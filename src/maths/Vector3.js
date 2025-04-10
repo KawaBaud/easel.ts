@@ -17,8 +17,8 @@ export function createVector3(x = 0, y = 0, z = 0) {
             _v.x += v.x, _v.y += v.y, _v.z += v.z;
             return _v;
         },
-        addScalar(scalar) {
-            _v.x += scalar, _v.y += scalar, _v.z += scalar;
+        addScalar(s) {
+            _v.x += s, _v.y += s, _v.z += s;
             return _v;
         },
         addVectors(a, b) {
@@ -74,6 +74,13 @@ export function createVector3(x = 0, y = 0, z = 0) {
         clamp(min, max) {
             return _v.max(min).min(max);
         },
+        clampScalar(min, max) {
+            return _v.set(
+                Maths.clamp(_v.x, min, max),
+                Maths.clamp(_v.y, min, max),
+                Maths.clamp(_v.z, min, max),
+            );
+        },
         clone() {
             return createVector3().copy(_v);
         },
@@ -105,8 +112,8 @@ export function createVector3(x = 0, y = 0, z = 0) {
             _v.x /= v.x, _v.y /= v.y, _v.z /= v.z;
             return _v;
         },
-        divScalar(scalar) {
-            _v.x /= scalar, _v.y /= scalar, _v.z /= scalar;
+        divScalar(s) {
+            _v.x /= s, _v.y /= s, _v.z /= s;
             return _v;
         },
         divVectors(a, b) {
@@ -164,8 +171,8 @@ export function createVector3(x = 0, y = 0, z = 0) {
             _v.x *= v.x, _v.y *= v.y, _v.z *= v.z;
             return _v;
         },
-        mulScalar(scalar) {
-            _v.x *= scalar, _v.y *= scalar, _v.z *= scalar;
+        mulScalar(s) {
+            _v.x *= s, _v.y *= s, _v.z *= s;
             return _v;
         },
         mulVectors(a, b) {
@@ -201,15 +208,15 @@ export function createVector3(x = 0, y = 0, z = 0) {
         setFromArray(array, offset = 0) {
             return _v.fromArray(array, offset);
         },
-        setScalar(scalar) {
-            return _v.set(scalar, scalar, scalar);
+        setScalar(s) {
+            return _v.set(s, s, s);
         },
         sub(v) {
             _v.x -= v.x, _v.y -= v.y, _v.z -= v.z;
             return _v;
         },
-        subScalar(scalar) {
-            _v.x -= scalar, _v.y -= scalar, _v.z -= scalar;
+        subScalar(s) {
+            _v.x -= s, _v.y -= s, _v.z -= s;
             return _v;
         },
         subVectors(a, b) {
