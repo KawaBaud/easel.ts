@@ -484,26 +484,26 @@ export function createMatrix4(elements = new Float32Array(16)) {
                 (a41 * b14) + (a42 * b24) + (a43 * b34) + (a44 * b44),
             );
         },
-        mulScalar(scalar) {
+        mulScalar(s) {
             const te = _m.elements;
 
             return _m.set(
-                te[0] * scalar,
-                te[4] * scalar,
-                te[8] * scalar,
-                te[12] * scalar,
-                te[1] * scalar,
-                te[5] * scalar,
-                te[9] * scalar,
-                te[13] * scalar,
-                te[2] * scalar,
-                te[6] * scalar,
-                te[10] * scalar,
-                te[14] * scalar,
-                te[3] * scalar,
-                te[7] * scalar,
-                te[11] * scalar,
-                te[15] * scalar,
+                te[0] * s,
+                te[4] * s,
+                te[8] * s,
+                te[12] * s,
+                te[1] * s,
+                te[5] * s,
+                te[9] * s,
+                te[13] * s,
+                te[2] * s,
+                te[6] * s,
+                te[10] * s,
+                te[14] * s,
+                te[3] * s,
+                te[7] * s,
+                te[11] * s,
+                te[15] * s,
             );
         },
 
