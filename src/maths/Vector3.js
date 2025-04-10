@@ -256,4 +256,8 @@ export const Vector3 = {
         const dx = v1.x - v2.x, dy = v1.y - v2.y, dz = v1.z - v2.z;
         return (dx * dx) + (dy * dy) + (dz * dz);
     },
+
+    lerp(v1, v2, alpha, target = createVector3()) {
+        return target.copy(v1).lerp(v2, alpha);
+    },
 };
