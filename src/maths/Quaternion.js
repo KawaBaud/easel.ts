@@ -58,9 +58,6 @@ export function createQuaternion(x = 0, y = 0, z = 0, w = 1) {
         identity() {
             return _q.set(0, 0, 0, 1);
         },
-        invert() {
-            return _q.conjugate();
-        },
 
         mul(q) {
             return _q.mulQuaternions(_q, q);
