@@ -117,7 +117,8 @@ export function createMatrix4(elements = new Float32Array(16)) {
                 1,
             );
         },
-        invert() {
+        inverse() {
+            // based on http://www.euclideanspace.com/maths/algebra/matrix/functions/inverse/fourD/index.htm
             const te = _m.elements;
 
             const n11 = te[0], n21 = te[1], n31 = te[2], n41 = te[3];
