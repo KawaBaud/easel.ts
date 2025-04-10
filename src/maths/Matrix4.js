@@ -118,7 +118,6 @@ export function createMatrix4(elements = new Float32Array(16)) {
             );
         },
         inverse() {
-            // based on http://www.euclideanspace.com/maths/algebra/matrix/functions/inverse/fourD/index.htm
             const te = _m.elements;
 
             const n11 = te[0], n21 = te[1], n31 = te[2], n41 = te[3];
@@ -190,66 +189,26 @@ export function createMatrix4(elements = new Float32Array(16)) {
         },
 
         lookAt(eye, target, up) {
-            const temp = createVector3();
+            const z = eye.clone().sub(target);
+            if (z.lengthSq === 0) z.z = 1;
+            z.unit();
 
-            let zx, zy, zz;
-            temp.subVectors(eye, target);
-            zx = temp.x, zy = temp.y, zz = temp.z;
+            const x = up.clone().cross(z);
+            if (x.lengthSq === 0) {
+                Math.abs(up.z) === 1 ? z.x += 0.0001 : z.z += 0.0001;
+                z.unit();
 
-            const zlsq = (zx * zx) + (zy * zy) + (zz * zz);
-            if (zlsq === 0) zz = 1;
-            const zl = Math.sqrt(zlsq);
-            zx /= zl, zy /= zl, zz /= zl;
-
-            let xx, xy, xz;
-            temp.crossVectors(up, { x: zx, y: zy, z: zz });
-            xx = temp.x, xy = temp.y, xz = temp.z;
-
-            const xlsq = (xx * xx) + (xy * xy) + (xz * xz);
-            if (xlsq === 0) {
-                zx += Math.abs(up.z) === 1 ? Maths.EPSILON : 0;
-                zz += Math.abs(up.z) === 1 ? 0 : Maths.EPSILON;
-
-                temp.set(zx, zy, zz);
-                temp.unit();
-                zx = temp.x;
-                zy = temp.y;
-                zz = temp.z;
-
-                temp.crossVectors(up, { x: zx, y: zy, z: zz });
-                xx = temp.x;
-                xy = temp.y;
-                xz = temp.z;
+                x.copy(up).cross(z);
             }
-            const xl = Math.sqrt(xlsq);
-            xx /= xl, xy /= xl, xz /= xl;
+            x.unit();
 
-            const yx = (zy * xz) - (zz * xy),
-                yy = (zz * xx) - (zx * xz),
-                yz = (zx * xy) - (zy * xx);
+            const y = z.clone().cross(x);
 
-            // te[0] = xx, te[4] = yx, te[8] = zx, te[12] = 0;
-            // te[1] = xy, te[5] = yy, te[9] = zy, te[13] = 0;
-            // te[2] = xz, te[6] = yz, te[10] = zz, te[14] = 0;
-            // te[3] = -1, te[7] = 0, te[11] = 0, te[15] = 1;
-            return _m.set(
-                xx,
-                xy,
-                xz,
-                0,
-                yx,
-                yy,
-                yz,
-                0,
-                zx,
-                zy,
-                zz,
-                0,
-                (-xx * eye.x) - (xy * eye.y) - (xz * eye.z),
-                (-yx * eye.x) - (yy * eye.y) - (yz * eye.z),
-                (-zx * eye.x) - (zy * eye.y) - (zz * eye.z),
-                1,
-            );
+            const te = _m.elements;
+            te[0] = x.x, te[4] = y.x, te[8] = z.x;
+            te[1] = x.y, te[5] = y.y, te[9] = z.y;
+            te[2] = x.z, te[6] = y.z, te[10] = z.z;
+            return _m;
         },
 
         makeOrthographic(left, right, top, bottom, near, far) {
@@ -592,5 +551,60 @@ export function createMatrix4(elements = new Float32Array(16)) {
 }
 
 export const Matrix4 = {
-    // static functions go here
+    perspective(fov, aspect, near, far, result = createMatrix4()) {
+        const f = 1 / Math.tan(fov / 2);
+        const nf = 1 / (near - far);
+
+        return result.set(
+            f / aspect,
+            0,
+            0,
+            0,
+            0,
+            f,
+            0,
+            0,
+            0,
+            0,
+            (far + near) * nf,
+            2 * far * near * nf,
+            0,
+            0,
+            -1,
+            0,
+        );
+    },
+
+    orthographic(
+        left,
+        right,
+        bottom,
+        top,
+        near,
+        far,
+        result = createMatrix4(),
+    ) {
+        const w = right - left;
+        const h = top - bottom;
+        const d = far - near;
+
+        return result.set(
+            2 / w,
+            0,
+            0,
+            -(right + left) / w,
+            0,
+            2 / h,
+            0,
+            -(top + bottom) / h,
+            0,
+            0,
+            -2 / d,
+            -(far + near) / d,
+            0,
+            0,
+            0,
+            1,
+        );
+    },
 };
