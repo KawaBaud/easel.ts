@@ -195,7 +195,9 @@ export function createMatrix4(elements = new Float32Array(16)) {
 
             const x = up.clone().cross(z);
             if (x.lengthSq === 0) {
-                Math.abs(up.z) === 1 ? z.x += 0.0001 : z.z += 0.0001;
+                Math.abs(up.z) === 1
+                    ? z.x += Maths.EPSILON
+                    : z.z += Maths.EPSILON;
                 z.unit();
 
                 x.copy(up).cross(z);
