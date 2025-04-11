@@ -117,7 +117,7 @@ export function createMatrix4(elements = new Float32Array(16)) {
                 1,
             );
         },
-        inverse() {
+        invert() {
             const te = _m.elements;
 
             const n11 = te[0], n21 = te[1], n31 = te[2], n41 = te[3];
@@ -126,8 +126,8 @@ export function createMatrix4(elements = new Float32Array(16)) {
             const n14 = te[12], n24 = te[13], n34 = te[14], n44 = te[15];
 
             const t11 = (n23 * n34 * n42) - (n24 * n33 * n42) +
-                (n24 * n32 * n43) -
-                (n22 * n34 * n43) - (n23 * n32 * n44) + (n22 * n33 * n44);
+                (n24 * n32 * n43) - (n22 * n34 * n43) -
+                (n23 * n32 * n44) + (n22 * n33 * n44);
             const t12 = (n14 * n33 * n42) - (n13 * n34 * n42) -
                 (n14 * n32 * n43) +
                 (n12 * n34 * n43) + (n13 * n32 * n44) - (n12 * n33 * n44);
@@ -144,48 +144,73 @@ export function createMatrix4(elements = new Float32Array(16)) {
             }
             const detInv = 1 / det;
 
-            return _m.set(
-                t11 * detInv,
-                ((n24 * n33 * n41) - (n23 * n34 * n41) - (n24 * n31 * n43) +
+            const m21 = ((n24 * n33 * n41) - (n23 * n34 * n41) -
+                    (n24 * n31 * n43) +
                     (n21 * n34 * n43) + (n23 * n31 * n44) - (n21 * n33 * n44)) *
                     detInv,
-                ((n22 * n34 * n41) - (n24 * n32 * n41) + (n24 * n31 * n42) -
-                    (n21 * n34 * n42) - (n22 * n31 * n44) + (n21 * n32 * n44)) *
+                m31 = ((n22 * n34 * n41) - (n24 * n32 * n41) +
+                    (n24 * n31 * n42) - (n21 * n34 * n42) -
+                    (n22 * n31 * n44) + (n21 * n32 * n44)) *
                     detInv,
-                ((n23 * n32 * n41) - (n22 * n33 * n41) - (n23 * n31 * n42) +
+                m41 = ((n23 * n32 * n41) - (n22 * n33 * n41) -
+                    (n23 * n31 * n42) +
                     (n21 * n33 * n42) + (n22 * n31 * n43) - (n21 * n32 * n43)) *
+                    detInv;
+            const m12 = ((n13 * n34 * n41) - (n14 * n33 * n41) +
+                    (n14 * n31 * n43) - (n11 * n34 * n43) -
+                    (n13 * n31 * n44) + (n11 * n33 * n44)) *
                     detInv,
-                t12 * detInv,
-                ((n13 * n34 * n41) - (n14 * n33 * n41) + (n14 * n31 * n43) -
-                    (n11 * n34 * n43) - (n13 * n31 * n44) + (n11 * n33 * n44)) *
-                    detInv,
-                ((n14 * n32 * n41) - (n12 * n34 * n41) - (n14 * n31 * n42) +
+                m22 = ((n14 * n32 * n41) - (n12 * n34 * n41) -
+                    (n14 * n31 * n42) +
                     (n11 * n34 * n42) + (n12 * n31 * n44) - (n11 * n32 * n44)) *
                     detInv,
-                ((n12 * n33 * n41) - (n13 * n32 * n41) + (n13 * n31 * n42) -
-                    (n11 * n33 * n42) - (n12 * n31 * n43) + (n11 * n32 * n43)) *
+                m32 = ((n12 * n33 * n41) - (n13 * n32 * n41) +
+                    (n13 * n31 * n42) - (n11 * n33 * n42) -
+                    (n12 * n31 * n43) + (n11 * n32 * n43)) *
+                    detInv;
+            const m13 = ((n13 * n24 * n41) - (n14 * n23 * n41) -
+                    (n13 * n21 * n44) +
+                    (n11 * n24 * n43) + (n14 * n21 * n43) - (n11 * n23 * n44)) *
                     detInv,
-                t13 * detInv,
-                ((n14 * n23 * n41) - (n13 * n24 * n41) + (n14 * n21 * n43) -
-                    (n11 * n24 * n43) - (n13 * n21 * n44) + (n11 * n23 * n44)) *
+                m23 = ((n12 * n24 * n41) - (n14 * n22 * n41) +
+                    (n14 * n21 * n42) - (n11 * n24 * n42) -
+                    (n12 * n21 * n44) + (n11 * n22 * n44)) *
                     detInv,
-                ((n12 * n24 * n41) - (n14 * n22 * n41) + (n14 * n21 * n42) -
-                    (n11 * n24 * n42) - (n12 * n21 * n44) + (n11 * n22 * n44)) *
-                    detInv,
-                ((n13 * n22 * n41) - (n12 * n23 * n41) - (n13 * n21 * n42) +
+                m33 = ((n13 * n22 * n41) - (n12 * n23 * n41) -
+                    (n13 * n21 * n42) +
                     (n11 * n23 * n42) + (n12 * n21 * n43) - (n11 * n22 * n43)) *
+                    detInv;
+            const m14 = ((n13 * n24 * n31) - (n14 * n23 * n31) +
+                    (n14 * n21 * n33) - (n11 * n24 * n33) -
+                    (n13 * n21 * n34) + (n11 * n23 * n34)) *
                     detInv,
-                t14 * detInv,
-                ((n13 * n24 * n31) - (n14 * n23 * n31) + (n14 * n21 * n33) -
-                    (n11 * n24 * n33) - (n13 * n21 * n34) + (n11 * n23 * n34)) *
-                    detInv,
-                ((n14 * n22 * n31) - (n12 * n24 * n31) - (n14 * n21 * n32) +
+                m24 = ((n14 * n22 * n31) - (n12 * n24 * n31) -
+                    (n14 * n21 * n32) +
                     (n11 * n24 * n32) + (n12 * n21 * n34) - (n11 * n22 * n34)) *
                     detInv,
-                ((n12 * n23 * n31) - (n13 * n22 * n31) + (n13 * n21 * n32) -
-                    (n11 * n23 * n32) - (n12 * n21 * n33) + (n11 * n22 * n33)) *
-                    detInv,
-            );
+                m34 = ((n12 * n23 * n31) - (n13 * n22 * n31) +
+                    (n13 * n21 * n32) - (n11 * n23 * n32) -
+                    (n12 * n21 * n33) + (n11 * n22 * n33)) *
+                    detInv;
+
+            return _m.set(
+                t11 * detInv,
+                m21,
+                m31,
+                m41,
+                t12 * detInv,
+                m12,
+                m22,
+                m32,
+                t13 * detInv,
+                m13,
+                m23,
+                m33,
+                t14 * detInv,
+                m14,
+                m24,
+                m34,
+            ).transpose();
         },
 
         lookAt(eye, target, up) {
@@ -206,14 +231,30 @@ export function createMatrix4(elements = new Float32Array(16)) {
 
             const y = z.clone().cross(x);
 
-            const te = _m.elements;
-            te[0] = x.x, te[4] = y.x, te[8] = z.x;
-            te[1] = x.y, te[5] = y.y, te[9] = z.y;
-            te[2] = x.z, te[6] = y.z, te[10] = z.z;
-            return _m;
+            return _m.set(
+                x.x,
+                y.x,
+                z.x,
+                0,
+                x.y,
+                y.y,
+                z.y,
+                0,
+                x.z,
+                y.z,
+                z.z,
+                0,
+                0,
+                0,
+                0,
+                1,
+            );
         },
 
-        makeOrthographic(left, right, top, bottom, near, far) {
+        makeOrthographic(size, aspect, near, far) {
+            const left = -size * aspect, right = size * aspect;
+            const top = size, bottom = -size;
+
             const lr = 1 / (left - right);
             const tb = 1 / (top - bottom);
             const nf = 1 / (near - far);
@@ -222,39 +263,46 @@ export function createMatrix4(elements = new Float32Array(16)) {
                 -2 * lr,
                 0,
                 0,
+                (left + right) * lr,
                 0,
                 -2 * tb,
                 0,
-                0,
+                (top + bottom) * tb,
                 0,
                 0,
                 2 * nf,
+                (far + near) * nf,
                 0,
-                (left + right) * lr,
-                (top + bottom) * tb,
-                (near + far) * nf,
+                0,
+                0,
                 1,
             );
         },
         makePerspective(fov, aspect, near, far) {
-            const f = Math.tan(Maths.HALF_PI - 0.5 * fov);
-            const rangeInv = 1 / (near - far);
+            const tanHalfFov = Math.tan(fov * 0.5);
+
+            const x = 1 / (aspect * tanHalfFov);
+            const y = 1 / tanHalfFov;
+
+            const c = -(far + near) / (far - near);
+            const d = (-2 * far * near) / (far - near);
 
             return _m.set(
-                f / aspect,
-                0,
-                0,
-                0,
-                f,
+                x,
                 0,
                 0,
                 0,
                 0,
-                (near + far) * rangeInv,
+                y,
+                0,
+                0,
+                0,
+                0,
+                c,
+                d,
+                0,
+                0,
                 -1,
-                0,
-                0,
-                near * far * rangeInv * 2,
                 0,
             );
         },
