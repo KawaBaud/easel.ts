@@ -199,28 +199,28 @@ export function createQuaternion(x = 0, y = 0, z = 0, w = 1) {
                 const s = 2.0 * Math.sqrt(1.0 + m11 - m22 - m33);
 
                 _q.set(
-                    (m32 - m23) / s,
                     0.25 * s,
                     (m12 + m21) / s,
                     (m13 + m31) / s,
+                    (m32 - m23) / s,
                 );
             } else if (m22 > m33) {
                 const s = 2.0 * Math.sqrt(1.0 + m22 - m11 - m33);
 
                 _q.set(
-                    (m13 - m31) / s,
                     (m12 + m21) / s,
                     0.25 * s,
                     (m23 + m32) / s,
+                    (m13 - m31) / s,
                 );
             } else {
                 const s = 2.0 * Math.sqrt(1.0 + m33 - m11 - m22);
 
                 _q.set(
-                    (m21 - m12) / s,
                     (m13 + m31) / s,
                     (m23 + m32) / s,
                     0.25 * s,
+                    (m21 - m12) / s,
                 );
             }
 
@@ -249,37 +249,37 @@ export function createQuaternion(x = 0, y = 0, z = 0, w = 1) {
             if (t === 1) return _q.copy(qb);
 
             const x = _q.x, y = _q.y, z = _q.z, w = _q.w;
+            const qbx = qb.x, qby = qb.y, qbz = qb.z, qbw = qb.w;
 
-            let cosHalfTheta = (w * qb.w) + (x * qb.x) + (y * qb.y) +
-                (z * qb.z);
-            if (cosHalfTheta < 0) {
-                _q.set(-qb.w, -qb.x, -qb.y, -qb.z);
-                cosHalfTheta = -cosHalfTheta;
-            } else _q.copy(qb);
-            if (cosHalfTheta >= 1.0) return _q.set(w, x, y, z);
+            let cHalfTheta = (w * qbw) + (x * qbx) + (y * qby) + (z * qbz);
 
-            const sqrSinHalfTheta = 1.0 - cosHalfTheta * cosHalfTheta;
-            if (sqrSinHalfTheta <= Maths.EPSILON) {
-                const s = 1 - t;
-
+            let bx = qbx, by = qby, bz = qbz, bw = qbw;
+            if (cHalfTheta < 0) {
+                cHalfTheta = -cHalfTheta;
+                bx = -qbx;
+                by = -qby;
+                bz = -qbz;
+                bw = -qbw;
+            }
+            if (cHalfTheta >= 0.999) {
                 return _q.set(
-                    (s * x) + (t * _q.x),
-                    (s * y) + (t * _q.y),
-                    (s * z) + (t * _q.z),
-                    (s * w) + (t * _q.w),
+                    x + t * (bx - x),
+                    y + t * (by - y),
+                    z + t * (bz - z),
+                    w + t * (bw - w),
                 ).unit();
             }
 
-            const sinHalfTheta = Math.sqrt(sqrSinHalfTheta);
-            const halfTheta = Math.fastAtan2(sinHalfTheta, cosHalfTheta);
-            const ratioA = Math.sin((1 - t) * halfTheta) / sinHalfTheta;
-            const ratioB = Math.sin(t * halfTheta) / sinHalfTheta;
+            const sHalfTheta = Math.sqrt(1.0 - cHalfTheta * cHalfTheta);
+            const halfTheta = Maths.fastAtan2(sHalfTheta, cHalfTheta);
+            const ratioA = Math.sin((1 - t) * halfTheta) / sHalfTheta;
+            const ratioB = Math.sin(t * halfTheta) / sHalfTheta;
 
             return _q.set(
-                (x * ratioA) + (_q.x * ratioB),
-                (y * ratioA) + (_q.y * ratioB),
-                (z * ratioA) + (_q.z * ratioB),
-                (w * ratioA) + (_q.w * ratioB),
+                (x * ratioA) + (bx * ratioB),
+                (y * ratioA) + (by * ratioB),
+                (z * ratioA) + (bz * ratioB),
+                (w * ratioA) + (bw * ratioB),
             );
         },
 
@@ -296,13 +296,13 @@ export function createQuaternion(x = 0, y = 0, z = 0, w = 1) {
         },
 
         unit() {
-            const len = _q.length === 0 ? _q.identity() : 1 / _q.length;
+            const length = _q.length === 0 ? _q.identity() : 1 / _q.length;
 
             return _q.set(
-                _q.x * len,
-                _q.y * len,
-                _q.z * len,
-                _q.w * len,
+                _q.x * length,
+                _q.y * length,
+                _q.z * length,
+                _q.w * length,
             );
         },
 
