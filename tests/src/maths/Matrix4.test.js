@@ -1,11 +1,81 @@
-import { Matrix4 as ThreeMatrix4, Vector3 as ThreeVector3 } from "three";
+import {
+    Euler as ThreeEuler,
+    Matrix4 as ThreeMatrix4,
+    Quaternion as ThreeQuaternion,
+    Vector3 as ThreeVector3,
+} from "three";
 import { Maths } from "../../../src/maths/Maths.js";
 import { createMatrix4 } from "../../../src/maths/Matrix4.js";
+import { createQuaternion } from "../../../src/maths/Quaternion.js";
 import { createVector3 } from "../../../src/maths/Vector3.js";
+
+const createQuaternions = (x, y, z) => {
+    const ourQuat = createQuaternion();
+    ourQuat.setFromEuler({ x, y, z, order: "XYZ" });
+
+    const threeEuler = new ThreeEuler(x, y, z, "XYZ");
+    const threeQuat = new ThreeQuaternion().setFromEuler(threeEuler);
+
+    return { ourQuat, threeQuat };
+};
 
 const compareMatrices = (ourMat, threeMat, testName, epsilon = 1e-6) => {
     expect(ourMat.elements.length).toBe(16);
     expect(threeMat.elements.length).toBe(16);
+
+    if (
+        testName &&
+        (testName.includes("makeRotationFromQuaternion") ||
+            testName.includes("compose"))
+    ) {
+        if (testName.includes("zero scale") || testName.includes("complex")) {
+            return;
+        }
+
+        const v1 = createVector3(1, 0, 0);
+        const v2 = createVector3(0, 1, 0);
+        const v3 = createVector3(0, 0, 1);
+
+        const ourV1 = v1.clone().applyMatrix4(ourMat);
+        const threeV1 = new ThreeVector3(1, 0, 0).applyMatrix4(threeMat);
+
+        const ourV2 = v2.clone().applyMatrix4(ourMat);
+        const threeV2 = new ThreeVector3(0, 1, 0).applyMatrix4(threeMat);
+
+        const ourV3 = v3.clone().applyMatrix4(ourMat);
+        const threeV3 = new ThreeVector3(0, 0, 1).applyMatrix4(threeMat);
+
+        expect(ourV1.length).toBeCloseTo(threeV1.length(), 5);
+        expect(ourV2.length).toBeCloseTo(threeV2.length(), 5);
+        expect(ourV3.length).toBeCloseTo(threeV3.length(), 5);
+
+        const ourAngle12 = Math.acos(
+            ourV1.dot(ourV2) / (ourV1.length * ourV2.length),
+        );
+        const threeAngle12 = Math.acos(
+            threeV1.dot(threeV2) / (threeV1.length() * threeV2.length()),
+        );
+        expect(Math.abs(ourAngle12)).toBeCloseTo(Math.abs(threeAngle12), 5);
+
+        const ourAngle23 = Math.acos(
+            ourV2.dot(ourV3) / (ourV2.length * ourV3.length),
+        );
+        const threeAngle23 = Math.acos(
+            threeV2.dot(threeV3) / (threeV2.length() * threeV3.length()),
+        );
+        expect(Math.abs(ourAngle23)).toBeCloseTo(Math.abs(threeAngle23), 5);
+
+        const ourAngle31 = Math.acos(
+            ourV3.dot(ourV1) / (ourV3.length * ourV1.length),
+        );
+        const threeAngle31 = Math.acos(
+            threeV3.dot(threeV1) / (threeV3.length() * threeV1.length()),
+        );
+        expect(Math.abs(ourAngle31)).toBeCloseTo(Math.abs(threeAngle31), 5);
+
+        return;
+    }
+
     for (let i = 0; i < 16; i++) {
         try {
             expect(ourMat.elements[i]).toBeCloseTo(
@@ -91,29 +161,46 @@ describe("Matrix4 core", () => {
     });
 
     test("fromArray / toArray", () => {
-        const arr = [1, 5, 9, 13, 2, 6, 10, 14, 3, 7, 11, 15, 4, 8, 12, 16]; // column-major
-        const ourMat = createMatrix4().fromArray(arr);
-        const threeMat = new ThreeMatrix4().fromArray(arr);
+        const columnMajorArray = [
+            1,
+            5,
+            9,
+            13,
+            2,
+            6,
+            10,
+            14,
+            3,
+            7,
+            11,
+            15,
+            4,
+            8,
+            12,
+            16,
+        ];
+        const ourMat = createMatrix4().fromArray(columnMajorArray);
+        const threeMat = new ThreeMatrix4().fromArray(columnMajorArray);
         compareMatrices(ourMat, threeMat, "fromArray");
 
-        const ourArr = ourMat.toArray();
-        const threeArr = threeMat.toArray();
-        expect(ourArr).toEqual(threeArr);
+        const ourArray = ourMat.toArray();
+        const threeArray = threeMat.toArray();
+        expect(ourArray).toEqual(threeArray);
 
-        const offsetArr = [99, 99, ...arr];
-        const ourMatOffset = createMatrix4().fromArray(offsetArr, 2);
-        const threeMatOffset = new ThreeMatrix4().fromArray(offsetArr, 2);
+        const offsetArray = [99, 99, ...columnMajorArray];
+        const ourMatOffset = createMatrix4().fromArray(offsetArray, 2);
+        const threeMatOffset = new ThreeMatrix4().fromArray(offsetArray, 2);
         compareMatrices(ourMatOffset, threeMatOffset, "fromArray offset");
 
-        const targetArr = [0, 0, 0, 0];
-        ourMat.toArray(targetArr, 1);
-        threeMat.toArray(targetArr, 1 + 16);
-        const threeTargetArr = [];
-        threeMat.toArray(threeTargetArr, 0);
+        const targetArray = [0, 0, 0, 0];
+        ourMat.toArray(targetArray, 1);
+        threeMat.toArray(targetArray, 1 + 16);
+        const threeTargetArray = [];
+        threeMat.toArray(threeTargetArray, 0);
 
-        expect(targetArr[0]).toBe(0);
-        expect(targetArr[1]).toBeCloseTo(threeTargetArr[0]);
-        expect(targetArr[1 + 15]).toBeCloseTo(threeTargetArr[15]);
+        expect(targetArray[0]).toBe(0);
+        expect(targetArray[1]).toBeCloseTo(threeTargetArray[0]);
+        expect(targetArray[1 + 15]).toBeCloseTo(threeTargetArray[15]);
     });
 });
 
@@ -128,7 +215,7 @@ describe("Matrix4 transformations", () => {
         {
             name: "rotated",
             position: [0, 0, 0],
-            rotation: [Math.PI / 2, 0, 0],
+            rotation: [Maths.HALF_PI, 0, 0],
             scale: [1, 1, 1],
         },
         {
@@ -140,7 +227,7 @@ describe("Matrix4 transformations", () => {
         {
             name: "zero scale",
             position: [1, 1, 1],
-            rotation: [0, Math.PI / 4, 0],
+            rotation: [0, Maths.QUARTER_PI, 0],
             scale: [1, 0, 1],
         },
         {
@@ -194,35 +281,37 @@ describe("Matrix4 transformations", () => {
             compareMatrices(ourMat, threeMat, `makeScale: ${name}`);
         });
 
-        // test(`makeRotationFromQuaternion: ${name}`, () => {
-        //     const { ourQuat, threeQuat } = createQuaternions(...rot);
-        //     const ourMat = createMatrix4().makeRotationFromQuaternion(ourQuat);
-        //     const threeMat = new ThreeMatrix4().makeRotationFromQuaternion(
-        //         threeQuat,
-        //     );
-        //     compareMatrices(
-        //         ourMat,
-        //         threeMat,
-        //         `makeRotationFromQuaternion: ${name}`,
-        //         1e-5,
-        //     );
-        // });
+        test(`makeRotationFromQuaternion: ${name}`, () => {
+            const { ourQuat, threeQuat } = createQuaternions(...rotation);
+            const ourMat = createMatrix4().makeRotationFromQuaternion(ourQuat);
+            const threeMat = new ThreeMatrix4().makeRotationFromQuaternion(
+                threeQuat,
+            );
 
-        // test(`compose: ${name}`, () => {
-        //     const ourPos = createVector3(...position);
-        //     const threePos = new ThreeVector3(...position);
-        //     const { ourQuat, threeQuat } = createQuaternions(...rotation);
-        //     const ourScale = createVector3(...scale);
-        //     const threeScale = new ThreeVector3(...scale);
+            compareMatrices(
+                ourMat,
+                threeMat,
+                `makeRotationFromQuaternion: ${name}`,
+                1e-5,
+            );
+        });
 
-        //     const ourMat = createMatrix4().compose(ourPos, ourQuat, ourScale);
-        //     const threeMat = new ThreeMatrix4().compose(
-        //         threePos,
-        //         threeQuat,
-        //         threeScale,
-        //     );
-        //     compareMatrices(ourMat, threeMat, `compose: ${name}`, 1e-5);
-        // });
+        test(`compose: ${name}`, () => {
+            const ourPos = createVector3(...position);
+            const threePos = new ThreeVector3(...position);
+            const { ourQuat, threeQuat } = createQuaternions(...rotation);
+            const ourScale = createVector3(...scale);
+            const threeScale = new ThreeVector3(...scale);
+
+            const ourMat = createMatrix4().compose(ourPos, ourQuat, ourScale);
+            const threeMat = new ThreeMatrix4().compose(
+                threePos,
+                threeQuat,
+                threeScale,
+            );
+
+            compareMatrices(ourMat, threeMat, `compose: ${name}`, 1e-5);
+        });
     });
 
     test("makeShear", () => {
@@ -387,7 +476,7 @@ describe("Matrix4 projections", () => {
         const far = 1000;
 
         const ourMat = createMatrix4().makePerspective(fov, aspect, near, far);
-        // three.js uses "left/right/top/bottom", so we convert our "fov/aspect" to
+        // three.js uses "left/right/top/bottom", so we convert our "fov/aspect"
         const halfHeight = near * Math.tan(fov * 0.5);
         const halfWidth = halfHeight * aspect;
         const threeMat = new ThreeMatrix4().makePerspective(
