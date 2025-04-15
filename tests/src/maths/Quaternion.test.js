@@ -3,6 +3,7 @@ import {
     Quaternion as ThreeQuaternion,
     Vector3 as ThreeVector3,
 } from "three";
+import { createEuler } from "../../../src/maths/Euler.js";
 import { Maths } from "../../../src/maths/Maths.js";
 import { createMatrix4 } from "../../../src/maths/Matrix4.js";
 import { createQuaternion } from "../../../src/maths/Quaternion.js";
@@ -21,27 +22,24 @@ const compareQuaternions = (ourQuat, threeQuat, epsilon = 0.01) => {
     expect(directMatch || negativeMatch).toBe(true);
 };
 
-const createEuler = (x, y, z, order = "XYZ") => ({ x, y, z, order });
-
 describe("Quaternion core", () => {
-    test("constructor/creation", () => {
+    test("constructor", () => {
         const ourQuat = createQuaternion();
         const threeQuat = new ThreeQuaternion();
-
         compareQuaternions(ourQuat, threeQuat);
 
         const x = 0.1, y = 0.2, z = 0.3, w = 0.4;
+
         const ourQuat2 = createQuaternion(x, y, z, w);
         const threeQuat2 = new ThreeQuaternion(x, y, z, w);
-
         compareQuaternions(ourQuat2, threeQuat2);
     });
 
     test("set", () => {
         const x = 0.1, y = 0.2, z = 0.3, w = 0.4;
+
         const ourQuat = createQuaternion().set(x, y, z, w);
         const threeQuat = new ThreeQuaternion().set(x, y, z, w);
-
         compareQuaternions(ourQuat, threeQuat);
     });
 
@@ -52,36 +50,33 @@ describe("Quaternion core", () => {
 
         const ourQuat2 = ourQuat1.clone();
         const threeQuat2 = threeQuat1.clone();
-
         compareQuaternions(ourQuat2, threeQuat2);
 
         const ourQuat3 = createQuaternion().copy(ourQuat1);
         const threeQuat3 = new ThreeQuaternion().copy(threeQuat1);
-
         compareQuaternions(ourQuat3, threeQuat3);
     });
 
     test("identity", () => {
         const ourQuat = createQuaternion(0.1, 0.2, 0.3, 0.4).identity();
         const threeQuat = new ThreeQuaternion(0.1, 0.2, 0.3, 0.4).identity();
-
         compareQuaternions(ourQuat, threeQuat);
     });
 
     test("length and lengthSq", () => {
         const x = 0.1, y = 0.2, z = 0.3, w = 0.4;
+
         const ourQuat = createQuaternion(x, y, z, w);
         const threeQuat = new ThreeQuaternion(x, y, z, w);
-
         expect(ourQuat.lengthSq).toBeCloseTo(threeQuat.lengthSq(), 1e-5);
         expect(ourQuat.length).toBeCloseTo(threeQuat.length(), 1e-5);
     });
 
     test("fromArray / toArray", () => {
         const array = [0.1, 0.2, 0.3, 0.4];
+
         const ourQuat = createQuaternion().fromArray(array);
         const threeQuat = new ThreeQuaternion().fromArray(array);
-
         compareQuaternions(ourQuat, threeQuat);
 
         const ourArray = [];
@@ -93,9 +88,9 @@ describe("Quaternion core", () => {
         expect(ourArray).toEqual(threeArray);
 
         const offsetArray = [9, 9, ...array];
+
         const ourQuatOffset = createQuaternion().fromArray(offsetArray, 2);
         const threeQuatOffset = new ThreeQuaternion().fromArray(offsetArray, 2);
-
         compareQuaternions(ourQuatOffset, threeQuatOffset);
     });
 });
@@ -114,14 +109,12 @@ describe("Quaternion operations", () => {
     test("conjugate", () => {
         const ourQuat = createQuaternion(0.1, 0.2, 0.3, 0.4).conjugate();
         const threeQuat = new ThreeQuaternion(0.1, 0.2, 0.3, 0.4).conjugate();
-
         compareQuaternions(ourQuat, threeQuat);
     });
 
     test("unit", () => {
         const ourQuat = createQuaternion(0.1, 0.2, 0.3, 0.4).unit();
         const threeQuat = new ThreeQuaternion(0.1, 0.2, 0.3, 0.4).normalize();
-
         compareQuaternions(ourQuat, threeQuat);
 
         expect(ourQuat.length).toBeCloseTo(1, 1e-5);
@@ -137,12 +130,10 @@ describe("Quaternion operations", () => {
 
         const ourMul = q1.clone().mul(q2);
         const threeMul = threeQ1.clone().multiply(threeQ2);
-
         compareQuaternions(ourMul, threeMul);
 
         const ourPremul = q1.clone().premul(q2);
         const threePremul = threeQ1.clone().premultiply(threeQ2);
-
         compareQuaternions(ourPremul, threePremul);
     });
 
@@ -247,7 +238,6 @@ describe("Quaternion conversions", () => {
 
             const ourQuat = createQuaternion().setFromEuler(ourEuler);
             const threeQuat = new ThreeQuaternion().setFromEuler(threeEuler);
-
             compareQuaternions(ourQuat, threeQuat);
         });
     });
@@ -260,11 +250,11 @@ describe("Quaternion conversions", () => {
         const ourQuat = createQuaternion().setFromAxisAngle(ourAxis, angle);
         const ourMat = createMatrix4().makeRotationFromQuaternion(ourQuat);
 
-        const q = createQuaternion().setFromRotationMatrix(ourMat);
-        const v = createVector3(1, 0, 0);
+        const testQuat = createQuaternion().setFromRotationMatrix(ourMat);
+        const testVec = createVector3(1, 0, 0);
 
-        const v1 = v.clone().applyQuaternion(ourQuat);
-        const v2 = v.clone().applyQuaternion(q);
+        const v1 = testVec.clone().applyQuaternion(ourQuat);
+        const v2 = testVec.clone().applyQuaternion(testQuat);
         expect(Math.abs(v1.x)).toBeCloseTo(Math.abs(v2.x), 5);
         expect(Math.abs(v1.y)).toBeCloseTo(Math.abs(v2.y), 5);
         expect(Math.abs(v1.z)).toBeCloseTo(Math.abs(v2.z), 5);
