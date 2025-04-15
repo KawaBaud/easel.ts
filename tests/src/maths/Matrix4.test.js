@@ -96,7 +96,7 @@ const compareMatrices = (ourMat, threeMat, testName, epsilon = 1e-6) => {
 };
 
 describe("Matrix4 core", () => {
-    test("identity", () => {
+    test("constructor", () => {
         const ourMat = createMatrix4().identity();
         const threeMat = new ThreeMatrix4().identity();
         compareMatrices(ourMat, threeMat, "identity");
