@@ -32,12 +32,12 @@ export function createMatrix4(elements = new Float32Array(16)) {
             return createMatrix4().copy(_m);
         },
         compose(position, q, scale) {
-            const qx = q.x, y = q.y, z = q.z, w = q.w;
-            const qx2 = qx + qx, y2 = y + y, z2 = z + z;
+            const qx = q.x, qy = q.y, qz = q.z, qw = q.w;
+            const qx2 = qx + qx, qy2 = qy + qy, qz2 = qz + qz;
 
-            const xx = qx * qx2, xy = qx * y2, xz = qx * z2;
-            const yy = y * y2, yz = y * z2, zz = z * z2;
-            const wx = w * qx2, wy = w * y2, wz = w * z2;
+            const xx = qx * qx2, xy = qx * qy2, xz = qx * qz2;
+            const yy = qy * qy2, yz = qy * qz2, zz = qz * qz2;
+            const wx = qw * qx2, wy = qw * qy2, wz = qw * qz2;
 
             const sx = scale.x, sy = scale.y, sz = scale.z;
 
