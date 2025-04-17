@@ -64,7 +64,6 @@ describe("Euler core", () => {
 
         const ourArray = [];
         const threeArray = [];
-
         ourEuler.toArray(ourArray);
         threeEuler.toArray(threeArray);
 

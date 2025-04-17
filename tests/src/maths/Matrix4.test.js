@@ -297,15 +297,19 @@ describe("Matrix4 transformations", () => {
         });
 
         test(`compose: ${name}`, () => {
-            const ourPos = createVector3(...position);
-            const threePos = new ThreeVector3(...position);
+            const ourPosition = createVector3(...position);
+            const threePosition = new ThreeVector3(...position);
             const { ourQuat, threeQuat } = createQuaternions(...rotation);
             const ourScale = createVector3(...scale);
             const threeScale = new ThreeVector3(...scale);
 
-            const ourMat = createMatrix4().compose(ourPos, ourQuat, ourScale);
+            const ourMat = createMatrix4().compose(
+                ourPosition,
+                ourQuat,
+                ourScale,
+            );
             const threeMat = new ThreeMatrix4().compose(
-                threePos,
+                threePosition,
                 threeQuat,
                 threeScale,
             );
@@ -316,6 +320,7 @@ describe("Matrix4 transformations", () => {
 
     test("makeShear", () => {
         const xy = 0.1, xz = 0.2, yx = 0.3, yz = 0.4, zx = 0.5, zy = 0.6;
+
         const ourMat = createMatrix4().makeShear(xy, xz, yx, yz, zx, zy);
         const threeMat = new ThreeMatrix4().makeShear(xy, xz, yx, yz, zx, zy);
         compareMatrices(ourMat, threeMat, "makeShear");
@@ -351,6 +356,7 @@ describe("Matrix4 operations", () => {
 
     test("mulScalar", () => {
         const s = 3.5;
+
         const ourMat = ourMatA.clone().mulScalar(s);
         const threeMat = threeMatA.clone().multiplyScalar(s);
         compareMatrices(ourMat, threeMat, "mulScalar");
@@ -419,6 +425,7 @@ describe("Matrix4 operations", () => {
     test("setPosition / copyPosition", () => {
         const ourMat = createMatrix4().makeRotationY(Math.PI / 3);
         const threeMat = new ThreeMatrix4().makeRotationY(Math.PI / 3);
+
         const x = 10, y = -20, z = 30;
 
         ourMat.setPosition(x, y, z);
@@ -477,8 +484,10 @@ describe("Matrix4 projections", () => {
 
         const ourMat = createMatrix4().makePerspective(fov, aspect, near, far);
         // three.js uses "left/right/top/bottom", so we convert our "fov/aspect"
+
         const halfHeight = near * Math.tan(fov * 0.5);
         const halfWidth = halfHeight * aspect;
+
         const threeMat = new ThreeMatrix4().makePerspective(
             -halfWidth,
             halfWidth,
