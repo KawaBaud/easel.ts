@@ -477,14 +477,13 @@ describe("Matrix4 operations", () => {
 
 describe("Matrix4 projections", () => {
     test("makePerspective", () => {
-        const fov = 75 * Maths.DEG2RAD;
+        const fov = 75 * Maths.DEGREES_TO_RADIANS;
         const aspect = 16 / 9;
         const near = 0.1;
         const far = 1000;
 
         const ourMat = createMatrix4().makePerspective(fov, aspect, near, far);
         // three.js uses "left/right/top/bottom", so we convert our "fov/aspect"
-
         const halfHeight = near * Math.tan(fov * 0.5);
         const halfWidth = halfHeight * aspect;
 
