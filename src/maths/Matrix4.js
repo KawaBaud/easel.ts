@@ -1,5 +1,14 @@
 import { Maths } from "./Maths.js";
 
+/**
+ * @typedef {Object} Matrix4
+ * @property {Float32Array} elements
+ */
+
+/**
+ * @param {Float32Array} elements
+ * @returns {Matrix4}
+ */
 export function createMatrix4(elements = new Float32Array(16)) {
     const _m = {
         /**
@@ -25,17 +34,17 @@ export function createMatrix4(elements = new Float32Array(16)) {
             const n31 = te[2], n32 = te[6], n33 = te[10], n34 = te[14];
             const n41 = te[3], n42 = te[7], n43 = te[11], n44 = te[15];
 
-            const t1 = (n33 * n44) - (n34 * n43),
-                t2 = (n32 * n44) - (n34 * n42),
-                t3 = (n32 * n43) - (n33 * n42),
-                t4 = (n31 * n44) - (n34 * n41),
-                t5 = (n31 * n43) - (n33 * n41),
-                t6 = (n31 * n42) - (n32 * n41);
+            const t1 = (n33 * n44) - (n34 * n43);
+            const t2 = (n32 * n44) - (n34 * n42);
+            const t3 = (n32 * n43) - (n33 * n42);
+            const t4 = (n31 * n44) - (n34 * n41);
+            const t5 = (n31 * n43) - (n33 * n41);
+            const t6 = (n31 * n42) - (n32 * n41);
 
-            const det11 = (n22 * t1) - (n23 * t2) + (n24 * t3),
-                det12 = (n21 * t1) - (n23 * t4) + (n24 * t5),
-                det13 = (n21 * t2) - (n22 * t4) + (n24 * t6),
-                det14 = (n21 * t3) - (n22 * t5) + (n23 * t6);
+            const det11 = (n22 * t1) - (n23 * t2) + (n24 * t3);
+            const det12 = (n21 * t1) - (n23 * t4) + (n24 * t5);
+            const det13 = (n21 * t2) - (n22 * t4) + (n24 * t6);
+            const det14 = (n21 * t3) - (n22 * t5) + (n23 * t6);
 
             return (n11 * det11) - (n12 * det12) + (n13 * det13) -
                 (n14 * det14);
@@ -114,23 +123,14 @@ export function createMatrix4(elements = new Float32Array(16)) {
          */
         fromArray(array, offset = 0) {
             const te = _m.elements;
-
-            te[0] = array[0 + offset],
-                te[1] = array[1 + offset],
-                te[2] = array[2 + offset],
-                te[3] = array[3 + offset];
-            te[4] = array[4 + offset],
-                te[5] = array[5 + offset],
-                te[6] = array[6 + offset],
-                te[7] = array[7 + offset];
-            te[8] = array[8 + offset],
-                te[9] = array[9 + offset],
-                te[10] = array[10 + offset],
-                te[11] = array[11 + offset];
-            te[12] = array[12 + offset],
-                te[13] = array[13 + offset],
-                te[14] = array[14 + offset],
-                te[15] = array[15 + offset];
+            te[0] = array[0 + offset], te[1] = array[1 + offset];
+            te[2] = array[2 + offset], te[3] = array[3 + offset];
+            te[4] = array[4 + offset], te[5] = array[5 + offset];
+            te[6] = array[6 + offset], te[7] = array[7 + offset];
+            te[8] = array[8 + offset], te[9] = array[9 + offset];
+            te[10] = array[10 + offset], te[11] = array[11 + offset];
+            te[12] = array[12 + offset], te[13] = array[13 + offset];
+            te[14] = array[14 + offset], te[15] = array[15 + offset];
 
             return _m;
         },
@@ -190,53 +190,56 @@ export function createMatrix4(elements = new Float32Array(16)) {
             const detInv = 1 / det;
 
             const m21 = ((n24 * n33 * n41) - (n23 * n34 * n41) -
-                    (n24 * n31 * n43) +
-                    (n21 * n34 * n43) + (n23 * n31 * n44) - (n21 * n33 * n44)) *
-                    detInv,
-                m31 = ((n22 * n34 * n41) - (n24 * n32 * n41) +
-                    (n24 * n31 * n42) - (n21 * n34 * n42) -
-                    (n22 * n31 * n44) + (n21 * n32 * n44)) *
-                    detInv,
-                m41 = ((n23 * n32 * n41) - (n22 * n33 * n41) -
-                    (n23 * n31 * n42) +
-                    (n21 * n33 * n42) + (n22 * n31 * n43) - (n21 * n32 * n43)) *
-                    detInv;
+                (n24 * n31 * n43) +
+                (n21 * n34 * n43) + (n23 * n31 * n44) - (n21 * n33 * n44)) *
+                detInv;
+            const m31 = ((n22 * n34 * n41) - (n24 * n32 * n41) +
+                (n24 * n31 * n42) - (n21 * n34 * n42) -
+                (n22 * n31 * n44) + (n21 * n32 * n44)) *
+                detInv;
+            const m41 = ((n23 * n32 * n41) - (n22 * n33 * n41) -
+                (n23 * n31 * n42) +
+                (n21 * n33 * n42) + (n22 * n31 * n43) - (n21 * n32 * n43)) *
+                detInv;
+
             const m12 = ((n13 * n34 * n41) - (n14 * n33 * n41) +
-                    (n14 * n31 * n43) - (n11 * n34 * n43) -
-                    (n13 * n31 * n44) + (n11 * n33 * n44)) *
-                    detInv,
-                m22 = ((n14 * n32 * n41) - (n12 * n34 * n41) -
-                    (n14 * n31 * n42) +
-                    (n11 * n34 * n42) + (n12 * n31 * n44) - (n11 * n32 * n44)) *
-                    detInv,
-                m32 = ((n12 * n33 * n41) - (n13 * n32 * n41) +
-                    (n13 * n31 * n42) - (n11 * n33 * n42) -
-                    (n12 * n31 * n43) + (n11 * n32 * n43)) *
-                    detInv;
+                (n14 * n31 * n43) - (n11 * n34 * n43) -
+                (n13 * n31 * n44) + (n11 * n33 * n44)) *
+                detInv;
+            const m22 = ((n14 * n32 * n41) - (n12 * n34 * n41) -
+                (n14 * n31 * n42) +
+                (n11 * n34 * n42) + (n12 * n31 * n44) - (n11 * n32 * n44)) *
+                detInv;
+            const m32 = ((n12 * n33 * n41) - (n13 * n32 * n41) +
+                (n13 * n31 * n42) - (n11 * n33 * n42) -
+                (n12 * n31 * n43) + (n11 * n32 * n43)) *
+                detInv;
+
             const m13 = ((n13 * n24 * n41) - (n14 * n23 * n41) -
-                    (n13 * n21 * n44) +
-                    (n11 * n24 * n43) + (n14 * n21 * n43) - (n11 * n23 * n44)) *
-                    detInv,
-                m23 = ((n12 * n24 * n41) - (n14 * n22 * n41) +
-                    (n14 * n21 * n42) - (n11 * n24 * n42) -
-                    (n12 * n21 * n44) + (n11 * n22 * n44)) *
-                    detInv,
-                m33 = ((n13 * n22 * n41) - (n12 * n23 * n41) -
-                    (n13 * n21 * n42) +
-                    (n11 * n23 * n42) + (n12 * n21 * n43) - (n11 * n22 * n43)) *
-                    detInv;
+                (n13 * n21 * n44) +
+                (n11 * n24 * n43) + (n14 * n21 * n43) - (n11 * n23 * n44)) *
+                detInv;
+            const m23 = ((n12 * n24 * n41) - (n14 * n22 * n41) +
+                (n14 * n21 * n42) - (n11 * n24 * n42) -
+                (n12 * n21 * n44) + (n11 * n22 * n44)) *
+                detInv;
+            const m33 = ((n13 * n22 * n41) - (n12 * n23 * n41) -
+                (n13 * n21 * n42) +
+                (n11 * n23 * n42) + (n12 * n21 * n43) - (n11 * n22 * n43)) *
+                detInv;
+
             const m14 = ((n13 * n24 * n31) - (n14 * n23 * n31) +
-                    (n14 * n21 * n33) - (n11 * n24 * n33) -
-                    (n13 * n21 * n34) + (n11 * n23 * n34)) *
-                    detInv,
-                m24 = ((n14 * n22 * n31) - (n12 * n24 * n31) -
-                    (n14 * n21 * n32) +
-                    (n11 * n24 * n32) + (n12 * n21 * n34) - (n11 * n22 * n34)) *
-                    detInv,
-                m34 = ((n12 * n23 * n31) - (n13 * n22 * n31) +
-                    (n13 * n21 * n32) - (n11 * n23 * n32) -
-                    (n12 * n21 * n33) + (n11 * n22 * n33)) *
-                    detInv;
+                (n14 * n21 * n33) - (n11 * n24 * n33) -
+                (n13 * n21 * n34) + (n11 * n23 * n34)) *
+                detInv;
+            const m24 = ((n14 * n22 * n31) - (n12 * n24 * n31) -
+                (n14 * n21 * n32) +
+                (n11 * n24 * n32) + (n12 * n21 * n34) - (n11 * n22 * n34)) *
+                detInv;
+            const m34 = ((n12 * n23 * n31) - (n13 * n22 * n31) +
+                (n13 * n21 * n32) - (n11 * n23 * n32) -
+                (n12 * n21 * n33) + (n11 * n22 * n33)) *
+                detInv;
 
             return _m.set(
                 t11 * detInv,
@@ -345,10 +348,10 @@ export function createMatrix4(elements = new Float32Array(16)) {
          * @returns {Matrix4}
          */
         makePerspective(fov, aspect, near, far) {
-            const tanHalfFov = Math.tan(fov * 0.5);
+            const tHalfFov = Math.tan(fov * 0.5);
 
-            const x = 1 / (aspect * tanHalfFov);
-            const y = 1 / tanHalfFov;
+            const x = 1 / (aspect * tHalfFov);
+            const y = 1 / tHalfFov;
 
             const c = -(far + near) / (far - near);
             const d = (-2 * far * near) / (far - near);
@@ -378,11 +381,12 @@ export function createMatrix4(elements = new Float32Array(16)) {
          * @returns {Matrix4}
          */
         makeRotationFromQuaternion(q) {
-            const x = q.x, y = q.y, z = q.z, w = q.w;
-            const x2 = x + x, y2 = y + y, z2 = z + z;
-            const xx = x * x2, xy = x * y2, xz = x * z2;
-            const yy = y * y2, yz = y * z2, zz = z * z2;
-            const wx = w * x2, wy = w * y2, wz = w * z2;
+            const qx = q.x, qy = q.y, qz = q.z, qw = q.w;
+            const qx2 = qx + qx, y2 = qy + qy, z2 = qz + qz;
+
+            const xx = qx * qx2, xy = qx * y2, xz = qx * z2;
+            const yy = qy * y2, yz = qy * z2, zz = qz * z2;
+            const wx = qw * qx2, wy = qw * y2, wz = qw * z2;
 
             return _m.set(
                 1 - (yy + zz),

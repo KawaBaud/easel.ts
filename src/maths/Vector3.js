@@ -1,5 +1,18 @@
 import { Maths } from "./Maths.js";
 
+/**
+ * @typedef {Object} Vector3
+ * @property {number} x
+ * @property {number} y
+ * @property {number} z
+ */
+
+/**
+ * @param {number} x
+ * @param {number} y
+ * @param {number} z
+ * @returns {Vector3}
+ */
 export function createVector3(x = 0, y = 0, z = 0) {
     const _v = {
         /**
@@ -43,7 +56,9 @@ export function createVector3(x = 0, y = 0, z = 0) {
          * @returns {Vector3}
          */
         add(v) {
-            _v.x += v.x, _v.y += v.y, _v.z += v.z;
+            _v.x += v.x;
+            _v.y += v.y;
+            _v.z += v.z;
             return _v;
         },
 
@@ -52,7 +67,9 @@ export function createVector3(x = 0, y = 0, z = 0) {
          * @returns {Vector3}
          */
         addScalar(s) {
-            _v.x += s, _v.y += s, _v.z += s;
+            _v.x += s;
+            _v.y += s;
+            _v.z += s;
             return _v;
         },
 
@@ -113,10 +130,10 @@ export function createVector3(x = 0, y = 0, z = 0) {
          */
         applyQuaternion(q) {
             const qx = q.x, qy = q.y, qz = q.z, qw = q.w;
-            const ix = (qw * _v.x) + (qy * _v.z) - (qz * _v.y),
-                iy = (qw * _v.y) + (qz * _v.x) - (qx * _v.z),
-                iz = (qw * _v.z) + (qx * _v.y) - (qy * _v.x),
-                iw = (-qx * _v.x) - (qy * _v.y) - (qz * _v.z);
+            const ix = (qw * _v.x) + (qy * _v.z) - (qz * _v.y);
+            const iy = (qw * _v.y) + (qz * _v.x) - (qx * _v.z);
+            const iz = (qw * _v.z) + (qx * _v.y) - (qy * _v.x);
+            const iw = (-qx * _v.x) - (qy * _v.y) - (qz * _v.z);
 
             return _v.set(
                 (ix * qw) + (iw * -qx) + (iy * -qz) - (iz * -qy),
@@ -211,7 +228,9 @@ export function createVector3(x = 0, y = 0, z = 0) {
          * @returns {number}
          */
         distanceSqTo(v) {
-            const dx = _v.x - v.x, dy = _v.y - v.y, dz = _v.z - v.z;
+            const dx = _v.x - v.x;
+            const dy = _v.y - v.y;
+            const dz = _v.z - v.z;
             return (dx * dx) + (dy * dy) + (dz * dz);
         },
 
@@ -220,7 +239,9 @@ export function createVector3(x = 0, y = 0, z = 0) {
          * @returns {Vector3}
          */
         div(v) {
-            _v.x /= v.x, _v.y /= v.y, _v.z /= v.z;
+            _v.x /= v.x;
+            _v.y /= v.y;
+            _v.z /= v.z;
             return _v;
         },
 
@@ -229,7 +250,9 @@ export function createVector3(x = 0, y = 0, z = 0) {
          * @returns {Vector3}
          */
         divScalar(s) {
-            _v.x /= s, _v.y /= s, _v.z /= s;
+            _v.x /= s;
+            _v.y /= s;
+            _v.z /= s;
             return _v;
         },
 
@@ -330,7 +353,9 @@ export function createVector3(x = 0, y = 0, z = 0) {
          * @returns {Vector3}
          */
         mul(v) {
-            _v.x *= v.x, _v.y *= v.y, _v.z *= v.z;
+            _v.x *= v.x;
+            _v.y *= v.y;
+            _v.z *= v.z;
             return _v;
         },
 
@@ -339,7 +364,9 @@ export function createVector3(x = 0, y = 0, z = 0) {
          * @returns {Vector3}
          */
         mulScalar(s) {
-            _v.x *= s, _v.y *= s, _v.z *= s;
+            _v.x *= s;
+            _v.y *= s;
+            _v.z *= s;
             return _v;
         },
 
@@ -391,7 +418,9 @@ export function createVector3(x = 0, y = 0, z = 0) {
          */
         set(x, y, z) {
             if (z === undefined) z = _v.z;
-            _v.x = x, _v.y = y, _v.z = z;
+            _v.x = x;
+            _v.y = y;
+            _v.z = z;
             return _v;
         },
 
@@ -417,7 +446,9 @@ export function createVector3(x = 0, y = 0, z = 0) {
          * @returns {Vector3}
          */
         sub(v) {
-            _v.x -= v.x, _v.y -= v.y, _v.z -= v.z;
+            _v.x -= v.x;
+            _v.y -= v.y;
+            _v.z -= v.z;
             return _v;
         },
 
@@ -426,7 +457,9 @@ export function createVector3(x = 0, y = 0, z = 0) {
          * @returns {Vector3}
          */
         subScalar(s) {
-            _v.x -= s, _v.y -= s, _v.z -= s;
+            _v.x -= s;
+            _v.y -= s;
+            _v.z -= s;
             return _v;
         },
 
@@ -471,7 +504,9 @@ export function createVector3(x = 0, y = 0, z = 0) {
         },
 
         *[Symbol.iterator]() {
-            yield _v.x, yield _v.y, yield _v.z;
+            yield _v.x;
+            yield _v.y;
+            yield _v.z;
         },
     };
     return _v;
@@ -493,7 +528,9 @@ export const Vector3 = {
      * @returns {number}
      */
     distanceSq(v1, v2) {
-        const dx = v1.x - v2.x, dy = v1.y - v2.y, dz = v1.z - v2.z;
+        const dx = v1.x - v2.x;
+        const dy = v1.y - v2.y;
+        const dz = v1.z - v2.z;
         return (dx * dx) + (dy * dy) + (dz * dz);
     },
 

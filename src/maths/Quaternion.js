@@ -1,5 +1,20 @@
 import { Maths } from "./Maths.js";
 
+/**
+ * @typedef {Object} Quaternion
+ * @property {number} x
+ * @property {number} y
+ * @property {number} z
+ * @property {number} w
+ */
+
+/**
+ * @param {number} x
+ * @param {number} y
+ * @param {number} w
+ * @param {number} w
+ * @returns {Quaternion}
+ */
 export function createQuaternion(x = 0, y = 0, z = 0, w = 1) {
     const _q = {
         /**
@@ -56,20 +71,40 @@ export function createQuaternion(x = 0, y = 0, z = 0, w = 1) {
             return 2 * Math.acos(Math.abs(Maths.clamp(_q.dot(q), -1, 1)));
         },
 
+        /**
+         * @returns {Quaternion}
+         */
         clone() {
             return createQuaternion().copy(_q);
         },
+
+        /**
+         * @returns {Quaternion}
+         */
         conjugate() {
             return _q.set(-_q.x, -_q.y, -_q.z, _q.w);
         },
+
+        /**
+         * @param {Quaternion} q
+         * @returns {Quaternion}
+         */
         copy(q) {
             return q === undefined ? _q : _q.set(q.x, q.y, q.z, q.w);
         },
 
+        /**
+         * @param {Quaternion} q
+         * @returns {number}
+         */
         dot(q) {
             return (_q.x * q.x) + (_q.y * q.y) + (_q.z * q.z) + (_q.w * q.w);
         },
 
+        /**
+         * @param {Quaternion} q
+         * @returns {boolean}
+         */
         equals(q) {
             return (
                 (q.x === _q.x) &&
@@ -79,6 +114,11 @@ export function createQuaternion(x = 0, y = 0, z = 0, w = 1) {
             );
         },
 
+        /**
+         * @param {Array<number>} array
+         * @param {number} offset
+         * @returns {Quaternion}
+         */
         fromArray(array, offset = 0) {
             return _q.set(
                 array[offset],
@@ -88,13 +128,26 @@ export function createQuaternion(x = 0, y = 0, z = 0, w = 1) {
             );
         },
 
+        /**
+         * @returns {Quaternion}
+         */
         identity() {
             return _q.set(0, 0, 0, 1);
         },
 
+        /**
+         * @param {Quaternion} q
+         * @returns {Quaternion}
+         */
         mul(q) {
             return _q.mulQuaternions(_q, q);
         },
+
+        /**
+         * @param {Quaternion} a
+         * @param {Quaternion} b
+         * @returns {Quaternion}
+         */
         mulQuaternions(a, b) {
             const qax = a.x, qay = a.y, qaz = a.z, qaw = a.w;
             const qbx = b.x, qby = b.y, qbz = b.z, qbw = b.w;
@@ -107,10 +160,17 @@ export function createQuaternion(x = 0, y = 0, z = 0, w = 1) {
             );
         },
 
+        /**
+         * @param {Quaternion} q
+         * @returns {Quaternion}
+         */
         premul(q) {
             return _q.mulQuaternions(q, _q);
         },
 
+        /**
+         * @returns {Quaternion}
+         */
         random() {
             const u1 = Math.random(), u2 = Math.random(), u3 = Math.random();
 
@@ -123,6 +183,12 @@ export function createQuaternion(x = 0, y = 0, z = 0, w = 1) {
                 sqrtU1 * Math.cos(Maths.TAU * u3),
             );
         },
+
+        /**
+         * @param {Quaternion} q
+         * @param {number} step
+         * @returns {Quaternion}
+         */
         rotateTowards(q, step) {
             const angle = _q.angleTo(q);
             if (angle === 0) return _q;
@@ -130,14 +196,32 @@ export function createQuaternion(x = 0, y = 0, z = 0, w = 1) {
             const t = Math.min(1, step / angle);
             return _q.slerp(q, t);
         },
+
+        /**
+         * @param {Vector3} v
+         * @returns {Vector3}
+         */
         rotateVector3(v) {
             return createVector3(v.x, v.y, v.z).applyQuaternion(_q);
         },
 
+        /**
+         * @param {number} x
+         * @param {number} y
+         * @param {number} z
+         * @param {number} w
+         * @returns {Quaternion}
+         */
         set(x, y, z, w) {
             _q.x = x, _q.y = y, _q.z = z, _q.w = w;
             return _q;
         },
+
+        /**
+         * @param {Vector3} axis
+         * @param {number} angle
+         * @returns {Quaternion}
+         */
         setFromAxisAngle(axis, angle) {
             const halfAngle = angle / 2;
             const s = Math.sin(halfAngle);
@@ -149,6 +233,11 @@ export function createQuaternion(x = 0, y = 0, z = 0, w = 1) {
                 Math.cos(halfAngle),
             );
         },
+
+        /**
+         * @param {Euler} euler
+         * @returns {Quaternion}
+         */
         setFromEuler(euler) {
             const c1 = Math.cos(euler.x / 2),
                 c2 = Math.cos(euler.y / 2),
@@ -211,6 +300,11 @@ export function createQuaternion(x = 0, y = 0, z = 0, w = 1) {
 
             return _q;
         },
+
+        /**
+         * @param {Matrix4} m
+         * @returns {Quaternion}
+         */
         setFromRotationMatrix(m) {
             const te = m.elements;
 
@@ -259,6 +353,12 @@ export function createQuaternion(x = 0, y = 0, z = 0, w = 1) {
 
             return _q;
         },
+
+        /**
+         * @param {Vector3} vFrom
+         * @param {Vector3} vTo
+         * @returns {Quaternion}
+         */
         setFromUnitVectors(vFrom, vTo) {
             let r = vFrom.dot(vTo) + 1;
             if (r < Maths.EPSILON) {
@@ -277,6 +377,12 @@ export function createQuaternion(x = 0, y = 0, z = 0, w = 1) {
 
             return _q.unit();
         },
+
+        /**
+         * @param {Quaternion} qb
+         * @param {number} t
+         * @returns {Quaternion}
+         */
         slerp(qb, t) {
             if (t === 0) return _q;
             if (t === 1) return _q.copy(qb);
@@ -305,6 +411,7 @@ export function createQuaternion(x = 0, y = 0, z = 0, w = 1) {
 
             const sHalfTheta = Math.sqrt(1.0 - cHalfTheta * cHalfTheta);
             const halfTheta = Maths.fastAtan2(sHalfTheta, cHalfTheta);
+
             const ratioA = Math.sin((1 - t) * halfTheta) / sHalfTheta;
             const ratioB = Math.sin(t * halfTheta) / sHalfTheta;
 
@@ -316,6 +423,11 @@ export function createQuaternion(x = 0, y = 0, z = 0, w = 1) {
             );
         },
 
+        /**
+         * @param {Array<number>} array
+         * @param {number} offset
+         * @returns {Array<number>}
+         */
         toArray(array = [], offset = 0) {
             array[offset] = _q.x;
             array[offset + 1] = _q.y;
@@ -324,10 +436,16 @@ export function createQuaternion(x = 0, y = 0, z = 0, w = 1) {
             return array;
         },
 
+        /**
+         * @returns {Matrix4}
+         */
         toMatrix4() {
             return createMatrix4().makeRotationFromQuaternion(_q);
         },
 
+        /**
+         * @returns {Quaternion}
+         */
         unit() {
             const length = _q.length === 0 ? _q.identity() : 1 / _q.length;
 
@@ -347,19 +465,47 @@ export function createQuaternion(x = 0, y = 0, z = 0, w = 1) {
 }
 
 export const Quaternion = {
+    /**
+     * @param {Vector3} axis
+     * @param {number} angle
+     * @returns {Quaternion}
+     */
     fromAxisAngle(axis, angle) {
         return createQuaternion().setFromAxisAngle(axis, angle);
     },
+
+    /**
+     * @param {Euler} euler
+     * @returns {Quaternion}
+     */
     fromEuler(euler) {
         return createQuaternion().setFromEuler(euler);
     },
+
+    /**
+     * @param {Matrix4} m
+     * @returns {Quaternion}
+     */
     fromRotationMatrix(m) {
         return createQuaternion().setFromRotationMatrix(m);
     },
+
+    /**
+     * @param {Vector3} vFrom
+     * @param {Vector3} vTo
+     * @returns {Quaternion}
+     */
     fromUnitVectors(vFrom, vTo) {
         return createQuaternion().setFromUnitVectors(vFrom, vTo);
     },
 
+    /**
+     * @param {Quaternion} qa
+     * @param {Quaternion} qb
+     * @param {Quaternion} qm
+     * @param {number} t
+     * @returns {Quaternion}
+     */
     slerp(qa, qb, qm, t) {
         return qm.copy(qa).slerp(qb, t);
     },
