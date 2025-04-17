@@ -2,8 +2,21 @@ import { Maths } from "./Maths.js";
 
 export function createMatrix4(elements = new Float32Array(16)) {
     const _m = {
+        /**
+         * @type {Float32Array}
+         */
         elements,
 
+        /**
+         * @returns {boolean}
+         */
+        get isMatrix4() {
+            return true;
+        },
+
+        /**
+         * @returns {number}
+         */
         get determinant() {
             const te = _m.elements;
 
@@ -28,9 +41,19 @@ export function createMatrix4(elements = new Float32Array(16)) {
                 (n14 * det14);
         },
 
+        /**
+         * @returns {Matrix4}
+         */
         clone() {
             return createMatrix4().copy(_m);
         },
+
+        /**
+         * @param {Vector3} position
+         * @param {Quaternion} q
+         * @param {Vector3} scale
+         * @returns {Matrix4}
+         */
         compose(position, q, scale) {
             const qx = q.x, qy = q.y, qz = q.z, qw = q.w;
             const qx2 = qx + qx, qy2 = qy + qy, qz2 = qz + qz;
@@ -60,10 +83,20 @@ export function createMatrix4(elements = new Float32Array(16)) {
                 1,
             );
         },
+
+        /**
+         * @param {Matrix4} m
+         * @returns {Matrix4}
+         */
         copy(m) {
             const me = m.elements;
             return me === _m.elements ? _m : (_m.elements.set(me), _m);
         },
+
+        /**
+         * @param {Matrix4} m
+         * @returns {Matrix4}
+         */
         copyPosition(m) {
             const te = _m.elements, me = m.elements;
 
@@ -74,6 +107,11 @@ export function createMatrix4(elements = new Float32Array(16)) {
             return _m;
         },
 
+        /**
+         * @param {Array<number>} array
+         * @param {number} offset
+         * @returns {Matrix4}
+         */
         fromArray(array, offset = 0) {
             const te = _m.elements;
 
@@ -97,6 +135,9 @@ export function createMatrix4(elements = new Float32Array(16)) {
             return _m;
         },
 
+        /**
+         * @returns {Matrix4}
+         */
         identity() {
             return _m.set(
                 1,
@@ -117,6 +158,10 @@ export function createMatrix4(elements = new Float32Array(16)) {
                 1,
             );
         },
+
+        /**
+         * @returns {Matrix4}
+         */
         invert() {
             const te = _m.elements;
 
@@ -213,6 +258,12 @@ export function createMatrix4(elements = new Float32Array(16)) {
             ).transpose();
         },
 
+        /**
+         * @param {Vector3} eye
+         * @param {Vector3} target
+         * @param {Vector3} up
+         * @returns {Matrix4}
+         */
         lookAt(eye, target, up) {
             const z = eye.clone().sub(target);
             if (z.lengthSq === 0) z.z = 1;
@@ -251,6 +302,13 @@ export function createMatrix4(elements = new Float32Array(16)) {
             );
         },
 
+        /**
+         * @param {number} size
+         * @param {number} aspect
+         * @param {number} near
+         * @param {number} far
+         * @returns {Matrix4}
+         */
         makeOrthographic(size, aspect, near, far) {
             const left = -size * aspect, right = size * aspect;
             const top = size, bottom = -size;
@@ -278,6 +336,14 @@ export function createMatrix4(elements = new Float32Array(16)) {
                 1,
             );
         },
+
+        /**
+         * @param {number} fov
+         * @param {number} aspect
+         * @param {number} near
+         * @param {number} far
+         * @returns {Matrix4}
+         */
         makePerspective(fov, aspect, near, far) {
             const tanHalfFov = Math.tan(fov * 0.5);
 
@@ -306,6 +372,11 @@ export function createMatrix4(elements = new Float32Array(16)) {
                 0,
             );
         },
+
+        /**
+         * @param {Quaternion} q
+         * @returns {Matrix4}
+         */
         makeRotationFromQuaternion(q) {
             const x = q.x, y = q.y, z = q.z, w = q.w;
             const x2 = x + x, y2 = y + y, z2 = z + z;
@@ -332,6 +403,11 @@ export function createMatrix4(elements = new Float32Array(16)) {
                 1,
             );
         },
+
+        /**
+         * @param {number} theta
+         * @returns {Matrix4}
+         */
         makeRotationX(theta) {
             const c = Math.cos(theta), s = Math.sin(theta);
 
@@ -354,6 +430,11 @@ export function createMatrix4(elements = new Float32Array(16)) {
                 1,
             );
         },
+
+        /**
+         * @param {number} theta
+         * @returns {Matrix4}
+         */
         makeRotationY(theta) {
             const c = Math.cos(theta), s = Math.sin(theta);
 
@@ -376,6 +457,11 @@ export function createMatrix4(elements = new Float32Array(16)) {
                 1,
             );
         },
+
+        /**
+         * @param {number} theta
+         * @returns {Matrix4}
+         */
         makeRotationZ(theta) {
             const c = Math.cos(theta), s = Math.sin(theta);
 
@@ -398,6 +484,13 @@ export function createMatrix4(elements = new Float32Array(16)) {
                 1,
             );
         },
+
+        /**
+         * @param {number} x
+         * @param {number} y
+         * @param {number} z
+         * @returns {Matrix4}
+         */
         makeScale(x, y, z) {
             return _m.set(
                 x,
@@ -418,6 +511,16 @@ export function createMatrix4(elements = new Float32Array(16)) {
                 1,
             );
         },
+
+        /**
+         * @param {number} xy
+         * @param {number} xz
+         * @param {number} yx
+         * @param {number} yz
+         * @param {number} zx
+         * @param {number} zy
+         * @returns {Matrix4}
+         */
         makeShear(xy, xz, yx, yz, zx, zy) {
             return _m.set(
                 1,
@@ -438,6 +541,13 @@ export function createMatrix4(elements = new Float32Array(16)) {
                 1,
             );
         },
+
+        /**
+         * @param {number} x
+         * @param {number} y
+         * @param {number} z
+         * @returns {Matrix4}
+         */
         makeTranslation(x, y, z) {
             return _m.set(
                 1,
@@ -458,9 +568,20 @@ export function createMatrix4(elements = new Float32Array(16)) {
                 1,
             );
         },
+
+        /**
+         * @param {Matrix4} m
+         * @returns {Matrix4}
+         */
         mul(m) {
             return _m.mulMatrices(_m, m);
         },
+
+        /**
+         * @param {Matrix4} a
+         * @param {Matrix4} b
+         * @returns {Matrix4}
+         */
         mulMatrices(a, b) {
             const ae = a.elements, be = b.elements;
 
@@ -493,6 +614,11 @@ export function createMatrix4(elements = new Float32Array(16)) {
                 (a41 * b14) + (a42 * b24) + (a43 * b34) + (a44 * b44),
             );
         },
+
+        /**
+         * @param {number} s
+         * @returns {Matrix4}
+         */
         mulScalar(s) {
             const te = _m.elements;
 
@@ -516,10 +642,18 @@ export function createMatrix4(elements = new Float32Array(16)) {
             );
         },
 
+        /**
+         * @param {Matrix4} m
+         * @returns {Matrix4}
+         */
         premul(m) {
             return _m.mulMatrices(m, _m);
         },
 
+        /**
+         * @param {Vector3} v
+         * @returns {Matrix4}
+         */
         scale(v) {
             const x = v.x, y = v.y, z = v.z;
 
@@ -530,6 +664,26 @@ export function createMatrix4(elements = new Float32Array(16)) {
             te[3] *= x, te[7] *= y, te[11] *= z;
             return _m;
         },
+
+        /**
+         * @param {number} n11
+         * @param {number} n12
+         * @param {number} n13
+         * @param {number} n14
+         * @param {number} n21
+         * @param {number} n22
+         * @param {number} n23
+         * @param {number} n24
+         * @param {number} n31
+         * @param {number} n32
+         * @param {number} n33
+         * @param {number} n34
+         * @param {number} n41
+         * @param {number} n42
+         * @param {number} n43
+         * @param {number} n44
+         * @returns {Matrix4}
+         */
         set(
             n11,
             n12,
@@ -555,12 +709,24 @@ export function createMatrix4(elements = new Float32Array(16)) {
             te[3] = n41, te[7] = n42, te[11] = n43, te[15] = n44;
             return _m;
         },
+
+        /**
+         * @param {number} x
+         * @param {number} y
+         * @param {number} z
+         * @returns {Matrix4}
+         */
         setPosition(x, y, z) {
             const te = _m.elements;
             te[12] = x, te[13] = y, te[14] = z;
             return _m;
         },
 
+        /**
+         * @param {Array<number>} array
+         * @param {number} offset
+         * @returns {Array<number>}
+         */
         toArray(array = [], offset = 0) {
             const te = _m.elements;
 
@@ -574,6 +740,10 @@ export function createMatrix4(elements = new Float32Array(16)) {
             array[offset + 14] = te[14], array[offset + 15] = te[15];
             return array;
         },
+
+        /**
+         * @returns {Matrix4}
+         */
         transpose() {
             const te = _m.elements;
 

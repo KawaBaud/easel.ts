@@ -2,14 +2,43 @@ import { Maths } from "./Maths.js";
 
 export function createQuaternion(x = 0, y = 0, z = 0, w = 1) {
     const _q = {
+        /**
+         * @type {number}
+         */
         x,
+
+        /**
+         * @type {number}
+         */
         y,
+
+        /**
+         * @type {number}
+         */
         z,
+
+        /**
+         * @type {number}
+         */
         w,
 
+        /**
+         * @type {boolean}
+         */
+        get isQuaternion() {
+            return true;
+        },
+
+        /**
+         * @type {number}
+         */
         get length() {
             return Math.sqrt(_q.lengthSq);
         },
+
+        /**
+         * @type {number}
+         */
         get lengthSq() {
             return (
                 (_q.x * _q.x) +
@@ -19,6 +48,10 @@ export function createQuaternion(x = 0, y = 0, z = 0, w = 1) {
             );
         },
 
+        /**
+         * @param {Quaternion} q
+         * @returns {number}
+         */
         angleTo(q) {
             return 2 * Math.acos(Math.abs(Maths.clamp(_q.dot(q), -1, 1)));
         },
