@@ -1,9 +1,16 @@
+/**
+ * @returns {HTMLCanvasElement}
+ */
 export function createCanvasElement() {
     const canvas = globalThis.document.createElement("canvas");
     canvas.style.display = "block";
     return canvas;
 }
 
+/**
+ * @param {string} hex
+ * @returns {Array<number>}
+ */
 export function hexToRgb(hex) {
     if (hex.length !== 6) return [0, 0, 0];
 
@@ -13,6 +20,10 @@ export function hexToRgb(hex) {
     return [r, g, b];
 }
 
+/**
+ * @param {string} hex
+ * @returns {Array<number>}
+ */
 export function hexToRgba(hex) {
     if (hex.length !== 8 && hex.length !== 6) return [0, 0, 0, 255];
 
@@ -23,6 +34,12 @@ export function hexToRgba(hex) {
     return [r, g, b, a];
 }
 
+/**
+ * @param {number} r
+ * @param {number} g
+ * @param {number} b
+ * @returns {string}
+ */
 export function rgbToHex(r, g, b) {
     return "#" +
         ((r & 0xFF).toString(16).padStart(2, "0") +
@@ -30,6 +47,13 @@ export function rgbToHex(r, g, b) {
             (b & 0xFF).toString(16).padStart(2, "0")).toUpperCase();
 }
 
+/**
+ * @param {number} r
+ * @param {number} g
+ * @param {number} b
+ * @param {number} a
+ * @returns {string}
+ */
 export function rgbaToHex(r, g, b, a) {
     return "#" +
         ((r & 0xFF).toString(16).padStart(2, "0") +

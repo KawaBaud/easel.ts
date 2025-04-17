@@ -4,20 +4,54 @@ import { createQuaternion } from "./Quaternion.js";
 
 export function createEuler(x = 0, y = 0, z = 0, order = "XYZ") {
     const _e = {
+        /**
+         * @type {number}
+         */
         x,
+
+        /**
+         * @type {number}
+         */
         y,
+
+        /**
+         * @type {number}
+         */
         z,
+
+        /**
+         * @type {string}
+         */
         order,
 
+        /**
+         * @returns {boolean}
+         */
+        get isEuler() {
+            return true;
+        },
+
+        /**
+         * @returns {Euler}
+         */
         clone() {
             return createEuler(_e.x, _e.y, _e.z, _e.order);
         },
+
+        /**
+         * @param {Euler} euler
+         * @returns {Euler}
+         */
         copy(euler) {
             _e.x = euler.x, _e.y = euler.y, _e.z = euler.z;
             _e.order = euler.order;
             return _e;
         },
 
+        /**
+         * @param {Euler} euler
+         * @returns {boolean}
+         */
         equals(euler) {
             return (
                 (euler.x === _e.x) &&
@@ -27,6 +61,11 @@ export function createEuler(x = 0, y = 0, z = 0, order = "XYZ") {
             );
         },
 
+        /**
+         * @param {Array<number,number,number,string>} array
+         * @param {number} offset
+         * @returns {Euler}
+         */
         fromArray(array, offset = 0) {
             _e.x = array[offset];
             _e.y = array[offset + 1];
@@ -35,16 +74,33 @@ export function createEuler(x = 0, y = 0, z = 0, order = "XYZ") {
             return _e;
         },
 
+        /**
+         * @param {string} newOrder
+         * @returns {Euler}
+         */
         reorder(newOrder) {
             const q = createQuaternion().setFromEuler(_e);
             return _e.setFromQuaternion(q, newOrder);
         },
 
+        /**
+         * @param {number} x
+         * @param {number} y
+         * @param {number} z
+         * @param {string} order
+         * @returns {Euler}
+         */
         set(x, y, z, order) {
             _e.x = x, _e.y = y, _e.z = z;
             _e.order = order || _e.order;
             return _e;
         },
+
+        /**
+         * @param {Matrix4} m
+         * @param {string} order
+         * @returns {Euler}
+         */
         setFromRotationMatrix(m, order) {
             const te = m.elements;
 
@@ -93,14 +149,31 @@ export function createEuler(x = 0, y = 0, z = 0, order = "XYZ") {
             _e.order = order;
             return _e;
         },
+
+        /**
+         * @param {Quaternion} q
+         * @param {string} order
+         * @returns {Euler}
+         */
         setFromQuaternion(q, order) {
             const m = createMatrix4().makeRotationFromQuaternion(q);
             return _e.setFromRotationMatrix(m, order);
         },
+
+        /**
+         * @param {Vector3} v
+         * @param {string} order
+         * @returns {Euler}
+         */
         setFromVector3(v, order) {
             return _e.set(v.x, v.y, v.z, order);
         },
 
+        /**
+         * @param {Array<number,number,number,string>} array
+         * @param {number} offset
+         * @returns {Array<number,number,number,string>}
+         */
         toArray(array = [], offset = 0) {
             array[offset] = _e.x;
             array[offset + 1] = _e.y;
@@ -108,6 +181,11 @@ export function createEuler(x = 0, y = 0, z = 0, order = "XYZ") {
             array[offset + 3] = _e.order;
             return array;
         },
+
+        /**
+         * @param {Vector3} v
+         * @returns {Vector3}
+         */
         toVector3(v) {
             return v.set(_e.x, _e.y, _e.z);
         },
