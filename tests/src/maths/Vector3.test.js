@@ -15,7 +15,7 @@ const compareVectors = (ourVec, threeVec, epsilon = 1e-5) => {
 };
 
 describe("Vector3 core", () => {
-    test("constructor", () => {
+    test("create / constructor", () => {
         const ourVecA = createVector3();
         const threeVecA = new ThreeVector3();
         compareVectors(ourVecA, threeVecA);
@@ -35,7 +35,7 @@ describe("Vector3 core", () => {
         compareVectors(ourVec, threeVec);
     });
 
-    test("clone and copy", () => {
+    test("clone, copy", () => {
         const x = 1, y = 2, z = 3;
 
         const ourVecA = createVector3(x, y, z);
@@ -50,7 +50,7 @@ describe("Vector3 core", () => {
         compareVectors(ourVec3, threeVec3);
     });
 
-    test("length and lengthSq", () => {
+    test("length, lengthSq", () => {
         const testCases = [
             [0, 0, 0],
             [1, 0, 0],
