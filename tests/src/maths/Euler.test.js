@@ -17,7 +17,7 @@ const compareEulers = (ourEuler, threeEuler, epsilon = 1e-5) => {
 };
 
 describe("Euler core", () => {
-    test("constructor", () => {
+    test("create / constructor", () => {
         const ourEuler = createEuler();
         const threeEuler = new ThreeEuler();
         compareEulers(ourEuler, threeEuler);
@@ -37,7 +37,7 @@ describe("Euler core", () => {
         compareEulers(ourEuler, threeEuler);
     });
 
-    test("clone and copy", () => {
+    test("clone, copy", () => {
         const x = 0.1, y = 0.2, z = 0.3, order = "ZYX";
 
         const ourEuler1 = createEuler(x, y, z, order);
@@ -52,8 +52,9 @@ describe("Euler core", () => {
         compareEulers(ourEuler3, threeEuler3);
     });
 
-    test("fromArray / toArray", () => {
+    test("fromArray, toArray", () => {
         const array = [0.1, 0.2, 0.3, "ZYX"];
+
         const ourEuler = createEuler().fromArray(array);
         const threeEuler = new ThreeEuler().fromArray(array);
 
