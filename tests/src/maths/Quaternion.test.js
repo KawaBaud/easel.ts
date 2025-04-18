@@ -23,7 +23,7 @@ const compareQuaternions = (ourQuat, threeQuat, epsilon = 0.01) => {
 };
 
 describe("Quaternion core", () => {
-    test("constructor", () => {
+    test("create / constructor", () => {
         const ourQuatA = createQuaternion();
         const threeQuatA = new ThreeQuaternion();
         compareQuaternions(ourQuatA, threeQuatA);
@@ -43,7 +43,7 @@ describe("Quaternion core", () => {
         compareQuaternions(ourQuat, threeQuat);
     });
 
-    test("clone and copy", () => {
+    test("clone, copy", () => {
         const x = 0.1, y = 0.2, z = 0.3, w = 0.4;
 
         const ourQuatA = createQuaternion(x, y, z, w);
@@ -64,7 +64,7 @@ describe("Quaternion core", () => {
         compareQuaternions(ourQuat, threeQuat);
     });
 
-    test("length and lengthSq", () => {
+    test("length, lengthSq", () => {
         const x = 0.1, y = 0.2, z = 0.3, w = 0.4;
 
         const ourQuat = createQuaternion(x, y, z, w);
@@ -74,7 +74,7 @@ describe("Quaternion core", () => {
         expect(ourQuat.length).toBeCloseTo(threeQuat.length(), 1e-5);
     });
 
-    test("fromArray / toArray", () => {
+    test("fromArray, toArray", () => {
         const array = [0.1, 0.2, 0.3, 0.4];
 
         const ourQuat = createQuaternion().fromArray(array);
@@ -126,7 +126,7 @@ describe("Quaternion operations", () => {
         expect(threeQuat.length()).toBeCloseTo(1, 1e-5);
     });
 
-    test("mul / premul", () => {
+    test("mul, premul / multiply, premultiply", () => {
         const ourQuatA = createQuaternion(0.1, 0.2, 0.3, 0.4);
         const ourQuatB = createQuaternion(0.5, 0.6, 0.7, 0.8);
 
@@ -203,7 +203,6 @@ describe("Quaternion conversions", () => {
                 threeAxis,
                 angle,
             );
-
             compareQuaternions(ourQuat, threeQuat);
         });
     });
@@ -294,7 +293,6 @@ describe("Quaternion conversions", () => {
                 threeFrom,
                 threeTo,
             );
-
             compareQuaternions(ourQuat, threeQuat);
         });
     });
