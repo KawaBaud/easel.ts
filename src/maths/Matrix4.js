@@ -51,6 +51,19 @@ export function createMatrix4(elements = new Float32Array(16)) {
         },
 
         /**
+         * @returns {number}
+         */
+        get maxScaleOnAxis() {
+            const te = _m.elements;
+
+            const scaleXSq = te[0] * te[0] + te[1] * te[1] + te[2] * te[2];
+            const scaleYSq = te[4] * te[4] + te[5] * te[5] + te[6] * te[6];
+            const scaleZSq = te[8] * te[8] + te[9] * te[9] + te[10] * te[10];
+
+            return Math.sqrt(Math.max(scaleXSq, scaleYSq, scaleZSq));
+        },
+
+        /**
          * @returns {Matrix4}
          */
         clone() {
@@ -114,6 +127,103 @@ export function createMatrix4(elements = new Float32Array(16)) {
             te[14] = me[14];
 
             return _m;
+        },
+
+        /**
+         * @param {Vector3} position
+         * @param {Quaternion} q
+         * @param {Vector3} scale
+         * @returns {Matrix4}
+         */
+        decompose(position, q, scale) {
+            const te = _m.elements;
+
+            // Frobenius norm
+            let sx = Math.hypot(te[0], te[1], te[2]);
+            const sy = Math.hypot(te[4], te[5], te[6]);
+            const sz = Math.hypot(te[8], te[9], te[10]);
+
+            const det = _m.determinant;
+            if (det < 0) sx = -sx;
+
+            position.x = te[12];
+            position.y = te[13];
+            position.z = te[14];
+
+            const invSX = 1 / sx;
+            const invSY = 1 / sy;
+            const invSZ = 1 / sz;
+
+            const r11 = te[0] * invSX, r12 = te[4] * invSY;
+            const r13 = te[8] * invSZ, r21 = te[1] * invSX;
+            const r22 = te[5] * invSY, r23 = te[9] * invSZ;
+            const r31 = te[2] * invSX, r32 = te[6] * invSY;
+            const r33 = te[10] * invSZ;
+
+            const trace = r11 + r22 + r33;
+            if (trace > 0) {
+                const s = 0.5 / Math.sqrt(trace + 1.0);
+
+                q.w = 0.25 / s;
+                q.x = (r32 - r23) * s;
+                q.y = (r13 - r31) * s;
+                q.z = (r21 - r12) * s;
+            } else if (r11 > r22 && r11 > r33) {
+                const s = 2.0 * Math.sqrt(1.0 + r11 - r22 - r33);
+
+                q.w = (r32 - r23) / s;
+                q.x = 0.25 * s;
+                q.y = (r12 + r21) / s;
+                q.z = (r13 + r31) / s;
+            } else if (r22 > r33) {
+                const s = 2.0 * Math.sqrt(1.0 + r22 - r11 - r33);
+
+                q.w = (r13 - r31) / s;
+                q.x = (r12 + r21) / s;
+                q.y = 0.25 * s;
+                q.z = (r23 + r32) / s;
+            } else {
+                const s = 2.0 * Math.sqrt(1.0 + r33 - r11 - r22);
+
+                q.w = (r21 - r12) / s;
+                q.x = (r13 + r31) / s;
+                q.y = (r23 + r32) / s;
+                q.z = 0.25 * s;
+            }
+
+            scale.x = sx;
+            scale.y = sy;
+            scale.z = sz;
+
+            return _m;
+        },
+
+        /**
+         * @param {Matrix4} m
+         * @returns {boolean}
+         */
+        equals(m) {
+            const te = _m.elements;
+            const me = m.elements;
+
+            if (Math.abs(te[0] - me[0]) > Maths.EPSILON) return false;
+            if (Math.abs(te[1] - me[1]) > Maths.EPSILON) return false;
+            if (Math.abs(te[2] - me[2]) > Maths.EPSILON) return false;
+            if (Math.abs(te[3] - me[3]) > Maths.EPSILON) return false;
+            if (Math.abs(te[4] - me[4]) > Maths.EPSILON) return false;
+            if (Math.abs(te[5] - me[5]) > Maths.EPSILON) return false;
+            if (Math.abs(te[6] - me[6]) > Maths.EPSILON) return false;
+            if (Math.abs(te[7] - me[7]) > Maths.EPSILON) return false;
+            if (Math.abs(te[8] - me[8]) > Maths.EPSILON) return false;
+            if (Math.abs(te[9] - me[9]) > Maths.EPSILON) return false;
+            if (Math.abs(te[10] - me[10]) > Maths.EPSILON) return false;
+            if (Math.abs(te[11] - me[11]) > Maths.EPSILON) return false;
+            if (Math.abs(te[12] - me[12]) > Maths.EPSILON) return false;
+            if (Math.abs(te[13] - me[13]) > Maths.EPSILON) return false;
+            if (Math.abs(te[14] - me[14]) > Maths.EPSILON) return false;
+            if (Math.abs(te[15] - me[15]) > Maths.EPSILON) return false;
+
+            return true;
         },
 
         /**
