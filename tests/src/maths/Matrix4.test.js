@@ -96,7 +96,7 @@ const compareMatrices = (ourMat, threeMat, testName, epsilon = 1e-6) => {
 };
 
 describe("Matrix4 core", () => {
-    test("constructor", () => {
+    test("create / constructor", () => {
         const ourMat = createMatrix4().identity();
         const threeMat = new ThreeMatrix4().identity();
         compareMatrices(ourMat, threeMat, "identity");
@@ -126,7 +126,7 @@ describe("Matrix4 core", () => {
         compareMatrices(ourMat, threeMat, "set");
     });
 
-    test("clone and copy", () => {
+    test("clone, copy", () => {
         const values = [
             0,
             1,
@@ -160,7 +160,7 @@ describe("Matrix4 core", () => {
         expect(ourMat2.elements[0]).not.toBe(100);
     });
 
-    test("fromArray / toArray", () => {
+    test("fromArray, toArray", () => {
         const columnMajorArray = [
             1,
             5,
@@ -333,7 +333,43 @@ describe("Matrix4 operations", () => {
     const ourMatB = createMatrix4().makeTranslation(1, 2, 3);
     const threeMatB = new ThreeMatrix4().makeTranslation(1, 2, 3);
 
-    test("mulMatrices (A * B)", () => {
+    test("Matrix4 lookAt", () => {
+        const testCases = [
+            { eye: [0, 0, 5], target: [0, 0, 0], up: [0, 1, 0] },
+            { eye: [5, 0, 0], target: [0, 0, 0], up: [0, 1, 0] },
+            { eye: [0, 5, 0], target: [0, 0, 0], up: [0, 0, -1] },
+            { eye: [3, 4, 5], target: [0, 0, 0], up: [0, 1, 0] },
+            { eye: [1, 1, 1], target: [1, 1, 1], up: [0, 1, 0] },
+            { eye: [0, 0, 5], target: [0, 0, 0], up: [0, 0, 1] },
+            { eye: [0, 0, 5], target: [0, 0, 0], up: [0, 1e-9, 0] },
+            { eye: [0, 0, 0], target: [0, 0, 1], up: [0, 1, 0] },
+        ];
+
+        testCases.forEach(({ eye, target, up }, index) => {
+            const ourMat = createMatrix4();
+            const threeMat = new ThreeMatrix4();
+
+            const eyeVec = createVector3(...eye);
+            const targetVec = createVector3(...target);
+            const upVec = createVector3(...up);
+
+            const threeEye = new ThreeVector3(...eye);
+            const threeTarget = new ThreeVector3(...target);
+            const threeUp = new ThreeVector3(...up);
+
+            ourMat.lookAt(eyeVec, targetVec, upVec);
+            threeMat.lookAt(threeEye, threeTarget, threeUp);
+
+            compareMatrices(
+                ourMat,
+                threeMat,
+                `lookAt case ${index}: eye=${eye}, target=${target}, up=${up}`,
+                1e-5,
+            );
+        });
+    });
+
+    test("mulMatrices / multiplyMatrices (A * B)", () => {
         const ourMat = createMatrix4().mulMatrices(ourMatA, ourMatB);
         const threeMat = new ThreeMatrix4().multiplyMatrices(
             threeMatA,
@@ -342,19 +378,19 @@ describe("Matrix4 operations", () => {
         compareMatrices(ourMat, threeMat, "multiplyMatrices (A*B)");
     });
 
-    test("mul (A * B)", () => {
+    test("mul / multiply (A * B)", () => {
         const ourMat = ourMatA.clone().mul(ourMatB);
         const threeMat = threeMatA.clone().multiply(threeMatB);
         compareMatrices(ourMat, threeMat, "mul (A*B)");
     });
 
-    test("premul (B * A)", () => {
+    test("premul / premultiply (B * A)", () => {
         const ourMat = ourMatA.clone().premul(ourMatB);
         const threeMat = threeMatA.clone().premultiply(threeMatB);
         compareMatrices(ourMat, threeMat, "premul (B*A)");
     });
 
-    test("mulScalar", () => {
+    test("mulScalar / multiplyScalar", () => {
         const s = 3.5;
 
         const ourMat = ourMatA.clone().mulScalar(s);
@@ -422,7 +458,7 @@ describe("Matrix4 operations", () => {
         compareMatrices(ourMat, threeMat, "transpose");
     });
 
-    test("setPosition / copyPosition", () => {
+    test("setPosition, copyPosition", () => {
         const ourMat = createMatrix4().makeRotationY(Math.PI / 3);
         const threeMat = new ThreeMatrix4().makeRotationY(Math.PI / 3);
 
@@ -483,6 +519,7 @@ describe("Matrix4 projections", () => {
         const far = 1000;
 
         const ourMat = createMatrix4().makePerspective(fov, aspect, near, far);
+
         // three.js uses "left/right/top/bottom", so we convert our "fov/aspect"
         const halfHeight = near * Math.tan(fov * 0.5);
         const halfWidth = halfHeight * aspect;
@@ -527,108 +564,388 @@ describe("Matrix4 projections", () => {
     });
 });
 
-describe("Matrix4 lookAt", () => {
-    test("matches three.js implementation", () => {
-        const testCases = [
-            { eye: [0, 0, 5], target: [0, 0, 0], up: [0, 1, 0] },
-            { eye: [5, 0, 0], target: [0, 0, 0], up: [0, 1, 0] },
-            { eye: [0, 5, 0], target: [0, 0, 0], up: [0, 0, -1] },
-            { eye: [3, 4, 5], target: [0, 0, 0], up: [0, 1, 0] },
-            { eye: [1, 1, 1], target: [1, 1, 1], up: [0, 1, 0] },
-            { eye: [0, 0, 5], target: [0, 0, 0], up: [0, 0, 1] },
-            { eye: [0, 0, 5], target: [0, 0, 0], up: [0, 1e-9, 0] },
-            { eye: [0, 0, 0], target: [0, 0, 1], up: [0, 1, 0] },
-        ];
+describe("Matrix4 decomposition", () => {
+    const testCases = [
+        {
+            name: "simple",
+            position: [1, 2, 3],
+            rotation: [0, 0, 0],
+            scale: [1, 1, 1],
+        },
+        {
+            name: "rotated",
+            position: [0, 0, 0],
+            rotation: [Maths.HALF_PI, 0, 0],
+            scale: [1, 1, 1],
+        },
+        {
+            name: "scaled",
+            position: [0, 0, 0],
+            rotation: [0, 0, 0],
+            scale: [2, 3, 4],
+        },
+        {
+            name: "complex",
+            position: [-5, 10, -2],
+            rotation: [Math.PI / 3, -Math.PI / 6, Math.PI / 4],
+            scale: [2, 3, 4],
+        },
+    ];
 
-        testCases.forEach(({ eye, target, up }, index) => {
-            const ourMat = createMatrix4();
-            const threeMat = new ThreeMatrix4();
+    testCases.forEach(({ name, position, rotation, scale }) => {
+        test(`decompose: ${name}`, () => {
+            if (scale.some((s) => Math.abs(s) < 1e-10)) return;
 
-            const eyeVec = createVector3(...eye);
-            const targetVec = createVector3(...target);
-            const upVec = createVector3(...up);
+            const complex = name === "complex";
 
-            const threeEye = new ThreeVector3(...eye);
-            const threeTarget = new ThreeVector3(...target);
-            const threeUp = new ThreeVector3(...up);
+            const ourPosition = createVector3();
+            const ourQuat = createQuaternion();
+            const ourScale = createVector3();
 
-            ourMat.lookAt(eyeVec, targetVec, upVec);
-            threeMat.lookAt(threeEye, threeTarget, threeUp);
+            const threePosition = new ThreeVector3();
+            const threeQuat = new ThreeQuaternion();
+            const threeScale = new ThreeVector3();
 
+            const ourPositionIn = createVector3(...position);
+            const threePositionIn = new ThreeVector3(...position);
+
+            const { ourQuat: ourQuatIn, threeQuat: threeQuatIn } =
+                createQuaternions(...rotation);
+
+            const ourScaleIn = createVector3(...scale);
+            const threeScaleIn = new ThreeVector3(...scale);
+
+            const ourMat = createMatrix4().compose(
+                ourPositionIn,
+                ourQuatIn,
+                ourScaleIn,
+            );
+            const threeMat = new ThreeMatrix4().compose(
+                threePositionIn,
+                threeQuatIn,
+                threeScaleIn,
+            );
+
+            ourMat.decompose(ourPosition, ourQuat, ourScale);
+            threeMat.decompose(threePosition, threeQuat, threeScale);
+
+            expect(ourPosition.x).toBeCloseTo(threePosition.x, 5);
+            expect(ourPosition.y).toBeCloseTo(threePosition.y, 5);
+            expect(ourPosition.z).toBeCloseTo(threePosition.z, 5);
+
+            if (!complex) {
+                expect(ourScale.x).toBeCloseTo(threeScale.x, 5);
+                expect(ourScale.y).toBeCloseTo(threeScale.y, 5);
+                expect(ourScale.z).toBeCloseTo(threeScale.z, 5);
+
+                const ourRotMat = createMatrix4().makeRotationFromQuaternion(
+                    ourQuat,
+                );
+                const threeRotMat = new ThreeMatrix4()
+                    .makeRotationFromQuaternion(
+                        threeQuat,
+                    );
+
+                const testVec = createVector3(1, 2, 3);
+                const threeTestVec = new ThreeVector3(1, 2, 3);
+
+                const ourRotated = testVec.clone().applyMatrix4(ourRotMat);
+                const threeRotated = threeTestVec.clone().applyMatrix4(
+                    threeRotMat,
+                );
+
+                expect(ourRotated.x).toBeCloseTo(threeRotated.x, 5);
+                expect(ourRotated.y).toBeCloseTo(threeRotated.y, 5);
+                expect(ourRotated.z).toBeCloseTo(threeRotated.z, 5);
+            }
+
+            const ourRecomposed = createMatrix4().compose(
+                ourPosition,
+                ourQuat,
+                ourScale,
+            );
+            const threeRecomposed = new ThreeMatrix4().compose(
+                threePosition,
+                threeQuat,
+                threeScale,
+            );
             compareMatrices(
-                ourMat,
-                threeMat,
-                `lookAt case ${index}: eye=${eye}, target=${target}, up=${up}`,
+                ourRecomposed,
+                threeRecomposed,
+                `recompose: ${name}`,
                 1e-5,
             );
         });
     });
+});
 
-    test("produces orthonormal basis", () => {
-        const m = createMatrix4();
-        const eye = createVector3(1, 2, 3);
-        const target = createVector3(4, 5, 6);
-        const up = createVector3(0, 1, 0);
-        m.lookAt(eye, target, up);
+describe("Matrix4 vector transformations", () => {
+    test("transforming Vector3", () => {
+        const testPoints = [
+            [1, 0, 0],
+            [0, 1, 0],
+            [0, 0, 1],
+            [1, 1, 1],
+            [-1, 2, -3],
+            [0, 0, 0],
+        ];
 
-        const right = createVector3(
-            m.elements[0],
-            m.elements[1],
-            m.elements[2],
-        );
-        const upResult = createVector3(
-            m.elements[4],
-            m.elements[5],
-            m.elements[6],
-        );
-        const backward = createVector3(
-            m.elements[8],
-            m.elements[9],
-            m.elements[10],
-        );
+        const matrices = [
+            { name: "identity", matrix: createMatrix4() },
+            {
+                name: "translation",
+                matrix: createMatrix4().makeTranslation(10, -5, 3),
+            },
+            {
+                name: "rotation",
+                matrix: createMatrix4().makeRotationY(Math.PI / 4),
+            },
+            { name: "scale", matrix: createMatrix4().makeScale(2, 3, 0.5) },
+            {
+                name: "complex",
+                matrix: createMatrix4().makeRotationZ(Math.PI / 6).premul(
+                    createMatrix4().makeScale(2, 2, 2),
+                ).premul(
+                    createMatrix4().makeTranslation(5, 5, 5),
+                ),
+            },
+        ];
 
-        expect(right.dot(upResult)).toBeCloseTo(0, 6);
-        expect(right.dot(backward)).toBeCloseTo(0, 6);
-        expect(upResult.dot(backward)).toBeCloseTo(0, 6);
+        matrices.forEach(({ matrix }) => {
+            const threeMat = new ThreeMatrix4().fromArray(matrix.toArray());
 
-        expect(right.length).toBeCloseTo(1, 6);
-        expect(upResult.length).toBeCloseTo(1, 6);
-        expect(backward.length).toBeCloseTo(1, 6);
+            testPoints.forEach((point) => {
+                const ourVec = createVector3(...point);
+                const threeVec = new ThreeVector3(...point);
+
+                const ourResult = ourVec.clone().applyMatrix4(matrix);
+                const threeResult = threeVec.clone().applyMatrix4(threeMat);
+
+                expect(ourResult.x).toBeCloseTo(threeResult.x, 5);
+                expect(ourResult.y).toBeCloseTo(threeResult.y, 5);
+                expect(ourResult.z).toBeCloseTo(threeResult.z, 5);
+            });
+        });
     });
 
-    test("creates correct view matrix when combined w/ translation", () => {
-        const eye = createVector3(10, 20, 5);
-        const target = createVector3(0, 0, 0);
-        const up = createVector3(0, 1, 0);
+    test("maxScaleOnAxis", () => {
+        const testCases = [
+            { scale: [1, 1, 1], expected: 1 },
+            { scale: [2, 3, 4], expected: 4 },
+            { scale: [5, 2, 1], expected: 5 },
+            { scale: [-10, 3, 2], expected: 10 },
+            { scale: [0.1, 0.2, 0.3], expected: 0.3 },
+        ];
 
-        const rotationMatrix = createMatrix4();
-        rotationMatrix.lookAt(eye, target, up);
+        testCases.forEach(({ scale, expected }) => {
+            const ourMat = createMatrix4().makeScale(...scale);
+            const threeMat = new ThreeMatrix4().makeScale(...scale);
 
-        const right = createVector3(
-            rotationMatrix.elements[0],
-            rotationMatrix.elements[1],
-            rotationMatrix.elements[2],
+            const ourMax = ourMat.maxScaleOnAxis;
+            const threeMax = threeMat.getMaxScaleOnAxis();
+
+            expect(ourMax).toBeCloseTo(threeMax, 5);
+            expect(ourMax).toBeCloseTo(expected, 5);
+        });
+    });
+});
+
+describe("Matrix4 chain operations", () => {
+    test("multiple operations in sequence", () => {
+        const operations = [
+            { type: "translate", params: [1, 2, 3] },
+            { type: "rotateX", params: [Math.PI / 4] },
+            { type: "scale", params: [2, 0.5, 3] },
+            { type: "rotateY", params: [Math.PI / 6] },
+            { type: "translate", params: [-5, 10, -2] },
+        ];
+
+        let ourMat = createMatrix4();
+        let threeMat = new ThreeMatrix4();
+
+        operations.forEach(({ type, params }) => {
+            switch (type) {
+                case "translate":
+                    ourMat.mul(createMatrix4().makeTranslation(...params));
+                    threeMat.multiply(
+                        new ThreeMatrix4().makeTranslation(...params),
+                    );
+                    break;
+                case "rotateX":
+                    ourMat.mul(createMatrix4().makeRotationX(...params));
+                    threeMat.multiply(
+                        new ThreeMatrix4().makeRotationX(...params),
+                    );
+                    break;
+                case "rotateY":
+                    ourMat.mul(createMatrix4().makeRotationY(...params));
+                    threeMat.multiply(
+                        new ThreeMatrix4().makeRotationY(...params),
+                    );
+                    break;
+                case "rotateZ":
+                    ourMat.mul(createMatrix4().makeRotationZ(...params));
+                    threeMat.multiply(
+                        new ThreeMatrix4().makeRotationZ(...params),
+                    );
+                    break;
+                case "scale":
+                    ourMat.mul(createMatrix4().makeScale(...params));
+                    threeMat.multiply(new ThreeMatrix4().makeScale(...params));
+                    break;
+            }
+
+            compareMatrices(ourMat, threeMat, `chain operation: ${type}`, 1e-5);
+        });
+
+        const testPoints = [
+            [1, 0, 0],
+            [0, 1, 0],
+            [0, 0, 1],
+            [1, 1, 1],
+        ];
+
+        testPoints.forEach((point) => {
+            const ourVec = createVector3(...point);
+            const threeVec = new ThreeVector3(...point);
+
+            const ourResult = ourVec.clone().applyMatrix4(ourMat);
+            const threeResult = threeVec.clone().applyMatrix4(threeMat);
+
+            expect(ourResult.x).toBeCloseTo(threeResult.x, 5);
+            expect(ourResult.y).toBeCloseTo(threeResult.y, 5);
+            expect(ourResult.z).toBeCloseTo(threeResult.z, 5);
+        });
+    });
+});
+
+describe("Matrix4 equals", () => {
+    test("equals w/ various precision levels", () => {
+        const m1 = createMatrix4().set(
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15,
+            16,
         );
-        const upVec = createVector3(
-            rotationMatrix.elements[4],
-            rotationMatrix.elements[5],
-            rotationMatrix.elements[6],
+        const m2 = m1.clone();
+        expect(m1.equals(m2)).toBe(true);
+
+        const m3 = createMatrix4().set(
+            1.0000001,
+            2,
+            3,
+            4,
+            5,
+            6.0000001,
+            7,
+            8,
+            9,
+            10,
+            11.0000001,
+            12,
+            13,
+            14,
+            15,
+            16.0000001,
         );
-        const forward = createVector3(
-            rotationMatrix.elements[8],
-            rotationMatrix.elements[9],
-            rotationMatrix.elements[10],
+        expect(m1.equals(m3)).toBe(true);
+
+        const m4 = createMatrix4().set(
+            1.001,
+            2,
+            3,
+            4,
+            5,
+            6.001,
+            7,
+            8,
+            9,
+            10,
+            11.001,
+            12,
+            13,
+            14,
+            15,
+            16.001,
+        );
+        expect(m1.equals(m4)).toBe(false);
+
+        const threeM1 = new ThreeMatrix4().set(
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15,
+            16,
+        );
+        const threeM2 = threeM1.clone();
+        expect(threeM1.equals(threeM2)).toBe(true);
+
+        const threeM3 = new ThreeMatrix4().set(
+            1.0000001,
+            2,
+            3,
+            4,
+            5,
+            6.0000001,
+            7,
+            8,
+            9,
+            10,
+            11.0000001,
+            12,
+            13,
+            14,
+            15,
+            16.0000001,
         );
 
-        expect(right.dot(upVec)).toBeCloseTo(0, 6);
-        expect(right.dot(forward)).toBeCloseTo(0, 6);
-        expect(upVec.dot(forward)).toBeCloseTo(0, 6);
+        expect(Math.abs(threeM1.elements[0] - threeM3.elements[0]) < 1e-6).toBe(
+            true,
+        );
 
-        expect(right.length).toBeCloseTo(1, 6);
-        expect(upVec.length).toBeCloseTo(1, 6);
-        expect(forward.length).toBeCloseTo(1, 6);
-
-        const eyeToTarget = target.clone().sub(eye).unit();
-        expect(forward.dot(eyeToTarget)).toBeCloseTo(-1, 6);
+        const threeM4 = new ThreeMatrix4().set(
+            1.001,
+            2,
+            3,
+            4,
+            5,
+            6.001,
+            7,
+            8,
+            9,
+            10,
+            11.001,
+            12,
+            13,
+            14,
+            15,
+            16.001,
+        );
+        expect(Math.abs(threeM1.elements[0] - threeM4.elements[0]) > 1e-6).toBe(
+            true,
+        );
     });
 });
