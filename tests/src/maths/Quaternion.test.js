@@ -191,9 +191,9 @@ describe("Quaternion conversions", () => {
             { axis: [1, 0, 0], angle: Maths.QUARTER_PI },
             { axis: [0, 1, 0], angle: Maths.HALF_PI },
             { axis: [0, 0, 1], angle: Math.PI },
-            { axis: [1, 1, 1], angle: Math.PI / 3 },
+            { axis: [1, 1, 1], angle: Maths.THIRD_PI },
             { axis: [0, 1, 0], angle: 1e6 * Math.PI },
-            { axis: [1000, 2000, 3000], angle: Math.PI / 6 },
+            { axis: [1000, 2000, 3000], angle: Maths.SIXTH_PI },
         ];
 
         testCases.forEach(({ axis, angle }) => {

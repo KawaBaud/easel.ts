@@ -364,7 +364,7 @@ describe("Object3D transformations", () => {
     test("rotation methods", () => {
         const testCases = [
             { name: "rotateX", angle: Maths.HALF_PI, method: "rotateX" },
-            { name: "rotateY", angle: Math.PI / 3, method: "rotateY" },
+            { name: "rotateY", angle: Maths.THIRD_PI, method: "rotateY" },
             { name: "rotateZ", angle: Maths.QUARTER_PI, method: "rotateZ" },
         ];
 

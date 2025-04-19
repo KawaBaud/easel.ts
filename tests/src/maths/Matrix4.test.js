@@ -238,7 +238,7 @@ describe("Matrix4 transformations", () => {
         {
             name: "complex",
             position: [-5, 10, -2],
-            rotation: [Math.PI / 3, -Math.PI / 6, Math.PI],
+            rotation: [Maths.THIRD_PI, -Maths.SIXTH_PI, Math.PI],
             scale: [1, 5, 1],
         },
     ];
@@ -333,8 +333,8 @@ describe("Matrix4 transformations", () => {
 });
 
 describe("Matrix4 operations", () => {
-    const ourMatA = createMatrix4().makeRotationX(Math.PI / 6);
-    const threeMatA = new ThreeMatrix4().makeRotationX(Math.PI / 6);
+    const ourMatA = createMatrix4().makeRotationX(Maths.SIXTH_PI);
+    const threeMatA = new ThreeMatrix4().makeRotationX(Maths.SIXTH_PI);
     const ourMatB = createMatrix4().makeTranslation(1, 2, 3);
     const threeMatB = new ThreeMatrix4().makeTranslation(1, 2, 3);
 
@@ -464,8 +464,8 @@ describe("Matrix4 operations", () => {
     });
 
     test("setPosition and copyPosition", () => {
-        const ourMat = createMatrix4().makeRotationY(Math.PI / 3);
-        const threeMat = new ThreeMatrix4().makeRotationY(Math.PI / 3);
+        const ourMat = createMatrix4().makeRotationY(Maths.THIRD_PI);
+        const threeMat = new ThreeMatrix4().makeRotationY(Maths.THIRD_PI);
 
         const x = 10, y = -20, z = 30;
 
@@ -592,7 +592,7 @@ describe("Matrix4 decomposition", () => {
         {
             name: "complex",
             position: [-5, 10, -2],
-            rotation: [Math.PI / 3, -Math.PI / 6, Maths.QUARTER_PI],
+            rotation: [Maths.THIRD_PI, -Maths.SIXTH_PI, Maths.QUARTER_PI],
             scale: [2, 3, 4],
         },
     ];
@@ -753,7 +753,7 @@ describe("Matrix4 vector transformations", () => {
             { name: "scale", matrix: createMatrix4().makeScale(2, 3, 0.5) },
             {
                 name: "complex",
-                matrix: createMatrix4().makeRotationZ(Math.PI / 6).premul(
+                matrix: createMatrix4().makeRotationZ(Maths.SIXTH_PI).premul(
                     createMatrix4().makeScale(2, 2, 2),
                 ).premul(
                     createMatrix4().makeTranslation(5, 5, 5),
@@ -806,7 +806,7 @@ describe("Matrix4 chain operations", () => {
             { type: "translate", params: [1, 2, 3] },
             { type: "rotateX", params: [Maths.QUARTER_PI] },
             { type: "scale", params: [2, 0.5, 3] },
-            { type: "rotateY", params: [Math.PI / 6] },
+            { type: "rotateY", params: [Maths.SIXTH_PI] },
             { type: "translate", params: [-5, 10, -2] },
         ];
 
