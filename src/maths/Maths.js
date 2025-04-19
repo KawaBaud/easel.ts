@@ -16,15 +16,54 @@ for (let i = 0; i < _TABLE_SIZE; i++) {
 }
 
 export const Maths = {
-    EPSILON: 1e-4, // 0.0001
+    /**
+     * 0.0001
+     * @readonly
+     * @const {number}
+     */
+    EPSILON: 1e-4,
 
-    TAU: _TAU, // 2 * PI
-    PISQ: 9.869604401089358, // PI * PI
-    HALF_PI: 1.5707963267948966, // PI / 2
-    QUARTER_PI: 0.7853981633974483, // PI / 4
+    /**
+     * 2 * PI
+     * @const {number}
+     * @readonly
+     */
+    TAU: _TAU,
 
-    RADIANS_TO_DEGREES: 57.29577951308232, // 180 / PI
-    DEGREES_TO_RADIANS: 0.017453292519943295, // PI / 180
+    /**
+     * PI * PI
+     * @const {number}
+     * @readonly
+     */
+    PISQ: 9.869604401089358,
+
+    /**
+     * PI / 2
+     * @const {number}
+     * @readonly
+     */
+    HALF_PI: 1.5707963267948966,
+
+    /**
+     * PI / 4
+     * @const {number}
+     * @readonly
+     */
+    QUARTER_PI: 0.7853981633974483,
+
+    /**
+     * 180 / PI
+     * @const {number}
+     * @readonly
+     */
+    RADIANS_TO_DEGREES: 57.29577951308232,
+
+    /**
+     * PI / 180
+     * @const {number}
+     * @readonly
+     */
+    DEGREES_TO_RADIANS: 0.017453292519943295,
 
     /**
      * @param {number} value
@@ -137,7 +176,7 @@ export const Maths = {
 
     /**
      * @param {number} value
-     * @param {number} amount
+     * @param {number} [amount=1]
      * @returns {number}
      */
     shrdiv(value, amount = 1) {
@@ -146,7 +185,7 @@ export const Maths = {
 
     /**
      * @param {number} value
-     * @param {number} amount
+     * @param {number} [amount=1]
      * @returns {number}
      */
     shlmul(value, amount = 1) {
