@@ -150,9 +150,9 @@ describe("Vector3 utility methods", () => {
         const threeVecA = new ThreeVector3(1, 2, 3);
         const threeVecB = new ThreeVector3(4, 5, 6);
 
-        const result = ourVecA.clone().cross(ourVecB);
+        const ourResult = ourVecA.clone().cross(ourVecB);
         const threeResult = threeVecA.clone().cross(threeVecB);
-        compareVectors(result, threeResult);
+        compareVectors(ourResult, threeResult);
     });
 
     test("distanceTo", () => {

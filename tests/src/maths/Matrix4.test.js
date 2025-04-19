@@ -369,25 +369,25 @@ describe("Matrix4 operations", () => {
         });
     });
 
-    test("mulMatrices / multiplyMatrices (A * B)", () => {
+    test("mulMatrices / multiplyMatrices", () => {
         const ourMat = createMatrix4().mulMatrices(ourMatA, ourMatB);
         const threeMat = new ThreeMatrix4().multiplyMatrices(
             threeMatA,
             threeMatB,
         );
-        compareMatrices(ourMat, threeMat, "multiplyMatrices (A*B)");
+        compareMatrices(ourMat, threeMat, "mulMatrices / multiplyMatrices");
     });
 
-    test("mul / multiply (A * B)", () => {
+    test("mul / multiply", () => {
         const ourMat = ourMatA.clone().mul(ourMatB);
         const threeMat = threeMatA.clone().multiply(threeMatB);
-        compareMatrices(ourMat, threeMat, "mul (A*B)");
+        compareMatrices(ourMat, threeMat, "mul / multiply");
     });
 
-    test("premul / premultiply (B * A)", () => {
+    test("premul / premultiply", () => {
         const ourMat = ourMatA.clone().premul(ourMatB);
         const threeMat = threeMatA.clone().premultiply(threeMatB);
-        compareMatrices(ourMat, threeMat, "premul (B*A)");
+        compareMatrices(ourMat, threeMat, "premul / premultiply");
     });
 
     test("mulScalar / multiplyScalar", () => {
@@ -395,7 +395,7 @@ describe("Matrix4 operations", () => {
 
         const ourMat = ourMatA.clone().mulScalar(s);
         const threeMat = threeMatA.clone().multiplyScalar(s);
-        compareMatrices(ourMat, threeMat, "mulScalar");
+        compareMatrices(ourMat, threeMat, "mulScalar / multiplyScalar");
     });
 
     test("determinant", () => {
