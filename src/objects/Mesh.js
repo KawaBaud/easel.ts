@@ -1,0 +1,42 @@
+import { createObject3D } from "./Object3D.js";
+
+/**
+ * @typedef {Object3D} Mesh
+ * @property {Object} geometry
+ * @property {Object} material
+ */
+
+/**
+ * @param {Object} geometry
+ * @param {Object} material
+ * @returns {Mesh}
+ */
+export function createMesh(geometry, material) {
+    const _mesh = createObject3D();
+    Object.assign(_mesh, {
+        geometry,
+        material,
+
+        /**
+         * @returns {boolean}
+         */
+        get isMesh() {
+            return true;
+        },
+
+        /**
+         * @param {Mesh} source
+         * @returns {Mesh}
+         */
+        copy(source) {
+            createObject3D().copy.call(_mesh, source);
+            _mesh.position.copy(source.position);
+            _mesh.quaternion.copy(source.quaternion);
+            _mesh.scale.copy(source.scale);
+            _mesh.geometry = source.geometry;
+            _mesh.material = source.material;
+            return _mesh;
+        },
+    });
+    return _mesh;
+}
