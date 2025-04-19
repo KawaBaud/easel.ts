@@ -52,11 +52,25 @@ export const Maths = {
     HALF_PI: 1.5707963267948966,
 
     /**
+     * PI / 3
+     * @readonly
+     * @const {number}
+     */
+    THIRD_PI: 1.0471975511965976,
+
+    /**
      * PI / 4
      * @readonly
      * @const {number}
      */
     QUARTER_PI: 0.7853981633974483,
+
+    /**
+     * PI / 6
+     * @readonly
+     * @const {number}
+     */
+    SIXTH_PI: 0.5235987755982988,
 
     /**
      * 180 / PI
