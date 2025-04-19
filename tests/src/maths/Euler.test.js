@@ -5,11 +5,12 @@ import {
     Vector3 as ThreeVector3,
 } from "three";
 import { createEuler } from "../../../src/maths/Euler.js";
+import { Maths } from "../../../src/maths/Maths.js";
 import { createMatrix4 } from "../../../src/maths/Matrix4.js";
 import { createQuaternion } from "../../../src/maths/Quaternion.js";
 import { createVector3 } from "../../../src/maths/Vector3.js";
 
-const compareEulers = (ourEuler, threeEuler, epsilon = 1e-5) => {
+const compareEulers = (ourEuler, threeEuler, epsilon = Maths.EPSILON) => {
     expect(ourEuler.x).toBeCloseTo(threeEuler.x, epsilon);
     expect(ourEuler.y).toBeCloseTo(threeEuler.y, epsilon);
     expect(ourEuler.z).toBeCloseTo(threeEuler.z, epsilon);
@@ -37,7 +38,7 @@ describe("Euler core", () => {
         compareEulers(ourEuler, threeEuler);
     });
 
-    test("clone, copy", () => {
+    test("clone and copy", () => {
         const x = 0.1, y = 0.2, z = 0.3, order = "ZYX";
 
         const ourEuler1 = createEuler(x, y, z, order);
@@ -52,7 +53,7 @@ describe("Euler core", () => {
         compareEulers(ourEuler3, threeEuler3);
     });
 
-    test("fromArray, toArray", () => {
+    test("fromArray and toArray", () => {
         const array = [0.1, 0.2, 0.3, "ZYX"];
 
         const ourEuler = createEuler().fromArray(array);

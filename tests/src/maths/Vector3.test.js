@@ -4,11 +4,12 @@ import {
     Quaternion as ThreeQuaternion,
     Vector3 as ThreeVector3,
 } from "three";
+import { Maths } from "../../../src/maths/Maths.js";
 import { createMatrix4 } from "../../../src/maths/Matrix4.js";
 import { createQuaternion } from "../../../src/maths/Quaternion.js";
 import { createVector3 } from "../../../src/maths/Vector3.js";
 
-const compareVectors = (ourVec, threeVec, epsilon = 1e-5) => {
+const compareVectors = (ourVec, threeVec, epsilon = Maths.EPSILON) => {
     expect(ourVec.x).toBeCloseTo(threeVec.x, epsilon);
     expect(ourVec.y).toBeCloseTo(threeVec.y, epsilon);
     expect(ourVec.z).toBeCloseTo(threeVec.z, epsilon);
@@ -35,7 +36,7 @@ describe("Vector3 core", () => {
         compareVectors(ourVec, threeVec);
     });
 
-    test("clone, copy", () => {
+    test("clone and copy", () => {
         const x = 1, y = 2, z = 3;
 
         const ourVecA = createVector3(x, y, z);
@@ -50,7 +51,7 @@ describe("Vector3 core", () => {
         compareVectors(ourVec3, threeVec3);
     });
 
-    test("length, lengthSq", () => {
+    test("length and lengthSq", () => {
         const testCases = [
             [0, 0, 0],
             [1, 0, 0],
@@ -139,7 +140,18 @@ describe("Vector3 utility methods", () => {
 
         expect(ourVecA.dot(ourVecB)).toBeCloseTo(
             threeVecA.dot(threeVecB),
-            1e-5,
+            Maths.EPSILON,
+        );
+
+        const extremeVecA = createVector3(1e10, 1e-10, -1e5);
+        const extremeVecB = createVector3(-1e8, 1e-8, 1e6);
+
+        const threeExtremeVecA = new ThreeVector3(1e10, 1e-10, -1e5);
+        const threeExtremeVecB = new ThreeVector3(-1e8, 1e-8, 1e6);
+
+        expect(extremeVecA.dot(extremeVecB)).toBeCloseTo(
+            threeExtremeVecA.dot(threeExtremeVecB),
+            Maths.EPSILON,
         );
     });
 
@@ -200,8 +212,8 @@ describe("Vector3 transformations", () => {
         const matrices = {
             identity: [createMatrix4(), new ThreeMatrix4()],
             rotateY: [
-                createMatrix4().makeRotationY(Math.PI / 4),
-                new ThreeMatrix4().makeRotationY(Math.PI / 4),
+                createMatrix4().makeRotationY(Maths.QUARTER_PI),
+                new ThreeMatrix4().makeRotationY(Maths.QUARTER_PI),
             ],
             translate: [
                 createMatrix4().makeTranslation(10, 20, 30),
@@ -224,8 +236,8 @@ describe("Vector3 transformations", () => {
     test("applyQuaternion", () => {
         const testCases = [
             { v: [1, 0, 0], rotation: [0, 0, 0] },
-            { v: [0, 1, 0], rotation: [Math.PI / 2, 0, 0] },
-            { v: [1, 2, 3], rotation: [0, Math.PI / 4, 0] },
+            { v: [0, 1, 0], rotation: [Maths.HALF_PI, 0, 0] },
+            { v: [1, 2, 3], rotation: [0, Maths.QUARTER_PI, 0] },
         ];
 
         testCases.forEach(({ v, rotation }) => {
