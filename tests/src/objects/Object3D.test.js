@@ -140,7 +140,7 @@ describe("Object3D hierarchy", () => {
         threeParent.remove(threeChild);
 
         expect(ourParent.children.length).toBe(0);
-        expect(ourChild.parent).toBe(undefined);
+        expect(ourChild.parent).toBe(null);
 
         // three.js uses 'null' instead of 'undefined'
         expect(threeParent.children.length).toBe(0);
@@ -226,8 +226,8 @@ describe("Object3D hierarchy", () => {
         ourParent.clear();
 
         expect(ourParent.children.length).toBe(0);
-        expect(ourChild1.parent).toBe(undefined);
-        expect(ourChild2.parent).toBe(undefined);
+        expect(ourChild1.parent).toBe(null);
+        expect(ourChild2.parent).toBe(null);
     });
 
     test("getObjectById and getObjectByName", () => {
@@ -246,11 +246,11 @@ describe("Object3D hierarchy", () => {
 
         expect(ourParent.getObjectById("id1")).toBe(ourChild1);
         expect(ourParent.getObjectById("id2")).toBe(ourChild2);
-        expect(ourParent.getObjectById("nonexistent")).toBe(undefined);
+        expect(ourParent.getObjectById("nonexistent")).toBe(null);
 
         expect(ourParent.getObjectByName("child1")).toBe(ourChild1);
         expect(ourParent.getObjectByName("child2")).toBe(ourChild2);
-        expect(ourParent.getObjectByName("nonexistent")).toBe(undefined);
+        expect(ourParent.getObjectByName("nonexistent")).toBe(null);
     });
 
     test("clone and copy", () => {
