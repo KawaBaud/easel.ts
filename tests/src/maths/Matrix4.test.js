@@ -19,7 +19,12 @@ const createQuaternions = (x, y, z) => {
     return { ourQuat, threeQuat };
 };
 
-const compareMatrices = (ourMat, threeMat, testName, epsilon = 1e-6) => {
+const compareMatrices = (
+    ourMat,
+    threeMat,
+    testName,
+    epsilon = Maths.EPSILON,
+) => {
     expect(ourMat.elements.length).toBe(16);
     expect(threeMat.elements.length).toBe(16);
 
@@ -126,7 +131,7 @@ describe("Matrix4 core", () => {
         compareMatrices(ourMat, threeMat, "set");
     });
 
-    test("clone, copy", () => {
+    test("clone and copy", () => {
         const values = [
             0,
             1,
@@ -160,7 +165,7 @@ describe("Matrix4 core", () => {
         expect(ourMat2.elements[0]).not.toBe(100);
     });
 
-    test("fromArray, toArray", () => {
+    test("fromArray and toArray", () => {
         const columnMajorArray = [
             1,
             5,
@@ -297,19 +302,19 @@ describe("Matrix4 transformations", () => {
         });
 
         test(`compose: ${name}`, () => {
-            const ourPosition = createVector3(...position);
-            const threePosition = new ThreeVector3(...position);
+            const ourPos = createVector3(...position);
+            const threePos = new ThreeVector3(...position);
             const { ourQuat, threeQuat } = createQuaternions(...rotation);
             const ourScale = createVector3(...scale);
             const threeScale = new ThreeVector3(...scale);
 
             const ourMat = createMatrix4().compose(
-                ourPosition,
+                ourPos,
                 ourQuat,
                 ourScale,
             );
             const threeMat = new ThreeMatrix4().compose(
-                threePosition,
+                threePos,
                 threeQuat,
                 threeScale,
             );
@@ -458,7 +463,7 @@ describe("Matrix4 operations", () => {
         compareMatrices(ourMat, threeMat, "transpose");
     });
 
-    test("setPosition, copyPosition", () => {
+    test("setPosition and copyPosition", () => {
         const ourMat = createMatrix4().makeRotationY(Math.PI / 3);
         const threeMat = new ThreeMatrix4().makeRotationY(Math.PI / 3);
 
@@ -498,7 +503,7 @@ describe("Matrix4 operations", () => {
         const zeroScaleMat = createMatrix4().makeScale(1, 0, 1);
         const threeZeroScaleMat = new ThreeMatrix4().makeScale(1, 0, 1);
         zeroScaleMat.invert();
-        threeZeroScaleMat.invert(); // three.js also sets zero matrix if det = 0
+        threeZeroScaleMat.invert();
         compareMatrices(
             zeroScaleMat,
             threeZeroScaleMat,
@@ -587,7 +592,7 @@ describe("Matrix4 decomposition", () => {
         {
             name: "complex",
             position: [-5, 10, -2],
-            rotation: [Math.PI / 3, -Math.PI / 6, Math.PI / 4],
+            rotation: [Math.PI / 3, -Math.PI / 6, Maths.QUARTER_PI],
             scale: [2, 3, 4],
         },
     ];
@@ -598,16 +603,16 @@ describe("Matrix4 decomposition", () => {
 
             const complex = name === "complex";
 
-            const ourPosition = createVector3();
+            const ourPos = createVector3();
             const ourQuat = createQuaternion();
             const ourScale = createVector3();
 
-            const threePosition = new ThreeVector3();
+            const threePos = new ThreeVector3();
             const threeQuat = new ThreeQuaternion();
             const threeScale = new ThreeVector3();
 
-            const ourPositionIn = createVector3(...position);
-            const threePositionIn = new ThreeVector3(...position);
+            const ourPosIn = createVector3(...position);
+            const threePosIn = new ThreeVector3(...position);
 
             const { ourQuat: ourQuatIn, threeQuat: threeQuatIn } =
                 createQuaternions(...rotation);
@@ -616,22 +621,22 @@ describe("Matrix4 decomposition", () => {
             const threeScaleIn = new ThreeVector3(...scale);
 
             const ourMat = createMatrix4().compose(
-                ourPositionIn,
+                ourPosIn,
                 ourQuatIn,
                 ourScaleIn,
             );
             const threeMat = new ThreeMatrix4().compose(
-                threePositionIn,
+                threePosIn,
                 threeQuatIn,
                 threeScaleIn,
             );
 
-            ourMat.decompose(ourPosition, ourQuat, ourScale);
-            threeMat.decompose(threePosition, threeQuat, threeScale);
+            ourMat.decompose(ourPos, ourQuat, ourScale);
+            threeMat.decompose(threePos, threeQuat, threeScale);
 
-            expect(ourPosition.x).toBeCloseTo(threePosition.x, 5);
-            expect(ourPosition.y).toBeCloseTo(threePosition.y, 5);
-            expect(ourPosition.z).toBeCloseTo(threePosition.z, 5);
+            expect(ourPos.x).toBeCloseTo(threePos.x, 5);
+            expect(ourPos.y).toBeCloseTo(threePos.y, 5);
+            expect(ourPos.z).toBeCloseTo(threePos.z, 5);
 
             if (!complex) {
                 expect(ourScale.x).toBeCloseTo(threeScale.x, 5);
@@ -660,12 +665,12 @@ describe("Matrix4 decomposition", () => {
             }
 
             const ourRecomposed = createMatrix4().compose(
-                ourPosition,
+                ourPos,
                 ourQuat,
                 ourScale,
             );
             const threeRecomposed = new ThreeMatrix4().compose(
-                threePosition,
+                threePos,
                 threeQuat,
                 threeScale,
             );
@@ -676,6 +681,51 @@ describe("Matrix4 decomposition", () => {
                 1e-5,
             );
         });
+    });
+
+    test("decompose w/ zero scale", () => {
+        const position = [1, 2, 3];
+        const rotation = [Maths.QUARTER_PI, 0, 0];
+        const scale = [1, 0, 1];
+
+        const ourPos = createVector3();
+        const ourQuat = createQuaternion();
+        const ourScale = createVector3();
+
+        const threePos = new ThreeVector3();
+        const threeQuat = new ThreeQuaternion();
+        const threeScale = new ThreeVector3();
+
+        const ourPosIn = createVector3(...position);
+        const threePosIn = new ThreeVector3(...position);
+
+        const { ourQuat: ourQuatIn, threeQuat: threeQuatIn } =
+            createQuaternions(...rotation);
+
+        const ourScaleIn = createVector3(...scale);
+        const threeScaleIn = new ThreeVector3(...scale);
+
+        const ourMat = createMatrix4().compose(ourPosIn, ourQuatIn, ourScaleIn);
+        const threeMat = new ThreeMatrix4().compose(
+            threePosIn,
+            threeQuatIn,
+            threeScaleIn,
+        );
+
+        ourMat.decompose(ourPos, ourQuat, ourScale);
+        threeMat.decompose(threePos, threeQuat, threeScale);
+
+        expect(ourPos.x).toBeCloseTo(position[0], 5);
+        expect(ourPos.y).toBeCloseTo(position[1], 5);
+        expect(ourPos.z).toBeCloseTo(position[2], 5);
+
+        expect(isNaN(ourScale.x)).toBe(false);
+        expect(isNaN(ourScale.y)).toBe(false);
+        expect(isNaN(ourScale.z)).toBe(false);
+
+        expect(isNaN(threeScale.x)).toBe(false);
+        expect(isNaN(threeScale.y)).toBe(false);
+        expect(isNaN(threeScale.z)).toBe(false);
     });
 });
 
@@ -698,7 +748,7 @@ describe("Matrix4 vector transformations", () => {
             },
             {
                 name: "rotation",
-                matrix: createMatrix4().makeRotationY(Math.PI / 4),
+                matrix: createMatrix4().makeRotationY(Maths.QUARTER_PI),
             },
             { name: "scale", matrix: createMatrix4().makeScale(2, 3, 0.5) },
             {
@@ -754,7 +804,7 @@ describe("Matrix4 chain operations", () => {
     test("multiple operations in sequence", () => {
         const operations = [
             { type: "translate", params: [1, 2, 3] },
-            { type: "rotateX", params: [Math.PI / 4] },
+            { type: "rotateX", params: [Maths.QUARTER_PI] },
             { type: "scale", params: [2, 0.5, 3] },
             { type: "rotateY", params: [Math.PI / 6] },
             { type: "translate", params: [-5, 10, -2] },
@@ -820,7 +870,7 @@ describe("Matrix4 chain operations", () => {
 });
 
 describe("Matrix4 equals", () => {
-    test("equals w/ various precision levels", () => {
+    test("equals - using various precisions", () => {
         const m1 = createMatrix4().set(
             1,
             2,
