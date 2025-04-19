@@ -1,4 +1,5 @@
 import { Maths } from "./Maths.js";
+import { createQuaternion } from "./Quaternion.js";
 
 /**
  * @typedef {Object} Vector3
@@ -90,6 +91,15 @@ export function createVector3(x = 0, y = 0, z = 0) {
 
             const theta = _v.dot(v) / denom;
             return Math.acos(Maths.clamp(theta, -1, 1));
+        },
+
+        /**
+         * @param {Euler} euler
+         * @returns {Vector3}
+         */
+        applyEuler(euler) {
+            const q = createQuaternion().setFromEuler(euler);
+            return _v.applyQuaternion(q);
         },
 
         /**
