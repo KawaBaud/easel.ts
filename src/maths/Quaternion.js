@@ -19,24 +19,9 @@ import { createVector3 } from "./Vector3.js";
  */
 export function createQuaternion(x = 0, y = 0, z = 0, w = 1) {
     const _q = {
-        /**
-         * @type {number}
-         */
         x,
-
-        /**
-         * @type {number}
-         */
         y,
-
-        /**
-         * @type {number}
-         */
         z,
-
-        /**
-         * @type {number}
-         */
         w,
 
         /**

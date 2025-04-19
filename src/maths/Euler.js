@@ -19,24 +19,9 @@ import { createQuaternion } from "./Quaternion.js";
  */
 export function createEuler(x = 0, y = 0, z = 0, order = "XYZ") {
     const _e = {
-        /**
-         * @type {number}
-         */
         x,
-
-        /**
-         * @type {number}
-         */
         y,
-
-        /**
-         * @type {number}
-         */
         z,
-
-        /**
-         * @type {string}
-         */
         order,
 
         /**

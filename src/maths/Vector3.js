@@ -15,19 +15,8 @@ import { Maths } from "./Maths.js";
  */
 export function createVector3(x = 0, y = 0, z = 0) {
     const _v = {
-        /**
-         * @type {number}
-         */
         x,
-
-        /**
-         * @type {number}
-         */
         y,
-
-        /**
-         * @type {number}
-         */
         z,
 
         /**
