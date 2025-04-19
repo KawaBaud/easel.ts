@@ -1,3 +1,7 @@
+/**
+ * @readonly
+ * @const {number}
+ */
 export const Q_ONE = 1 << 12;
 
 const _TAU = 6.283185307179586;
@@ -28,43 +32,43 @@ export const Maths = {
 
     /**
      * 2 * PI
-     * @const {number}
      * @readonly
+     * @const {number}
      */
     TAU: _TAU,
 
     /**
      * PI * PI
-     * @const {number}
      * @readonly
+     * @const {number}
      */
     PISQ: 9.869604401089358,
 
     /**
      * PI / 2
-     * @const {number}
      * @readonly
+     * @const {number}
      */
     HALF_PI: 1.5707963267948966,
 
     /**
      * PI / 4
-     * @const {number}
      * @readonly
+     * @const {number}
      */
     QUARTER_PI: 0.7853981633974483,
 
     /**
      * 180 / PI
-     * @const {number}
      * @readonly
+     * @const {number}
      */
     RADIANS_TO_DEGREES: 57.29577951308232,
 
     /**
      * PI / 180
-     * @const {number}
      * @readonly
+     * @const {number}
      */
     DEGREES_TO_RADIANS: 0.017453292519943295,
 
