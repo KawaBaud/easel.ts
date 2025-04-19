@@ -8,9 +8,9 @@ import { Maths } from "./Maths.js";
  */
 
 /**
- * @param {number} x
- * @param {number} y
- * @param {number} z
+ * @param {number} [x=0]
+ * @param {number} [y=0]
+ * @param {number} [z=0]
  * @returns {Vector3}
  */
 export function createVector3(x = 0, y = 0, z = 0) {
@@ -176,7 +176,6 @@ export function createVector3(x = 0, y = 0, z = 0) {
         },
 
         /**
-         * @param {Euler} euler
          * @returns {Vector3}
          */
         clone() {
@@ -235,7 +234,7 @@ export function createVector3(x = 0, y = 0, z = 0) {
         },
 
         /**
-         * @param {Euler} euler
+         * @param {Vector3} v
          * @returns {Vector3}
          */
         div(v) {
@@ -287,7 +286,7 @@ export function createVector3(x = 0, y = 0, z = 0) {
 
         /**
          * @param {Array<number>} array
-         * @param {number} offset
+         * @param {number} [offset=0]
          * @returns {Vector3}
          */
         fromArray(array, offset = 0) {
@@ -386,6 +385,10 @@ export function createVector3(x = 0, y = 0, z = 0) {
             return _v.set(-_v.x, -_v.y, -_v.z);
         },
 
+        /**
+         * @param {Camera} camera
+         * @returns {Vector3}
+         */
         project(camera) {
             return _v
                 .applyMatrix4(camera.matrixWorldInverse)
@@ -413,7 +416,9 @@ export function createVector3(x = 0, y = 0, z = 0) {
         },
 
         /**
-         * @param {Vector3} v
+         * @param {number} x
+         * @param {number} y
+         * @param {number} [z]
          * @returns {Vector3}
          */
         set(x, y, z) {
@@ -426,7 +431,7 @@ export function createVector3(x = 0, y = 0, z = 0) {
 
         /**
          * @param {Array<number>} array
-         * @param {number} offset
+         * @param {number} [offset=0]
          * @returns {Vector3}
          */
         setFromArray(array, offset = 0) {
@@ -473,8 +478,8 @@ export function createVector3(x = 0, y = 0, z = 0) {
         },
 
         /**
-         * @param {Array<number>} array
-         * @param {number} offset
+         * @param {Array<number>} [array=[]]
+         * @param {number} [offset=0]
          * @returns {Array<number>}
          */
         toArray(array = [], offset = 0) {
@@ -512,6 +517,9 @@ export function createVector3(x = 0, y = 0, z = 0) {
     return _v;
 }
 
+/**
+ * @namespace
+ */
 export const Vector3 = {
     /**
      * @param {Vector3} v1

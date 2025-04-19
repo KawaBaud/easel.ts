@@ -1,4 +1,6 @@
 import { Maths } from "./Maths.js";
+import { createMatrix4 } from "./Matrix4.js";
+import { createVector3 } from "./Vector3.js";
 
 /**
  * @typedef {Object} Quaternion
@@ -9,10 +11,10 @@ import { Maths } from "./Maths.js";
  */
 
 /**
- * @param {number} x
- * @param {number} y
- * @param {number} w
- * @param {number} w
+ * @param {number} [x=0]
+ * @param {number} [y=0]
+ * @param {number} [z=0]
+ * @param {number} [w=1]
  * @returns {Quaternion}
  */
 export function createQuaternion(x = 0, y = 0, z = 0, w = 1) {
@@ -116,7 +118,7 @@ export function createQuaternion(x = 0, y = 0, z = 0, w = 1) {
 
         /**
          * @param {Array<number>} array
-         * @param {number} offset
+         * @param {number} [offset=0]
          * @returns {Quaternion}
          */
         fromArray(array, offset = 0) {
@@ -238,7 +240,7 @@ export function createQuaternion(x = 0, y = 0, z = 0, w = 1) {
         },
 
         /**
-         * @param {Euler} euler
+         * @param {Euler} [euler="XYZ"]
          * @returns {Quaternion}
          */
         setFromEuler(euler) {
@@ -424,8 +426,8 @@ export function createQuaternion(x = 0, y = 0, z = 0, w = 1) {
         },
 
         /**
-         * @param {Array<number>} array
-         * @param {number} offset
+         * @param {Array<number>} [array=[]]
+         * @param {number} [offset=0]
          * @returns {Array<number>}
          */
         toArray(array = [], offset = 0) {
@@ -467,6 +469,9 @@ export function createQuaternion(x = 0, y = 0, z = 0, w = 1) {
     return _q;
 }
 
+/**
+ * @namespace
+ */
 export const Quaternion = {
     /**
      * @param {Vector3} axis

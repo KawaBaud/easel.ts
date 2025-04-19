@@ -15,6 +15,9 @@ for (let i = 0; i < _TABLE_SIZE; i++) {
     _Q_COS_TABLE[i] = (Math.cos(angle) * Q_ONE) | 0;
 }
 
+/**
+ * @namespace
+ */
 export const Maths = {
     /**
      * 0.0001

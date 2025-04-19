@@ -11,10 +11,10 @@ import { createQuaternion } from "./Quaternion.js";
  */
 
 /**
- * @param {number} x
- * @param {number} y
- * @param {number} z
- * @param {string} order
+ * @param {number} [x=0]
+ * @param {number} [y=0]
+ * @param {number} [z=0]
+ * @param {string} [order="XYZ"]
  * @returns {Euler}
  */
 export function createEuler(x = 0, y = 0, z = 0, order = "XYZ") {
@@ -104,7 +104,7 @@ export function createEuler(x = 0, y = 0, z = 0, order = "XYZ") {
          * @param {number} x
          * @param {number} y
          * @param {number} z
-         * @param {string} order
+         * @param {string} [order]
          * @returns {Euler}
          */
         set(x, y, z, order) {
@@ -117,7 +117,7 @@ export function createEuler(x = 0, y = 0, z = 0, order = "XYZ") {
 
         /**
          * @param {Matrix4} m
-         * @param {string} order
+         * @param {string} [order]
          * @returns {Euler}
          */
         setFromRotationMatrix(m, order) {
@@ -189,9 +189,9 @@ export function createEuler(x = 0, y = 0, z = 0, order = "XYZ") {
         },
 
         /**
-         * @param {Array<number,number,number,string>} array
+         * @param {Array<number>} array
          * @param {number} offset
-         * @returns {Array<number,number,number,string>}
+         * @returns {Array<number>}
          */
         toArray(array = [], offset = 0) {
             array[offset] = _e.x;
@@ -212,6 +212,9 @@ export function createEuler(x = 0, y = 0, z = 0, order = "XYZ") {
     return _e;
 }
 
+/**
+ * @namespace
+ */
 export const Euler = {
     // static methods go here
 };

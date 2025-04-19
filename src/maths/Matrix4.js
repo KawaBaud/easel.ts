@@ -228,7 +228,7 @@ export function createMatrix4(elements = new Float32Array(16)) {
 
         /**
          * @param {Array<number>} array
-         * @param {number} offset
+         * @param {number} [offset=0]
          * @returns {Matrix4}
          */
         fromArray(array, offset = 0) {
@@ -837,8 +837,8 @@ export function createMatrix4(elements = new Float32Array(16)) {
         },
 
         /**
-         * @param {Array<number>} array
-         * @param {number} offset
+         * @param {Array<number>} [array=[]]
+         * @param {number} [offset=0]
          * @returns {Array<number>}
          */
         toArray(array = [], offset = 0) {
@@ -884,6 +884,9 @@ export function createMatrix4(elements = new Float32Array(16)) {
     return _m;
 }
 
+/**
+ * @namespace
+ */
 export const Matrix4 = {
     // statics go here
 };
