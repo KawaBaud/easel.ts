@@ -481,11 +481,5 @@ export function createObject3D(id = "") {
  * @namespace
  */
 export const Object3D = {
-    /**
-     * @param {string} [id]
-     * @returns {Object3D}
-     */
-    create(id) {
-        return createObject3D(id);
-    },
+    // static methods go here
 };
