@@ -21,7 +21,7 @@ const _scale = createVector3();
  * @property {Matrix4} matrix
  * @property {Matrix4} worldMatrix
  * @property {boolean} autoUpdateMatrix
- * @property {Object3D|undefined} parent
+ * @property {Object3D|null} parent
  * @property {Array<Object3D>} children
  * @property {boolean} visible
  * @property {number} layers
@@ -41,7 +41,7 @@ export function createObject3D(id = "") {
         matrix: createMatrix4(),
         worldMatrix: createMatrix4(),
         autoUpdateMatrix: true,
-        parent: undefined,
+        parent: null,
         children: [],
         visible: true,
         layers: 1,
@@ -175,7 +175,7 @@ export function createObject3D(id = "") {
 
         /**
          * @param {number} id
-         * @returns {Object3D|undefined}
+         * @returns {Object3D|null}
          */
         getObjectById(id) {
             return _object.getObjectByProperty("id", id);
@@ -183,7 +183,7 @@ export function createObject3D(id = "") {
 
         /**
          * @param {string} name
-         * @returns {Object3D|undefined}
+         * @returns {Object3D|null}
          */
         getObjectByName(name) {
             return _object.getObjectByProperty("name", name);
@@ -192,7 +192,7 @@ export function createObject3D(id = "") {
         /**
          * @param {string} name
          * @param {any} value
-         * @returns {Object3D|undefined}
+         * @returns {Object3D|null}
          */
         getObjectByProperty(name, value) {
             if (_object[name] === value) return _object;
@@ -200,9 +200,9 @@ export function createObject3D(id = "") {
             for (let i = 0, l = _object.children.length; i < l; i++) {
                 const child = _object.children[i];
                 const object = child.getObjectByProperty(name, value);
-                if (object !== undefined) return object;
+                if (object !== null) return object;
             }
-            return undefined;
+            return null;
         },
 
         /**
@@ -295,7 +295,7 @@ export function createObject3D(id = "") {
         remove(object) {
             const index = _object.children.indexOf(object);
             if (index !== -1) {
-                object.parent = undefined;
+                object.parent = null;
                 _object.children.splice(index, 1);
             }
             return _object;
@@ -476,10 +476,3 @@ export function createObject3D(id = "") {
     };
     return _object;
 }
-
-/**
- * @namespace
- */
-export const Object3D = {
-    // static methods go here
-};
