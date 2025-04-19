@@ -58,7 +58,9 @@ export function createEuler(x = 0, y = 0, z = 0, order = "XYZ") {
          * @returns {Euler}
          */
         copy(euler) {
-            _e.x = euler.x, _e.y = euler.y, _e.z = euler.z;
+            _e.x = euler.x;
+            _e.y = euler.y;
+            _e.z = euler.z;
             _e.order = euler.order;
             return _e;
         },
@@ -106,7 +108,9 @@ export function createEuler(x = 0, y = 0, z = 0, order = "XYZ") {
          * @returns {Euler}
          */
         set(x, y, z, order) {
-            _e.x = x, _e.y = y, _e.z = z;
+            _e.x = x;
+            _e.y = y;
+            _e.z = z;
             _e.order = order || _e.order;
             return _e;
         },

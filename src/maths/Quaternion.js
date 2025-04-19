@@ -213,7 +213,10 @@ export function createQuaternion(x = 0, y = 0, z = 0, w = 1) {
          * @returns {Quaternion}
          */
         set(x, y, z, w) {
-            _q.x = x, _q.y = y, _q.z = z, _q.w = w;
+            _q.x = x;
+            _q.y = y;
+            _q.z = z;
+            _q.w = w;
             return _q;
         },
 
@@ -239,12 +242,12 @@ export function createQuaternion(x = 0, y = 0, z = 0, w = 1) {
          * @returns {Quaternion}
          */
         setFromEuler(euler) {
-            const c1 = Math.cos(euler.x / 2),
-                c2 = Math.cos(euler.y / 2),
-                c3 = Math.cos(euler.z / 2);
-            const s1 = Math.sin(euler.x / 2),
-                s2 = Math.sin(euler.y / 2),
-                s3 = Math.sin(euler.z / 2);
+            const c1 = Math.cos(euler.x / 2);
+            const c2 = Math.cos(euler.y / 2);
+            const c3 = Math.cos(euler.z / 2);
+            const s1 = Math.sin(euler.x / 2);
+            const s2 = Math.sin(euler.y / 2);
+            const s3 = Math.sin(euler.z / 2);
 
             const order = euler.order || "XYZ";
             switch (order) {
@@ -297,7 +300,6 @@ export function createQuaternion(x = 0, y = 0, z = 0, w = 1) {
                     );
                     break;
             }
-
             return _q;
         },
 
@@ -350,7 +352,6 @@ export function createQuaternion(x = 0, y = 0, z = 0, w = 1) {
                     (m21 - m12) / s,
                 );
             }
-
             return _q;
         },
 
@@ -374,7 +375,6 @@ export function createQuaternion(x = 0, y = 0, z = 0, w = 1) {
                     r,
                 );
             }
-
             return _q.unit();
         },
 
@@ -458,7 +458,10 @@ export function createQuaternion(x = 0, y = 0, z = 0, w = 1) {
         },
 
         *[Symbol.iterator]() {
-            yield _q.x, yield _q.y, yield _q.z, yield _q.w;
+            yield _q.x;
+            yield _q.y;
+            yield _q.z;
+            yield _q.w;
         },
     };
     return _q;
