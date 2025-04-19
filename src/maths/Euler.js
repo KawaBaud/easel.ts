@@ -64,7 +64,7 @@ export function createEuler(x = 0, y = 0, z = 0, order = "XYZ") {
         },
 
         /**
-         * @param {Array<number,number,number,string>} array
+         * @param {Array<number>} array
          * @param {number} offset
          * @returns {Euler}
          */
