@@ -192,5 +192,6 @@ export function createCubeShape(size = 1) {
             return _shape;
         },
     });
+
     return _shape;
 }

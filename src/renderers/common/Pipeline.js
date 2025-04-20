@@ -123,5 +123,6 @@ export function createPipeline() {
             }
         }
     }
+
     return _pipeline;
 }

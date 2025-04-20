@@ -58,5 +58,6 @@ export function createRenderList() {
             return _renderList;
         },
     };
+
     return _renderList;
 }

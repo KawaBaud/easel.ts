@@ -44,5 +44,6 @@ export function createScene() {
             return _scene;
         },
     });
+
     return _scene;
 }

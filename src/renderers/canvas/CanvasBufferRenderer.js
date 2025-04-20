@@ -66,5 +66,6 @@ export function createCanvasBufferRenderer(options = {}) {
             return _bufferRenderer;
         },
     };
+
     return _bufferRenderer;
 }

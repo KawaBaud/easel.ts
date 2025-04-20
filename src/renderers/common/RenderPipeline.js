@@ -51,5 +51,6 @@ export function createRenderPipeline(options) {
             return _renderPipeline;
         },
     };
+
     return _renderPipeline;
 }

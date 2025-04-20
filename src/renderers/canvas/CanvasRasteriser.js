@@ -145,5 +145,6 @@ export function createCanvasRasteriser(canvas) {
             _imageData.data[index + 3] = a;
         },
     };
+
     return _rasteriser;
 }

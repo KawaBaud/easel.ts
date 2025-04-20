@@ -43,5 +43,6 @@ export function createRenderContext(scene, camera) {
             return _context;
         },
     };
+
     return _context;
 }
