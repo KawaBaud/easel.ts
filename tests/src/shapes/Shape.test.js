@@ -142,6 +142,37 @@ describe("Shape core", () => {
         expect(shape2.position.z).toBeCloseTo(origPos.z);
     });
 
+    test("computeBoundingSphere", () => {
+        const shape = createShape();
+        const vertices = new Float32Array([
+            -5,
+            0,
+            0,
+            5,
+            0,
+            0,
+            0,
+            3,
+            0,
+            0,
+            0,
+            4,
+        ]);
+
+        shape.setVertices(vertices);
+        shape.computeBoundingSphere();
+
+        expect(shape.boundingSphere).toBeDefined();
+        expect(shape.boundingSphere.centre.x).toBeCloseTo(0, 5);
+        expect(shape.boundingSphere.centre.y).toBeCloseTo(1.5, 5);
+        expect(shape.boundingSphere.centre.z).toBeCloseTo(2, 5);
+        expect(shape.boundingSphere.radius).toBeCloseTo(5.59, 2);
+
+        const emptyShape = createShape();
+        emptyShape.computeBoundingSphere();
+        expect(emptyShape.boundingSphere).toBeUndefined();
+    });
+
     test("Object3D inheritance", () => {
         const shape = createShape();
 
