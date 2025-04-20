@@ -4,10 +4,10 @@ import {
     Quaternion as ThreeQuaternion,
     Vector3 as ThreeVector3,
 } from "three";
-import { Maths } from "../../../src/maths/Maths.js";
 import { createMatrix4 } from "../../../src/maths/Matrix4.js";
 import { createQuaternion } from "../../../src/maths/Quaternion.js";
 import { createVector3 } from "../../../src/maths/Vector3.js";
+import { MathsUtils } from "../../../src/utils/MathsUtils.js";
 
 const createQuaternions = (x, y, z) => {
     const ourQuat = createQuaternion();
@@ -23,7 +23,7 @@ const compareMatrices = (
     ourMat,
     threeMat,
     testName,
-    epsilon = Maths.EPSILON,
+    epsilon = MathsUtils.EPSILON,
 ) => {
     expect(ourMat.elements.length).toBe(16);
     expect(threeMat.elements.length).toBe(16);
@@ -220,7 +220,7 @@ describe("Matrix4 transformations", () => {
         {
             name: "rotated",
             position: [0, 0, 0],
-            rotation: [Maths.HALF_PI, 0, 0],
+            rotation: [MathsUtils.HALF_PI, 0, 0],
             scale: [1, 1, 1],
         },
         {
@@ -232,13 +232,13 @@ describe("Matrix4 transformations", () => {
         {
             name: "zero scale",
             position: [1, 1, 1],
-            rotation: [0, Maths.QUARTER_PI, 0],
+            rotation: [0, MathsUtils.QUARTER_PI, 0],
             scale: [1, 0, 1],
         },
         {
             name: "complex",
             position: [-5, 10, -2],
-            rotation: [Maths.THIRD_PI, -Maths.SIXTH_PI, Math.PI],
+            rotation: [MathsUtils.THIRD_PI, -MathsUtils.SIXTH_PI, Math.PI],
             scale: [1, 5, 1],
         },
     ];
@@ -333,8 +333,8 @@ describe("Matrix4 transformations", () => {
 });
 
 describe("Matrix4 operations", () => {
-    const ourMatA = createMatrix4().makeRotationX(Maths.SIXTH_PI);
-    const threeMatA = new ThreeMatrix4().makeRotationX(Maths.SIXTH_PI);
+    const ourMatA = createMatrix4().makeRotationX(MathsUtils.SIXTH_PI);
+    const threeMatA = new ThreeMatrix4().makeRotationX(MathsUtils.SIXTH_PI);
     const ourMatB = createMatrix4().makeTranslation(1, 2, 3);
     const threeMatB = new ThreeMatrix4().makeTranslation(1, 2, 3);
 
@@ -464,8 +464,8 @@ describe("Matrix4 operations", () => {
     });
 
     test("setPosition and copyPosition", () => {
-        const ourMat = createMatrix4().makeRotationY(Maths.THIRD_PI);
-        const threeMat = new ThreeMatrix4().makeRotationY(Maths.THIRD_PI);
+        const ourMat = createMatrix4().makeRotationY(MathsUtils.THIRD_PI);
+        const threeMat = new ThreeMatrix4().makeRotationY(MathsUtils.THIRD_PI);
 
         const x = 10, y = -20, z = 30;
 
@@ -518,7 +518,7 @@ describe("Matrix4 operations", () => {
 
 describe("Matrix4 projections", () => {
     test("makePerspective", () => {
-        const fov = 75 * Maths.DEGREES_TO_RADIANS;
+        const fov = 75 * MathsUtils.DEGREES_TO_RADIANS;
         const aspect = 16 / 9;
         const near = 0.1;
         const far = 1000;
@@ -580,7 +580,7 @@ describe("Matrix4 decomposition", () => {
         {
             name: "rotated",
             position: [0, 0, 0],
-            rotation: [Maths.HALF_PI, 0, 0],
+            rotation: [MathsUtils.HALF_PI, 0, 0],
             scale: [1, 1, 1],
         },
         {
@@ -592,7 +592,11 @@ describe("Matrix4 decomposition", () => {
         {
             name: "complex",
             position: [-5, 10, -2],
-            rotation: [Maths.THIRD_PI, -Maths.SIXTH_PI, Maths.QUARTER_PI],
+            rotation: [
+                MathsUtils.THIRD_PI,
+                -MathsUtils.SIXTH_PI,
+                MathsUtils.QUARTER_PI,
+            ],
             scale: [2, 3, 4],
         },
     ];
@@ -685,7 +689,7 @@ describe("Matrix4 decomposition", () => {
 
     test("decompose w/ zero scale", () => {
         const position = [1, 2, 3];
-        const rotation = [Maths.QUARTER_PI, 0, 0];
+        const rotation = [MathsUtils.QUARTER_PI, 0, 0];
         const scale = [1, 0, 1];
 
         const ourPos = createVector3();
@@ -748,16 +752,17 @@ describe("Matrix4 vector transformations", () => {
             },
             {
                 name: "rotation",
-                matrix: createMatrix4().makeRotationY(Maths.QUARTER_PI),
+                matrix: createMatrix4().makeRotationY(MathsUtils.QUARTER_PI),
             },
             { name: "scale", matrix: createMatrix4().makeScale(2, 3, 0.5) },
             {
                 name: "complex",
-                matrix: createMatrix4().makeRotationZ(Maths.SIXTH_PI).premul(
-                    createMatrix4().makeScale(2, 2, 2),
-                ).premul(
-                    createMatrix4().makeTranslation(5, 5, 5),
-                ),
+                matrix: createMatrix4().makeRotationZ(MathsUtils.SIXTH_PI)
+                    .premul(
+                        createMatrix4().makeScale(2, 2, 2),
+                    ).premul(
+                        createMatrix4().makeTranslation(5, 5, 5),
+                    ),
             },
         ];
 
@@ -804,9 +809,9 @@ describe("Matrix4 chain operations", () => {
     test("multiple operations in sequence", () => {
         const operations = [
             { type: "translate", params: [1, 2, 3] },
-            { type: "rotateX", params: [Maths.QUARTER_PI] },
+            { type: "rotateX", params: [MathsUtils.QUARTER_PI] },
             { type: "scale", params: [2, 0.5, 3] },
-            { type: "rotateY", params: [Maths.SIXTH_PI] },
+            { type: "rotateY", params: [MathsUtils.SIXTH_PI] },
             { type: "translate", params: [-5, 10, -2] },
         ];
 

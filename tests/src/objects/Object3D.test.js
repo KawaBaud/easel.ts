@@ -1,8 +1,8 @@
 import { Object3D as ThreeObject3D, Vector3 as ThreeVector3 } from "three";
-import { Maths } from "../../../src/maths/Maths.js";
 import { createQuaternion } from "../../../src/maths/Quaternion.js";
 import { createVector3 } from "../../../src/maths/Vector3.js";
 import { createObject3D } from "../../../src/objects/Object3D.js";
+import { MathsUtils } from "../../../src/utils/MathsUtils.js";
 
 const compareVector3 = (ourVec, threeVec, testName, epsilon = 1e-5) => {
     try {
@@ -156,8 +156,8 @@ describe("Object3D hierarchy", () => {
         ourParent.add(ourChild2);
 
         const visited = [];
-        ourParent.traverse((obj) => {
-            visited.push(obj.id);
+        ourParent.traverse((object) => {
+            visited.push(object.id);
         });
 
         expect(visited).toEqual(["parent", "child1", "child2"]);
@@ -174,8 +174,8 @@ describe("Object3D hierarchy", () => {
         ourChild2.visible = false;
 
         const visited = [];
-        ourParent.traverseVisible((obj) => {
-            visited.push(obj.id);
+        ourParent.traverseVisible((object) => {
+            visited.push(object.id);
         });
 
         expect(visited).toEqual(["parent", "child1"]);
@@ -190,8 +190,8 @@ describe("Object3D hierarchy", () => {
         ourParent.add(ourChild);
 
         const visited = [];
-        ourChild.traverseAncestors((obj) => {
-            visited.push(obj.id);
+        ourChild.traverseAncestors((object) => {
+            visited.push(object.id);
         });
 
         expect(visited).toEqual(["parent", "grandparent"]);
@@ -254,17 +254,17 @@ describe("Object3D hierarchy", () => {
     });
 
     test("clone and copy", () => {
-        const original = createObject3D("original");
-        original.position.set(1, 2, 3);
-        original.scale.set(2, 2, 2);
-        original.userData = { test: "data" };
+        const orig = createObject3D("original");
+        orig.position.set(1, 2, 3);
+        orig.scale.set(2, 2, 2);
+        orig.userData = { test: "data" };
 
         const child = createObject3D("child");
-        original.add(child);
+        orig.add(child);
 
-        const clone = original.clone();
+        const clone = orig.clone();
 
-        expect(clone.id).toBe(original.id);
+        expect(clone.id).toBe(orig.id);
         expect(clone.position.x).toBe(1);
         expect(clone.position.y).toBe(2);
         expect(clone.position.z).toBe(3);
@@ -275,7 +275,7 @@ describe("Object3D hierarchy", () => {
         expect(clone.children.length).toBe(1);
         expect(clone.children[0].id).toBe("child");
 
-        const nonRecursiveClone = original.clone(false);
+        const nonRecursiveClone = orig.clone(false);
         expect(nonRecursiveClone.children.length).toBe(0);
     });
 });
@@ -363,9 +363,13 @@ describe("Object3D transformations", () => {
 
     test("rotation methods", () => {
         const testCases = [
-            { name: "rotateX", angle: Maths.HALF_PI, method: "rotateX" },
-            { name: "rotateY", angle: Maths.THIRD_PI, method: "rotateY" },
-            { name: "rotateZ", angle: Maths.QUARTER_PI, method: "rotateZ" },
+            { name: "rotateX", angle: MathsUtils.HALF_PI, method: "rotateX" },
+            { name: "rotateY", angle: MathsUtils.THIRD_PI, method: "rotateY" },
+            {
+                name: "rotateZ",
+                angle: MathsUtils.QUARTER_PI,
+                method: "rotateZ",
+            },
         ];
 
         testCases.forEach(({ name, angle, method }) => {
@@ -393,12 +397,12 @@ describe("Object3D transformations", () => {
             { name: "default", rotation: [0, 0, 0], expected: [0, 0, 1] },
             {
                 name: "rotateY90",
-                rotation: [0, Maths.HALF_PI, 0],
+                rotation: [0, MathsUtils.HALF_PI, 0],
                 expected: [1, 0, 0],
             },
             {
                 name: "rotateX90",
-                rotation: [Maths.HALF_PI, 0, 0],
+                rotation: [MathsUtils.HALF_PI, 0, 0],
                 expected: [0, -1, 0],
             },
         ];
@@ -446,11 +450,11 @@ describe("Object3D transformations", () => {
 
         ourParent.position.set(1, 0, 0);
         ourParent.scale.set(2, 2, 2);
-        ourParent.rotateY(Maths.HALF_PI); // 90 degrees
+        ourParent.rotateY(MathsUtils.HALF_PI); // 90 degrees
 
         ourChild.position.set(0, 1, 0);
         ourChild.scale.set(0.5, 0.5, 0.5);
-        ourChild.rotateX(Maths.HALF_PI); // 90 degrees
+        ourChild.rotateX(MathsUtils.HALF_PI); // 90 degrees
 
         ourParent.add(ourChild);
 
@@ -476,7 +480,7 @@ describe("Object3D transformations", () => {
         const ourObj = createObject3D();
 
         ourObj.position.set(1, 2, 3);
-        ourObj.rotateY(Maths.HALF_PI); // 90 degrees
+        ourObj.rotateY(MathsUtils.HALF_PI); // 90 degrees
         ourObj.updateMatrix();
         ourObj.updateWorldMatrix();
 
@@ -507,10 +511,10 @@ describe("Object3D transformations", () => {
         expect(ourObj.position.y).toBeCloseTo(expectedPos);
         expect(ourObj.position.z).toBeCloseTo(0);
 
-        ourObj.rotateY(Maths.HALF_PI);
+        ourObj.rotateY(MathsUtils.HALF_PI);
 
         const worldZAxis = createVector3(0, 0, 1);
-        ourObj.rotateOnWorldAxis(worldZAxis, Maths.HALF_PI);
+        ourObj.rotateOnWorldAxis(worldZAxis, MathsUtils.HALF_PI);
 
         const dir = createVector3();
         ourObj.getWorldDirection(dir);

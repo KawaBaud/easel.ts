@@ -4,12 +4,16 @@ import {
     Vector3 as ThreeVector3,
 } from "three";
 import { createEuler } from "../../../src/maths/Euler.js";
-import { Maths } from "../../../src/maths/Maths.js";
 import { createMatrix4 } from "../../../src/maths/Matrix4.js";
 import { createQuaternion } from "../../../src/maths/Quaternion.js";
 import { createVector3 } from "../../../src/maths/Vector3.js";
+import { MathsUtils } from "../../../src/utils/MathsUtils.js";
 
-const compareQuaternions = (ourQuat, threeQuat, epsilon = Maths.EPSILON) => {
+const compareQuaternions = (
+    ourQuat,
+    threeQuat,
+    epsilon = MathsUtils.EPSILON,
+) => {
     const directMatch = Math.abs(ourQuat.x - threeQuat.x) < epsilon &&
         Math.abs(ourQuat.y - threeQuat.y) < epsilon &&
         Math.abs(ourQuat.z - threeQuat.z) < epsilon &&
@@ -188,12 +192,12 @@ describe("Quaternion operations", () => {
 describe("Quaternion conversions", () => {
     test("setFromAxisAngle", () => {
         const testCases = [
-            { axis: [1, 0, 0], angle: Maths.QUARTER_PI },
-            { axis: [0, 1, 0], angle: Maths.HALF_PI },
+            { axis: [1, 0, 0], angle: MathsUtils.QUARTER_PI },
+            { axis: [0, 1, 0], angle: MathsUtils.HALF_PI },
             { axis: [0, 0, 1], angle: Math.PI },
-            { axis: [1, 1, 1], angle: Maths.THIRD_PI },
+            { axis: [1, 1, 1], angle: MathsUtils.THIRD_PI },
             { axis: [0, 1, 0], angle: 1e6 * Math.PI },
-            { axis: [1000, 2000, 3000], angle: Maths.SIXTH_PI },
+            { axis: [1000, 2000, 3000], angle: MathsUtils.SIXTH_PI },
         ];
 
         testCases.forEach(({ axis, angle }) => {
@@ -212,31 +216,55 @@ describe("Quaternion conversions", () => {
     test("setFromEuler", () => {
         const testCases = [
             { euler: [0, 0, 0], order: "XYZ" },
-            { euler: [Maths.QUARTER_PI, 0, 0], order: "XYZ" },
-            { euler: [0, Maths.QUARTER_PI, 0], order: "XYZ" },
-            { euler: [0, 0, Maths.QUARTER_PI], order: "XYZ" },
+            { euler: [MathsUtils.QUARTER_PI, 0, 0], order: "XYZ" },
+            { euler: [0, MathsUtils.QUARTER_PI, 0], order: "XYZ" },
+            { euler: [0, 0, MathsUtils.QUARTER_PI], order: "XYZ" },
             {
-                euler: [Maths.QUARTER_PI, Maths.QUARTER_PI, Maths.QUARTER_PI],
+                euler: [
+                    MathsUtils.QUARTER_PI,
+                    MathsUtils.QUARTER_PI,
+                    MathsUtils.QUARTER_PI,
+                ],
                 order: "XYZ",
             },
             {
-                euler: [Maths.QUARTER_PI, Maths.QUARTER_PI, Maths.QUARTER_PI],
+                euler: [
+                    MathsUtils.QUARTER_PI,
+                    MathsUtils.QUARTER_PI,
+                    MathsUtils.QUARTER_PI,
+                ],
                 order: "YXZ",
             },
             {
-                euler: [Maths.QUARTER_PI, Maths.QUARTER_PI, Maths.QUARTER_PI],
+                euler: [
+                    MathsUtils.QUARTER_PI,
+                    MathsUtils.QUARTER_PI,
+                    MathsUtils.QUARTER_PI,
+                ],
                 order: "ZXY",
             },
             {
-                euler: [Maths.QUARTER_PI, Maths.QUARTER_PI, Maths.QUARTER_PI],
+                euler: [
+                    MathsUtils.QUARTER_PI,
+                    MathsUtils.QUARTER_PI,
+                    MathsUtils.QUARTER_PI,
+                ],
                 order: "ZYX",
             },
             {
-                euler: [Maths.QUARTER_PI, Maths.QUARTER_PI, Maths.QUARTER_PI],
+                euler: [
+                    MathsUtils.QUARTER_PI,
+                    MathsUtils.QUARTER_PI,
+                    MathsUtils.QUARTER_PI,
+                ],
                 order: "YZX",
             },
             {
-                euler: [Maths.QUARTER_PI, Maths.QUARTER_PI, Maths.QUARTER_PI],
+                euler: [
+                    MathsUtils.QUARTER_PI,
+                    MathsUtils.QUARTER_PI,
+                    MathsUtils.QUARTER_PI,
+                ],
                 order: "XZY",
             },
         ];
@@ -252,7 +280,7 @@ describe("Quaternion conversions", () => {
     });
 
     test("setFromRotationMatrix", () => {
-        const angle = Maths.HALF_PI;
+        const angle = MathsUtils.HALF_PI;
         const yAxis = [0, 1, 0];
 
         const ourAxis = createVector3(...yAxis).unit();

@@ -4,12 +4,12 @@ import {
     Quaternion as ThreeQuaternion,
     Vector3 as ThreeVector3,
 } from "three";
-import { Maths } from "../../../src/maths/Maths.js";
 import { createMatrix4 } from "../../../src/maths/Matrix4.js";
 import { createQuaternion } from "../../../src/maths/Quaternion.js";
 import { createVector3 } from "../../../src/maths/Vector3.js";
+import { MathsUtils } from "../../../src/utils/MathsUtils.js";
 
-const compareVectors = (ourVec, threeVec, epsilon = Maths.EPSILON) => {
+const compareVectors = (ourVec, threeVec, epsilon = MathsUtils.EPSILON) => {
     expect(ourVec.x).toBeCloseTo(threeVec.x, epsilon);
     expect(ourVec.y).toBeCloseTo(threeVec.y, epsilon);
     expect(ourVec.z).toBeCloseTo(threeVec.z, epsilon);
@@ -140,7 +140,7 @@ describe("Vector3 utility methods", () => {
 
         expect(ourVecA.dot(ourVecB)).toBeCloseTo(
             threeVecA.dot(threeVecB),
-            Maths.EPSILON,
+            MathsUtils.EPSILON,
         );
 
         const extremeVecA = createVector3(1e10, 1e-10, -1e5);
@@ -151,7 +151,7 @@ describe("Vector3 utility methods", () => {
 
         expect(extremeVecA.dot(extremeVecB)).toBeCloseTo(
             threeExtremeVecA.dot(threeExtremeVecB),
-            Maths.EPSILON,
+            MathsUtils.EPSILON,
         );
     });
 
@@ -212,8 +212,8 @@ describe("Vector3 transformations", () => {
         const matrices = {
             identity: [createMatrix4(), new ThreeMatrix4()],
             rotateY: [
-                createMatrix4().makeRotationY(Maths.QUARTER_PI),
-                new ThreeMatrix4().makeRotationY(Maths.QUARTER_PI),
+                createMatrix4().makeRotationY(MathsUtils.QUARTER_PI),
+                new ThreeMatrix4().makeRotationY(MathsUtils.QUARTER_PI),
             ],
             translate: [
                 createMatrix4().makeTranslation(10, 20, 30),
@@ -236,8 +236,8 @@ describe("Vector3 transformations", () => {
     test("applyQuaternion", () => {
         const testCases = [
             { v: [1, 0, 0], rotation: [0, 0, 0] },
-            { v: [0, 1, 0], rotation: [Maths.HALF_PI, 0, 0] },
-            { v: [1, 2, 3], rotation: [0, Maths.QUARTER_PI, 0] },
+            { v: [0, 1, 0], rotation: [MathsUtils.HALF_PI, 0, 0] },
+            { v: [1, 2, 3], rotation: [0, MathsUtils.QUARTER_PI, 0] },
         ];
 
         testCases.forEach(({ v, rotation }) => {
