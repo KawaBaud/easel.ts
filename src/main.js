@@ -1,13 +1,7 @@
-import { createPerspCamera } from "./cameras/PerspCamera.js";
-import { createMaterial } from "./materials/Material.js";
-import { createVector3 } from "./maths/Vector3.js";
-import { createMesh } from "./objects/Mesh.js";
-import { createCanvasRenderer } from "./renderers/canvas/CanvasRenderer.js";
-import { createScene } from "./scenes/Scene.js";
-import { createCubeShape } from "./shapes/CubeShape.js";
+import { MUSI } from "./MUSI.js";
 
-const scene = createScene();
-const camera = createPerspCamera(
+const scene = MUSI.Scene();
+const camera = MUSI.PerspCamera(
     70,
     globalThis.innerWidth / globalThis.innerHeight,
     0.1,
@@ -15,12 +9,12 @@ const camera = createPerspCamera(
 );
 camera.position.z = 5;
 
-const renderer = createCanvasRenderer();
+const renderer = MUSI.CanvasRenderer();
 globalThis.document.body.appendChild(renderer.domElement);
 
-const shape = createCubeShape();
-const material = createMaterial({ colour: 0x00FF00, wireframe: true });
-const cube = createMesh(shape, material);
+const shape = MUSI.CubeShape();
+const material = MUSI.Material({ colour: 0x00FF00, wireframe: true });
+const cube = MUSI.Mesh(shape, material);
 scene.add(cube);
 
 const keys = {};
@@ -40,7 +34,7 @@ function animate() {
     requestAnimationFrame(animate);
 
     // movement
-    const direction = createVector3();
+    const direction = MUSI.Vector3();
     if (keys["w"]) direction.z -= 1;
     if (keys["s"]) direction.z += 1;
     if (keys["a"]) direction.x -= 1;
