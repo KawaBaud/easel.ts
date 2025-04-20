@@ -1,7 +1,7 @@
 import { MathsUtils } from "../../../src/maths/MathsUtils.js";
 
 describe("MathsUtils", () => {
-    describe("core", () => {
+    describe("basics", () => {
         test("clamp", () => {
             expect(MathsUtils.clamp(5, 0, 10)).toBe(5);
             expect(MathsUtils.clamp(-5, 0, 10)).toBe(0);
@@ -9,35 +9,178 @@ describe("MathsUtils", () => {
         });
 
         test("constants", () => {
-            expect(MathsUtils.DEGREES_TO_RADIANS * 180).toBeCloseTo(Math.PI, 5);
-            expect(MathsUtils.RADIANS_TO_DEGREES * Math.PI).toBeCloseTo(180, 5);
+            expect(MathsUtils.HALF_PI).toBeCloseTo(Math.PI / 2, 10);
+            expect(MathsUtils.QUARTER_PI).toBeCloseTo(Math.PI / 4, 10);
+            expect(MathsUtils.THIRD_PI).toBeCloseTo(Math.PI / 3, 10);
+            expect(MathsUtils.SIXTH_PI).toBeCloseTo(Math.PI / 6, 10);
+            expect(MathsUtils.TAU).toBeCloseTo(Math.PI * 2, 10);
+            expect(MathsUtils.PISQ).toBeCloseTo(Math.PI * Math.PI, 10);
+
+            expect(MathsUtils.DEGREES_TO_RADIANS * 180).toBeCloseTo(
+                Math.PI,
+                10,
+            );
+            expect(MathsUtils.RADIANS_TO_DEGREES * Math.PI).toBeCloseTo(
+                180,
+                10,
+            );
+
             expect(MathsUtils.EPSILON).toBe(1e-4);
+        });
+
+        test("ipow", () => {
+            expect(MathsUtils.ipow(2, 0)).toBe(1);
+            expect(MathsUtils.ipow(2, 1)).toBe(2);
+            expect(MathsUtils.ipow(2, 3)).toBe(8);
+            expect(MathsUtils.ipow(3, 2)).toBe(9);
+            expect(MathsUtils.ipow(2, -2)).toBe(0.25);
+        });
+
+        test("shlmul", () => {
+            expect(MathsUtils.shlmul(5)).toBe(10);
+            expect(MathsUtils.shlmul(5, 2)).toBe(20);
+            expect(MathsUtils.shlmul(5, 3)).toBe(40);
         });
 
         test("shrdiv", () => {
             expect(MathsUtils.shrdiv(10)).toBe(5);
             expect(MathsUtils.shrdiv(100)).toBe(50);
+            expect(MathsUtils.shrdiv(16, 2)).toBe(4);
+            expect(MathsUtils.shrdiv(16, 3)).toBe(2);
+        });
+
+        test("smoothstep", () => {
+            expect(MathsUtils.smoothstep(-0.5)).toBe(0);
+            expect(MathsUtils.smoothstep(0)).toBe(0);
+            expect(MathsUtils.smoothstep(0.25)).toBeCloseTo(0.15625, 5);
+            expect(MathsUtils.smoothstep(0.5)).toBeCloseTo(0.5, 5);
+            expect(MathsUtils.smoothstep(0.75)).toBeCloseTo(0.84375, 5);
+            expect(MathsUtils.smoothstep(1)).toBe(1);
+            expect(MathsUtils.smoothstep(1.5)).toBe(1);
+        });
+
+        test("smootherstep", () => {
+            expect(MathsUtils.smootherstep(-0.5)).toBe(0);
+            expect(MathsUtils.smootherstep(0)).toBe(0);
+            expect(MathsUtils.smootherstep(0.25)).toBeCloseTo(0.103515625, 5);
+            expect(MathsUtils.smootherstep(0.5)).toBeCloseTo(0.5, 5);
+            expect(MathsUtils.smootherstep(0.75)).toBeCloseTo(0.896484375, 5);
+            expect(MathsUtils.smootherstep(1)).toBe(1);
+            expect(MathsUtils.smootherstep(1.5)).toBe(1);
+        });
+
+        test("toDegrees and toRadians", () => {
+            expect(MathsUtils.toDegrees(Math.PI)).toBeCloseTo(180, 10);
+            expect(MathsUtils.toDegrees(Math.PI / 2)).toBeCloseTo(90, 10);
+            expect(MathsUtils.toDegrees(Math.PI / 4)).toBeCloseTo(45, 10);
+
+            expect(MathsUtils.toRadians(180)).toBeCloseTo(Math.PI, 10);
+            expect(MathsUtils.toRadians(90)).toBeCloseTo(Math.PI / 2, 10);
+            expect(MathsUtils.toRadians(45)).toBeCloseTo(Math.PI / 4, 10);
+        });
+    });
+
+    describe("fast maths", () => {
+        test("fastAtan2", () => {
+            const testCases = [
+                { y: 0, x: 1, expected: 0 },
+                { y: 1, x: 0, expected: Math.PI / 2 },
+                { y: 0, x: -1, expected: Math.PI },
+                { y: -1, x: 0, expected: -Math.PI / 2 },
+                { y: 1, x: 1, expected: Math.PI / 4 },
+                { y: 1, x: -1, expected: 3 * Math.PI / 4 },
+                { y: -1, x: -1, expected: -3 * Math.PI / 4 },
+                { y: -1, x: 1, expected: -Math.PI / 4 },
+                { y: 0, x: 0, expected: 0 },
+            ];
+
+            for (const { y, x, expected } of testCases) {
+                const result = MathsUtils.fastAtan2(y, x);
+                expect(result).toBeCloseTo(expected, 2);
+            }
+        });
+
+        test("fastCeil", () => {
+            expect(MathsUtils.fastCeil(1.5)).toBe(2);
+            expect(MathsUtils.fastCeil(1.0)).toBe(1);
+            expect(MathsUtils.fastCeil(-1.5)).toBe(-1);
+            expect(MathsUtils.fastCeil(-1.0)).toBe(-1);
+        });
+
+        test("fastFloor", () => {
+            const testCases = [
+                [1.5, 1],
+                [1.9, 1],
+                [1.0, 1],
+                [0.1, 0],
+                [-0.1, -1],
+                [-1.0, -1],
+                [-1.5, -2],
+                [-1.9, -2],
+            ];
+
+            for (const [input, expected] of testCases) {
+                const result = MathsUtils.fastFloor(input);
+                expect(result).toBe(expected);
+            }
+        });
+
+        test("fastRound", () => {
+            expect(MathsUtils.fastRound(1.4)).toBe(1);
+            expect(MathsUtils.fastRound(1.5)).toBe(2);
+            expect(MathsUtils.fastRound(-1.4)).toBe(0); // fastTrunc(-1.4 + 0.5) = fastTrunc(-0.9) = 0
+            expect(MathsUtils.fastRound(-1.5)).toBe(-1); // fastTrunc(-1.5 + 0.5) = fastTrunc(-1.0) = -1
+        });
+
+        test("fastTrunc", () => {
+            expect(MathsUtils.fastTrunc(1.5)).toBe(1);
+            expect(MathsUtils.fastTrunc(-1.5)).toBe(-1);
+            expect(MathsUtils.fastTrunc(0)).toBe(0);
         });
     });
 
     describe("fixed-point maths", () => {
-        test("toFixed and toFloat", () => {
-            const values = [
-                0,
-                1,
-                -1,
-                0.5,
-                -0.5,
-                3.14159,
-                -3.14159,
-                1000,
-                -1000,
+        test("qdiv", () => {
+            const testCases = [
+                [6, 2, 3],
+                [1, 2, 0.5],
+                [10, 4, 2.5],
+                [-6, 2, -3],
+                [6, -2, -3],
             ];
 
-            for (const value of values) {
-                const fixed = MathsUtils.toFixed(value);
-                const float = MathsUtils.toFloat(fixed);
-                expect(float).toBeCloseTo(value, 3);
+            for (const [a, b, expected] of testCases) {
+                const fixedA = MathsUtils.toFixed(a);
+                const fixedB = MathsUtils.toFixed(b);
+                const result = MathsUtils.qdiv(fixedA, fixedB);
+                expect(MathsUtils.toFloat(result)).toBeCloseTo(expected, 5);
+            }
+
+            const fixedA = MathsUtils.toFixed(10);
+            const fixedB = MathsUtils.toFixed(0);
+            const result = MathsUtils.qdiv(fixedA, fixedB);
+            expect(result).toBe(0x7FFFFFFF);
+
+            const fixedNegA = MathsUtils.toFixed(-10);
+            const resultNeg = MathsUtils.qdiv(fixedNegA, fixedB);
+            expect(resultNeg).toBe(-0x7FFFFFFF);
+        });
+
+        test("qfloor", () => {
+            const testCases = [
+                [1.5, 1],
+                [1.9, 1],
+                [1.0, 1],
+                [0.1, 0],
+                [-0.1, -1],
+                [-1.0, -1],
+                [-1.5, -2],
+            ];
+
+            for (const [input, expected] of testCases) {
+                const fixedInput = MathsUtils.toFixed(input);
+                const result = MathsUtils.qfloor(fixedInput);
+                expect(MathsUtils.toFloat(result)).toBeCloseTo(expected, 5);
             }
         });
 
@@ -58,50 +201,63 @@ describe("MathsUtils", () => {
             }
         });
 
-        test("qdiv", () => {
-            const testCases = [
-                [6, 2, 3],
-                [1, 2, 0.5],
-                [10, 4, 2.5],
-                [-6, 2, -3],
-                [6, -2, -3],
+        test("qsin and qcos", () => {
+            const angles = [
+                0,
+                Math.PI / 6,
+                Math.PI / 4,
+                Math.PI / 3,
+                Math.PI / 2,
+                Math.PI,
+                3 * Math.PI / 2,
+                2 * Math.PI,
             ];
 
-            for (const [a, b, expected] of testCases) {
-                const fixedA = MathsUtils.toFixed(a);
-                const fixedB = MathsUtils.toFixed(b);
-                const result = MathsUtils.qdiv(fixedA, fixedB);
-                expect(MathsUtils.toFloat(result)).toBeCloseTo(expected, 5);
+            for (const angle of angles) {
+                const qsinResult = MathsUtils.toFloat(MathsUtils.qsin(angle));
+                const qcosResult = MathsUtils.toFloat(MathsUtils.qcos(angle));
+
+                expect(qsinResult).toBeCloseTo(Math.sin(angle), 2);
+                expect(qcosResult).toBeCloseTo(Math.cos(angle), 2);
             }
         });
-    });
 
-    describe("fast maths", () => {
-        test("fastTrunc", () => {
-            expect(MathsUtils.fastTrunc(1.5)).toBe(1);
-            expect(MathsUtils.fastTrunc(-1.5)).toBe(-1);
-        });
-
-        test("fastRound", () => {
-            expect(MathsUtils.fastRound(1.4)).toBe(1);
-            expect(MathsUtils.fastRound(1.5)).toBe(2);
-        });
-
-        test("fastFloor", () => {
+        test("qtrunc", () => {
             const testCases = [
                 [1.5, 1],
                 [1.9, 1],
                 [1.0, 1],
                 [0.1, 0],
-                [-0.1, -1],
+                [-0.1, 0],
                 [-1.0, -1],
-                [-1.5, -2],
-                [-1.9, -2],
+                [-1.5, -1],
+                [-1.9, -1],
             ];
 
             for (const [input, expected] of testCases) {
-                const result = MathsUtils.fastFloor(input);
-                expect(result).toBe(expected);
+                const fixedInput = MathsUtils.toFixed(input);
+                const result = MathsUtils.qtrunc(fixedInput);
+                expect(MathsUtils.toFloat(result)).toBeCloseTo(expected, 5);
+            }
+        });
+
+        test("toFixed and toFloat", () => {
+            const values = [
+                0,
+                1,
+                -1,
+                0.5,
+                -0.5,
+                3.14159,
+                -3.14159,
+                1000,
+                -1000,
+            ];
+
+            for (const value of values) {
+                const fixed = MathsUtils.toFixed(value);
+                const float = MathsUtils.toFloat(fixed);
+                expect(float).toBeCloseTo(value, 3);
             }
         });
     });
