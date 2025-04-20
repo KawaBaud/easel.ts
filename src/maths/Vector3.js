@@ -9,6 +9,9 @@ import { createQuaternion } from "./Quaternion.js";
  * @property {number} x
  * @property {number} y
  * @property {number} z
+ * @property {boolean} isVector3
+ * @property {number} length
+ * @property {number} lengthSq
  */
 
 /**

@@ -4,6 +4,9 @@ import { MathsUtils } from "./MathsUtils.js";
  * @typedef {Object} Vector2
  * @property {number} x
  * @property {number} y
+ * @property {boolean} isVector2
+ * @property {number} length
+ * @property {number} lengthSq
  */
 
 /**
