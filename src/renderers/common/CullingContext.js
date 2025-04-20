@@ -8,8 +8,8 @@ import { createVector3 } from "../../maths/Vector3.js";
  * @typedef {import("../../objects/Object3D.js").Object3D} Object3D
  * @typedef {Object} CullingContext
  * @property {Frustum} frustum
- * @property {boolean} enableBackfaceCulling
- * @property {boolean} enableFrustumCulling
+ * @property {boolean} backfaceCulled
+ * @property {boolean} frustumCulled
  */
 
 /**
@@ -18,11 +18,16 @@ import { createVector3 } from "../../maths/Vector3.js";
  */
 export function createCullingContext(camera) {
     const _frustum = createFrustum().setFromCamera(camera);
+    const _a = createVector3();
+    const _b = createVector3();
+    const _normal = createVector3();
+    const _vertex = createVector3();
+    const _centre = createVector3();
 
     const _context = {
         frustum: _frustum,
-        enableBackfaceCulling: true,
-        enableFrustumCulling: true,
+        backfaceCulled: true,
+        frustumCulled: true,
 
         /**
          * @param {Vector3} v1
@@ -31,13 +36,13 @@ export function createCullingContext(camera) {
          * @returns {boolean}
          */
         backfaceCull(v1, v2, v3) {
-            if (!_context.enableBackfaceCulling) return true;
+            if (!_context.backfaceCulled) return true;
 
-            const a = createVector3().subVectors(v2, v1);
-            const b = createVector3().subVectors(v3, v1);
-            const normal = createVector3().crossVectors(a, b);
+            _a.subVectors(v2, v1);
+            _b.subVectors(v3, v1);
+            _normal.crossVectors(_a, _b);
 
-            return normal.z < 0;
+            return _normal.z < 0;
         },
 
         /**
@@ -50,7 +55,7 @@ export function createCullingContext(camera) {
          * @returns {boolean}
          */
         backfaceCullScreenSpace(x0, y0, x1, y1, x2, y2) {
-            if (!_context.enableBackfaceCulling) return true;
+            if (!_context.backfaceCulled) return true;
 
             const opz = ((x1 - x0) * (y2 - y0)) - ((x2 - x0) * (y1 - y0));
             return opz > 0;
@@ -61,21 +66,19 @@ export function createCullingContext(camera) {
          * @returns {boolean}
          */
         frustumCull(object) {
-            if (!_context.enableFrustumCulling) return true;
+            if (!_context.frustumCulled) return true;
             if (!object.geometry) return true;
 
             if (object.geometry.boundingSphere) {
                 const sphere = object.geometry.boundingSphere;
-                const centre = createVector3().copy(sphere.centre).applyMatrix4(
-                    object.worldMatrix,
-                );
+                _centre.copy(sphere.centre).applyMatrix4(object.worldMatrix);
                 const radius = sphere.radius * Math.max(
                     object.scale.x,
                     object.scale.y,
                     object.scale.z,
                 );
 
-                return _context.frustum.intersectsSphere(centre, radius);
+                return _context.frustum.intersectsSphere(_centre, radius);
             }
 
             if (object.geometry.vertices) {
@@ -83,13 +86,13 @@ export function createCullingContext(camera) {
                 const worldMatrix = object.worldMatrix;
 
                 for (let i = 0; i < vertices.length; i += 3) {
-                    const vertex = createVector3(
+                    _vertex.set(
                         vertices[i],
                         vertices[i + 1],
                         vertices[i + 2],
                     ).applyMatrix4(worldMatrix);
 
-                    if (_context.frustum.containsPoint(vertex)) return true;
+                    if (_context.frustum.containsPoint(_vertex)) return true;
                 }
                 return false;
             }

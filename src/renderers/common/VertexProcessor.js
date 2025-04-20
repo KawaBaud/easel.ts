@@ -13,7 +13,6 @@ import { createVector3 } from "../../maths/Vector3.js";
 export function createVertexProcessor() {
     const _vector = createVector3();
     const _tempVector = createVector3();
-
     const _tempVertexBuffer = new Float32Array(9);
 
     const _vertexProcessor = {
@@ -71,6 +70,80 @@ export function createVertexProcessor() {
         },
 
         /**
+         * @param {Vector3} v1
+         * @param {Vector3} v2
+         * @param {Vector3} v3
+         * @param {Camera} camera
+         * @param {number} width
+         * @param {number} height
+         * @param {boolean} [backfaceCulled=true]
+         * @returns {Array<Object>|null}
+         */
+        projectTriangle(
+            v1,
+            v2,
+            v3,
+            camera,
+            width,
+            height,
+            backfaceCulled = true,
+        ) {
+            _tempVertexBuffer[0] = v1.x;
+            _tempVertexBuffer[1] = v1.y;
+            _tempVertexBuffer[2] = v1.z;
+            _tempVertexBuffer[3] = v2.x;
+            _tempVertexBuffer[4] = v2.y;
+            _tempVertexBuffer[5] = v2.z;
+            _tempVertexBuffer[6] = v3.x;
+            _tempVertexBuffer[7] = v3.y;
+            _tempVertexBuffer[8] = v3.z;
+
+            if (!camera || !camera.matrixWorldInverse) return null;
+
+            const halfWidth = width >> 1; // width / 2
+            const halfHeight = height >> 1; // height / 2
+
+            const result = [null, null, null];
+
+            for (let i = 0; i < 3; i++) {
+                const idx = i * 3;
+
+                _tempVector.set(
+                    _tempVertexBuffer[idx],
+                    _tempVertexBuffer[idx + 1],
+                    _tempVertexBuffer[idx + 2],
+                );
+                _tempVector.applyMatrix4(camera.matrixWorldInverse);
+                if (_tempVector.z > -0.1) return null;
+
+                const scale = 1 / -_tempVector.z;
+
+                let screenX = _tempVector.x * scale;
+                let screenY = _tempVector.y * scale;
+                screenX = (screenX * halfWidth) + halfWidth;
+                screenY = halfHeight - (screenY * halfHeight);
+
+                result[i] = {
+                    x: screenX | 0,
+                    y: screenY | 0,
+                    z: _tempVector.z,
+                };
+            }
+
+            if (backfaceCulled) {
+                const p1 = result[0];
+                const p2 = result[1];
+                const p3 = result[2];
+
+                const opz = ((p2.x - p1.x) * (p3.y - p1.y)) -
+                    ((p3.x - p1.x) * (p2.y - p1.y));
+                if (opz <= 0) return null;
+            }
+
+            return result;
+        },
+
+        /**
          * @param {Vector3} vertex
          * @param {Camera} camera
          * @param {number} width
@@ -107,60 +180,6 @@ export function createVertexProcessor() {
          */
         transformVertex(vertex, matrix) {
             return _vector.copy(vertex).applyMatrix4(matrix);
-        },
-
-        /**
-         * @param {Vector3} v1
-         * @param {Vector3} v2
-         * @param {Vector3} v3
-         * @param {Camera} camera
-         * @param {number} width
-         * @param {number} height
-         * @returns {Array<Object>|null}
-         */
-        projectTriangle(v1, v2, v3, camera, width, height) {
-            _tempVertexBuffer[0] = v1.x;
-            _tempVertexBuffer[1] = v1.y;
-            _tempVertexBuffer[2] = v1.z;
-            _tempVertexBuffer[3] = v2.x;
-            _tempVertexBuffer[4] = v2.y;
-            _tempVertexBuffer[5] = v2.z;
-            _tempVertexBuffer[6] = v3.x;
-            _tempVertexBuffer[7] = v3.y;
-            _tempVertexBuffer[8] = v3.z;
-
-            if (!camera || !camera.matrixWorldInverse) return null;
-
-            const halfWidth = width >> 1; // width / 2
-            const halfHeight = height >> 1; // height / 2
-
-            const result = [null, null, null];
-
-            for (let i = 0; i < 3; i++) {
-                const idx = i * 3;
-                _tempVector.set(
-                    _tempVertexBuffer[idx],
-                    _tempVertexBuffer[idx + 1],
-                    _tempVertexBuffer[idx + 2],
-                );
-                _tempVector.applyMatrix4(camera.matrixWorldInverse);
-
-                if (_tempVector.z > -0.1) return null;
-
-                const scale = 1 / -_tempVector.z;
-
-                let screenX = _tempVector.x * scale;
-                let screenY = _tempVector.y * scale;
-                screenX = (screenX * halfWidth) + halfWidth;
-                screenY = halfHeight - (screenY * halfHeight);
-
-                result[i] = {
-                    x: screenX | 0,
-                    y: screenY | 0,
-                    z: _tempVector.z,
-                };
-            }
-            return result;
         },
     };
 

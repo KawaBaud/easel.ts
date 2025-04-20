@@ -21,6 +21,8 @@ export function createPipeline() {
     const _v2 = createVector3();
     const _v3 = createVector3();
 
+    let _cullingContext = null;
+
     const _pipeline = {
         /**
          * @returns {import("./RenderList.js").RenderList}
@@ -37,6 +39,7 @@ export function createPipeline() {
          */
         cull(scene, camera, cullingContext) {
             _renderList.clear();
+            _cullingContext = cullingContext;
 
             cullingContext.updateFrustum(camera);
 
@@ -108,6 +111,7 @@ export function createPipeline() {
                     camera,
                     target.width,
                     target.height,
+                    _cullingContext ? _cullingContext.backfaceCulled : true,
                 );
                 if (projectedPoints) {
                     renderFunction(

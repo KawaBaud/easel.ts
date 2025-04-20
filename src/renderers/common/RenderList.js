@@ -1,3 +1,5 @@
+import { createVector3 } from "../../maths/Vector3.js";
+
 /**
  * @typedef {import("../../objects/Object3D.js").Object3D} Object3D
  * @typedef {Object} RenderList
@@ -12,6 +14,10 @@ export function createRenderList() {
     const _zValues = new Float32Array(128);
     const _indices = new Uint16Array(128);
     let _capacity = 128;
+
+    const _v1 = createVector3();
+    const _v2 = createVector3();
+    const _v3 = createVector3();
 
     const _renderList = {
         /**
@@ -39,6 +45,38 @@ export function createRenderList() {
         },
 
         /**
+         * OTZ = (SZ0 + SZ1 + SZ2) / 3
+         * @param {Object} mesh
+         * @returns {number}
+         */
+        calculateOTZ(mesh) {
+            if (
+                !mesh.geometry || !mesh.geometry.vertices ||
+                !mesh.geometry.indices
+            ) {
+                return mesh.position.z;
+            }
+
+            const vertices = mesh.geometry.vertices;
+            const indices = mesh.geometry.indices;
+            if (indices.length < 3) return mesh.position.z;
+
+            const idx1 = indices[0] * 3;
+            const idx2 = indices[1] * 3;
+            const idx3 = indices[2] * 3;
+
+            _v1.set(vertices[idx1], vertices[idx1 + 1], vertices[idx1 + 2]);
+            _v2.set(vertices[idx2], vertices[idx2 + 1], vertices[idx2 + 2]);
+            _v3.set(vertices[idx3], vertices[idx3 + 1], vertices[idx3 + 2]);
+
+            _v1.applyMatrix4(mesh.worldMatrix);
+            _v2.applyMatrix4(mesh.worldMatrix);
+            _v3.applyMatrix4(mesh.worldMatrix);
+
+            return (_v1.z + _v2.z + _v3.z) / 3;
+        },
+
+        /**
          * @param {Array<Object3D>} objects
          * @returns {RenderList}
          */
@@ -51,7 +89,7 @@ export function createRenderList() {
             }
 
             for (let i = 0; i < count; i++) {
-                _zValues[i] = objects[i].position.z;
+                _zValues[i] = _renderList.calculateOTZ(objects[i]);
                 _indices[i] = i;
             }
             _indices.sort((a, b) => _zValues[b] - _zValues[a]);

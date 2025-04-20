@@ -26,46 +26,6 @@ export function createMatrix4(elements = new Float32Array(16)) {
         isMatrix4: true,
 
         /**
-         * @returns {number}
-         */
-        get determinant() {
-            const te = _m.elements;
-
-            const n11 = te[0], n12 = te[4], n13 = te[8], n14 = te[12];
-            const n21 = te[1], n22 = te[5], n23 = te[9], n24 = te[13];
-            const n31 = te[2], n32 = te[6], n33 = te[10], n34 = te[14];
-            const n41 = te[3], n42 = te[7], n43 = te[11], n44 = te[15];
-
-            const t1 = (n33 * n44) - (n34 * n43);
-            const t2 = (n32 * n44) - (n34 * n42);
-            const t3 = (n32 * n43) - (n33 * n42);
-            const t4 = (n31 * n44) - (n34 * n41);
-            const t5 = (n31 * n43) - (n33 * n41);
-            const t6 = (n31 * n42) - (n32 * n41);
-
-            const det11 = (n22 * t1) - (n23 * t2) + (n24 * t3);
-            const det12 = (n21 * t1) - (n23 * t4) + (n24 * t5);
-            const det13 = (n21 * t2) - (n22 * t4) + (n24 * t6);
-            const det14 = (n21 * t3) - (n22 * t5) + (n23 * t6);
-
-            return (n11 * det11) - (n12 * det12) + (n13 * det13) -
-                (n14 * det14);
-        },
-
-        /**
-         * @returns {number}
-         */
-        get maxScaleOnAxis() {
-            const te = _m.elements;
-
-            const scaleXSq = te[0] * te[0] + te[1] * te[1] + te[2] * te[2];
-            const scaleYSq = te[4] * te[4] + te[5] * te[5] + te[6] * te[6];
-            const scaleZSq = te[8] * te[8] + te[9] * te[9] + te[10] * te[10];
-
-            return Math.sqrt(Math.max(scaleXSq, scaleYSq, scaleZSq));
-        },
-
-        /**
          * @returns {Matrix4}
          */
         clone() {
@@ -144,7 +104,7 @@ export function createMatrix4(elements = new Float32Array(16)) {
             const sy = Math.hypot(te[4], te[5], te[6]);
             const sz = Math.hypot(te[8], te[9], te[10]);
 
-            const det = _m.determinant;
+            const det = _m.determinant();
             if (det < 0) sx = -sx;
 
             position.x = te[12];
@@ -197,6 +157,33 @@ export function createMatrix4(elements = new Float32Array(16)) {
             scale.z = sz;
 
             return _m;
+        },
+
+        /**
+         * @returns {number}
+         */
+        determinant() {
+            const te = _m.elements;
+
+            const n11 = te[0], n12 = te[4], n13 = te[8], n14 = te[12];
+            const n21 = te[1], n22 = te[5], n23 = te[9], n24 = te[13];
+            const n31 = te[2], n32 = te[6], n33 = te[10], n34 = te[14];
+            const n41 = te[3], n42 = te[7], n43 = te[11], n44 = te[15];
+
+            const t1 = (n33 * n44) - (n34 * n43);
+            const t2 = (n32 * n44) - (n34 * n42);
+            const t3 = (n32 * n43) - (n33 * n42);
+            const t4 = (n31 * n44) - (n34 * n41);
+            const t5 = (n31 * n43) - (n33 * n41);
+            const t6 = (n31 * n42) - (n32 * n41);
+
+            const det11 = (n22 * t1) - (n23 * t2) + (n24 * t3);
+            const det12 = (n21 * t1) - (n23 * t4) + (n24 * t5);
+            const det13 = (n21 * t2) - (n22 * t4) + (n24 * t6);
+            const det14 = (n21 * t3) - (n22 * t5) + (n23 * t6);
+
+            return (n11 * det11) - (n12 * det12) + (n13 * det13) -
+                (n14 * det14);
         },
 
         /**
@@ -380,11 +367,11 @@ export function createMatrix4(elements = new Float32Array(16)) {
          */
         lookAt(eye, target, up) {
             const z = eye.clone().sub(target);
-            if (z.lengthSq === 0) z.z = 1;
+            if (z.lengthSq() === 0) z.z = 1;
             z.unit();
 
             const x = up.clone().cross(z);
-            if (x.lengthSq === 0) {
+            if (x.lengthSq() === 0) {
                 Math.abs(up.z) === 1
                     ? z.x += MathsUtils.EPSILON
                     : z.z += MathsUtils.EPSILON;
@@ -734,29 +721,29 @@ export function createMatrix4(elements = new Float32Array(16)) {
         },
 
         /**
-         * @param {number} s
+         * @param {number} scalar
          * @returns {Matrix4}
          */
-        mulScalar(s) {
+        mulScalar(scalar) {
             const te = _m.elements;
 
             return _m.set(
-                te[0] * s,
-                te[4] * s,
-                te[8] * s,
-                te[12] * s,
-                te[1] * s,
-                te[5] * s,
-                te[9] * s,
-                te[13] * s,
-                te[2] * s,
-                te[6] * s,
-                te[10] * s,
-                te[14] * s,
-                te[3] * s,
-                te[7] * s,
-                te[11] * s,
-                te[15] * s,
+                te[0] * scalar,
+                te[4] * scalar,
+                te[8] * scalar,
+                te[12] * scalar,
+                te[1] * scalar,
+                te[5] * scalar,
+                te[9] * scalar,
+                te[13] * scalar,
+                te[2] * scalar,
+                te[6] * scalar,
+                te[10] * scalar,
+                te[14] * scalar,
+                te[3] * scalar,
+                te[7] * scalar,
+                te[11] * scalar,
+                te[15] * scalar,
             );
         },
 

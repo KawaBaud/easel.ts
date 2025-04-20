@@ -42,20 +42,6 @@ export function createVector3(x = 0, y = 0, z = 0) {
         isVector3: true,
 
         /**
-         * @returns {number}
-         */
-        get length() {
-            return Math.sqrt(_v.lengthSq);
-        },
-
-        /**
-         * @returns {number}
-         */
-        get lengthSq() {
-            return (_v.x * _v.x) + (_v.y * _v.y) + (_v.z * _v.z);
-        },
-
-        /**
          * @param {Vector3} v
          * @returns {Vector3}
          */
@@ -92,7 +78,7 @@ export function createVector3(x = 0, y = 0, z = 0) {
          * @returns {Vector3}
          */
         angle(a, b) {
-            return Math.acos(a.dot(b) / (a.length * b.length));
+            return Math.acos(a.dot(b) / (a.length() * b.length()));
         },
 
         /**
@@ -100,7 +86,7 @@ export function createVector3(x = 0, y = 0, z = 0) {
          * @returns {number}
          */
         angleTo(v) {
-            const denom = Math.sqrt(_v.lengthSq * v.lengthSq);
+            const denom = Math.sqrt(_v.lengthSq() * v.lengthSq());
             if (denom === 0) return MathsUtils.TAU;
 
             const theta = _v.dot(v) / denom;
@@ -274,7 +260,10 @@ export function createVector3(x = 0, y = 0, z = 0) {
          * @returns {Vector3}
          */
         divVectors(a, b) {
-            return _v.set(a.x / b.x, a.y / b.y, a.z / b.z);
+            _v.x = a.x / b.x;
+            _v.y = a.y / b.y;
+            _v.z = a.z / b.z;
+            return _v;
         },
 
         /**
@@ -301,11 +290,10 @@ export function createVector3(x = 0, y = 0, z = 0) {
          * @returns {Vector3}
          */
         floor() {
-            return _v.set(
-                Math.floor(_v.x),
-                Math.floor(_v.y),
-                Math.floor(_v.z),
-            );
+            _v.x = Math.floor(_v.x);
+            _v.y = Math.floor(_v.y);
+            _v.z = Math.floor(_v.z);
+            return _v;
         },
 
         /**
@@ -319,6 +307,21 @@ export function createVector3(x = 0, y = 0, z = 0) {
                 array[offset + 1],
                 array[offset + 2],
             );
+        },
+
+        /**
+         * @returns {number}
+         */
+        length() {
+            const lengthSq = _v.lengthSq();
+            return lengthSq === 0 ? 0 : Math.sqrt(lengthSq);
+        },
+
+        /**
+         * @returns {number}
+         */
+        lengthSq() {
+            return (_v.x * _v.x) + (_v.y * _v.y) + (_v.z * _v.z);
         },
 
         /**
@@ -340,11 +343,10 @@ export function createVector3(x = 0, y = 0, z = 0) {
          * @returns {Vector3}
          */
         lerpVectors(v1, v2, alpha) {
-            return _v.set(
-                v1.x + (v2.x - v1.x) * alpha,
-                v1.y + (v2.y - v1.y) * alpha,
-                v1.z + (v2.z - v1.z) * alpha,
-            );
+            _v.x = v1.x + (v2.x - v1.x) * alpha;
+            _v.y = v1.y + (v2.y - v1.y) * alpha;
+            _v.z = v1.z + (v2.z - v1.z) * alpha;
+            return _v;
         },
 
         /**
@@ -352,11 +354,10 @@ export function createVector3(x = 0, y = 0, z = 0) {
          * @returns {Vector3}
          */
         max(v) {
-            return _v.set(
-                Math.max(_v.x, v.x),
-                Math.max(_v.y, v.y),
-                Math.max(_v.z, v.z),
-            );
+            _v.x = Math.max(_v.x, v.x);
+            _v.y = Math.max(_v.y, v.y);
+            _v.z = Math.max(_v.z, v.z);
+            return _v;
         },
 
         /**
@@ -364,11 +365,10 @@ export function createVector3(x = 0, y = 0, z = 0) {
          * @returns {Vector3}
          */
         min(v) {
-            return _v.set(
-                Math.min(_v.x, v.x),
-                Math.min(_v.y, v.y),
-                Math.min(_v.z, v.z),
-            );
+            _v.x = Math.min(_v.x, v.x);
+            _v.y = Math.min(_v.y, v.y);
+            _v.z = Math.min(_v.z, v.z);
+            return _v;
         },
 
         /**
@@ -399,14 +399,20 @@ export function createVector3(x = 0, y = 0, z = 0) {
          * @returns {Vector3}
          */
         mulVectors(a, b) {
-            return _v.set(a.x * b.x, a.y * b.y, a.z * b.z);
+            _v.x = a.x * b.x;
+            _v.y = a.y * b.y;
+            _v.z = a.z * b.z;
+            return _v;
         },
 
         /**
          * @returns {Vector3}
          */
         neg() {
-            return _v.set(-_v.x, -_v.y, -_v.z);
+            _v.x = -_v.x;
+            _v.y = -_v.y;
+            _v.z = -_v.z;
+            return _v;
         },
 
         /**
@@ -424,7 +430,7 @@ export function createVector3(x = 0, y = 0, z = 0) {
          * @returns {Vector3}
          */
         projectOnto(v) {
-            const denom = v.lengthSq;
+            const denom = v.lengthSq();
             if (denom === 0) return _v.set(0, 0, 0);
 
             const scalar = v.dot(_v) / denom;
@@ -467,7 +473,10 @@ export function createVector3(x = 0, y = 0, z = 0) {
          * @returns {Vector3}
          */
         setScalar(scalar) {
-            return _v.set(scalar, scalar, scalar);
+            _v.x = scalar;
+            _v.y = scalar;
+            _v.z = scalar;
+            return _v;
         },
 
         /**
@@ -498,7 +507,10 @@ export function createVector3(x = 0, y = 0, z = 0) {
          * @returns {Vector3}
          */
         subVectors(a, b) {
-            return _v.set(a.x - b.x, a.y - b.y, a.z - b.z);
+            _v.x = a.x - b.x;
+            _v.y = a.y - b.y;
+            _v.z = a.z - b.z;
+            return _v;
         },
 
         /**
@@ -517,9 +529,13 @@ export function createVector3(x = 0, y = 0, z = 0) {
          * @returns {Vector3}
          */
         unit() {
-            const length = _v.length;
+            const length = _v.length();
             if (length === 0) return _v;
-            return _v.divScalar(length);
+
+            _v.x /= length;
+            _v.y /= length;
+            _v.z /= length;
+            return _v;
         },
 
         /**

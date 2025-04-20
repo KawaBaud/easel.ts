@@ -50,25 +50,6 @@ export function createQuaternion(x = 0, y = 0, z = 0, w = 1) {
         isQuaternion: true,
 
         /**
-         * @returns {number}
-         */
-        get length() {
-            return Math.sqrt(_q.lengthSq);
-        },
-
-        /**
-         * @returns {number}
-         */
-        get lengthSq() {
-            return (
-                (_q.x * _q.x) +
-                (_q.y * _q.y) +
-                (_q.z * _q.z) +
-                (_q.w * _q.w)
-            );
-        },
-
-        /**
          * @param {Quaternion} q
          * @returns {number}
          */
@@ -138,6 +119,26 @@ export function createQuaternion(x = 0, y = 0, z = 0, w = 1) {
          */
         identity() {
             return _q.set(0, 0, 0, 1);
+        },
+
+        /**
+         * @returns {number}
+         */
+        length() {
+            const lengthSq = _q.lengthSq();
+            return lengthSq === 0 ? 0 : Math.sqrt(lengthSq);
+        },
+
+        /**
+         * @returns {number}
+         */
+        lengthSq() {
+            return (
+                (_q.x * _q.x) +
+                (_q.y * _q.y) +
+                (_q.z * _q.z) +
+                (_q.w * _q.w)
+            );
         },
 
         /**
@@ -452,7 +453,7 @@ export function createQuaternion(x = 0, y = 0, z = 0, w = 1) {
          * @returns {Quaternion}
          */
         unit() {
-            const length = _q.length === 0 ? _q.identity() : 1 / _q.length;
+            const length = _q.length() === 0 ? _q.identity() : 1 / _q.length();
 
             return _q.set(
                 _q.x * length,
