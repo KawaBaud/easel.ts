@@ -135,7 +135,7 @@ describe("ShapeUtils core", () => {
         expect(result.z).toBeGreaterThan(worldZ);
     });
 
-    test("worldToScreenFixed with point behind camera", () => {
+    test("worldToScreenFixed - point behind camera", () => {
         const worldX = MathsUtils.toFixed(10);
         const worldY = MathsUtils.toFixed(20);
         const worldZ = MathsUtils.toFixed(-500); // behind camera

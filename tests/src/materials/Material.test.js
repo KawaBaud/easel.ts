@@ -13,7 +13,7 @@ describe("Material core", () => {
         expect(ourMaterial.wireframe).toBe(false);
     });
 
-    test("create with options", () => {
+    test("create - options", () => {
         const options = {
             colour: 0x00FF00,
             wireframe: true,
