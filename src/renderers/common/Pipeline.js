@@ -101,25 +101,22 @@ export function createPipeline() {
                 _v2.applyMatrix4(mesh.worldMatrix);
                 _v3.applyMatrix4(mesh.worldMatrix);
 
-                const p1 = _processor.projectVertex(
+                const projectedPoints = _processor.projectTriangle(
                     _v1,
-                    camera,
-                    target.width,
-                    target.height,
-                );
-                const p2 = _processor.projectVertex(
                     _v2,
-                    camera,
-                    target.width,
-                    target.height,
-                );
-                const p3 = _processor.projectVertex(
                     _v3,
                     camera,
                     target.width,
                     target.height,
                 );
-                if (p1 && p2 && p3) renderFunction(p1, p2, p3, colour);
+                if (projectedPoints) {
+                    renderFunction(
+                        projectedPoints[0],
+                        projectedPoints[1],
+                        projectedPoints[2],
+                        colour,
+                    );
+                }
             }
         }
     }

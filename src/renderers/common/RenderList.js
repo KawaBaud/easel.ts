@@ -9,6 +9,9 @@
  */
 export function createRenderList() {
     const _objects = [];
+    const _zValues = new Float32Array(128);
+    const _indices = new Uint16Array(128);
+    let _capacity = 128;
 
     const _renderList = {
         /**
@@ -40,11 +43,27 @@ export function createRenderList() {
          * @returns {RenderList}
          */
         depthSort(objects = _objects) {
-            objects.sort((a, b) => {
-                return a.position.z !== b.position.z
-                    ? b.position.z - a.position.z
-                    : 0;
-            });
+            const count = objects.length;
+            if (count > _capacity) {
+                _capacity = Math.max(count, _capacity * 2);
+                _zValues = new Float32Array(_capacity);
+                _indices = new Uint16Array(_capacity);
+            }
+
+            for (let i = 0; i < count; i++) {
+                _zValues[i] = objects[i].position.z;
+                _indices[i] = i;
+            }
+            _indices.sort((a, b) => _zValues[b] - _zValues[a]);
+
+            const sortedObjects = new Array(count);
+            for (let i = 0; i < count; i++) {
+                sortedObjects[i] = objects[_indices[i]];
+            }
+            for (let i = 0; i < count; i++) {
+                objects[i] = sortedObjects[i];
+            }
+
             return _renderList;
         },
 

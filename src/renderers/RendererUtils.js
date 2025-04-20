@@ -8,6 +8,11 @@ import { createVector3 } from "../maths/Vector3.js";
  * @typedef {import("../objects/Object3D.js").Object3D} Object3D
  */
 
+const _a = createVector3();
+const _b = createVector3();
+const _normal = createVector3();
+const _centre = createVector3();
+
 /**
  * @namespace
  */
@@ -19,10 +24,10 @@ export const RendererUtils = {
      * @returns {boolean}
      */
     backfaceCull(v1, v2, v3) {
-        const a = createVector3().subVectors(v2, v1);
-        const b = createVector3().subVectors(v3, v1);
-        const normal = createVector3().crossVectors(a, b);
-        return normal.z < 0;
+        _a.subVectors(v2, v1);
+        _b.subVectors(v3, v1);
+        _normal.crossVectors(_a, _b);
+        return _normal.z < 0;
     },
 
     /**
@@ -81,16 +86,14 @@ export const RendererUtils = {
 
         if (object.geometry.boundingSphere) {
             const sphere = object.geometry.boundingSphere;
-            const centre = createVector3().copy(sphere.centre).applyMatrix4(
-                object.worldMatrix,
-            );
+            _centre.copy(sphere.centre).applyMatrix4(object.worldMatrix);
             const radius = sphere.radius * Math.max(
                 object.scale.x,
                 object.scale.y,
                 object.scale.z,
             );
 
-            return frustum.intersectsSphere(centre, radius);
+            return frustum.intersectsSphere(_centre, radius);
         }
 
         if (object.geometry.vertices) {
