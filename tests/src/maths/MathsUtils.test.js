@@ -71,12 +71,24 @@ describe("MathsUtils", () => {
 
         test("toDegrees and toRadians", () => {
             expect(MathsUtils.toDegrees(Math.PI)).toBeCloseTo(180, 10);
-            expect(MathsUtils.toDegrees(Math.PI / 2)).toBeCloseTo(90, 10);
-            expect(MathsUtils.toDegrees(Math.PI / 4)).toBeCloseTo(45, 10);
+            expect(MathsUtils.toDegrees(MathsUtils.HALF_PI)).toBeCloseTo(
+                90,
+                10,
+            );
+            expect(MathsUtils.toDegrees(MathsUtils.QUARTER_PI)).toBeCloseTo(
+                45,
+                10,
+            );
 
             expect(MathsUtils.toRadians(180)).toBeCloseTo(Math.PI, 10);
-            expect(MathsUtils.toRadians(90)).toBeCloseTo(Math.PI / 2, 10);
-            expect(MathsUtils.toRadians(45)).toBeCloseTo(Math.PI / 4, 10);
+            expect(MathsUtils.toRadians(90)).toBeCloseTo(
+                MathsUtils.HALF_PI,
+                10,
+            );
+            expect(MathsUtils.toRadians(45)).toBeCloseTo(
+                MathsUtils.QUARTER_PI,
+                10,
+            );
         });
     });
 
@@ -84,13 +96,13 @@ describe("MathsUtils", () => {
         test("fastAtan2", () => {
             const testCases = [
                 { y: 0, x: 1, expected: 0 },
-                { y: 1, x: 0, expected: Math.PI / 2 },
+                { y: 1, x: 0, expected: MathsUtils.HALF_PI },
                 { y: 0, x: -1, expected: Math.PI },
-                { y: -1, x: 0, expected: -Math.PI / 2 },
-                { y: 1, x: 1, expected: Math.PI / 4 },
-                { y: 1, x: -1, expected: 3 * Math.PI / 4 },
-                { y: -1, x: -1, expected: -3 * Math.PI / 4 },
-                { y: -1, x: 1, expected: -Math.PI / 4 },
+                { y: -1, x: 0, expected: -MathsUtils.HALF_PI },
+                { y: 1, x: 1, expected: MathsUtils.QUARTER_PI },
+                { y: 1, x: -1, expected: 3 * MathsUtils.QUARTER_PI },
+                { y: -1, x: -1, expected: -3 * MathsUtils.QUARTER_PI },
+                { y: -1, x: 1, expected: -MathsUtils.QUARTER_PI },
                 { y: 0, x: 0, expected: 0 },
             ];
 
@@ -204,13 +216,13 @@ describe("MathsUtils", () => {
         test("qsin and qcos", () => {
             const angles = [
                 0,
-                Math.PI / 6,
-                Math.PI / 4,
-                Math.PI / 3,
-                Math.PI / 2,
+                MathsUtils.SIXTH_PI,
+                MathsUtils.QUARTER_PI,
+                MathsUtils.THIRD_PI,
+                MathsUtils.HALF_PI,
                 Math.PI,
-                3 * Math.PI / 2,
-                2 * Math.PI,
+                3 * MathsUtils.HALF_PI,
+                MathsUtils.TAU,
             ];
 
             for (const angle of angles) {
@@ -262,8 +274,8 @@ describe("MathsUtils", () => {
         });
     });
 
-    describe("coordinate conversion", () => {
-        test("3D world -> 2D screen (floating-point)", () => {
+    describe("conversions - coordinates", () => {
+        test("float: 3D world -> 2D screen", () => {
             const worldX = 10;
             const worldY = 20;
             const worldZ = 100;
@@ -277,7 +289,7 @@ describe("MathsUtils", () => {
             expect(expectedY).toBe(192);
         });
 
-        test("3D world -> 2D screen (fixed-point)", () => {
+        test("fixed: 3D world -> 2D screen", () => {
             const worldX = MathsUtils.toFixed(10);
             const worldY = MathsUtils.toFixed(20);
             const worldZ = MathsUtils.toFixed(100);
