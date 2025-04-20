@@ -38,8 +38,8 @@ export function createObject3D(id = "") {
         position: createVector3(),
         quaternion: createQuaternion(),
         scale: createVector3(1, 1, 1),
-        matrix: createMatrix4(),
-        worldMatrix: createMatrix4(),
+        matrix: createMatrix4().identity(),
+        worldMatrix: createMatrix4().identity(),
         autoUpdateMatrix: true,
         parent: null,
         children: [],
@@ -302,7 +302,7 @@ export function createObject3D(id = "") {
         },
 
         /**
-         * @param {Vector3} axis - normalized axis vector
+         * @param {Vector3} axis
          * @param {number} angle - in radians
          * @returns {Object3D}
          */
@@ -446,9 +446,7 @@ export function createObject3D(id = "") {
                 _object.parent.updateWorldMatrix(true, false);
             }
 
-            if (_object.autoUpdateMatrix) {
-                _object.updateMatrix();
-            }
+            if (_object.autoUpdateMatrix) _object.updateMatrix();
             _object.worldMatrix = _object.parent
                 ? _object.worldMatrix.mulMatrices(
                     _object.parent.worldMatrix,

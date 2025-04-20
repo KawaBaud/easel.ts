@@ -3,10 +3,16 @@ import { createMatrix4 } from "../maths/Matrix4.js";
 import { createObject3D } from "../objects/Object3D.js";
 
 /**
+ * @typedef {import("../objects/Object3D.js").Object3D} Object3D
+ * @typedef {import("../maths/Euler.js").Euler} Euler
+ * @typedef {import("../maths/Matrix4.js").Matrix4} Matrix4
+ */
+
+/**
  * @typedef {Object3D} Camera
- * @property {Matrix4} projectionMatrix
- * @property {Matrix4} matrixWorldInverse
  * @property {Euler} rotation
+ * @property {Matrix4} matrixWorldInverse
+ * @property {Matrix4} projectionMatrix
  */
 
 /**

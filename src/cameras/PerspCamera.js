@@ -2,6 +2,10 @@ import { Maths } from "../maths/Maths.js";
 import { createCamera } from "./Camera.js";
 
 /**
+ * @typedef {import("./Camera.js").Camera} Camera
+ */
+
+/**
  * @typedef {Camera} PerspCamera
  * @property {number} fov
  * @property {number} aspect

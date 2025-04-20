@@ -16,8 +16,19 @@ import { createQuaternion } from "./Quaternion.js";
  */
 export function createVector3(x = 0, y = 0, z = 0) {
     const _v = {
+        /**
+         * @default 0
+         */
         x,
+
+        /**
+         * @default 0
+         */
         y,
+
+        /**
+         * @default 0
+         */
         z,
 
         /**
@@ -53,13 +64,13 @@ export function createVector3(x = 0, y = 0, z = 0) {
         },
 
         /**
-         * @param {number} s
+         * @param {number} scalar
          * @returns {Vector3}
          */
-        addScalar(s) {
-            _v.x += s;
-            _v.y += s;
-            _v.z += s;
+        addScalar(scalar) {
+            _v.x += scalar;
+            _v.y += scalar;
+            _v.z += scalar;
             return _v;
         },
 
@@ -244,13 +255,13 @@ export function createVector3(x = 0, y = 0, z = 0) {
         },
 
         /**
-         * @param {number} s
+         * @param {number} scalar
          * @returns {Vector3}
          */
-        divScalar(s) {
-            _v.x /= s;
-            _v.y /= s;
-            _v.z /= s;
+        divScalar(scalar) {
+            _v.x /= scalar;
+            _v.y /= scalar;
+            _v.z /= scalar;
             return _v;
         },
 
@@ -358,13 +369,13 @@ export function createVector3(x = 0, y = 0, z = 0) {
         },
 
         /**
-         * @param {number} s
+         * @param {number} scalar
          * @returns {Vector3}
          */
-        mulScalar(s) {
-            _v.x *= s;
-            _v.y *= s;
-            _v.z *= s;
+        mulScalar(scalar) {
+            _v.x *= scalar;
+            _v.y *= scalar;
+            _v.z *= scalar;
             return _v;
         },
 
@@ -438,11 +449,11 @@ export function createVector3(x = 0, y = 0, z = 0) {
         },
 
         /**
-         * @param {number} s
+         * @param {number} scalar
          * @returns {Vector3}
          */
-        setScalar(s) {
-            return _v.set(s, s, s);
+        setScalar(scalar) {
+            return _v.set(scalar, scalar, scalar);
         },
 
         /**
@@ -457,13 +468,13 @@ export function createVector3(x = 0, y = 0, z = 0) {
         },
 
         /**
-         * @param {number} s
+         * @param {number} scalar
          * @returns {Vector3}
          */
-        subScalar(s) {
-            _v.x -= s;
-            _v.y -= s;
-            _v.z -= s;
+        subScalar(scalar) {
+            _v.x -= scalar;
+            _v.y -= scalar;
+            _v.z -= scalar;
             return _v;
         },
 
@@ -489,14 +500,13 @@ export function createVector3(x = 0, y = 0, z = 0) {
         },
 
         /**
-         * @param {number} value
          * @returns {Vector3}
          */
-        trunc(value) {
+        trunc() {
             return _v.set(
-                Maths.fastTrunc(_v.x, value),
-                Maths.fastTrunc(_v.y, value),
-                Maths.fastTrunc(_v.z, value),
+                Maths.fastTrunc(_v.x),
+                Maths.fastTrunc(_v.y),
+                Maths.fastTrunc(_v.z),
             );
         },
 
@@ -504,7 +514,9 @@ export function createVector3(x = 0, y = 0, z = 0) {
          * @returns {Vector3}
          */
         unit() {
-            return _v.divScalar(_v.length);
+            const length = _v.length;
+            if (length === 0) return _v;
+            return _v.divScalar(length);
         },
 
         *[Symbol.iterator]() {
@@ -515,40 +527,3 @@ export function createVector3(x = 0, y = 0, z = 0) {
     };
     return _v;
 }
-
-/**
- * @namespace
- */
-export const Vector3 = {
-    /**
-     * @param {Vector3} v1
-     * @param {Vector3} v2
-     * @returns {number}
-     */
-    distance(v1, v2) {
-        return Math.sqrt(Vector3.distanceSq(v1, v2));
-    },
-
-    /**
-     * @param {Vector3} v1
-     * @param {Vector3} v2
-     * @returns {number}
-     */
-    distanceSq(v1, v2) {
-        const dx = v1.x - v2.x;
-        const dy = v1.y - v2.y;
-        const dz = v1.z - v2.z;
-        return (dx * dx) + (dy * dy) + (dz * dz);
-    },
-
-    /**
-     * @param {Vector3} v1
-     * @param {Vector3} v2
-     * @param {number} alpha
-     * @param {Vector3} target
-     * @returns {Vector3}
-     */
-    lerp(v1, v2, alpha, target = createVector3()) {
-        return target.copy(v1).lerp(v2, alpha);
-    },
-};

@@ -1,6 +1,6 @@
 /**
- * @readonly
- * @const {number}
+ * @type {number}
+ * @constant
  */
 export const Q_ONE = 1 << 12;
 
@@ -25,64 +25,73 @@ for (let i = 0; i < _TABLE_SIZE; i++) {
 export const Maths = {
     /**
      * 0.0001
+     * @type {number}
      * @readonly
-     * @const {number}
+     * @constant
      */
     EPSILON: 1e-4,
 
     /**
      * 2 * PI
+     * @type {number}
      * @readonly
-     * @const {number}
+     * @constant
      */
     TAU: _TAU,
 
     /**
      * PI * PI
+     * @type {number}
      * @readonly
-     * @const {number}
+     * @constant
      */
     PISQ: 9.869604401089358,
 
     /**
      * PI / 2
+     * @type {number}
      * @readonly
-     * @const {number}
+     * @constant
      */
     HALF_PI: 1.5707963267948966,
 
     /**
      * PI / 3
+     * @type {number}
      * @readonly
-     * @const {number}
+     * @constant
      */
     THIRD_PI: 1.0471975511965976,
 
     /**
      * PI / 4
+     * @type {number}
      * @readonly
-     * @const {number}
+     * @constant
      */
     QUARTER_PI: 0.7853981633974483,
 
     /**
      * PI / 6
+     * @type {number}
      * @readonly
-     * @const {number}
+     * @constant
      */
     SIXTH_PI: 0.5235987755982988,
 
     /**
      * 180 / PI
+     * @type {number}
      * @readonly
-     * @const {number}
+     * @constant
      */
     RADIANS_TO_DEGREES: 57.29577951308232,
 
     /**
      * PI / 180
+     * @type {number}
      * @readonly
-     * @const {number}
+     * @constant
      */
     DEGREES_TO_RADIANS: 0.017453292519943295,
 

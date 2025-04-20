@@ -19,9 +19,24 @@ import { createQuaternion } from "./Quaternion.js";
  */
 export function createEuler(x = 0, y = 0, z = 0, order = "XYZ") {
     const _e = {
+        /**
+         * @default 0
+         */
         x,
+
+        /**
+         * @default 0
+         */
         y,
+
+        /**
+         * @default 0
+         */
         z,
+
+        /**
+         * @default "XYZ"
+         */
         order,
 
         /**
@@ -196,10 +211,3 @@ export function createEuler(x = 0, y = 0, z = 0, order = "XYZ") {
     };
     return _e;
 }
-
-/**
- * @namespace
- */
-export const Euler = {
-    // static methods go here
-};

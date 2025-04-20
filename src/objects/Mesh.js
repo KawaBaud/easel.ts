@@ -1,6 +1,10 @@
 import { createObject3D } from "./Object3D.js";
 
 /**
+ * @typedef {import("./Object3D.js").Object3D} Object3D
+ */
+
+/**
  * @typedef {Object3D} Mesh
  * @property {Object} geometry
  * @property {Object} material
