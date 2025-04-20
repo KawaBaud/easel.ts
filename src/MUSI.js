@@ -8,48 +8,43 @@ import { createSphere } from "./maths/Sphere.js";
 import { createVector3 } from "./maths/Vector3.js";
 import { createMesh } from "./objects/Mesh.js";
 import { createObject3D } from "./objects/Object3D.js";
+import { createQuadMesh } from "./objects/QuadMesh.js";
 import { createCanvasRenderer } from "./renderers/canvas/CanvasRenderer.js";
 import { createScene } from "./scenes/Scene.js";
 import { createCubeShape } from "./shapes/CubeShape.js";
+import { createRectangleShape } from "./shapes/RectangleShape.js";
 import { createShape } from "./shapes/Shape.js";
+import { ShapeUtils } from "./shapes/ShapeUtils.js";
 
-let instance = null;
+export const MUSI = Object.freeze({
+    /* cameras */
+    PerspCamera: createPerspCamera,
 
-/**
- * @returns {Object}
- */
-function _createMUSI() {
-    if (instance) return instance;
-    instance = Object.freeze({
-        /* cameras */
-        PerspCamera: createPerspCamera,
+    /* materials */
+    Material: createMaterial,
 
-        /* materials */
-        Material: createMaterial,
+    /* maths */
+    Vector3: createVector3,
+    Matrix4: createMatrix4,
+    Quaternion: createQuaternion,
+    Euler: createEuler,
+    Sphere: createSphere,
+    Maths: MathsUtils,
 
-        /* maths */
-        Vector3: createVector3,
-        Matrix4: createMatrix4,
-        Quaternion: createQuaternion,
-        Euler: createEuler,
-        Sphere: createSphere,
-        Maths: MathsUtils,
+    /* objects */
+    Mesh: createMesh,
+    Object3D: createObject3D,
+    QuadMesh: createQuadMesh,
 
-        /* objects */
-        Mesh: createMesh,
-        Object3D: createObject3D,
+    /* renderers */
+    CanvasRenderer: createCanvasRenderer,
 
-        /* renderers */
-        CanvasRenderer: createCanvasRenderer,
+    /* scenes */
+    Scene: createScene,
 
-        /* scenes */
-        Scene: createScene,
-
-        /* shapes */
-        Shape: createShape,
-        CubeShape: createCubeShape,
-    });
-    return instance;
-}
-
-export const MUSI = _createMUSI();
+    /* shapes */
+    Shape: createShape,
+    CubeShape: createCubeShape,
+    RectangleShape: createRectangleShape,
+    ShapeUtils: ShapeUtils,
+});
