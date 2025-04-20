@@ -1,12 +1,12 @@
-import { createVector3 } from "../maths/Vector3.js";
-import { createProcessor } from "./Processor.js";
-import { createRenderList } from "./RenderList.js";
+import { createVector3 } from "../../maths/Vector3.js";
+import { createProcessor } from "../pipeline/Processor.js";
+import { createRenderList } from "../RenderList.js";
 
 /**
- * @typedef {import("../cameras/Camera.js").Camera} Camera
- * @typedef {import("../scenes/Scene.js").Scene} Scene
- * @typedef {import("./RenderTarget.js").RenderTarget} RenderTarget
- * @typedef {import("./CullingContext.js").CullingContext} CullingContext
+ * @typedef {import("../../cameras/Camera.js").Camera} Camera
+ * @typedef {import("../../scenes/Scene.js").Scene} Scene
+ * @typedef {import("../RenderTarget.js").RenderTarget} RenderTarget
+ * @typedef {import("../common/CullingContext.js").CullingContext} CullingContext
  * @typedef {Object} Pipeline
  */
 
@@ -23,7 +23,7 @@ export function createPipeline() {
 
     const _pipeline = {
         /**
-         * @returns {import("./RenderList.js").RenderList}
+         * @returns {import("../RenderList.js").RenderList}
          */
         get renderList() {
             return _renderList;
@@ -60,7 +60,6 @@ export function createPipeline() {
             camera.updateMatrixWorld();
 
             _renderList.depthSort();
-
             _renderList.objects.forEach((object) => {
                 if (object.isMesh) {
                     object.updateWorldMatrix(true, false);
@@ -120,13 +119,9 @@ export function createPipeline() {
                     target.width,
                     target.height,
                 );
-
-                if (p1 && p2 && p3) {
-                    renderFunction(p1, p2, p3, colour);
-                }
+                if (p1 && p2 && p3) renderFunction(p1, p2, p3, colour);
             }
         }
     }
-
     return _pipeline;
 }

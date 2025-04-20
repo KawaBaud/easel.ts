@@ -1,12 +1,12 @@
-import { createCullingContext } from "./CullingContext.js";
+import { createCullingContext } from "../common/CullingContext.js";
+import { createRenderContext } from "../common/RenderContext.js";
+import { createRenderTarget } from "../RenderTarget.js";
 import { createPipeline } from "./Pipeline.js";
-import { createRenderContext } from "./RenderContext.js";
-import { createRenderTarget } from "./RenderTarget.js";
 
 /**
- * @typedef {import("../cameras/Camera.js").Camera} Camera
- * @typedef {import("../scenes/Scene.js").Scene} Scene
- * @typedef {import("../renderers/RenderTarget.js").RenderTarget} RenderTarget
+ * @typedef {import("../../cameras/Camera.js").Camera} Camera
+ * @typedef {import("../../scenes/Scene.js").Scene} Scene
+ * @typedef {import("../RenderTarget.js").RenderTarget} RenderTarget
  * @typedef {Object} RenderPipeline
  */
 

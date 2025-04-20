@@ -1,11 +1,11 @@
-import { createFrustum } from "../maths/Frustum.js";
-import { createVector3 } from "../maths/Vector3.js";
+import { createFrustum } from "../../maths/Frustum.js";
+import { createVector3 } from "../../maths/Vector3.js";
 
 /**
- * @typedef {import("../maths/Vector3.js").Vector3} Vector3
- * @typedef {import("../maths/Frustum.js").Frustum} Frustum
- * @typedef {import("../cameras/Camera.js").Camera} Camera
- * @typedef {import("../objects/Object3D.js").Object3D} Object3D
+ * @typedef {import("../../maths/Vector3.js").Vector3} Vector3
+ * @typedef {import("../../maths/Frustum.js").Frustum} Frustum
+ * @typedef {import("../../cameras/Camera.js").Camera} Camera
+ * @typedef {import("../../objects/Object3D.js").Object3D} Object3D
  * @typedef {Object} CullingContext
  * @property {Frustum} frustum
  * @property {boolean} enableBackfaceCulling

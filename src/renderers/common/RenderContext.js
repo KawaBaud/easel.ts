@@ -1,6 +1,6 @@
 /**
- * @typedef {import("../cameras/Camera.js").Camera} Camera
- * @typedef {import("../scenes/Scene.js").Scene} Scene
+ * @typedef {import("../../cameras/Camera.js").Camera} Camera
+ * @typedef {import("../../scenes/Scene.js").Scene} Scene
  * @typedef {Object} RenderContext
  * @property {Camera} camera
  * @property {Scene} scene
