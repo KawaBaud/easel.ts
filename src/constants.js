@@ -1,4 +1,4 @@
-import { Maths } from "./maths/Maths.js";
+import { MathsUtils } from "./utils/MathsUtils.js";
 
 /**
  * @type {number}
@@ -16,10 +16,10 @@ export const MIN_LOGICAL_HEIGHT = 240;
  * @type {number}
  * @constant
  */
-export const MAX_LOGICAL_WIDTH = Maths.shlmul(MIN_LOGICAL_WIDTH);
+export const MAX_LOGICAL_WIDTH = MathsUtils.shlmul(MIN_LOGICAL_WIDTH);
 
 /**
  * @type {number}
  * @constant
  */
-export const MAX_LOGICAL_HEIGHT = Maths.shlmul(MIN_LOGICAL_HEIGHT);
+export const MAX_LOGICAL_HEIGHT = MathsUtils.shlmul(MIN_LOGICAL_HEIGHT);
