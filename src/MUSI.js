@@ -20,16 +20,16 @@ export const MUSI = Object.freeze({
     /* cameras */
     PerspCamera: createPerspCamera,
 
-    /* materials */
-    Material: createMaterial,
-
     /* maths */
-    Vector3: createVector3,
+    Euler: createEuler,
+    Maths: MathsUtils,
     Matrix4: createMatrix4,
     Quaternion: createQuaternion,
-    Euler: createEuler,
+    Vector3: createVector3,
     Sphere: createSphere,
-    Maths: MathsUtils,
+
+    /* materials */
+    Material: createMaterial,
 
     /* objects */
     Mesh: createMesh,
@@ -43,8 +43,8 @@ export const MUSI = Object.freeze({
     Scene: createScene,
 
     /* shapes */
-    Shape: createShape,
     CubeShape: createCubeShape,
     RectangleShape: createRectangleShape,
+    Shape: createShape,
     ShapeUtils: ShapeUtils,
 });
