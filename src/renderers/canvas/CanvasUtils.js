@@ -7,17 +7,9 @@ export const CanvasUtils = {
     /**
      * @param {number} width
      * @param {number} height
-     * @param {boolean} [offscreen=false]
-     * @returns {OffscreenCanvas|HTMLCanvasElement}
+     * @returns {HTMLCanvasElement}
      */
-    createCanvasElement(width, height, offscreen = false) {
-        if (offscreen) {
-            return new OffscreenCanvas(
-                width || MIN_LOGICAL_WIDTH,
-                height || MIN_LOGICAL_HEIGHT,
-            );
-        }
-
+    createCanvasElement(width, height) {
         const canvas = globalThis.document.createElement("canvas");
         canvas.width = width || MIN_LOGICAL_WIDTH;
         canvas.height = height || MIN_LOGICAL_HEIGHT;
