@@ -74,6 +74,7 @@ export function createPerspCamera(
             return _camera;
         },
     });
+
     _camera.updateProjectionMatrix();
     return _camera;
 }
