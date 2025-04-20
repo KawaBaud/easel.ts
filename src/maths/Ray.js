@@ -193,11 +193,10 @@ export function createRay() {
             _v2.subVectors(a, b);
             _v3.crossVectors(_v1, _v2);
 
-            const dotNormDir = _direction.dot(_v3);
-            if (Math.abs(dotNormDir) < MathsUtils.EPSILON) return null;
-            if (backfaceCulling && dotNormDir > 0) return null;
-
-            const invDot = 1 / dotNormDir;
+            const dot = _direction.dot(_v3);
+            if (Math.abs(dot) < MathsUtils.EPSILON) return null;
+            if (backfaceCulling && dot > 0) return null;
+            const invDot = 1 / dot;
 
             _v1.subVectors(_origin, b);
             const t = _v3.dot(_v1) * invDot;
