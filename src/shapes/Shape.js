@@ -1,12 +1,15 @@
+import { createSphere } from "../maths/Sphere.js";
 import { createObject3D } from "../objects/Object3D.js";
 
 /**
  * @typedef {import("../objects/Object3D.js").Object3D} Object3D
+ * @typedef {import("../maths/Sphere.js").Sphere} Sphere
  * @typedef {Object3D} Shape
  * @property {Float32Array} vertices
  * @property {Float32Array} normals
  * @property {Float32Array} uvs
  * @property {Uint16Array} indices
+ * @property {Sphere} [boundingSphere]
  */
 
 /**
@@ -35,6 +38,19 @@ export function createShape() {
             const newShape = createShape();
             newShape.copy(_shape);
             return newShape;
+        },
+
+        /**
+         * @returns {Shape}
+         */
+        computeBoundingSphere() {
+            if (!_shape.vertices || _shape.vertices.length === 0) return _shape;
+
+            if (!_shape.boundingSphere) {
+                _shape.boundingSphere = createSphere();
+            }
+            _shape.boundingSphere.setFromVertices(_shape.vertices);
+            return _shape;
         },
 
         /**

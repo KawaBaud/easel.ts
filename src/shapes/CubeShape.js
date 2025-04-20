@@ -168,6 +168,7 @@ export function createCubeShape(size = 1) {
     _shape.setNormals(normals);
     _shape.setUVs(uvs);
     _shape.setIndices(indices);
+    _shape.computeBoundingSphere();
 
     Object.assign(_shape, {
         /**
