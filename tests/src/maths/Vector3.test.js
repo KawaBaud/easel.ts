@@ -332,8 +332,8 @@ describe("Vector3", () => {
         expect(a.z).toBe(threeA.z);
     });
 
-    test("negate", () => {
-        const a = createVector3(1, 2, 3).negate();
+    test("neg", () => {
+        const a = createVector3(1, 2, 3).neg();
         const threeA = new ThreeVector3(1, 2, 3).negate();
 
         expect(a.x).toBe(threeA.x);

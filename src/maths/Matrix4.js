@@ -274,7 +274,7 @@ export function createMatrix4(elements = new Float32Array(16)) {
         /**
          * @returns {Matrix4}
          */
-        invert() {
+        inv() {
             const te = _m.elements;
 
             const n11 = te[0], n21 = te[1], n31 = te[2], n41 = te[3];

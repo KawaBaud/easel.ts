@@ -93,8 +93,8 @@ export function createTransform() {
         /**
          * @returns {Transform}
          */
-        invert() {
-            _matrix.invert();
+        inv() {
+            _matrix.inv();
             _matrix.decompose(_position, _rotation, _scale);
             return _transform;
         },
@@ -308,7 +308,7 @@ export function createTransform() {
          * @returns {Vector3}
          */
         worldToLocal(point) {
-            const invMat = createMatrix4().copy(_matrix).invert();
+            const invMat = createMatrix4().copy(_matrix).inv();
             return point.clone().applyMatrix4(invMat);
         },
     };

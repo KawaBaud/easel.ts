@@ -310,7 +310,7 @@ describe("Matrix4", () => {
         }
     });
 
-    test("invert", () => {
+    test("inv", () => {
         const a = createMatrix4().set(
             1,
             2,
@@ -328,7 +328,7 @@ describe("Matrix4", () => {
             0,
             0,
             1,
-        ).invert();
+        ).inv();
         const threeA = new ThreeMatrix4().set(
             1,
             2,

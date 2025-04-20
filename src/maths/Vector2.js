@@ -315,7 +315,7 @@ export function createVector2(x = 0, y = 0) {
         /**
          * @returns {Vector2}
          */
-        negate() {
+        neg() {
             return _v.set(-_v.x, -_v.y);
         },
 

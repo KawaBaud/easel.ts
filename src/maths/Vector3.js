@@ -408,7 +408,7 @@ export function createVector3(x = 0, y = 0, z = 0) {
         /**
          * @returns {Vector3}
          */
-        negate() {
+        neg() {
             return _v.set(-_v.x, -_v.y, -_v.z);
         },
 
