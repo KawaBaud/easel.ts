@@ -8,7 +8,6 @@ describe("MUSI singleton", () => {
     test("cannot modify MUSI properties", () => {
         const originalPerspCamera = MUSI.PerspCamera;
 
-        // should throw in strict mode
         expect(() => {
             MUSI.PerspCamera = () => "modified";
         }).toThrow();
