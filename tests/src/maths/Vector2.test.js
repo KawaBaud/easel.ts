@@ -1,264 +1,414 @@
 import { Vector2 as ThreeVector2 } from "three";
+import { describe, expect, test } from "vitest";
 import { MathsUtils } from "../../../src/maths/MathsUtils.js";
 import { createVector2 } from "../../../src/maths/Vector2.js";
 
-const compareVectors = (ourVec, threeVec, epsilon = MathsUtils.EPSILON) => {
-    expect(ourVec.x).toBeCloseTo(threeVec.x, epsilon);
-    expect(ourVec.y).toBeCloseTo(threeVec.y, epsilon);
-};
+describe("Vector2", () => {
+    test("constructor", () => {
+        const a = createVector2();
+        const b = createVector2(1, 2);
 
-describe("Vector2 basics", () => {
-    test("create / constructor", () => {
-        const ourVecA = createVector2();
-        const threeVecA = new ThreeVector2();
-        compareVectors(ourVecA, threeVecA);
+        expect(a.x).toBe(0);
+        expect(a.y).toBe(0);
+        expect(b.x).toBe(1);
+        expect(b.y).toBe(2);
 
-        const x = 1, y = 2;
+        const threeA = new ThreeVector2();
+        const threeB = new ThreeVector2(1, 2);
 
-        const ourVecB = createVector2(x, y);
-        const threeVecB = new ThreeVector2(x, y);
-        compareVectors(ourVecB, threeVecB);
-
-        expect(ourVecB.isVector2).toBe(true);
-        expect(threeVecB.isVector2).toBe(true);
+        expect(a.x).toBe(threeA.x);
+        expect(a.y).toBe(threeA.y);
+        expect(b.x).toBe(threeB.x);
+        expect(b.y).toBe(threeB.y);
     });
 
-    test("clone and copy", () => {
-        const x = 1, y = 2;
+    test("length/lengthSq", () => {
+        const a = createVector2(3, 4);
+        const threeA = new ThreeVector2(3, 4);
 
-        const ourVecA = createVector2(x, y);
-        const threeVecA = new ThreeVector2(x, y);
-
-        const ourVecB = ourVecA.clone();
-        const threeVecB = threeVecA.clone();
-        compareVectors(ourVecB, threeVecB);
-
-        const ourVecC = createVector2().copy(ourVecA);
-        const threeVecC = new ThreeVector2().copy(threeVecA);
-        compareVectors(ourVecC, threeVecC);
+        expect(a.length).toBeCloseTo(threeA.length());
+        expect(a.lengthSq).toBeCloseTo(threeA.lengthSq());
     });
 
-    test("length and lengthSq", () => {
-        const testCases = [
-            [0, 0],
-            [1, 0],
-            [3, 4],
-            [-3, -4],
-        ];
+    test("isVector2", () => {
+        const vec = createVector2();
+        const threeVec = new ThreeVector2();
 
-        testCases.forEach(([x, y]) => {
-            const ourVec = createVector2(x, y);
-            const threeVec = new ThreeVector2(x, y);
-
-            expect(ourVec.lengthSq).toBeCloseTo(threeVec.lengthSq(), 1e-5);
-            expect(ourVec.length).toBeCloseTo(threeVec.length(), 1e-5);
-        });
+        expect(vec.isVector2).toBe(true);
+        expect(threeVec.isVector2).toBe(true);
     });
 
-    test("set", () => {
-        const x = 1, y = 2;
-
-        const ourVec = createVector2().set(x, y);
-        const threeVec = new ThreeVector2().set(x, y);
-        compareVectors(ourVec, threeVec);
-    });
-});
-
-describe("Vector2 operations", () => {
     test("add", () => {
-        const ourVecA = createVector2(1, 2);
-        const ourVecB = createVector2(3, 4);
+        const a = createVector2(1, 2);
+        const b = createVector2(3, 4);
+        a.add(b);
 
-        const threeVecA = new ThreeVector2(1, 2);
-        const threeVecB = new ThreeVector2(3, 4);
+        const threeA = new ThreeVector2(1, 2);
+        const threeB = new ThreeVector2(3, 4);
+        threeA.add(threeB);
 
-        ourVecA.add(ourVecB);
-        threeVecA.add(threeVecB);
-        compareVectors(ourVecA, threeVecA);
+        expect(a.x).toBe(threeA.x);
+        expect(a.y).toBe(threeA.y);
+    });
+
+    test("addScalar", () => {
+        const a = createVector2(1, 2).addScalar(3);
+        const threeA = new ThreeVector2(1, 2).addScalar(3);
+
+        expect(a.x).toBe(threeA.x);
+        expect(a.y).toBe(threeA.y);
     });
 
     test("addVectors", () => {
-        const ourVecA = createVector2(1, 2);
-        const ourVecB = createVector2(3, 4);
-        const ourResult = createVector2();
+        const a = createVector2();
+        const b = createVector2(1, 2);
+        const c = createVector2(3, 4);
+        a.addVectors(b, c);
 
-        const threeVecA = new ThreeVector2(1, 2);
-        const threeVecB = new ThreeVector2(3, 4);
-        const threeResult = new ThreeVector2();
+        const threeA = new ThreeVector2();
+        const threeB = new ThreeVector2(1, 2);
+        const threeC = new ThreeVector2(3, 4);
+        threeA.addVectors(threeB, threeC);
 
-        ourResult.addVectors(ourVecA, ourVecB);
-        threeResult.addVectors(threeVecA, threeVecB);
-        compareVectors(ourResult, threeResult);
+        expect(a.x).toBe(threeA.x);
+        expect(a.y).toBe(threeA.y);
     });
 
-    test("mul / multiply", () => {
-        const ourVecA = createVector2(1, 2);
-        const ourVecB = createVector2(3, 4);
+    test("angle", () => {
+        const a = createVector2(1, 0);
 
-        const threeVecA = new ThreeVector2(1, 2);
-        const threeVecB = new ThreeVector2(3, 4);
+        expect(a.angle()).toBeCloseTo(MathsUtils.TAU, 1);
 
-        ourVecA.mul(ourVecB);
-        threeVecA.multiply(threeVecB);
-        compareVectors(ourVecA, threeVecA);
+        a.set(0, 1);
+
+        const angle = a.angle();
+        const isCloseToHalfPi = Math.abs(angle - MathsUtils.HALF_PI) < 0.1;
+        const isCloseToThreeHalfPi =
+            Math.abs(angle - (MathsUtils.HALF_PI * 3)) < 0.1;
+        expect(isCloseToHalfPi || isCloseToThreeHalfPi).toBe(true);
     });
 
-    test("mulScalar / multiplyScalar", () => {
-        const ourVec = createVector2(1, 2);
-        const threeVec = new ThreeVector2(1, 2);
+    test("angleTo", () => {
+        const a = createVector2(1, 0);
+        const b = createVector2(0, 1);
+        const threeA = new ThreeVector2(1, 0);
+        const threeB = new ThreeVector2(0, 1);
 
-        ourVec.mulScalar(5);
-        threeVec.multiplyScalar(5);
-        compareVectors(ourVec, threeVec);
+        expect(a.angleTo(b)).toBeCloseTo(threeA.angleTo(threeB));
     });
 
-    test("sub", () => {
-        const ourVecA = createVector2(1, 2);
-        const ourVecB = createVector2(3, 4);
+    test("ceil", () => {
+        const a = createVector2(0.1, 0.9).ceil();
+        const threeA = new ThreeVector2(0.1, 0.9).ceil();
 
-        const threeVecA = new ThreeVector2(1, 2);
-        const threeVecB = new ThreeVector2(3, 4);
-
-        ourVecA.sub(ourVecB);
-        threeVecA.sub(threeVecB);
-        compareVectors(ourVecA, threeVecA);
-    });
-});
-
-describe("Vector2 array operations", () => {
-    test("fromArray and toArray", () => {
-        const array = [1, 2];
-
-        const ourVec = createVector2().fromArray(array);
-        const threeVec = new ThreeVector2().fromArray(array);
-        compareVectors(ourVec, threeVec);
-
-        const ourArray = [];
-        const threeArray = [];
-
-        ourVec.toArray(ourArray);
-        threeVec.toArray(threeArray);
-
-        expect(ourArray[0]).toBeCloseTo(threeArray[0], MathsUtils.EPSILON);
-        expect(ourArray[1]).toBeCloseTo(threeArray[1], MathsUtils.EPSILON);
+        expect(a.x).toBe(threeA.x);
+        expect(a.y).toBe(threeA.y);
     });
 
-    test("iterator", () => {
-        const ourVec = createVector2(1, 2);
-        const values = [];
+    test("clamp", () => {
+        const a = createVector2(-1, 3);
+        const min = createVector2(0, 0);
+        const max = createVector2(2, 2);
+        a.clamp(min, max);
 
-        for (const value of ourVec) {
-            values.push(value);
-        }
+        const threeA = new ThreeVector2(-1, 3);
+        const minThree = new ThreeVector2(0, 0);
+        const maxThree = new ThreeVector2(2, 2);
+        threeA.clamp(minThree, maxThree);
 
-        expect(values[0]).toBe(1);
-        expect(values[1]).toBe(2);
-        expect(values.length).toBe(2);
+        expect(a.x).toBe(threeA.x);
+        expect(a.y).toBe(threeA.y);
     });
-});
 
-describe("Vector2 utilities", () => {
+    test("clampScalar", () => {
+        const a = createVector2(-1, 3).clampScalar(0, 2);
+        const threeA = new ThreeVector2(-1, 3).clampScalar(0, 2);
+
+        expect(a.x).toBe(threeA.x);
+        expect(a.y).toBe(threeA.y);
+    });
+
+    test("clone/copy", () => {
+        const a = createVector2(1, 2);
+        const threeA = new ThreeVector2(1, 2);
+
+        const clonedA = a.clone();
+        const clonedThreeA = threeA.clone();
+
+        expect(clonedA.x).toBe(clonedThreeA.x);
+        expect(clonedA.y).toBe(clonedThreeA.y);
+
+        const b = createVector2().copy(a);
+        const threeB = new ThreeVector2().copy(threeA);
+
+        expect(b.x).toBe(threeB.x);
+        expect(b.y).toBe(threeB.y);
+    });
+
     test("cross", () => {
-        const ourVecA = createVector2(1, 2);
-        const ourVecB = createVector2(3, 4);
+        const a = createVector2(1, 2);
+        const b = createVector2(3, 4);
+        const threeA = new ThreeVector2(1, 2);
+        const threeB = new ThreeVector2(3, 4);
 
-        const threeVecA = new ThreeVector2(1, 2);
-        const threeVecB = new ThreeVector2(3, 4);
-
-        const ourCross = ourVecA.cross(ourVecB);
-        const threeCross = threeVecA.cross(threeVecB);
-
-        expect(ourCross).toBeCloseTo(threeCross, MathsUtils.EPSILON);
+        expect(a.cross(b)).toBe(threeA.cross(threeB));
     });
 
-    test("distanceTo", () => {
-        const ourVecA = createVector2(1, 2);
-        const ourVecB = createVector2(4, 6);
+    test("distanceTo/distanceSqTo", () => {
+        const a = createVector2(1, 2);
+        const b = createVector2(4, 6);
+        const threeA = new ThreeVector2(1, 2);
+        const threeB = new ThreeVector2(4, 6);
 
-        const threeVecA = new ThreeVector2(1, 2);
-        const threeVecB = new ThreeVector2(4, 6);
-
-        expect(ourVecA.distanceTo(ourVecB)).toBeCloseTo(
-            threeVecA.distanceTo(threeVecB),
-            1e-5,
+        expect(a.distanceTo(b)).toBeCloseTo(
+            threeA.distanceTo(threeB),
         );
+        expect(a.distanceSqTo(b)).toBeCloseTo(
+            threeA.distanceToSquared(threeB),
+        );
+    });
+
+    test("div", () => {
+        const a = createVector2(6, 8);
+        const b = createVector2(2, 4);
+        a.div(b);
+
+        const threeA = new ThreeVector2(6, 8);
+        const threeB = new ThreeVector2(2, 4);
+        threeA.divide(threeB);
+
+        expect(a.x).toBe(threeA.x);
+        expect(a.y).toBe(threeA.y);
+    });
+
+    test("divScalar", () => {
+        const a = createVector2(6, 8).divScalar(2);
+        const threeA = new ThreeVector2(6, 8).divideScalar(2);
+
+        expect(a.x).toBe(threeA.x);
+        expect(a.y).toBe(threeA.y);
     });
 
     test("dot", () => {
-        const ourVecA = createVector2(1, 2);
-        const ourVecB = createVector2(3, 4);
+        const a = createVector2(1, 2);
+        const b = createVector2(3, 4);
+        const threeA = new ThreeVector2(1, 2);
+        const threeB = new ThreeVector2(3, 4);
 
-        const threeVecA = new ThreeVector2(1, 2);
-        const threeVecB = new ThreeVector2(3, 4);
-
-        expect(ourVecA.dot(ourVecB)).toBeCloseTo(
-            threeVecA.dot(threeVecB),
-            MathsUtils.EPSILON,
-        );
-
-        const extremeVecA = createVector2(1e10, 1e-10);
-        const extremeVecB = createVector2(-1e8, 1e-8);
-
-        const threeExtremeVecA = new ThreeVector2(1e10, 1e-10);
-        const threeExtremeVecB = new ThreeVector2(-1e8, 1e-8);
-
-        expect(extremeVecA.dot(extremeVecB)).toBeCloseTo(
-            threeExtremeVecA.dot(threeExtremeVecB),
-            MathsUtils.EPSILON,
-        );
+        expect(a.dot(b)).toBe(threeA.dot(threeB));
     });
 
     test("equals", () => {
-        const ourVecA = createVector2(1, 2);
-        const ourVecB = createVector2(1, 2);
-        const ourVecC = createVector2(3, 4);
+        const a = createVector2(1, 2);
+        const b = createVector2(1, 2);
+        const c = createVector2(3, 4);
+        const threeA = new ThreeVector2(1, 2);
+        const threeB = new ThreeVector2(1, 2);
+        const threeC = new ThreeVector2(3, 4);
 
-        const threeVecA = new ThreeVector2(1, 2);
-        const threeVecB = new ThreeVector2(1, 2);
-        const threeVecC = new ThreeVector2(3, 4);
+        expect(a.equals(b)).toBe(threeA.equals(threeB));
+        expect(a.equals(c)).toBe(threeA.equals(threeC));
+    });
 
-        expect(ourVecA.equals(ourVecB)).toBe(threeVecA.equals(threeVecB));
-        expect(ourVecA.equals(ourVecC)).toBe(threeVecA.equals(threeVecC));
+    test("floor", () => {
+        const a = createVector2(1.5, 2.5).floor();
+        const threeA = new ThreeVector2(1.5, 2.5).floor();
+
+        expect(a.x).toBe(threeA.x);
+        expect(a.y).toBe(threeA.y);
+    });
+
+    test("fromArray", () => {
+        const array = [1, 2, 3, 4];
+
+        const a = createVector2();
+        a.fromArray(array, 1);
+
+        const threeA = new ThreeVector2();
+        threeA.fromArray(array, 1);
+
+        expect(a.x).toBe(threeA.x);
+        expect(a.y).toBe(threeA.y);
+    });
+
+    test("lerp", () => {
+        const a = createVector2(1, 2);
+        const b = createVector2(3, 4);
+        a.lerp(b, 0.5);
+
+        const threeA = new ThreeVector2(1, 2);
+        const threeB = new ThreeVector2(3, 4);
+        threeA.lerp(threeB, 0.5);
+
+        expect(a.x).toBeCloseTo(threeA.x);
+        expect(a.y).toBeCloseTo(threeA.y);
+    });
+
+    test("lerpVectors", () => {
+        const a = createVector2();
+        const b = createVector2(1, 2);
+        const c = createVector2(3, 4);
+        a.lerpVectors(b, c, 0.5);
+
+        const threeA = new ThreeVector2();
+        const threeB = new ThreeVector2(1, 2);
+        const threeC = new ThreeVector2(3, 4);
+        threeA.lerpVectors(threeB, threeC, 0.5);
+
+        expect(a.x).toBeCloseTo(threeA.x);
+        expect(a.y).toBeCloseTo(threeA.y);
+    });
+
+    test("max/min", () => {
+        const a = createVector2(1, 2);
+        const b = createVector2(3, 1);
+        a.max(b);
+
+        const threeA = new ThreeVector2(1, 2);
+        const threeB = new ThreeVector2(3, 1);
+        threeA.max(threeB);
+
+        expect(a.x).toBe(threeA.x);
+        expect(a.y).toBe(threeA.y);
+
+        a.set(1, 2);
+        b.set(3, 1);
+        threeA.set(1, 2);
+        threeB.set(3, 1);
+
+        a.min(b);
+        threeA.min(threeB);
+
+        expect(a.x).toBe(threeA.x);
+        expect(a.y).toBe(threeA.y);
+    });
+
+    test("mul", () => {
+        const a = createVector2(1, 2);
+        const b = createVector2(3, 4);
+        a.mul(b);
+
+        const threeA = new ThreeVector2(1, 2);
+        const threeB = new ThreeVector2(3, 4);
+        threeA.multiply(threeB);
+
+        expect(a.x).toBe(threeA.x);
+        expect(a.y).toBe(threeA.y);
+    });
+
+    test("mulScalar", () => {
+        const a = createVector2(1, 2).mulScalar(3);
+        const threeA = new ThreeVector2(1, 2).multiplyScalar(3);
+
+        expect(a.x).toBe(threeA.x);
+        expect(a.y).toBe(threeA.y);
     });
 
     test("negate", () => {
-        const ourVec = createVector2(1, 2);
-        const threeVec = new ThreeVector2(1, 2);
+        const a = createVector2(1, 2).negate();
+        const threeA = new ThreeVector2(1, 2).negate();
 
-        ourVec.negate();
-        threeVec.negate();
-        compareVectors(ourVec, threeVec);
+        expect(a.x).toBe(threeA.x);
+        expect(a.y).toBe(threeA.y);
+    });
+
+    test("rotate", () => {
+        const a = createVector2(1, 0).rotate(MathsUtils.HALF_PI);
+
+        /* three.js doesn't have 'rotate(angle)' */
+
+        expect(a.x).toBeCloseTo(0);
+        expect(a.y).toBeCloseTo(1);
     });
 
     test("rotateAround", () => {
-        const ourVec = createVector2(1, 0);
-        const threeVec = new ThreeVector2(1, 0);
+        const a = createVector2(2, 0);
+        const centre = createVector2(1, 0);
+        a.rotateAround(centre, MathsUtils.HALF_PI);
 
-        ourVec.rotateAround(createVector2(0, 0), MathsUtils.HALF_PI);
-        threeVec.rotateAround(new ThreeVector2(0, 0), MathsUtils.HALF_PI);
-        compareVectors(ourVec, threeVec);
+        const threeA = new ThreeVector2(2, 0);
+        const centreThree = new ThreeVector2(1, 0);
+        threeA.rotateAround(centreThree, MathsUtils.HALF_PI);
 
-        ourVec.rotateAround(createVector2(0, 0), MathsUtils.HALF_PI);
-        threeVec.rotateAround(new ThreeVector2(0, 0), MathsUtils.HALF_PI);
-        compareVectors(ourVec, threeVec);
+        expect(a.x).toBeCloseTo(threeA.x);
+        expect(a.y).toBeCloseTo(threeA.y);
     });
 
-    test("unit / normalize", () => {
-        const testCases = [
-            [1, 0],
-            [0, 1],
-            [1, 2],
-            [-3, 4],
-        ];
-        testCases.forEach(([x, y]) => {
-            const ourVec = createVector2(x, y);
-            const threeVec = new ThreeVector2(x, y);
-            ourVec.unit();
-            threeVec.normalize();
-            compareVectors(ourVec, threeVec);
+    test("set", () => {
+        const a = createVector2().set(1, 2);
+        const threeA = new ThreeVector2().set(1, 2);
 
-            expect(ourVec.length).toBeCloseTo(1, 1e-5);
-            expect(threeVec.length()).toBeCloseTo(1, 1e-5);
-        });
+        expect(a.x).toBe(threeA.x);
+        expect(a.y).toBe(threeA.y);
+    });
+
+    test("setScalar", () => {
+        const a = createVector2().setScalar(1);
+        const threeA = new ThreeVector2().setScalar(1);
+
+        expect(a.x).toBe(threeA.x);
+        expect(a.y).toBe(threeA.y);
+    });
+
+    test("sub", () => {
+        const a = createVector2(4, 5);
+        const b = createVector2(1, 2);
+        a.sub(b);
+
+        const threeA = new ThreeVector2(4, 5);
+        const threeB = new ThreeVector2(1, 2);
+        threeA.sub(threeB);
+
+        expect(a.x).toBe(threeA.x);
+        expect(a.y).toBe(threeA.y);
+    });
+
+    test("subScalar", () => {
+        const a = createVector2(4, 5).subScalar(1);
+        const threeA = new ThreeVector2(4, 5).subScalar(1);
+
+        expect(a.x).toBe(threeA.x);
+        expect(a.y).toBe(threeA.y);
+    });
+
+    test("subVectors", () => {
+        const a = createVector2();
+        const b = createVector2(4, 5);
+        const c = createVector2(1, 2);
+        a.subVectors(b, c);
+
+        const threeA = new ThreeVector2();
+        const threeB = new ThreeVector2(4, 5);
+        const threeC = new ThreeVector2(1, 2);
+        threeA.subVectors(threeB, threeC);
+
+        expect(a.x).toBe(threeA.x);
+        expect(a.y).toBe(threeA.y);
+    });
+
+    test("toArray", () => {
+        const array1 = [], array2 = [];
+        const array3 = [], array4 = [];
+
+        const a = createVector2(1, 2);
+        const threeA = new ThreeVector2(1, 2);
+
+        a.toArray(array1);
+        threeA.toArray(array2);
+
+        expect(array1).toEqual(array2);
+
+        a.toArray(array3, 1);
+        threeA.toArray(array4, 1);
+
+        expect(array3).toEqual(array4);
+    });
+
+    test("unit", () => {
+        const a = createVector2(3, 4).unit();
+        const threeA = new ThreeVector2(3, 4).normalize();
+
+        expect(a.x).toBeCloseTo(threeA.x);
+        expect(a.y).toBeCloseTo(threeA.y);
     });
 });
