@@ -1,13 +1,4 @@
 /**
- * @returns {HTMLCanvasElement}
- */
-export function createCanvasElement() {
-    const canvas = globalThis.document.createElement("canvas");
-    canvas.style.display = "block";
-    return canvas;
-}
-
-/**
  * @param {string} hex
  * @returns {Array<number>}
  */
