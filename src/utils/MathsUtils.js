@@ -22,7 +22,7 @@ for (let i = 0; i < _TABLE_SIZE; i++) {
 /**
  * @namespace
  */
-export const Maths = {
+export const MathsUtils = {
     /**
      * 0.0001
      * @type {number}
@@ -119,7 +119,7 @@ export const Maths = {
 
         let r = ((-0.0464964749 * s + 0.15931422) * s - 0.327622764) * s * a +
             a;
-        r = ay > ax ? Maths.HALF_PI - r : r;
+        r = ay > ax ? MathsUtils.HALF_PI - r : r;
         r = x < 0 ? Math.PI - r : r;
         return y < 0 ? -r : r;
     },
@@ -156,7 +156,7 @@ export const Maths = {
     ipow(value, n) {
         if (n === 0) return 1;
         if (n === 1) return value;
-        if (n < 0) return 1 / Maths.ipow(value, -n);
+        if (n < 0) return 1 / MathsUtils.ipow(value, -n);
 
         let result = 1;
         let base = value;
@@ -227,7 +227,7 @@ export const Maths = {
      * @returns {number}
      */
     smoothstep(value) {
-        const t = Maths.clamp(value, 0, 1);
+        const t = MathsUtils.clamp(value, 0, 1);
         return t * t * (3 - 2 * t);
     },
 
@@ -236,7 +236,7 @@ export const Maths = {
      * @returns {number}
      */
     smootherstep(value) {
-        const t = Maths.clamp(value, 0, 1);
+        const t = MathsUtils.clamp(value, 0, 1);
         return t * t * t * (t * (t * 6 - 15) + 10);
     },
 
@@ -245,7 +245,7 @@ export const Maths = {
      * @returns {number}
      */
     toDegrees(radians) {
-        return radians * Maths.RADIANS_TO_DEGREES;
+        return radians * MathsUtils.RADIANS_TO_DEGREES;
     },
 
     /**
@@ -269,6 +269,6 @@ export const Maths = {
      * @returns {number}
      */
     toRadians(degrees) {
-        return degrees * Maths.DEGREES_TO_RADIANS;
+        return degrees * MathsUtils.DEGREES_TO_RADIANS;
     },
 };
