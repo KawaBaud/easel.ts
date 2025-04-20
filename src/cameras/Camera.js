@@ -64,7 +64,7 @@ export function createCamera() {
          */
         updateMatrixWorld() {
             _camera.updateWorldMatrix(true, false);
-            _camera.matrixWorldInverse.copy(_camera.worldMatrix).invert();
+            _camera.matrixWorldInverse.copy(_camera.worldMatrix).inv();
             return _camera;
         },
 
