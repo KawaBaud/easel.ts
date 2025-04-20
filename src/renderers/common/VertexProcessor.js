@@ -5,16 +5,16 @@ import { createVector3 } from "../../maths/Vector3.js";
  * @typedef {import("../../maths/Vector3.js").Vector3} Vector3
  * @typedef {import("../../maths/Matrix4.js").Matrix4} Matrix4
  * @typedef {import("../../cameras/Camera.js").Camera} Camera
- * @typedef {Object} Processor
+ * @typedef {Object} VertexProcessor
  */
 
 /**
- * @returns {Processor}
+ * @returns {VertexProcessor}
  */
-export function createProcessor() {
+export function createVertexProcessor() {
     const _v = createVector3();
 
-    const _processor = {
+    const _vertexProcessor = {
         /**
          * @param {Array<number>} vertices
          * @param {Matrix4} matrix
@@ -49,14 +49,14 @@ export function createProcessor() {
         },
 
         /**
-         * @param {Array<number>} vertices
+         * @param {Array<number>|Float32Array} vertices
          * @param {Matrix4} viewMatrix
          * @param {Matrix4} projectionMatrix
-         * @returns {Array<number>}
+         * @returns {Float32Array}
          */
         processVertices(vertices, viewMatrix, projectionMatrix) {
             const v = createVector3();
-            const result = new Array(vertices.length);
+            const result = new Float32Array(vertices.length);
 
             for (let i = 0; i < vertices.length; i += 3) {
                 v.set(vertices[i], vertices[i + 1], vertices[i + 2]);
@@ -95,8 +95,8 @@ export function createProcessor() {
             screenX = (screenX * halfWidth) + halfWidth;
             screenY = halfHeight - (screenY * halfHeight);
 
-            const x = MathsUtils.fastTrunc(screenX);
-            const y = MathsUtils.fastTrunc(screenY);
+            const x = MathsUtils.fastFloor(screenX);
+            const y = MathsUtils.fastFloor(screenY);
             return { x, y, z: v.z };
         },
 
@@ -109,5 +109,5 @@ export function createProcessor() {
             return _v.copy(vertex).applyMatrix4(matrix);
         },
     };
-    return _processor;
+    return _vertexProcessor;
 }
