@@ -100,37 +100,7 @@ const compareMatrices = (
     }
 };
 
-describe("Matrix4 core", () => {
-    test("create / constructor", () => {
-        const ourMat = createMatrix4().identity();
-        const threeMat = new ThreeMatrix4().identity();
-        compareMatrices(ourMat, threeMat, "identity");
-    });
-
-    test("set", () => {
-        const values = [
-            1,
-            2,
-            3,
-            4,
-            5,
-            6,
-            7,
-            8,
-            9,
-            10,
-            11,
-            12,
-            13,
-            14,
-            15,
-            16,
-        ];
-        const ourMat = createMatrix4().set(...values);
-        const threeMat = new ThreeMatrix4().set(...values);
-        compareMatrices(ourMat, threeMat, "set");
-    });
-
+describe("Matrix4 basics", () => {
     test("clone and copy", () => {
         const values = [
             0,
@@ -163,6 +133,12 @@ describe("Matrix4 core", () => {
 
         ourMat1.elements[0] = 100;
         expect(ourMat2.elements[0]).not.toBe(100);
+    });
+
+    test("create / constructor", () => {
+        const ourMat = createMatrix4().identity();
+        const threeMat = new ThreeMatrix4().identity();
+        compareMatrices(ourMat, threeMat, "identity");
     });
 
     test("fromArray and toArray", () => {
@@ -207,6 +183,82 @@ describe("Matrix4 core", () => {
         expect(targetArray[1]).toBeCloseTo(threeTargetArray[0]);
         expect(targetArray[1 + 15]).toBeCloseTo(threeTargetArray[15]);
     });
+
+    test("iterator", () => {
+        const values = [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15,
+            16,
+        ];
+        const ourMat = createMatrix4().set(...values);
+        const iteratedValues = [];
+
+        for (const value of ourMat) {
+            iteratedValues.push(value);
+        }
+
+        expect(iteratedValues.length).toBe(16);
+
+        const expectedOrder = [
+            1,
+            5,
+            9,
+            13, // 1st col
+            2,
+            6,
+            10,
+            14, // 2nd col
+            3,
+            7,
+            11,
+            15, // 3rd col
+            4,
+            8,
+            12,
+            16, // 4th col
+        ];
+
+        for (let i = 0; i < 16; i++) {
+            expect(iteratedValues[i]).toBe(expectedOrder[i]);
+        }
+    });
+
+    test("set", () => {
+        const values = [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15,
+            16,
+        ];
+        const ourMat = createMatrix4().set(...values);
+        const threeMat = new ThreeMatrix4().set(...values);
+        compareMatrices(ourMat, threeMat, "set");
+    });
 });
 
 describe("Matrix4 transformations", () => {
@@ -242,20 +294,42 @@ describe("Matrix4 transformations", () => {
             scale: [1, 5, 1],
         },
     ];
-
     testCases.forEach(({ name, position, rotation, scale }) => {
-        test(`makeTranslation: ${name}`, () => {
-            const ourMat = createMatrix4().makeTranslation(
-                position[0],
-                position[1],
-                position[2],
+        test(`compose: ${name}`, () => {
+            const ourPos = createVector3(...position);
+            const threePos = new ThreeVector3(...position);
+
+            const { ourQuat, threeQuat } = createQuaternions(...rotation);
+
+            const ourScale = createVector3(...scale);
+            const threeScale = new ThreeVector3(...scale);
+
+            const ourMat = createMatrix4().compose(
+                ourPos,
+                ourQuat,
+                ourScale,
             );
-            const threeMat = new ThreeMatrix4().makeTranslation(
-                position[0],
-                position[1],
-                position[2],
+            const threeMat = new ThreeMatrix4().compose(
+                threePos,
+                threeQuat,
+                threeScale,
             );
-            compareMatrices(ourMat, threeMat, `makeTranslation: ${name}`);
+            compareMatrices(ourMat, threeMat, `compose: ${name}`, 1e-5);
+        });
+
+        test(`makeRotationFromQuaternion: ${name}`, () => {
+            const { ourQuat, threeQuat } = createQuaternions(...rotation);
+            const ourMat = createMatrix4().makeRotationFromQuaternion(ourQuat);
+            const threeMat = new ThreeMatrix4().makeRotationFromQuaternion(
+                threeQuat,
+            );
+
+            compareMatrices(
+                ourMat,
+                threeMat,
+                `makeRotationFromQuaternion: ${name}`,
+                1e-5,
+            );
         });
 
         test(`makeRotationX/Y/Z: ${name}`, () => {
@@ -286,40 +360,18 @@ describe("Matrix4 transformations", () => {
             compareMatrices(ourMat, threeMat, `makeScale: ${name}`);
         });
 
-        test(`makeRotationFromQuaternion: ${name}`, () => {
-            const { ourQuat, threeQuat } = createQuaternions(...rotation);
-            const ourMat = createMatrix4().makeRotationFromQuaternion(ourQuat);
-            const threeMat = new ThreeMatrix4().makeRotationFromQuaternion(
-                threeQuat,
+        test(`makeTranslation: ${name}`, () => {
+            const ourMat = createMatrix4().makeTranslation(
+                position[0],
+                position[1],
+                position[2],
             );
-
-            compareMatrices(
-                ourMat,
-                threeMat,
-                `makeRotationFromQuaternion: ${name}`,
-                1e-5,
+            const threeMat = new ThreeMatrix4().makeTranslation(
+                position[0],
+                position[1],
+                position[2],
             );
-        });
-
-        test(`compose: ${name}`, () => {
-            const ourPos = createVector3(...position);
-            const threePos = new ThreeVector3(...position);
-            const { ourQuat, threeQuat } = createQuaternions(...rotation);
-            const ourScale = createVector3(...scale);
-            const threeScale = new ThreeVector3(...scale);
-
-            const ourMat = createMatrix4().compose(
-                ourPos,
-                ourQuat,
-                ourScale,
-            );
-            const threeMat = new ThreeMatrix4().compose(
-                threePos,
-                threeQuat,
-                threeScale,
-            );
-
-            compareMatrices(ourMat, threeMat, `compose: ${name}`, 1e-5);
+            compareMatrices(ourMat, threeMat, `makeTranslation: ${name}`);
         });
     });
 
@@ -338,7 +390,76 @@ describe("Matrix4 operations", () => {
     const ourMatB = createMatrix4().makeTranslation(1, 2, 3);
     const threeMatB = new ThreeMatrix4().makeTranslation(1, 2, 3);
 
-    test("Matrix4 lookAt", () => {
+    test("copyPosition", () => {
+        const ourMat = createMatrix4().makeRotationY(MathsUtils.THIRD_PI);
+        const threeMat = new ThreeMatrix4().makeRotationY(MathsUtils.THIRD_PI);
+
+        const x = 10, y = -20, z = 30;
+
+        ourMat.setPosition(x, y, z);
+        threeMat.setPosition(x, y, z);
+
+        const ourMat2 = createMatrix4();
+        const threeMat2 = new ThreeMatrix4();
+        ourMat2.copyPosition(ourMat);
+        threeMat2.copyPosition(threeMat);
+        compareMatrices(ourMat2, threeMat2, "copyPosition");
+    });
+
+    test("determinant", () => {
+        expect(createMatrix4().determinant).toBeCloseTo(1);
+
+        const scaleMat = createMatrix4().makeScale(2, 3, 4);
+        expect(scaleMat.determinant).toBeCloseTo(2 * 3 * 4);
+
+        expect(ourMatA.determinant).toBeCloseTo(threeMatA.determinant(), 6);
+        expect(ourMatB.determinant).toBeCloseTo(threeMatB.determinant(), 6);
+
+        const zeroScaleMat = createMatrix4().makeScale(1, 0, 1);
+        const threeZeroScaleMat = new ThreeMatrix4().makeScale(1, 0, 1);
+        expect(zeroScaleMat.determinant).toBeCloseTo(0, 6);
+        expect(zeroScaleMat.determinant).toBeCloseTo(
+            threeZeroScaleMat.determinant(),
+            6,
+        );
+    });
+
+    test("invert", () => {
+        const ourMatInv = ourMatA.clone().invert();
+        const threeMatInv = threeMatA.clone().invert();
+        compareMatrices(ourMatInv, threeMatInv, "invert (invertible)");
+
+        const identityTest = ourMatA.clone().mul(ourMatInv);
+        const threeIdentityTest = threeMatA.clone().multiply(threeMatInv);
+        compareMatrices(
+            identityTest,
+            threeIdentityTest,
+            "invert check (M * M_inv)",
+            1e-5,
+        );
+        compareMatrices(
+            identityTest,
+            createMatrix4().identity(),
+            "invert check (M * M_inv vs I)",
+            1e-5,
+        );
+
+        const zeroScaleMat = createMatrix4().makeScale(1, 0, 1);
+        const threeZeroScaleMat = new ThreeMatrix4().makeScale(1, 0, 1);
+        zeroScaleMat.invert();
+        threeZeroScaleMat.invert();
+        compareMatrices(
+            zeroScaleMat,
+            threeZeroScaleMat,
+            "invert (non-invertible)",
+        );
+
+        expect(zeroScaleMat.elements.every((v) => Math.abs(v) < 1e-9)).toBe(
+            true,
+        );
+    });
+
+    test("lookAt", () => {
         const testCases = [
             { eye: [0, 0, 5], target: [0, 0, 0], up: [0, 1, 0] },
             { eye: [5, 0, 0], target: [0, 0, 0], up: [0, 1, 0] },
@@ -364,7 +485,6 @@ describe("Matrix4 operations", () => {
 
             ourMat.lookAt(eyeVec, targetVec, upVec);
             threeMat.lookAt(threeEye, threeTarget, threeUp);
-
             compareMatrices(
                 ourMat,
                 threeMat,
@@ -372,6 +492,12 @@ describe("Matrix4 operations", () => {
                 1e-5,
             );
         });
+    });
+
+    test("mul / multiply", () => {
+        const ourMat = ourMatA.clone().mul(ourMatB);
+        const threeMat = threeMatA.clone().multiply(threeMatB);
+        compareMatrices(ourMat, threeMat, "mul / multiply");
     });
 
     test("mulMatrices / multiplyMatrices", () => {
@@ -383,18 +509,6 @@ describe("Matrix4 operations", () => {
         compareMatrices(ourMat, threeMat, "mulMatrices / multiplyMatrices");
     });
 
-    test("mul / multiply", () => {
-        const ourMat = ourMatA.clone().mul(ourMatB);
-        const threeMat = threeMatA.clone().multiply(threeMatB);
-        compareMatrices(ourMat, threeMat, "mul / multiply");
-    });
-
-    test("premul / premultiply", () => {
-        const ourMat = ourMatA.clone().premul(ourMatB);
-        const threeMat = threeMatA.clone().premultiply(threeMatB);
-        compareMatrices(ourMat, threeMat, "premul / premultiply");
-    });
-
     test("mulScalar / multiplyScalar", () => {
         const s = 3.5;
 
@@ -403,22 +517,21 @@ describe("Matrix4 operations", () => {
         compareMatrices(ourMat, threeMat, "mulScalar / multiplyScalar");
     });
 
-    test("determinant", () => {
-        expect(createMatrix4().determinant).toBeCloseTo(1);
+    test("premul / premultiply", () => {
+        const ourMat = ourMatA.clone().premul(ourMatB);
+        const threeMat = threeMatA.clone().premultiply(threeMatB);
+        compareMatrices(ourMat, threeMat, "premul / premultiply");
+    });
 
-        const scaleMat = createMatrix4().makeScale(2, 3, 4);
-        expect(scaleMat.determinant).toBeCloseTo(2 * 3 * 4);
+    test("setPosition", () => {
+        const ourMat = createMatrix4().makeRotationY(MathsUtils.THIRD_PI);
+        const threeMat = new ThreeMatrix4().makeRotationY(MathsUtils.THIRD_PI);
 
-        expect(ourMatA.determinant).toBeCloseTo(threeMatA.determinant(), 6);
-        expect(ourMatB.determinant).toBeCloseTo(threeMatB.determinant(), 6);
+        const x = 10, y = -20, z = 30;
 
-        const zeroScaleMat = createMatrix4().makeScale(1, 0, 1);
-        const threeZeroScaleMat = new ThreeMatrix4().makeScale(1, 0, 1);
-        expect(zeroScaleMat.determinant).toBeCloseTo(0, 6);
-        expect(zeroScaleMat.determinant).toBeCloseTo(
-            threeZeroScaleMat.determinant(),
-            6,
-        );
+        ourMat.setPosition(x, y, z);
+        threeMat.setPosition(x, y, z);
+        compareMatrices(ourMat, threeMat, "setPosition");
     });
 
     test("transpose", () => {
@@ -462,58 +575,6 @@ describe("Matrix4 operations", () => {
         threeMat.transpose();
         compareMatrices(ourMat, threeMat, "transpose");
     });
-
-    test("setPosition and copyPosition", () => {
-        const ourMat = createMatrix4().makeRotationY(MathsUtils.THIRD_PI);
-        const threeMat = new ThreeMatrix4().makeRotationY(MathsUtils.THIRD_PI);
-
-        const x = 10, y = -20, z = 30;
-
-        ourMat.setPosition(x, y, z);
-        threeMat.setPosition(x, y, z);
-        compareMatrices(ourMat, threeMat, "setPosition");
-
-        const ourMat2 = createMatrix4();
-        const threeMat2 = new ThreeMatrix4();
-        ourMat2.copyPosition(ourMat);
-        threeMat2.copyPosition(threeMat);
-        compareMatrices(ourMat2, threeMat2, "copyPosition");
-    });
-
-    test("invert", () => {
-        const ourMatInv = ourMatA.clone().invert();
-        const threeMatInv = threeMatA.clone().invert();
-        compareMatrices(ourMatInv, threeMatInv, "invert (invertible)");
-
-        const identityTest = ourMatA.clone().mul(ourMatInv);
-        const threeIdentityTest = threeMatA.clone().multiply(threeMatInv);
-        compareMatrices(
-            identityTest,
-            threeIdentityTest,
-            "invert check (M * M_inv)",
-            1e-5,
-        );
-        compareMatrices(
-            identityTest,
-            createMatrix4().identity(),
-            "invert check (M * M_inv vs I)",
-            1e-5,
-        );
-
-        const zeroScaleMat = createMatrix4().makeScale(1, 0, 1);
-        const threeZeroScaleMat = new ThreeMatrix4().makeScale(1, 0, 1);
-        zeroScaleMat.invert();
-        threeZeroScaleMat.invert();
-        compareMatrices(
-            zeroScaleMat,
-            threeZeroScaleMat,
-            "invert (non-invertible)",
-        );
-
-        expect(zeroScaleMat.elements.every((v) => Math.abs(v) < 1e-9)).toBe(
-            true,
-        );
-    });
 });
 
 describe("Matrix4 projections", () => {
@@ -525,7 +586,7 @@ describe("Matrix4 projections", () => {
 
         const ourMat = createMatrix4().makePerspective(fov, aspect, near, far);
 
-        // three.js uses "left/right/top/bottom", so we convert our "fov/aspect"
+        // three.js uses "left/right/top/bottom"
         const halfHeight = near * Math.tan(fov * 0.5);
         const halfWidth = halfHeight * aspect;
 
