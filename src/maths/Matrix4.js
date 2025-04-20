@@ -1,16 +1,21 @@
-import { Maths } from "./Maths.js";
+import { MathsUtils } from "../utils/MathsUtils.js";
 
 /**
+ * @typedef {import("./Vector3.js").Vector3} Vector3
+ * @typedef {import("./Quaternion.js").Quaternion} Quaternion
  * @typedef {Object} Matrix4
  * @property {Float32Array} elements
  */
 
 /**
- * @param {Float32Array} elements
+ * @param {Float32Array} [elements=new Float32Array(16)]
  * @returns {Matrix4}
  */
 export function createMatrix4(elements = new Float32Array(16)) {
     const _m = {
+        /**
+         * @default new Float32Array(16)
+         */
         elements,
 
         /**
@@ -147,15 +152,15 @@ export function createMatrix4(elements = new Float32Array(16)) {
             position.y = te[13];
             position.z = te[14];
 
-            const invSX = 1 / sx;
-            const invSY = 1 / sy;
-            const invSZ = 1 / sz;
+            const invsx = 1 / sx;
+            const invsy = 1 / sy;
+            const invsz = 1 / sz;
 
-            const r11 = te[0] * invSX, r12 = te[4] * invSY;
-            const r13 = te[8] * invSZ, r21 = te[1] * invSX;
-            const r22 = te[5] * invSY, r23 = te[9] * invSZ;
-            const r31 = te[2] * invSX, r32 = te[6] * invSY;
-            const r33 = te[10] * invSZ;
+            const r11 = te[0] * invsx, r12 = te[4] * invsy;
+            const r13 = te[8] * invsz, r21 = te[1] * invsx;
+            const r22 = te[5] * invsy, r23 = te[9] * invsz;
+            const r31 = te[2] * invsx, r32 = te[6] * invsy;
+            const r33 = te[10] * invsz;
 
             const trace = r11 + r22 + r33;
             if (trace > 0) {
@@ -203,22 +208,22 @@ export function createMatrix4(elements = new Float32Array(16)) {
             const te = _m.elements;
             const me = m.elements;
 
-            if (Math.abs(te[0] - me[0]) > Maths.EPSILON) return false;
-            if (Math.abs(te[1] - me[1]) > Maths.EPSILON) return false;
-            if (Math.abs(te[2] - me[2]) > Maths.EPSILON) return false;
-            if (Math.abs(te[3] - me[3]) > Maths.EPSILON) return false;
-            if (Math.abs(te[4] - me[4]) > Maths.EPSILON) return false;
-            if (Math.abs(te[5] - me[5]) > Maths.EPSILON) return false;
-            if (Math.abs(te[6] - me[6]) > Maths.EPSILON) return false;
-            if (Math.abs(te[7] - me[7]) > Maths.EPSILON) return false;
-            if (Math.abs(te[8] - me[8]) > Maths.EPSILON) return false;
-            if (Math.abs(te[9] - me[9]) > Maths.EPSILON) return false;
-            if (Math.abs(te[10] - me[10]) > Maths.EPSILON) return false;
-            if (Math.abs(te[11] - me[11]) > Maths.EPSILON) return false;
-            if (Math.abs(te[12] - me[12]) > Maths.EPSILON) return false;
-            if (Math.abs(te[13] - me[13]) > Maths.EPSILON) return false;
-            if (Math.abs(te[14] - me[14]) > Maths.EPSILON) return false;
-            if (Math.abs(te[15] - me[15]) > Maths.EPSILON) return false;
+            if (Math.abs(te[0] - me[0]) > MathsUtils.EPSILON) return false;
+            if (Math.abs(te[1] - me[1]) > MathsUtils.EPSILON) return false;
+            if (Math.abs(te[2] - me[2]) > MathsUtils.EPSILON) return false;
+            if (Math.abs(te[3] - me[3]) > MathsUtils.EPSILON) return false;
+            if (Math.abs(te[4] - me[4]) > MathsUtils.EPSILON) return false;
+            if (Math.abs(te[5] - me[5]) > MathsUtils.EPSILON) return false;
+            if (Math.abs(te[6] - me[6]) > MathsUtils.EPSILON) return false;
+            if (Math.abs(te[7] - me[7]) > MathsUtils.EPSILON) return false;
+            if (Math.abs(te[8] - me[8]) > MathsUtils.EPSILON) return false;
+            if (Math.abs(te[9] - me[9]) > MathsUtils.EPSILON) return false;
+            if (Math.abs(te[10] - me[10]) > MathsUtils.EPSILON) return false;
+            if (Math.abs(te[11] - me[11]) > MathsUtils.EPSILON) return false;
+            if (Math.abs(te[12] - me[12]) > MathsUtils.EPSILON) return false;
+            if (Math.abs(te[13] - me[13]) > MathsUtils.EPSILON) return false;
+            if (Math.abs(te[14] - me[14]) > MathsUtils.EPSILON) return false;
+            if (Math.abs(te[15] - me[15]) > MathsUtils.EPSILON) return false;
 
             return true;
         },
@@ -382,8 +387,8 @@ export function createMatrix4(elements = new Float32Array(16)) {
             const x = up.clone().cross(z);
             if (x.lengthSq === 0) {
                 Math.abs(up.z) === 1
-                    ? z.x += Maths.EPSILON
-                    : z.z += Maths.EPSILON;
+                    ? z.x += MathsUtils.EPSILON
+                    : z.z += MathsUtils.EPSILON;
                 z.unit();
 
                 x.copy(up).cross(z);
@@ -520,7 +525,8 @@ export function createMatrix4(elements = new Float32Array(16)) {
          * @returns {Matrix4}
          */
         makeRotationX(theta) {
-            const c = Math.cos(theta), s = Math.sin(theta);
+            const c = Math.cos(theta);
+            const s = Math.sin(theta);
 
             return _m.set(
                 1,
@@ -547,7 +553,8 @@ export function createMatrix4(elements = new Float32Array(16)) {
          * @returns {Matrix4}
          */
         makeRotationY(theta) {
-            const c = Math.cos(theta), s = Math.sin(theta);
+            const c = Math.cos(theta);
+            const s = Math.sin(theta);
 
             return _m.set(
                 c,
@@ -574,7 +581,8 @@ export function createMatrix4(elements = new Float32Array(16)) {
          * @returns {Matrix4}
          */
         makeRotationZ(theta) {
-            const c = Math.cos(theta), s = Math.sin(theta);
+            const c = Math.cos(theta);
+            const s = Math.sin(theta);
 
             return _m.set(
                 c,
@@ -880,10 +888,3 @@ export function createMatrix4(elements = new Float32Array(16)) {
     _m.identity();
     return _m;
 }
-
-/**
- * @namespace
- */
-export const Matrix4 = {
-    // statics go here
-};

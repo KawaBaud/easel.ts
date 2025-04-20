@@ -1,8 +1,11 @@
-import { Maths } from "./Maths.js";
+import { MathsUtils } from "../utils/MathsUtils.js";
 import { createMatrix4 } from "./Matrix4.js";
 import { createQuaternion } from "./Quaternion.js";
 
 /**
+ * @typedef {import("./Vector3.js").Vector3} Vector3
+ * @typedef {import("./Quaternion.js").Quaternion} Quaternion
+ * @typedef {import("./Matrix4.js").Matrix4} Matrix4
  * @typedef {Object} Euler
  * @property {number} x
  * @property {number} y
@@ -80,7 +83,7 @@ export function createEuler(x = 0, y = 0, z = 0, order = "XYZ") {
 
         /**
          * @param {Array<number>} array
-         * @param {number} offset
+         * @param {number} [offset=0]
          * @returns {Euler}
          */
         fromArray(array, offset = 0) {
@@ -131,39 +134,39 @@ export function createEuler(x = 0, y = 0, z = 0, order = "XYZ") {
             if (order === "XYZ") {
                 _e.y = Math.asin(Math.min(Math.max(m13, -1), 1));
                 Math.abs(m13) < 0.9999999
-                    ? (_e.x = Maths.fastAtan2(-m23, m33),
-                        _e.z = Maths.fastAtan2(-m12, m11))
-                    : (_e.x = Maths.fastAtan2(m32, m22), _e.z = 0);
+                    ? (_e.x = MathsUtils.fastAtan2(-m23, m33),
+                        _e.z = MathsUtils.fastAtan2(-m12, m11))
+                    : (_e.x = MathsUtils.fastAtan2(m32, m22), _e.z = 0);
             } else if (order === "YXZ") {
                 _e.x = Math.asin(-Math.min(Math.max(m23, -1), 1));
                 Math.abs(m23) < 0.9999999
-                    ? (_e.y = Maths.fastAtan2(m13, m33),
-                        _e.z = Maths.fastAtan2(m21, m22))
-                    : (_e.y = Maths.fastAtan2(-m31, m11), _e.z = 0);
+                    ? (_e.y = MathsUtils.fastAtan2(m13, m33),
+                        _e.z = MathsUtils.fastAtan2(m21, m22))
+                    : (_e.y = MathsUtils.fastAtan2(-m31, m11), _e.z = 0);
             } else if (order === "ZXY") {
                 _e.x = Math.asin(Math.min(Math.max(m32, -1), 1));
                 Math.abs(m32) < 0.9999999
-                    ? (_e.y = Maths.fastAtan2(-m31, m33),
-                        _e.z = Maths.fastAtan2(-m12, m22))
-                    : (_e.y = 0, _e.z = Maths.fastAtan2(m21, m11));
+                    ? (_e.y = MathsUtils.fastAtan2(-m31, m33),
+                        _e.z = MathsUtils.fastAtan2(-m12, m22))
+                    : (_e.y = 0, _e.z = MathsUtils.fastAtan2(m21, m11));
             } else if (order === "ZYX") {
                 _e.y = Math.asin(-Math.min(Math.max(m31, -1), 1));
                 Math.abs(m31) < 0.9999999
-                    ? (_e.x = Maths.fastAtan2(m32, m33),
-                        _e.z = Maths.fastAtan2(m21, m11))
-                    : (_e.x = 0, _e.z = Maths.fastAtan2(-m12, m22));
+                    ? (_e.x = MathsUtils.fastAtan2(m32, m33),
+                        _e.z = MathsUtils.fastAtan2(m21, m11))
+                    : (_e.x = 0, _e.z = MathsUtils.fastAtan2(-m12, m22));
             } else if (order === "YZX") {
                 _e.z = Math.asin(Math.min(Math.max(m21, -1), 1));
                 Math.abs(m21) < 0.9999999
-                    ? (_e.x = Maths.fastAtan2(-m23, m22),
-                        _e.y = Maths.fastAtan2(-m31, m11))
-                    : (_e.x = 0, _e.y = Maths.fastAtan2(m13, m33));
+                    ? (_e.x = MathsUtils.fastAtan2(-m23, m22),
+                        _e.y = MathsUtils.fastAtan2(-m31, m11))
+                    : (_e.x = 0, _e.y = MathsUtils.fastAtan2(m13, m33));
             } else if (order === "XZY") {
                 _e.z = Math.asin(-Math.min(Math.max(m12, -1), 1));
                 Math.abs(m12) < 0.9999999
-                    ? (_e.x = Maths.fastAtan2(m32, m22),
-                        _e.y = Maths.fastAtan2(m13, m11))
-                    : (_e.x = Maths.fastAtan2(-m23, m33), _e.y = 0);
+                    ? (_e.x = MathsUtils.fastAtan2(m32, m22),
+                        _e.y = MathsUtils.fastAtan2(m13, m11))
+                    : (_e.x = MathsUtils.fastAtan2(-m23, m33), _e.y = 0);
             }
             _e.order = order;
             return _e;
@@ -190,7 +193,7 @@ export function createEuler(x = 0, y = 0, z = 0, order = "XYZ") {
 
         /**
          * @param {Array<number>} array
-         * @param {number} offset
+         * @param {number} [offset=0]
          * @returns {Array<number>}
          */
         toArray(array = [], offset = 0) {

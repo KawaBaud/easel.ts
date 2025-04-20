@@ -1,7 +1,10 @@
-import { Maths } from "./Maths.js";
+import { MathsUtils } from "../utils/MathsUtils.js";
 import { createQuaternion } from "./Quaternion.js";
 
 /**
+ * @typedef {import("./Euler.js").Euler} Euler
+ * @typedef {import("./Matrix4.js").Matrix4} Matrix4
+ * @typedef {import("./Quaternion.js").Quaternion} Quaternion
  * @typedef {Object} Vector3
  * @property {number} x
  * @property {number} y
@@ -98,10 +101,10 @@ export function createVector3(x = 0, y = 0, z = 0) {
          */
         angleTo(v) {
             const denom = Math.sqrt(_v.lengthSq * v.lengthSq);
-            if (denom === 0) return Maths.TAU;
+            if (denom === 0) return MathsUtils.TAU;
 
             const theta = _v.dot(v) / denom;
-            return Math.acos(Maths.clamp(theta, -1, 1));
+            return Math.acos(MathsUtils.clamp(theta, -1, 1));
         },
 
         /**
@@ -157,9 +160,9 @@ export function createVector3(x = 0, y = 0, z = 0) {
          */
         ceil() {
             return _v.set(
-                Maths.fastCeil(_v.x),
-                Maths.fastCeil(_v.y),
-                Maths.fastCeil(_v.z),
+                MathsUtils.fastCeil(_v.x),
+                MathsUtils.fastCeil(_v.y),
+                MathsUtils.fastCeil(_v.z),
             );
         },
 
@@ -179,9 +182,9 @@ export function createVector3(x = 0, y = 0, z = 0) {
          */
         clampScalar(min, max) {
             return _v.set(
-                Maths.clamp(_v.x, min, max),
-                Maths.clamp(_v.y, min, max),
-                Maths.clamp(_v.z, min, max),
+                MathsUtils.clamp(_v.x, min, max),
+                MathsUtils.clamp(_v.y, min, max),
+                MathsUtils.clamp(_v.z, min, max),
             );
         },
 
@@ -391,7 +394,7 @@ export function createVector3(x = 0, y = 0, z = 0) {
         /**
          * @returns {Vector3}
          */
-        neg() {
+        negate() {
             return _v.set(-_v.x, -_v.y, -_v.z);
         },
 
@@ -504,9 +507,9 @@ export function createVector3(x = 0, y = 0, z = 0) {
          */
         trunc() {
             return _v.set(
-                Maths.fastTrunc(_v.x),
-                Maths.fastTrunc(_v.y),
-                Maths.fastTrunc(_v.z),
+                MathsUtils.fastTrunc(_v.x),
+                MathsUtils.fastTrunc(_v.y),
+                MathsUtils.fastTrunc(_v.z),
             );
         },
 

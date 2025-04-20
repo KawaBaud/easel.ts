@@ -6,9 +6,6 @@ import { createObject3D } from "../objects/Object3D.js";
  * @typedef {import("../objects/Object3D.js").Object3D} Object3D
  * @typedef {import("../maths/Euler.js").Euler} Euler
  * @typedef {import("../maths/Matrix4.js").Matrix4} Matrix4
- */
-
-/**
  * @typedef {Object3D} Camera
  * @property {Euler} rotation
  * @property {Matrix4} matrixWorldInverse
@@ -54,8 +51,10 @@ export function createCamera() {
             _camera.position.copy(source.position);
             _camera.quaternion.copy(source.quaternion);
             _camera.scale.copy(source.scale);
+
             _camera.projectionMatrix.copy(source.projectionMatrix);
             _camera.matrixWorldInverse.copy(source.matrixWorldInverse);
+
             _rotation.copy(source.rotation);
             return _camera;
         },

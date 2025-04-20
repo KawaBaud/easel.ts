@@ -1,8 +1,11 @@
-import { Maths } from "./Maths.js";
+import { MathsUtils } from "../utils/MathsUtils.js";
 import { createMatrix4 } from "./Matrix4.js";
 import { createVector3 } from "./Vector3.js";
 
 /**
+ * @typedef {import("./Vector3.js").Vector3} Vector3
+ * @typedef {import("./Euler.js").Euler} Euler
+ * @typedef {import("./Matrix4.js").Matrix4} Matrix4
  * @typedef {Object} Quaternion
  * @property {number} x
  * @property {number} y
@@ -70,7 +73,7 @@ export function createQuaternion(x = 0, y = 0, z = 0, w = 1) {
          * @returns {number}
          */
         angleTo(q) {
-            return 2 * Math.acos(Math.abs(Maths.clamp(_q.dot(q), -1, 1)));
+            return 2 * Math.acos(Math.abs(MathsUtils.clamp(_q.dot(q), -1, 1)));
         },
 
         /**
@@ -179,10 +182,10 @@ export function createQuaternion(x = 0, y = 0, z = 0, w = 1) {
             const sqrt1MinusU1 = Math.sqrt(1 - u1), sqrtU1 = Math.sqrt(u1);
 
             return _q.set(
-                sqrt1MinusU1 * Math.sin(Maths.TAU * u2),
-                sqrt1MinusU1 * Math.cos(Maths.TAU * u2),
-                sqrtU1 * Math.sin(Maths.TAU * u3),
-                sqrtU1 * Math.cos(Maths.TAU * u3),
+                sqrt1MinusU1 * Math.sin(MathsUtils.TAU * u2),
+                sqrt1MinusU1 * Math.cos(MathsUtils.TAU * u2),
+                sqrtU1 * Math.sin(MathsUtils.TAU * u3),
+                sqrtU1 * Math.cos(MathsUtils.TAU * u3),
             );
         },
 
@@ -364,7 +367,7 @@ export function createQuaternion(x = 0, y = 0, z = 0, w = 1) {
          */
         setFromUnitVectors(vFrom, vTo) {
             let r = vFrom.dot(vTo) + 1;
-            if (r < Maths.EPSILON) {
+            if (r < MathsUtils.EPSILON) {
                 r = 0;
                 Math.abs(vFrom.x) > Math.abs(vFrom.z)
                     ? _q.set(-vFrom.y, vFrom.x, 0, r)
@@ -412,7 +415,7 @@ export function createQuaternion(x = 0, y = 0, z = 0, w = 1) {
             }
 
             const sHalfTheta = Math.sqrt(1.0 - cHalfTheta * cHalfTheta);
-            const halfTheta = Maths.fastAtan2(sHalfTheta, cHalfTheta);
+            const halfTheta = MathsUtils.fastAtan2(sHalfTheta, cHalfTheta);
 
             const ratioA = Math.sin((1 - t) * halfTheta) / sHalfTheta;
             const ratioB = Math.sin(t * halfTheta) / sHalfTheta;
@@ -468,53 +471,3 @@ export function createQuaternion(x = 0, y = 0, z = 0, w = 1) {
     };
     return _q;
 }
-
-/**
- * @namespace
- */
-export const Quaternion = {
-    /**
-     * @param {Vector3} axis
-     * @param {number} angle
-     * @returns {Quaternion}
-     */
-    fromAxisAngle(axis, angle) {
-        return createQuaternion().setFromAxisAngle(axis, angle);
-    },
-
-    /**
-     * @param {Euler} euler
-     * @returns {Quaternion}
-     */
-    fromEuler(euler) {
-        return createQuaternion().setFromEuler(euler);
-    },
-
-    /**
-     * @param {Matrix4} m
-     * @returns {Quaternion}
-     */
-    fromRotationMatrix(m) {
-        return createQuaternion().setFromRotationMatrix(m);
-    },
-
-    /**
-     * @param {Vector3} vFrom
-     * @param {Vector3} vTo
-     * @returns {Quaternion}
-     */
-    fromUnitVectors(vFrom, vTo) {
-        return createQuaternion().setFromUnitVectors(vFrom, vTo);
-    },
-
-    /**
-     * @param {Quaternion} qa
-     * @param {Quaternion} qb
-     * @param {Quaternion} qm
-     * @param {number} t
-     * @returns {Quaternion}
-     */
-    slerp(qa, qb, qm, t) {
-        return qm.copy(qa).slerp(qb, t);
-    },
-};

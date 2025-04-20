@@ -2,9 +2,6 @@ import { createObject3D } from "../objects/Object3D.js";
 
 /**
  * @typedef {import("../objects/Object3D.js").Object3D} Object3D
- */
-
-/**
  * @typedef {Object3D} Shape
  * @property {Float32Array} vertices
  * @property {Float32Array} normals

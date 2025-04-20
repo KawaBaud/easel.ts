@@ -3,9 +3,6 @@ import { createShape } from "./Shape.js";
 
 /**
  * @typedef {import("./Shape.js").Shape} Shape
- */
-
-/**
  * @typedef {Shape} CubeShape
  */
 

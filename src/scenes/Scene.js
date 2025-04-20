@@ -1,6 +1,7 @@
 import { createObject3D } from "../objects/Object3D.js";
 
 /**
+ * @typedef {import("../objects/Object3D.js").Object3D} Object3D
  * @typedef {Object3D} Scene
  * @property {number} background
  */
