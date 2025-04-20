@@ -66,7 +66,7 @@ describe("Matrix4", () => {
             17,
         );
 
-        expect(a.determinant).toBeCloseTo(threeA.determinant());
+        expect(a.determinant()).toBeCloseTo(threeA.determinant());
     });
 
     test("clone/copy", () => {
