@@ -43,10 +43,10 @@ export function createCanvasRasteriser(canvas) {
          * @param {number} y0
          * @param {number} x1
          * @param {number} y1
-         * @param {string} [colour="#fff"]
+         * @param {string} [colour="#FFFFFF"]
          * @returns {void}
          */
-        drawLine(x0, y0, x1, y1, colour = "#fff") {
+        drawLine(x0, y0, x1, y1, colour = "#FFFFFF") {
             const dx = Math.abs(x1 - x0);
             const dy = -Math.abs(y1 - y0);
             const stepX = x0 < x1 ? 1 : -1;
@@ -57,7 +57,7 @@ export function createCanvasRasteriser(canvas) {
 
             while (true) {
                 if (x0 === x1 && y0 === y1) break;
-                const error2 = MathsUtils.shlmul(error);
+                const error2 = error << 1;
                 if (error2 > dy) {
                     error += dy;
                     x0 += stepX;
@@ -73,10 +73,10 @@ export function createCanvasRasteriser(canvas) {
         /**
          * @param {number} x
          * @param {number} y
-         * @param {string} [colour="#000000"]
+         * @param {string} [colour="#FFFFFF"]
          * @returns {void}
          */
-        drawPixel(x, y, colour = "#000000") {
+        drawPixel(x, y, colour = "#FFFFFF") {
             _ctx.fillStyle = colour;
             _ctx.fillRect(x, y, 1, 1);
         },
@@ -85,10 +85,10 @@ export function createCanvasRasteriser(canvas) {
          * @param {Vector3} v1
          * @param {Vector3} v2
          * @param {Vector3} v3
-         * @param {string} [colour="#fff"]
+         * @param {string} [colour="#FFFFFF"]
          * @returns {void}
          */
-        drawTriangle(v1, v2, v3, colour = "#fff") {
+        drawTriangle(v1, v2, v3, colour = "#FFFFFF") {
             if (!v1 || !v2 || !v3) return;
 
             _rasteriser.drawLine(v1.x, v1.y, v2.x, v2.y, colour);

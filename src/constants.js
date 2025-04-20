@@ -1,5 +1,3 @@
-import { MathsUtils } from "./maths/MathsUtils.js";
-
 /**
  * @type {number}
  * @constant
@@ -16,10 +14,10 @@ export const MIN_LOGICAL_HEIGHT = 240;
  * @type {number}
  * @constant
  */
-export const MAX_LOGICAL_WIDTH = MathsUtils.shlmul(MIN_LOGICAL_WIDTH);
+export const MAX_LOGICAL_WIDTH = MIN_LOGICAL_WIDTH >> 1;
 
 /**
  * @type {number}
  * @constant
  */
-export const MAX_LOGICAL_HEIGHT = MathsUtils.shlmul(MIN_LOGICAL_HEIGHT);
+export const MAX_LOGICAL_HEIGHT = MIN_LOGICAL_HEIGHT >> 1;

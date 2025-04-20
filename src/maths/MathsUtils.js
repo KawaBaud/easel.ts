@@ -7,7 +7,7 @@ export const Q_ONE = 1 << 12;
 const _TAU = 6.283185307179586;
 
 const _TABLE_SIZE = 1024;
-const _QUARTER_TABLE_SIZE = _TABLE_SIZE >> 2; // _TABLE_SIZE / 4
+const _QUARTER_TABLE_SIZE = _TABLE_SIZE >> 2;
 const _TABLE_MASK = _TABLE_SIZE - 1;
 const _TABLE_SCALE = 162.97466172610083; // 1024 / (PI * 2)
 
@@ -231,24 +231,6 @@ export const MathsUtils = {
      */
     qtrunc(value) {
         return value >= 0 ? value & ~(Q_ONE - 1) : -((-value) & ~(Q_ONE - 1));
-    },
-
-    /**
-     * @param {number} value
-     * @param {number} [amount=1]
-     * @returns {number}
-     */
-    shrdiv(value, amount = 1) {
-        return value >> amount;
-    },
-
-    /**
-     * @param {number} value
-     * @param {number} [amount=1]
-     * @returns {number}
-     */
-    shlmul(value, amount = 1) {
-        return value << amount;
     },
 
     /**

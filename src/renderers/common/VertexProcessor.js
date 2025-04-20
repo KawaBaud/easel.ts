@@ -100,8 +100,8 @@ export function createVertexProcessor() {
 
             if (!camera || !camera.matrixWorldInverse) return null;
 
-            const halfWidth = width >> 1; // width / 2
-            const halfHeight = height >> 1; // height / 2
+            const halfWidth = width >> 1;
+            const halfHeight = height >> 1;
 
             const result = [null, null, null];
 
@@ -158,8 +158,8 @@ export function createVertexProcessor() {
             _tempVector.applyMatrix4(camera.matrixWorldInverse);
             if (_tempVector.z > -0.1) return null;
 
-            const halfWidth = width >> 1; // width / 2
-            const halfHeight = height >> 1; // height / 2
+            const halfWidth = width >> 1;
+            const halfHeight = height >> 1;
 
             const scale = 1 / -_tempVector.z;
 
