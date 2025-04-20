@@ -10,6 +10,7 @@ import { createObject3D } from "../objects/Object3D.js";
  * @property {Euler} rotation
  * @property {Matrix4} matrixWorldInverse
  * @property {Matrix4} projectionMatrix
+ * @property {boolean} isCamera
  */
 
 /**
@@ -29,11 +30,10 @@ export function createCamera() {
 
     Object.assign(_camera, {
         /**
-         * @returns {boolean}
+         * @readonly
+         * @default true
          */
-        get isCamera() {
-            return true;
-        },
+        isCamera: true,
 
         /**
          * @returns {Euler}

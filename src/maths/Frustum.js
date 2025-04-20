@@ -12,7 +12,7 @@ import { createVector3 } from "./Vector3.js";
 
 /**
  * @typedef {Object} Frustum
- * @property {Array<Plane>} planes
+ * @property {boolean} isFrustum
  */
 
 /**
@@ -79,17 +79,16 @@ export function createFrustum() {
 
     const _frustum = {
         /**
+         * @readonly
+         * @default true
+         */
+        isFrustum: true,
+
+        /**
          * @returns {Array<Plane>}
          */
         get planes() {
             return _planes;
-        },
-
-        /**
-         * @returns {boolean}
-         */
-        get isFrustum() {
-            return true;
         },
 
         /**

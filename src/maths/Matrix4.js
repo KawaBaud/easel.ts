@@ -5,6 +5,7 @@ import { MathsUtils } from "./MathsUtils.js";
  * @typedef {import("./Quaternion.js").Quaternion} Quaternion
  * @typedef {Object} Matrix4
  * @property {Float32Array} elements
+ * @property {boolean} isMatrix4
  */
 
 /**
@@ -19,11 +20,10 @@ export function createMatrix4(elements = new Float32Array(16)) {
         elements,
 
         /**
-         * @returns {boolean}
+         * @readonly
+         * @default true
          */
-        get isMatrix4() {
-            return true;
-        },
+        isMatrix4: true,
 
         /**
          * @returns {number}

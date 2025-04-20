@@ -2,6 +2,7 @@
  * @typedef {Object} Material
  * @property {number} colour
  * @property {boolean} wireframe
+ * @property {boolean} isMaterial
  */
 
 /**
@@ -16,11 +17,10 @@ export function createMaterial(options = {}) {
         wireframe: options.wireframe !== undefined ? options.wireframe : false,
 
         /**
-         * @returns {boolean}
+         * @readonly
+         * @default true
          */
-        get isMaterial() {
-            return true;
-        },
+        isMaterial: true,
 
         /**
          * @param {Material} source

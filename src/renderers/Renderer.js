@@ -12,6 +12,7 @@ import { createMatrix4 } from "../maths/Matrix4.js";
  * @typedef {import("../scenes/Scene.js").Scene} Scene
  * @typedef {Object} Renderer
  * @property {HTMLElement} domElement
+ * @property {boolean} isRenderer
  */
 
 /**
@@ -44,11 +45,10 @@ export function createRenderer(options = {}) {
         height: height,
 
         /**
-         * @returns {boolean}
+         * @readonly
+         * @default true
          */
-        get isRenderer() {
-            return true;
-        },
+        isRenderer: true,
 
         /**
          * @param {Scene} _scene

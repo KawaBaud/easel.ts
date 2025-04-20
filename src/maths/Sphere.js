@@ -5,6 +5,7 @@ import { createVector3 } from "./Vector3.js";
  * @typedef {Object} Sphere
  * @property {Vector3} centre
  * @property {number} radius
+ * @property {boolean} isSphere
  */
 
 /**
@@ -25,11 +26,10 @@ export function createSphere(centre = createVector3(), radius = 0) {
         radius,
 
         /**
-         * @returns {boolean}
+         * @readonly
+         * @default true
          */
-        get isSphere() {
-            return true;
-        },
+        isSphere: true,
 
         /**
          * @returns {Sphere}
@@ -120,5 +120,6 @@ export function createSphere(centre = createVector3(), radius = 0) {
             return _sphere.setFromPoints(points);
         },
     };
+
     return _sphere;
 }

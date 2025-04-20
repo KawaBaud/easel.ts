@@ -5,6 +5,7 @@ import { createObject3D } from "./Object3D.js";
  * @typedef {Object3D} Mesh
  * @property {Object} geometry
  * @property {Object} material
+ * @property {boolean} isMesh
  */
 
 /**
@@ -20,11 +21,10 @@ export function createMesh(geometry, material) {
         material,
 
         /**
-         * @returns {boolean}
+         * @readonly
+         * @default true
          */
-        get isMesh() {
-            return true;
-        },
+        isMesh: true,
 
         /**
          * @param {Mesh} source

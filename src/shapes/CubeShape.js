@@ -4,6 +4,7 @@ import { createShape } from "./Shape.js";
 /**
  * @typedef {import("./Shape.js").Shape} Shape
  * @typedef {Shape} CubeShape
+ * @property {boolean} isCubeShape
  */
 
 /**
@@ -172,11 +173,10 @@ export function createCubeShape(size = 1) {
 
     Object.assign(_shape, {
         /**
-         * @returns {boolean}
+         * @readonly
+         * @default true
          */
-        get isCubeShape() {
-            return true;
-        },
+        isCubeShape: true,
 
         /**
          * @param {CubeShape} source

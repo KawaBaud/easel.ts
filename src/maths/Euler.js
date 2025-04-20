@@ -11,6 +11,7 @@ import { createQuaternion } from "./Quaternion.js";
  * @property {number} y
  * @property {number} z
  * @property {string} order
+ * @property {boolean} isEuler
  */
 
 /**
@@ -43,11 +44,10 @@ export function createEuler(x = 0, y = 0, z = 0, order = "XYZ") {
         order,
 
         /**
-         * @returns {boolean}
+         * @readonly
+         * @default true
          */
-        get isEuler() {
-            return true;
-        },
+        isEuler: true,
 
         /**
          * @returns {Euler}

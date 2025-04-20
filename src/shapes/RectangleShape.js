@@ -5,6 +5,7 @@ import { ShapeUtils } from "./ShapeUtils.js";
 /**
  * @typedef {import("./Shape.js").Shape} Shape
  * @typedef {Shape} RectangleShape
+ * @property {boolean} isRectangleShape
  */
 
 /**
@@ -72,11 +73,10 @@ export function createRectangleShape(width = 1, height = 1) {
 
     Object.assign(_shape, {
         /**
-         * @returns {boolean}
+         * @readonly
+         * @default true
          */
-        get isRectangleShape() {
-            return true;
-        },
+        isRectangleShape: true,
 
         /**
          * @returns {RectangleShape}

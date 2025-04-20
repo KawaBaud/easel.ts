@@ -11,6 +11,7 @@ import { createVector3 } from "./Vector3.js";
  * @property {Quaternion} rotation
  * @property {Vector3} scale
  * @property {Matrix4} matrix
+ * @property {boolean} isTransform
  */
 
 /**
@@ -23,6 +24,32 @@ export function createTransform() {
     const _matrix = createMatrix4();
 
     const _transform = {
+        /**
+         * @default createVector3()
+         */
+        position: _position,
+
+        /**
+         * @default createQuaternion()
+         */
+        rotation: _rotation,
+
+        /**
+         * @default createVector3(1, 1, 1)
+         */
+        scale: _scale,
+
+        /**
+         * @default createMatrix4()
+         */
+        matrix: _matrix,
+
+        /**
+         * @readonly
+         * @default true
+         */
+        isTransform: true,
+
         /**
          * @returns {Vector3}
          */
@@ -49,13 +76,6 @@ export function createTransform() {
          */
         get matrix() {
             return _matrix;
-        },
-
-        /**
-         * @returns {boolean}
-         */
-        get isTransform() {
-            return true;
         },
 
         /**
@@ -312,5 +332,6 @@ export function createTransform() {
             return point.clone().applyMatrix4(invMat);
         },
     };
+
     return _transform;
 }

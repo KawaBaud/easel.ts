@@ -5,6 +5,7 @@ import { createMesh } from "./Mesh.js";
 /**
  * @typedef {import("./Mesh.js").Mesh} Mesh
  * @typedef {Mesh} QuadMesh
+ * @property {boolean} isQuadMesh
  */
 
 /**
@@ -26,11 +27,10 @@ export function createQuadMesh(width = 1, height = 1, material) {
 
     Object.assign(_mesh, {
         /**
-         * @returns {boolean}
+         * @readonly
+         * @default true
          */
-        get isQuadMesh() {
-            return true;
-        },
+        isQuadMesh: true,
 
         /**
          * @param {QuadMesh} source

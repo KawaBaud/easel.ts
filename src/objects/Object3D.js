@@ -19,6 +19,7 @@ import { createVector3 } from "../maths/Vector3.js";
  * @property {boolean} visible
  * @property {number} layers
  * @property {Object} userData
+ * @property {boolean} isObject3D
  */
 
 const _q = createQuaternion();
@@ -98,11 +99,10 @@ export function createObject3D(id = "") {
         userData: {},
 
         /**
-         * @returns {boolean}
+         * @readonly
+         * @default true
          */
-        get isObject3D() {
-            return true;
-        },
+        isObject3D: true,
 
         /**
          * @param {Object3D} object

@@ -10,6 +10,7 @@ import { createObject3D } from "../objects/Object3D.js";
  * @property {Float32Array} uvs
  * @property {Uint16Array} indices
  * @property {Sphere} [boundingSphere]
+ * @property {boolean} isShape
  */
 
 /**
@@ -25,11 +26,10 @@ export function createShape() {
         indices: new Uint16Array(),
 
         /**
-         * @returns {boolean}
+         * @readonly
+         * @default true
          */
-        get isShape() {
-            return true;
-        },
+        isShape: true,
 
         /**
          * @returns {Shape}

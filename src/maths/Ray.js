@@ -5,6 +5,7 @@ import { createVector3 } from "./Vector3.js";
  * @typedef {Object} Ray
  * @property {Vector3} origin
  * @property {Vector3} direction
+ * @property {boolean} isRay
  */
 
 /**
@@ -20,6 +21,22 @@ export function createRay() {
 
     const _ray = {
         /**
+         * @default createVector3()
+         */
+        origin: _origin,
+
+        /**
+         * @default createVector3(0, 0, -1)
+         */
+        direction: _direction,
+
+        /**
+         * @readonly
+         * @default true
+         */
+        isRay: true,
+
+        /**
          * @returns {Vector3}
          */
         get origin() {
@@ -31,13 +48,6 @@ export function createRay() {
          */
         get direction() {
             return _direction;
-        },
-
-        /**
-         * @returns {boolean}
-         */
-        get isRay() {
-            return true;
         },
 
         /**

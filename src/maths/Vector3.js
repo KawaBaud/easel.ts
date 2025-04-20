@@ -10,8 +10,6 @@ import { createQuaternion } from "./Quaternion.js";
  * @property {number} y
  * @property {number} z
  * @property {boolean} isVector3
- * @property {number} length
- * @property {number} lengthSq
  */
 
 /**
@@ -38,11 +36,10 @@ export function createVector3(x = 0, y = 0, z = 0) {
         z,
 
         /**
-         * @returns {boolean}
+         * @readonly
+         * @default true
          */
-        get isVector3() {
-            return true;
-        },
+        isVector3: true,
 
         /**
          * @returns {number}

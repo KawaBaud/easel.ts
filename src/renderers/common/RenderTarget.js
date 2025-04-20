@@ -4,6 +4,7 @@ import { MIN_LOGICAL_HEIGHT, MIN_LOGICAL_WIDTH } from "../../constants.js";
  * @typedef {Object} RenderTarget
  * @property {number} width
  * @property {number} height
+ * @property {number} aspectRatio
  */
 
 /**
@@ -21,6 +22,12 @@ export function createRenderTarget(options = {}) {
     );
 
     const _target = {
+        /**
+         * @readonly
+         * @default true
+         */
+        isRenderTarget: true,
+
         /**
          * @returns {number}
          */
@@ -40,13 +47,6 @@ export function createRenderTarget(options = {}) {
          */
         get aspectRatio() {
             return _width / _height;
-        },
-
-        /**
-         * @returns {boolean}
-         */
-        get isRenderTarget() {
-            return true;
         },
     };
     return _target;

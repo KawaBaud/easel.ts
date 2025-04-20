@@ -8,6 +8,7 @@ import { createCamera } from "./Camera.js";
  * @property {number} aspect
  * @property {number} near
  * @property {number} far
+ * @property {boolean} isPerspCamera
  */
 
 /**
@@ -32,11 +33,10 @@ export function createPerspCamera(
         far,
 
         /**
-         * @returns {boolean}
+         * @readonly
+         * @default true
          */
-        get isPerspCamera() {
-            return true;
-        },
+        isPerspCamera: true,
 
         /**
          * @param {PerspCamera} source
