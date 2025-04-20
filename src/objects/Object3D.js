@@ -2,17 +2,10 @@ import { createMatrix4 } from "../maths/Matrix4.js";
 import { createQuaternion } from "../maths/Quaternion.js";
 import { createVector3 } from "../maths/Vector3.js";
 
-const _q = createQuaternion();
-const _m = createMatrix4();
-const _up = createVector3(0, 1, 0);
-const _xAxis = createVector3(1, 0, 0);
-const _yAxis = createVector3(0, 1, 0);
-const _zAxis = createVector3(0, 0, 1);
-const _v1 = createVector3();
-const _position = createVector3();
-const _scale = createVector3();
-
 /**
+ * @typedef {import("../maths/Vector3.js").Vector3} Vector3
+ * @typedef {import("../maths/Quaternion.js").Quaternion} Quaternion
+ * @typedef {import("../maths/Matrix4.js").Matrix4} Matrix4
  * @typedef {Object} Object3D
  * @property {string} id
  * @property {Vector3} position
@@ -28,23 +21,80 @@ const _scale = createVector3();
  * @property {Object} userData
  */
 
+const _q = createQuaternion();
+const _m = createMatrix4();
+const _up = createVector3(0, 1, 0);
+const _xAxis = createVector3(1, 0, 0);
+const _yAxis = createVector3(0, 1, 0);
+const _zAxis = createVector3(0, 0, 1);
+const _v1 = createVector3();
+const _position = createVector3();
+const _scale = createVector3();
+
 /**
  * @param {string} [id=""]
  * @returns {Object3D}
  */
 export function createObject3D(id = "") {
     const _object = {
+        /**
+         * @default ""
+         */
         id,
+
+        /**
+         * @default createVector3()
+         */
         position: createVector3(),
+
+        /**
+         * @default createQuaternion()
+         */
         quaternion: createQuaternion(),
+
+        /**
+         * @default createVector3(1, 1, 1)
+         */
         scale: createVector3(1, 1, 1),
+
+        /**
+         * @default createMatrix4().identity()
+         */
         matrix: createMatrix4().identity(),
+
+        /**
+         * @default createMatrix4().identity()
+         */
         worldMatrix: createMatrix4().identity(),
+
+        /**
+         * @default true
+         */
         autoUpdateMatrix: true,
+
+        /**
+         * @default null
+         */
         parent: null,
+
+        /**
+         * @default []
+         */
         children: [],
+
+        /**
+         * @default true
+         */
         visible: true,
+
+        /**
+         * @default 1
+         */
         layers: 1,
+
+        /**
+         * @default {}
+         */
         userData: {},
 
         /**
@@ -222,7 +272,7 @@ export function createObject3D(id = "") {
         },
 
         /**
-         * @param {Vector3} [target]
+         * @param {Vector3} [target=createVector3()]
          * @returns {Vector3}
          */
         getWorldDirection(target = createVector3()) {
@@ -232,7 +282,7 @@ export function createObject3D(id = "") {
         },
 
         /**
-         * @param {Vector3} [target]
+         * @param {Vector3} [target=createVector3()]
          * @returns {Vector3}
          */
         getWorldPosition(target = createVector3()) {
@@ -242,7 +292,7 @@ export function createObject3D(id = "") {
         },
 
         /**
-         * @param {Quaternion} [target]
+         * @param {Quaternion} [target=createQuaternion()]
          * @returns {Quaternion}
          */
         getWorldQuaternion(target = createQuaternion()) {
@@ -252,7 +302,7 @@ export function createObject3D(id = "") {
         },
 
         /**
-         * @param {Vector3} [target]
+         * @param {Vector3} [target=createVector3()]
          * @returns {Vector3}
          */
         getWorldScale(target = createVector3()) {
