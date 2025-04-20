@@ -22,20 +22,20 @@ describe("Vector2", () => {
         expect(b.y).toBe(threeB.y);
     });
 
-    test("length/lengthSq", () => {
-        const a = createVector2(3, 4);
-        const threeA = new ThreeVector2(3, 4);
-
-        expect(a.length).toBeCloseTo(threeA.length());
-        expect(a.lengthSq).toBeCloseTo(threeA.lengthSq());
-    });
-
     test("isVector2", () => {
         const vec = createVector2();
         const threeVec = new ThreeVector2();
 
         expect(vec.isVector2).toBe(true);
         expect(threeVec.isVector2).toBe(true);
+    });
+
+    test("length/lengthSq", () => {
+        const a = createVector2(3, 4);
+        const threeA = new ThreeVector2(3, 4);
+
+        expect(a.length).toBeCloseTo(threeA.length());
+        expect(a.lengthSq).toBeCloseTo(threeA.lengthSq());
     });
 
     test("add", () => {
