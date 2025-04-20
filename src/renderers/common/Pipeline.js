@@ -1,6 +1,6 @@
 import { createVector3 } from "../../maths/Vector3.js";
-import { createProcessor } from "./Processor.js";
 import { createRenderList } from "./RenderList.js";
+import { createVertexProcessor } from "./VertexProcessor.js";
 
 /**
  * @typedef {import("../../cameras/Camera.js").Camera} Camera
@@ -14,7 +14,7 @@ import { createRenderList } from "./RenderList.js";
  * @returns {Pipeline}
  */
 export function createPipeline() {
-    const _processor = createProcessor();
+    const _processor = createVertexProcessor();
     const _renderList = createRenderList();
 
     const _v1 = createVector3();
