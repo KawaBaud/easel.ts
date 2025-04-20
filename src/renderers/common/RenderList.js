@@ -45,11 +45,50 @@ export function createRenderList() {
         },
 
         /**
+         * @param {Array<Object3D>} objects
+         * @returns {RenderList}
+         */
+        depthSort(objects = _objects) {
+            const count = objects.length;
+            if (count > _capacity) {
+                _capacity = Math.max(count, _capacity * 2);
+                _zValues = new Float32Array(_capacity);
+                _indices = new Uint16Array(_capacity);
+            }
+
+            for (let i = 0; i < count; i++) {
+                _zValues[i] = _renderList.sortVerticesByZ(objects[i]);
+                _indices[i] = i;
+            }
+            _indices.sort((a, b) => _zValues[b] - _zValues[a]);
+
+            const sortedObjects = new Array(count);
+            for (let i = 0; i < count; i++) {
+                sortedObjects[i] = objects[_indices[i]];
+            }
+            for (let i = 0; i < count; i++) {
+                objects[i] = sortedObjects[i];
+            }
+
+            return _renderList;
+        },
+
+        /**
+         * @param {Object3D} object
+         * @returns {RenderList}
+         */
+        remove(object) {
+            const index = _objects.indexOf(object);
+            if (index !== -1) _objects.splice(index, 1);
+            return _renderList;
+        },
+
+        /**
          * OTZ = (SZ0 + SZ1 + SZ2) / 3
          * @param {Object} mesh
          * @returns {number}
          */
-        calculateOTZ(mesh) {
+        sortVerticesByZ(mesh) {
             if (
                 !mesh.geometry || !mesh.geometry.vertices ||
                 !mesh.geometry.indices
@@ -74,45 +113,6 @@ export function createRenderList() {
             _v3.applyMatrix4(mesh.worldMatrix);
 
             return (_v1.z + _v2.z + _v3.z) / 3;
-        },
-
-        /**
-         * @param {Array<Object3D>} objects
-         * @returns {RenderList}
-         */
-        depthSort(objects = _objects) {
-            const count = objects.length;
-            if (count > _capacity) {
-                _capacity = Math.max(count, _capacity * 2);
-                _zValues = new Float32Array(_capacity);
-                _indices = new Uint16Array(_capacity);
-            }
-
-            for (let i = 0; i < count; i++) {
-                _zValues[i] = _renderList.calculateOTZ(objects[i]);
-                _indices[i] = i;
-            }
-            _indices.sort((a, b) => _zValues[b] - _zValues[a]);
-
-            const sortedObjects = new Array(count);
-            for (let i = 0; i < count; i++) {
-                sortedObjects[i] = objects[_indices[i]];
-            }
-            for (let i = 0; i < count; i++) {
-                objects[i] = sortedObjects[i];
-            }
-
-            return _renderList;
-        },
-
-        /**
-         * @param {Object3D} object
-         * @returns {RenderList}
-         */
-        remove(object) {
-            const index = _objects.indexOf(object);
-            if (index !== -1) _objects.splice(index, 1);
-            return _renderList;
         },
     };
 
