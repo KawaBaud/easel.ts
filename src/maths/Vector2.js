@@ -1,5 +1,3 @@
-import { Maths } from "./Maths.js";
-
 /**
  * @typedef {Object} Vector2
  * @property {number} x
@@ -77,7 +75,7 @@ export function createVector2(x = 0, y = 0) {
          * @returns {number}
          */
         angle() {
-            return Maths.fastAtan2(-_v.y, -_v.x) + Math.PI;
+            return MathsUtils.fastAtan2(-_v.y, -_v.x) + Math.PI;
         },
 
         /**
@@ -86,10 +84,10 @@ export function createVector2(x = 0, y = 0) {
          */
         angleTo(v) {
             const denom = Math.sqrt(_v.lengthSq * v.lengthSq);
-            if (denom === 0) return Maths.TAU;
+            if (denom === 0) return MathsUtils.TAU;
 
             const theta = _v.dot(v) / denom;
-            return Math.acos(Maths.clamp(theta, -1, 1));
+            return Math.acos(MathsUtils.clamp(theta, -1, 1));
         },
 
         /**
@@ -97,8 +95,8 @@ export function createVector2(x = 0, y = 0) {
          */
         ceil() {
             return _v.set(
-                Maths.fastCeil(_v.x),
-                Maths.fastCeil(_v.y),
+                MathsUtils.fastCeil(_v.x),
+                MathsUtils.fastCeil(_v.y),
             );
         },
 
@@ -118,8 +116,8 @@ export function createVector2(x = 0, y = 0) {
          */
         clampScalar(min, max) {
             return _v.set(
-                Maths.clamp(_v.x, min, max),
-                Maths.clamp(_v.y, min, max),
+                MathsUtils.clamp(_v.x, min, max),
+                MathsUtils.clamp(_v.y, min, max),
             );
         },
 
@@ -136,6 +134,14 @@ export function createVector2(x = 0, y = 0) {
          */
         copy(v) {
             return v === undefined ? _v : _v.set(v.x, v.y);
+        },
+
+        /**
+         * @param {Vector2} v
+         * @returns {number}
+         */
+        cross(v) {
+            return (_v.x * v.y) - (_v.y * v.x);
         },
 
         /**
@@ -294,7 +300,7 @@ export function createVector2(x = 0, y = 0) {
         /**
          * @returns {Vector2}
          */
-        neg() {
+        negate() {
             return _v.set(-_v.x, -_v.y);
         },
 
@@ -385,8 +391,8 @@ export function createVector2(x = 0, y = 0) {
          */
         trunc() {
             return _v.set(
-                Maths.fastTrunc(_v.x),
-                Maths.fastTrunc(_v.y),
+                MathsUtils.fastTrunc(_v.x),
+                MathsUtils.fastTrunc(_v.y),
             );
         },
 
