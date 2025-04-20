@@ -32,11 +32,18 @@ export function createSphere(centre = createVector3(), radius = 0) {
         },
 
         /**
+         * @returns {Sphere}
+         */
+        clone() {
+            return createSphere().copy(_sphere);
+        },
+
+        /**
          * @param {Sphere} sphere
          * @returns {boolean}
          */
         containsPoint(point) {
-            return point.distanceToSquared(_sphere.centre) <=
+            return point.distanceSqTo(_sphere.centre) <=
                 (_sphere.radius * _sphere.radius);
         },
 
@@ -46,8 +53,18 @@ export function createSphere(centre = createVector3(), radius = 0) {
          */
         containsSphere(sphere) {
             const radiusDiff = _sphere.radius - sphere.radius;
-            return sphere.centre.distanceToSquared(_sphere.centre) <=
+            return sphere.centre.distanceSqTo(_sphere.centre) <=
                 (radiusDiff * radiusDiff);
+        },
+
+        /**
+         * @param {Sphere} sphere
+         * @returns {Sphere}
+         */
+        copy(sphere) {
+            _sphere.centre.copy(sphere.centre);
+            _sphere.radius = sphere.radius;
+            return _sphere;
         },
 
         /**
@@ -56,7 +73,7 @@ export function createSphere(centre = createVector3(), radius = 0) {
          */
         intersectsSphere(sphere) {
             const radiusSum = _sphere.radius + sphere.radius;
-            return sphere.centre.distanceToSquared(_sphere.centre) <=
+            return sphere.centre.distanceSqTo(_sphere.centre) <=
                 (radiusSum * radiusSum);
         },
 
@@ -69,26 +86,21 @@ export function createSphere(centre = createVector3(), radius = 0) {
                 min: createVector3(Infinity, Infinity, Infinity),
                 max: createVector3(-Infinity, -Infinity, -Infinity),
             };
-
-            // Find the bounding box
             for (const point of points) {
                 box.min.min(point);
                 box.max.max(point);
             }
 
-            // Set the center to the center of the box
-            _sphere.centre.copy(box.min).add(box.max).multiplyScalar(0.5);
+            _sphere.centre.copy(box.min).add(box.max).mulScalar(0.5);
 
-            // Find the radius from the center to the furthest point
             let maxRadiusSq = 0;
             for (const point of points) {
                 maxRadiusSq = Math.max(
                     maxRadiusSq,
-                    _sphere.centre.distanceToSquared(point),
+                    _sphere.centre.distanceSqTo(point),
                 );
             }
             _sphere.radius = Math.sqrt(maxRadiusSq);
-
             return _sphere;
         },
 
@@ -107,24 +119,6 @@ export function createSphere(centre = createVector3(), radius = 0) {
             }
             return _sphere.setFromPoints(points);
         },
-
-        /**
-         * @param {Sphere} sphere
-         * @returns {Sphere}
-         */
-        copy(sphere) {
-            _sphere.centre.copy(sphere.centre);
-            _sphere.radius = sphere.radius;
-            return _sphere;
-        },
-
-        /**
-         * @returns {Sphere}
-         */
-        clone() {
-            return createSphere().copy(_sphere);
-        },
     };
-
     return _sphere;
 }
