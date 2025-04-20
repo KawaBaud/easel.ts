@@ -146,7 +146,7 @@ export function createObject3D(id = "") {
          */
         attach(object) {
             const m = createMatrix4();
-            m.copy(_object.worldMatrix).invert();
+            m.copy(_object.worldMatrix).inv();
 
             if (object.parent) {
                 object.parent.updateWorldMatrix(true, false);
@@ -522,7 +522,7 @@ export function createObject3D(id = "") {
          */
         worldToLocal(v) {
             _object.updateWorldMatrix(true, false);
-            return v.applyMatrix4(_m.copy(_object.worldMatrix).invert());
+            return v.applyMatrix4(_m.copy(_object.worldMatrix).inv());
         },
     };
 
