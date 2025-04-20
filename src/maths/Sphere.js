@@ -14,7 +14,14 @@ import { createVector3 } from "./Vector3.js";
  */
 export function createSphere(centre = createVector3(), radius = 0) {
     const _sphere = {
+        /**
+         * @default createVector3()
+         */
         centre,
+
+        /**
+         * @default 0
+         */
         radius,
 
         /**
@@ -29,7 +36,8 @@ export function createSphere(centre = createVector3(), radius = 0) {
          * @returns {boolean}
          */
         containsPoint(point) {
-            return point.distanceToSquared(_sphere.centre) <= (_sphere.radius * _sphere.radius);
+            return point.distanceToSquared(_sphere.centre) <=
+                (_sphere.radius * _sphere.radius);
         },
 
         /**
@@ -38,7 +46,8 @@ export function createSphere(centre = createVector3(), radius = 0) {
          */
         containsSphere(sphere) {
             const radiusDiff = _sphere.radius - sphere.radius;
-            return sphere.centre.distanceToSquared(_sphere.centre) <= (radiusDiff * radiusDiff);
+            return sphere.centre.distanceToSquared(_sphere.centre) <=
+                (radiusDiff * radiusDiff);
         },
 
         /**
@@ -47,7 +56,8 @@ export function createSphere(centre = createVector3(), radius = 0) {
          */
         intersectsSphere(sphere) {
             const radiusSum = _sphere.radius + sphere.radius;
-            return sphere.centre.distanceToSquared(_sphere.centre) <= (radiusSum * radiusSum);
+            return sphere.centre.distanceToSquared(_sphere.centre) <=
+                (radiusSum * radiusSum);
         },
 
         /**
@@ -72,7 +82,10 @@ export function createSphere(centre = createVector3(), radius = 0) {
             // Find the radius from the center to the furthest point
             let maxRadiusSq = 0;
             for (const point of points) {
-                maxRadiusSq = Math.max(maxRadiusSq, _sphere.centre.distanceToSquared(point));
+                maxRadiusSq = Math.max(
+                    maxRadiusSq,
+                    _sphere.centre.distanceToSquared(point),
+                );
             }
             _sphere.radius = Math.sqrt(maxRadiusSq);
 

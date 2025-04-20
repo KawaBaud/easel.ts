@@ -1,12 +1,12 @@
 import { createVector3 } from "../../maths/Vector3.js";
-import { createProcessor } from "../pipeline/Processor.js";
-import { createRenderList } from "../RenderList.js";
+import { createProcessor } from "./Processor.js";
+import { createRenderList } from "./RenderList.js";
 
 /**
  * @typedef {import("../../cameras/Camera.js").Camera} Camera
  * @typedef {import("../../scenes/Scene.js").Scene} Scene
- * @typedef {import("../RenderTarget.js").RenderTarget} RenderTarget
- * @typedef {import("../common/CullingContext.js").CullingContext} CullingContext
+ * @typedef {import("./RenderTarget.js").RenderTarget} RenderTarget
+ * @typedef {import("./CullingContext.js").CullingContext} CullingContext
  * @typedef {Object} Pipeline
  */
 
@@ -23,7 +23,7 @@ export function createPipeline() {
 
     const _pipeline = {
         /**
-         * @returns {import("../RenderList.js").RenderList}
+         * @returns {import("./RenderList.js").RenderList}
          */
         get renderList() {
             return _renderList;

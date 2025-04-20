@@ -1,5 +1,5 @@
 import { createRenderer } from "../Renderer.js";
-import { createRenderPipeline } from "../RenderPipeline.js";
+import { createRenderPipeline } from "../common/RenderPipeline.js";
 import { createCanvasRasteriser } from "./CanvasRasteriser.js";
 import { CanvasUtils } from "./CanvasUtils.js";
 

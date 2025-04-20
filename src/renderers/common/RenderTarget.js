@@ -1,4 +1,4 @@
-import { MIN_LOGICAL_HEIGHT, MIN_LOGICAL_WIDTH } from "../constants.js";
+import { MIN_LOGICAL_HEIGHT, MIN_LOGICAL_WIDTH } from "../../constants.js";
 
 /**
  * @typedef {Object} RenderTarget

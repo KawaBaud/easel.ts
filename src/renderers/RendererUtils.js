@@ -98,13 +98,13 @@ export const RendererUtils = {
             const worldMatrix = object.worldMatrix;
 
             for (let i = 0; i < vertices.length; i += 3) {
-                const vertex = createVector3(
+                const vert = createVector3(
                     vertices[i],
                     vertices[i + 1],
                     vertices[i + 2],
                 ).applyMatrix4(worldMatrix);
 
-                if (frustum.containsPoint(vertex)) return true;
+                if (frustum.containsPoint(vert)) return true;
             }
             return false;
         }

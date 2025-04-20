@@ -1,5 +1,5 @@
 /**
- * @typedef {import("../objects/Object3D.js").Object3D} Object3D
+ * @typedef {import("../../objects/Object3D.js").Object3D} Object3D
  * @typedef {Object} RenderList
  * @property {Array<Object3D>} objects
  */
