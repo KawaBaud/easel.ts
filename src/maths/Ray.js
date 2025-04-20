@@ -253,5 +253,6 @@ export function createRay() {
             return _ray;
         },
     };
+
     return _ray;
 }

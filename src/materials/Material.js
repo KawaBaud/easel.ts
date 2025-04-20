@@ -32,5 +32,6 @@ export function createMaterial(options = {}) {
             return _material;
         },
     };
+
     return _material;
 }

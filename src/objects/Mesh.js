@@ -40,5 +40,6 @@ export function createMesh(geometry, material) {
             return _mesh;
         },
     });
+
     return _mesh;
 }

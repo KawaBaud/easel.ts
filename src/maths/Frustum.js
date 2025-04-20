@@ -57,6 +57,7 @@ function createPlane() {
             return _plane;
         },
     };
+
     return _plane;
 }
 
@@ -211,5 +212,6 @@ export function createFrustum() {
             return _frustum;
         },
     };
+
     return _frustum;
 }

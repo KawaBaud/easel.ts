@@ -348,6 +348,7 @@ export function createObject3D(id = "") {
                 object.parent = null;
                 _object.children.splice(index, 1);
             }
+
             return _object;
         },
 
@@ -457,6 +458,7 @@ export function createObject3D(id = "") {
                 callback(_object.parent);
                 _object.parent.traverseAncestors(callback);
             }
+
             return _object;
         },
 
@@ -471,6 +473,7 @@ export function createObject3D(id = "") {
             for (const child of _object.children) {
                 if (child.visible) child.traverseVisible(callback);
             }
+
             return _object;
         },
 
@@ -522,5 +525,6 @@ export function createObject3D(id = "") {
             return v.applyMatrix4(_m.copy(_object.worldMatrix).invert());
         },
     };
+
     return _object;
 }
