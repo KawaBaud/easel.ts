@@ -5,10 +5,10 @@ import {
     Vector3 as ThreeVector3,
 } from "three";
 import { createEuler } from "../../../src/maths/Euler.js";
+import { MathsUtils } from "../../../src/maths/MathsUtils.js";
 import { createMatrix4 } from "../../../src/maths/Matrix4.js";
 import { createQuaternion } from "../../../src/maths/Quaternion.js";
 import { createVector3 } from "../../../src/maths/Vector3.js";
-import { MathsUtils } from "../../../src/utils/MathsUtils.js";
 
 const compareEulers = (ourEuler, threeEuler, epsilon = MathsUtils.EPSILON) => {
     expect(ourEuler.x).toBeCloseTo(threeEuler.x, epsilon);

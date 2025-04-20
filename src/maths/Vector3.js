@@ -1,4 +1,4 @@
-import { MathsUtils } from "../utils/MathsUtils.js";
+import { MathsUtils } from "./MathsUtils.js";
 import { createQuaternion } from "./Quaternion.js";
 
 /**

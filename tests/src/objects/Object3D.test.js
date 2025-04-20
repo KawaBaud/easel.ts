@@ -1,8 +1,8 @@
 import { Object3D as ThreeObject3D, Vector3 as ThreeVector3 } from "three";
+import { MathsUtils } from "../../../src/maths/MathsUtils.js";
 import { createQuaternion } from "../../../src/maths/Quaternion.js";
 import { createVector3 } from "../../../src/maths/Vector3.js";
 import { createObject3D } from "../../../src/objects/Object3D.js";
-import { MathsUtils } from "../../../src/utils/MathsUtils.js";
 
 const compareVector3 = (ourVec, threeVec, testName, epsilon = 1e-5) => {
     try {
@@ -457,7 +457,6 @@ describe("Object3D transformations", () => {
         ourChild.rotateX(MathsUtils.HALF_PI); // 90 degrees
 
         ourParent.add(ourChild);
-
         ourParent.updateWorldMatrix(false, true);
 
         const worldQuat = createQuaternion();

@@ -1,4 +1,4 @@
-import { MathsUtils } from "../utils/MathsUtils.js";
+import { MathsUtils } from "./MathsUtils.js";
 
 /**
  * @typedef {import("./Vector3.js").Vector3} Vector3

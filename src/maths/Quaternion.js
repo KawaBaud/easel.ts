@@ -1,4 +1,4 @@
-import { MathsUtils } from "../utils/MathsUtils.js";
+import { MathsUtils } from "./MathsUtils.js";
 import { createMatrix4 } from "./Matrix4.js";
 import { createVector3 } from "./Vector3.js";
 
