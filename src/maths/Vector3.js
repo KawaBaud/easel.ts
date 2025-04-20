@@ -525,6 +525,9 @@ export function createVector3(x = 0, y = 0, z = 0) {
             return _v.divScalar(length);
         },
 
+        /**
+         * @returns {IterableIterator<number>}
+         */
         *[Symbol.iterator]() {
             yield _v.x;
             yield _v.y;
