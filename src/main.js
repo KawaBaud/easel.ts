@@ -2,7 +2,7 @@ import { createPerspCamera } from "./cameras/PerspCamera.js";
 import { createMaterial } from "./materials/Material.js";
 import { createVector3 } from "./maths/Vector3.js";
 import { createMesh } from "./objects/Mesh.js";
-import { createRenderer } from "./renderers/Renderer.js";
+import { createCanvasRenderer } from "./renderers/canvas/CanvasRenderer.js";
 import { createScene } from "./scenes/Scene.js";
 import { createCubeShape } from "./shapes/CubeShape.js";
 
@@ -15,7 +15,7 @@ const camera = createPerspCamera(
 );
 camera.position.z = 5;
 
-const renderer = createRenderer();
+const renderer = createCanvasRenderer();
 globalThis.document.body.appendChild(renderer.domElement);
 
 const shape = createCubeShape();
