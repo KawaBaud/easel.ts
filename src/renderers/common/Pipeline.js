@@ -104,6 +104,10 @@ export function createPipeline() {
                 _v2.applyMatrix4(mesh.worldMatrix);
                 _v3.applyMatrix4(mesh.worldMatrix);
 
+                const backfaceCulled = material.wireframe
+                    ? false
+                    : (_cullingContext ? _cullingContext.backfaceCulled : true);
+
                 const projectedPoints = _processor.projectTriangle(
                     _v1,
                     _v2,
@@ -111,7 +115,7 @@ export function createPipeline() {
                     camera,
                     target.width,
                     target.height,
-                    _cullingContext ? _cullingContext.backfaceCulled : true,
+                    backfaceCulled,
                 );
                 if (projectedPoints) {
                     renderFunction(
