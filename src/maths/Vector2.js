@@ -319,6 +319,15 @@ export function createVector2(x = 0, y = 0) {
         },
 
         /**
+         * @param {Vector2} centre
+         * @param {number} angle - in radians
+         * @returns {Vector2}
+         */
+        rotateAround(centre, angle) {
+            return _v.sub(centre).rotate(angle).add(centre);
+        },
+
+        /**
          * @param {number} x
          * @param {number} y
          * @returns {Vector2}
