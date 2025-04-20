@@ -168,15 +168,127 @@ describe("Vector3 operations", () => {
     });
 });
 
+describe("Vector3 array operations", () => {
+    test("fromArray and toArray", () => {
+        const array = [1, 2, 3];
+
+        const ourVec = createVector3().fromArray(array);
+        const threeVec = new ThreeVector3().fromArray(array);
+        compareVectors(ourVec, threeVec);
+
+        const ourArray = [];
+        const threeArray = [];
+
+        ourVec.toArray(ourArray);
+        threeVec.toArray(threeArray);
+
+        expect(ourArray[0]).toBeCloseTo(threeArray[0], MathsUtils.EPSILON);
+        expect(ourArray[1]).toBeCloseTo(threeArray[1], MathsUtils.EPSILON);
+        expect(ourArray[2]).toBeCloseTo(threeArray[2], MathsUtils.EPSILON);
+    });
+
+    test("iterator", () => {
+        const ourVec = createVector3(1, 2, 3);
+        const values = [];
+
+        for (const value of ourVec) {
+            values.push(value);
+        }
+
+        expect(values[0]).toBe(1);
+        expect(values[1]).toBe(2);
+        expect(values[2]).toBe(3);
+        expect(values.length).toBe(3);
+    });
+});
+
+describe("Vector3 transformations", () => {
+    test("applyEuler", () => {
+        const testCases = [
+            { v: [1, 0, 0], rotation: [0, 0, 0] },
+            { v: [0, 1, 0], rotation: [MathsUtils.HALF_PI, 0, 0] },
+            { v: [1, 2, 3], rotation: [0, MathsUtils.QUARTER_PI, 0] },
+        ];
+        testCases.forEach(({ v, rotation }) => {
+            const ourVec = createVector3(...v);
+            const threeVec = new ThreeVector3(...v);
+
+            const [rx, ry, rz] = rotation;
+
+            const ourEuler = { x: rx, y: ry, z: rz, order: "XYZ" };
+            const threeEuler = new ThreeEuler(rx, ry, rz, "XYZ");
+
+            ourVec.applyEuler(ourEuler);
+            threeVec.applyEuler(threeEuler);
+            compareVectors(ourVec, threeVec);
+        });
+    });
+
+    test("applyMatrix4", () => {
+        const testCases = [
+            { v: [1, 0, 0], matrix: "identity" },
+            { v: [1, 2, 3], matrix: "translate" },
+            { v: [1, 2, 3], matrix: "rotateY" },
+        ];
+
+        const matrices = {
+            identity: [createMatrix4(), new ThreeMatrix4()],
+            rotateY: [
+                createMatrix4().makeRotationY(MathsUtils.QUARTER_PI),
+                new ThreeMatrix4().makeRotationY(MathsUtils.QUARTER_PI),
+            ],
+            translate: [
+                createMatrix4().makeTranslation(10, 20, 30),
+                new ThreeMatrix4().makeTranslation(10, 20, 30),
+            ],
+        };
+
+        testCases.forEach(({ v, matrix }) => {
+            const ourVec = createVector3(...v);
+            const threeVec = new ThreeVector3(...v);
+
+            const [ourMat, threeMat] = matrices[matrix];
+
+            ourVec.applyMatrix4(ourMat);
+            threeVec.applyMatrix4(threeMat);
+            compareVectors(ourVec, threeVec);
+        });
+    });
+
+    test("applyQuaternion", () => {
+        const testCases = [
+            { v: [1, 0, 0], rotation: [0, 0, 0] },
+            { v: [0, 1, 0], rotation: [MathsUtils.HALF_PI, 0, 0] },
+            { v: [1, 2, 3], rotation: [0, MathsUtils.QUARTER_PI, 0] },
+        ];
+        testCases.forEach(({ v, rotation }) => {
+            const ourVec = createVector3(...v);
+            const threeVec = new ThreeVector3(...v);
+
+            const [rx, ry, rz] = rotation;
+
+            const ourQuat = createQuaternion();
+            ourQuat.setFromEuler({ x: rx, y: ry, z: rz, order: "XYZ" });
+
+            const threeQuat = new ThreeQuaternion();
+            const threeEuler = new ThreeEuler(rx, ry, rz, "XYZ");
+            threeQuat.setFromEuler(threeEuler);
+
+            ourVec.applyQuaternion(ourQuat);
+            threeVec.applyQuaternion(threeQuat);
+            compareVectors(ourVec, threeVec);
+        });
+    });
+});
+
 describe("Vector3 utilities", () => {
     test("angleTo", () => {
         const testCases = [
             { a: [1, 0, 0], b: [0, 1, 0] }, // 90 degrees
             { a: [1, 0, 0], b: [-1, 0, 0] }, // 180 degrees
             { a: [1, 0, 0], b: [1, 0, 0] }, // 0 degrees
-            { a: [1, 1, 1], b: [2, 2, 2] }, // Same direction
+            { a: [1, 1, 1], b: [2, 2, 2] },
         ];
-
         testCases.forEach(({ a, b }) => {
             const ourVecA = createVector3(...a);
             const ourVecB = createVector3(...b);
@@ -283,7 +395,6 @@ describe("Vector3 utilities", () => {
             [0, 0, 1],
             [1, 2, 3],
         ];
-
         testCases.forEach(([x, y, z]) => {
             const ourVec = createVector3(x, y, z);
             const threeVec = new ThreeVector3(x, y, z);
@@ -294,120 +405,5 @@ describe("Vector3 utilities", () => {
             expect(ourVec.length).toBeCloseTo(1, 1e-5);
             expect(threeVec.length()).toBeCloseTo(1, 1e-5);
         });
-    });
-});
-
-describe("Vector3 transformations", () => {
-    test("applyEuler", () => {
-        const testCases = [
-            { v: [1, 0, 0], rotation: [0, 0, 0] },
-            { v: [0, 1, 0], rotation: [MathsUtils.HALF_PI, 0, 0] },
-            { v: [1, 2, 3], rotation: [0, MathsUtils.QUARTER_PI, 0] },
-        ];
-
-        testCases.forEach(({ v, rotation }) => {
-            const ourVec = createVector3(...v);
-            const threeVec = new ThreeVector3(...v);
-
-            const [rx, ry, rz] = rotation;
-
-            const ourEuler = { x: rx, y: ry, z: rz, order: "XYZ" };
-            const threeEuler = new ThreeEuler(rx, ry, rz, "XYZ");
-
-            ourVec.applyEuler(ourEuler);
-            threeVec.applyEuler(threeEuler);
-            compareVectors(ourVec, threeVec);
-        });
-    });
-
-    test("applyMatrix4", () => {
-        const testCases = [
-            { v: [1, 0, 0], matrix: "identity" },
-            { v: [1, 2, 3], matrix: "translate" },
-            { v: [1, 2, 3], matrix: "rotateY" },
-        ];
-
-        const matrices = {
-            identity: [createMatrix4(), new ThreeMatrix4()],
-            rotateY: [
-                createMatrix4().makeRotationY(MathsUtils.QUARTER_PI),
-                new ThreeMatrix4().makeRotationY(MathsUtils.QUARTER_PI),
-            ],
-            translate: [
-                createMatrix4().makeTranslation(10, 20, 30),
-                new ThreeMatrix4().makeTranslation(10, 20, 30),
-            ],
-        };
-
-        testCases.forEach(({ v, matrix }) => {
-            const ourVec = createVector3(...v);
-            const threeVec = new ThreeVector3(...v);
-
-            const [ourMat, threeMat] = matrices[matrix];
-
-            ourVec.applyMatrix4(ourMat);
-            threeVec.applyMatrix4(threeMat);
-            compareVectors(ourVec, threeVec);
-        });
-    });
-
-    test("applyQuaternion", () => {
-        const testCases = [
-            { v: [1, 0, 0], rotation: [0, 0, 0] },
-            { v: [0, 1, 0], rotation: [MathsUtils.HALF_PI, 0, 0] },
-            { v: [1, 2, 3], rotation: [0, MathsUtils.QUARTER_PI, 0] },
-        ];
-
-        testCases.forEach(({ v, rotation }) => {
-            const ourVec = createVector3(...v);
-            const threeVec = new ThreeVector3(...v);
-
-            const [rx, ry, rz] = rotation;
-
-            const ourQuat = createQuaternion();
-            ourQuat.setFromEuler({ x: rx, y: ry, z: rz, order: "XYZ" });
-
-            const threeQuat = new ThreeQuaternion();
-            const threeEuler = new ThreeEuler(rx, ry, rz, "XYZ");
-            threeQuat.setFromEuler(threeEuler);
-
-            ourVec.applyQuaternion(ourQuat);
-            threeVec.applyQuaternion(threeQuat);
-            compareVectors(ourVec, threeVec);
-        });
-    });
-});
-
-describe("Vector3 array operations", () => {
-    test("fromArray and toArray", () => {
-        const array = [1, 2, 3];
-
-        const ourVec = createVector3().fromArray(array);
-        const threeVec = new ThreeVector3().fromArray(array);
-        compareVectors(ourVec, threeVec);
-
-        const ourArray = [];
-        const threeArray = [];
-
-        ourVec.toArray(ourArray);
-        threeVec.toArray(threeArray);
-
-        expect(ourArray[0]).toBeCloseTo(threeArray[0], MathsUtils.EPSILON);
-        expect(ourArray[1]).toBeCloseTo(threeArray[1], MathsUtils.EPSILON);
-        expect(ourArray[2]).toBeCloseTo(threeArray[2], MathsUtils.EPSILON);
-    });
-
-    test("iterator", () => {
-        const ourVec = createVector3(1, 2, 3);
-        const values = [];
-
-        for (const value of ourVec) {
-            values.push(value);
-        }
-
-        expect(values[0]).toBe(1);
-        expect(values[1]).toBe(2);
-        expect(values[2]).toBe(3);
-        expect(values.length).toBe(3);
     });
 });

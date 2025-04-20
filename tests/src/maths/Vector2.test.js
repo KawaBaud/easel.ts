@@ -125,6 +125,38 @@ describe("Vector2 operations", () => {
     });
 });
 
+describe("Vector2 array operations", () => {
+    test("fromArray and toArray", () => {
+        const array = [1, 2];
+
+        const ourVec = createVector2().fromArray(array);
+        const threeVec = new ThreeVector2().fromArray(array);
+        compareVectors(ourVec, threeVec);
+
+        const ourArray = [];
+        const threeArray = [];
+
+        ourVec.toArray(ourArray);
+        threeVec.toArray(threeArray);
+
+        expect(ourArray[0]).toBeCloseTo(threeArray[0], MathsUtils.EPSILON);
+        expect(ourArray[1]).toBeCloseTo(threeArray[1], MathsUtils.EPSILON);
+    });
+
+    test("iterator", () => {
+        const ourVec = createVector2(1, 2);
+        const values = [];
+
+        for (const value of ourVec) {
+            values.push(value);
+        }
+
+        expect(values[0]).toBe(1);
+        expect(values[1]).toBe(2);
+        expect(values.length).toBe(2);
+    });
+});
+
 describe("Vector2 utilities", () => {
     test("cross", () => {
         const ourVecA = createVector2(1, 2);
@@ -228,37 +260,5 @@ describe("Vector2 utilities", () => {
             expect(ourVec.length).toBeCloseTo(1, 1e-5);
             expect(threeVec.length()).toBeCloseTo(1, 1e-5);
         });
-    });
-});
-
-describe("Vector2 array operations", () => {
-    test("fromArray and toArray", () => {
-        const array = [1, 2];
-
-        const ourVec = createVector2().fromArray(array);
-        const threeVec = new ThreeVector2().fromArray(array);
-        compareVectors(ourVec, threeVec);
-
-        const ourArray = [];
-        const threeArray = [];
-
-        ourVec.toArray(ourArray);
-        threeVec.toArray(threeArray);
-
-        expect(ourArray[0]).toBeCloseTo(threeArray[0], MathsUtils.EPSILON);
-        expect(ourArray[1]).toBeCloseTo(threeArray[1], MathsUtils.EPSILON);
-    });
-
-    test("iterator", () => {
-        const ourVec = createVector2(1, 2);
-        const values = [];
-
-        for (const value of ourVec) {
-            values.push(value);
-        }
-
-        expect(values[0]).toBe(1);
-        expect(values[1]).toBe(2);
-        expect(values.length).toBe(2);
     });
 });

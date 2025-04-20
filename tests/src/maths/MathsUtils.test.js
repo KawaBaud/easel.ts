@@ -274,8 +274,8 @@ describe("MathsUtils", () => {
         });
     });
 
-    describe("conversions - coordinates", () => {
-        test("float: 3D world -> 2D screen", () => {
+    describe("conversions", () => {
+        test("3D world -> 2D screen (float)", () => {
             const worldX = 10;
             const worldY = 20;
             const worldZ = 100;
@@ -289,7 +289,7 @@ describe("MathsUtils", () => {
             expect(expectedY).toBe(192);
         });
 
-        test("fixed: 3D world -> 2D screen", () => {
+        test("3D world -> 2D screen (fixed)", () => {
             const worldX = MathsUtils.toFixed(10);
             const worldY = MathsUtils.toFixed(20);
             const worldZ = MathsUtils.toFixed(100);
