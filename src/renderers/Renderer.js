@@ -30,10 +30,19 @@ export function createRenderer(options = {}) {
         MAX_LOGICAL_HEIGHT,
     );
 
-    const aspectRatio = width / height;
-    let _currentCamera = null;
+    const _aspectRatio = width / height;
 
     const _renderer = {
+        /**
+         * @type {number}
+         */
+        width: width,
+
+        /**
+         * @type {number}
+         */
+        height: height,
+
         /**
          * @returns {boolean}
          */
@@ -42,21 +51,19 @@ export function createRenderer(options = {}) {
         },
 
         /**
-         * @param {Scene} scene
+         * @param {Scene} _scene
          * @param {Camera} camera
          * @returns {Renderer}
          */
         render(_scene, camera) {
-            _currentCamera = camera;
-
             if (!camera.matrixWorldInverse) {
                 camera.matrixWorldInverse = createMatrix4().identity();
             }
             if (!camera.projectionMatrix) {
                 camera.projectionMatrix = createMatrix4().identity();
             }
-            if (camera.isPerspCamera && camera.aspect !== aspectRatio) {
-                camera.aspect = aspectRatio;
+            if (camera.isPerspCamera && camera.aspect !== _aspectRatio) {
+                camera.aspect = _aspectRatio;
                 camera.updateProjectionMatrix();
             }
             camera.updateMatrixWorld();
@@ -69,10 +76,6 @@ export function createRenderer(options = {}) {
          */
         setupResizeHandler(callback) {
             globalThis.addEventListener("resize", () => {
-                if (_currentCamera && _currentCamera.isPerspCamera) {
-                    _currentCamera.aspect = aspectRatio;
-                    _currentCamera.updateProjectionMatrix();
-                }
                 if (callback) callback();
             });
         },
