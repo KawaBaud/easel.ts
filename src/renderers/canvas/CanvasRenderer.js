@@ -15,7 +15,7 @@ import { CanvasUtils } from "./CanvasUtils.js";
  * @returns {CanvasRenderer}
  */
 export function createCanvasRenderer(options = {}) {
-    const _baseRenderer = createRenderer(options);
+    const _renderer = createRenderer(options);
     const _canvas = CanvasUtils.createCanvasElement(
         options.width,
         options.height,
@@ -30,7 +30,7 @@ export function createCanvasRenderer(options = {}) {
     const _rasteriser = createCanvasRasteriser(_canvas);
     const _renderPipeline = createRenderPipeline(options);
 
-    const _renderer = {
+    const _canvasRenderer = {
         domElement: _canvas,
 
         /**
@@ -46,18 +46,17 @@ export function createCanvasRenderer(options = {}) {
          * @returns {CanvasRenderer}
          */
         render(scene, camera) {
-            _baseRenderer.render(scene, camera);
+            _renderer.render(scene, camera);
 
             _rasteriser.clear(scene.background);
             _renderPipeline.render(scene, camera, (p1, p2, p3, colour) => {
                 _rasteriser.drawTriangle(p1, p2, p3, colour);
             });
 
-            return _renderer;
+            return _canvasRenderer;
         },
     };
 
-    _baseRenderer.setupResizeHandler();
-
-    return _renderer;
+    _renderer.setupResizeHandler();
+    return _canvasRenderer;
 }
