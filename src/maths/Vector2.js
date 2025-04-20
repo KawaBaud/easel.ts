@@ -1,3 +1,5 @@
+import { MathsUtils } from "./MathsUtils.js";
+
 /**
  * @typedef {Object} Vector2
  * @property {number} x
@@ -95,8 +97,8 @@ export function createVector2(x = 0, y = 0) {
          */
         ceil() {
             return _v.set(
-                MathsUtils.fastCeil(_v.x),
-                MathsUtils.fastCeil(_v.y),
+                Math.ceil(_v.x),
+                Math.ceil(_v.y),
             );
         },
 
@@ -207,6 +209,16 @@ export function createVector2(x = 0, y = 0) {
             return (
                 (_v.x === v.x) &&
                 (_v.y === v.y)
+            );
+        },
+
+        /**
+         * @returns {Vector2}
+         */
+        floor() {
+            return _v.set(
+                Math.floor(_v.x),
+                Math.floor(_v.y),
             );
         },
 
@@ -393,16 +405,6 @@ export function createVector2(x = 0, y = 0) {
             array[offset] = _v.x;
             array[offset + 1] = _v.y;
             return array;
-        },
-
-        /**
-         * @returns {Vector2}
-         */
-        trunc() {
-            return _v.set(
-                MathsUtils.fastTrunc(_v.x),
-                MathsUtils.fastTrunc(_v.y),
-            );
         },
 
         /**

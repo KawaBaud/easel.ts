@@ -160,9 +160,9 @@ export function createVector3(x = 0, y = 0, z = 0) {
          */
         ceil() {
             return _v.set(
-                MathsUtils.fastCeil(_v.x),
-                MathsUtils.fastCeil(_v.y),
-                MathsUtils.fastCeil(_v.z),
+                Math.ceil(_v.x),
+                Math.ceil(_v.y),
+                Math.ceil(_v.z),
             );
         },
 
@@ -294,6 +294,17 @@ export function createVector3(x = 0, y = 0, z = 0) {
                 (_v.x === v.x) &&
                 (_v.y === v.y) &&
                 (_v.z === v.z)
+            );
+        },
+
+        /**
+         * @returns {Vector3}
+         */
+        floor() {
+            return _v.set(
+                Math.floor(_v.x),
+                Math.floor(_v.y),
+                Math.floor(_v.z),
             );
         },
 
@@ -500,17 +511,6 @@ export function createVector3(x = 0, y = 0, z = 0) {
             array[offset + 1] = _v.y;
             array[offset + 2] = _v.z;
             return array;
-        },
-
-        /**
-         * @returns {Vector3}
-         */
-        trunc() {
-            return _v.set(
-                MathsUtils.fastTrunc(_v.x),
-                MathsUtils.fastTrunc(_v.y),
-                MathsUtils.fastTrunc(_v.z),
-            );
         },
 
         /**
