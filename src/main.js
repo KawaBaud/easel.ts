@@ -27,7 +27,7 @@ globalThis.document.addEventListener(
     (event) => keys[event.key.toLowerCase()] = false,
 );
 
-const speed = 0.01;
+const speed = 0.05;
 const rotationSpeed = 0.02;
 
 function animate() {
