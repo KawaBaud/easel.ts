@@ -135,9 +135,9 @@ export function createVertexProcessor() {
                 const p2 = result[1];
                 const p3 = result[2];
 
-                const opz = ((p2.x - p1.x) * (p3.y - p1.y)) -
+                const normalSort = ((p2.x - p1.x) * (p3.y - p1.y)) -
                     ((p3.x - p1.x) * (p2.y - p1.y));
-                if (opz <= 0) return null;
+                if (normalSort <= 0) return null;
             }
 
             return result;
