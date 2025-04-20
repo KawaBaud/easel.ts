@@ -97,7 +97,7 @@ export const ShapeUtils = {
      * @param {number} indexOffset
      * @returns {number}
      */
-    triangulatePolygon(vertices, indices, polygonIndices, indexOffset) {
+    triangulate(vertices, indices, polygonIndices, indexOffset) {
         if (polygonIndices.length < 3) return indexOffset;
         if (polygonIndices.length === 3) {
             indices[indexOffset] = polygonIndices[0];
