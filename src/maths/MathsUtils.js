@@ -129,7 +129,9 @@ export const MathsUtils = {
      * @returns {number}
      */
     fastCeil(value) {
-        return value > 0 && value !== (value | 0) ? (value | 0) + 1 : value | 0;
+        return value > 0 && value !== MathsUtils.fastTrunc(value)
+            ? MathsUtils.fastTrunc(value) + 1
+            : MathsUtils.fastTrunc(value);
     },
 
     /**
@@ -137,7 +139,7 @@ export const MathsUtils = {
      * @returns {number}
      */
     fastRound(value) {
-        return (value + 0.5) | 0;
+        return MathsUtils.fastTrunc(value + 0.5);
     },
 
     /**
@@ -146,6 +148,17 @@ export const MathsUtils = {
      */
     fastTrunc(value) {
         return value | 0;
+    },
+
+    /**
+     * @param {number} value
+     * @returns {number}
+     */
+    fastFloor(value) {
+        return value >= 0
+            ? MathsUtils.fastTrunc(value)
+            : MathsUtils.fastTrunc(value) -
+                (value !== MathsUtils.fastTrunc(value) ? 1 : 0);
     },
 
     /**
@@ -173,7 +186,9 @@ export const MathsUtils = {
      * @returns {number}
      */
     qcos(angle) {
-        return _Q_COS_TABLE[(angle * _TABLE_SCALE) | 0 & _TABLE_MASK];
+        return _Q_COS_TABLE[
+            MathsUtils.fastTrunc(angle * _TABLE_SCALE) & _TABLE_MASK
+        ];
     },
 
     /**
@@ -184,7 +199,15 @@ export const MathsUtils = {
     qdiv(a, b) {
         return b === 0
             ? (a >= 0 ? 0x7FFFFFFF : -0x7FFFFFFF)
-            : ((a * Q_ONE) / b) | 0;
+            : MathsUtils.fastTrunc((a * Q_ONE) / b);
+    },
+
+    /**
+     * @param {number} value
+     * @returns {number}
+     */
+    qfloor(value) {
+        return value & ~(Q_ONE - 1);
     },
 
     /**
@@ -193,7 +216,7 @@ export const MathsUtils = {
      * @returns {number}
      */
     qmul(a, b) {
-        return ((a * b) / Q_ONE) | 0;
+        return MathsUtils.fastTrunc((a * b) / Q_ONE);
     },
 
     /**
@@ -201,7 +224,19 @@ export const MathsUtils = {
      * @returns {number}
      */
     qsin(angle) {
-        return _Q_SIN_TABLE[(angle * _TABLE_SCALE) | 0 & _TABLE_MASK];
+        return _Q_SIN_TABLE[
+            MathsUtils.fastTrunc(angle * _TABLE_SCALE) & _TABLE_MASK
+        ];
+    },
+
+    /**
+     * @param {number} value
+     * @returns {number}
+     */
+    qtrunc(value) {
+        return value >= 0
+            ? MathsUtils.qfloor(value)
+            : -MathsUtils.qfloor(-value);
     },
 
     /**
@@ -253,7 +288,7 @@ export const MathsUtils = {
      * @returns {number}
      */
     toFixed(float) {
-        return (float * Q_ONE) | 0;
+        return MathsUtils.fastTrunc(float * Q_ONE);
     },
 
     /**
