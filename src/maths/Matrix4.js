@@ -140,7 +140,6 @@ export function createMatrix4(elements = new Float32Array(16)) {
         decompose(position, q, scale) {
             const te = _m.elements;
 
-            // Frobenius norm
             let sx = Math.hypot(te[0], te[1], te[2]);
             const sy = Math.hypot(te[4], te[5], te[6]);
             const sz = Math.hypot(te[8], te[9], te[10]);

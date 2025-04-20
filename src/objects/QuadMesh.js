@@ -19,7 +19,7 @@ export function createQuadMesh(width = 1, height = 1, material) {
     const _mesh = createMesh(_geometry, material);
 
     if (_geometry.vertices && !_geometry.indices) {
-        const indices = new Uint16Array(6); // 2 triangles
+        const indices = new Uint16Array(6);
 
         ShapeUtils.addQuad(indices, 0, 0, 1, 2, 3);
         _geometry.indices = indices;

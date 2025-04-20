@@ -75,7 +75,6 @@ export const ShapeUtils = {
      * @returns {boolean}
      */
     pointInTriangle(px, py, x1, y1, x2, y2, x3, y3) {
-        // Barycentric coordinate
         const denom = (y2 - y3) * (x1 - x3) + (x3 - x2) * (y1 - y3);
         if (denom === 0) return false;
 
