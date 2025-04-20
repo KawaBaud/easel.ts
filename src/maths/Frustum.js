@@ -202,7 +202,7 @@ export function createFrustum() {
                 const plane = _planes[i];
                 const normal = plane.normal;
 
-                const invLength = 1 / normal.length;
+                const invLength = 1 / normal.length();
 
                 normal.mulScalar(invLength);
                 plane.constant *= invLength;

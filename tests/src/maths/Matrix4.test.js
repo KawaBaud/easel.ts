@@ -172,7 +172,7 @@ describe("Matrix4", () => {
         const transformedVec = testVec.clone().applyMatrix4(a);
 
         expect(transformedVec.x).not.toBe(testVec.x);
-        expect(transformedVec.length).toBeGreaterThan(0);
+        expect(transformedVec.length()).toBeGreaterThan(0);
     });
 
     test("copyPosition", () => {

@@ -40,7 +40,7 @@ export const ShapeUtils = {
         const a = createVector3().subVectors(v2, v1);
         const b = createVector3().subVectors(v3, v1);
         const cross = createVector3().crossVectors(a, b);
-        return cross.length * 0.5;
+        return cross.length() * 0.5;
     },
 
     /**

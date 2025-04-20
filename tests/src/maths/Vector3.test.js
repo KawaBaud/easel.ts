@@ -37,8 +37,8 @@ describe("Vector3", () => {
         const a = createVector3(3, 4, 5);
         const threeA = new ThreeVector3(3, 4, 5);
 
-        expect(a.length).toBeCloseTo(threeA.length());
-        expect(a.lengthSq).toBeCloseTo(threeA.lengthSq());
+        expect(a.length()).toBeCloseTo(threeA.length());
+        expect(a.lengthSq()).toBeCloseTo(threeA.lengthSq()());
     });
 
     test("add", () => {
