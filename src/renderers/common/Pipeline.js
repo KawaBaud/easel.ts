@@ -106,7 +106,9 @@ export function createPipeline() {
 
                 const backfaceCulled = material.wireframe
                     ? false
-                    : (_cullingContext ? _cullingContext.backfaceCulled : true);
+                    : (_cullingContext
+                        ? _cullingContext.backfaceCulled
+                        : false);
 
                 const projectedPoints = _processor.projectTriangle(
                     _v1,

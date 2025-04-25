@@ -14,7 +14,43 @@ import { createVector3 } from "../../maths/Vector3.js";
 export function createVertexProcessor() {
     const _vector = createVector3();
     const _tempVector = createVector3();
-    const _tempVertexBuffer = new Float32Array(9);
+
+    function _projectPoint(
+        x,
+        y,
+        z,
+        camera,
+        width,
+        height,
+        handleNearPlane = false,
+    ) {
+        _tempVector.set(x, y, z);
+        _tempVector.applyMatrix4(camera.matrixWorldInverse);
+
+        const behindNearPlane = _tempVector.z > -camera.near;
+        if (behindNearPlane && !handleNearPlane) return null;
+        if (behindNearPlane && handleNearPlane) _tempVector.z = -camera.near;
+
+        _tempVector.applyMatrix4(camera.projectionMatrix);
+        _tempVector.x = -_tempVector.x;
+
+        const halfWidth = width >> 1;
+        const halfHeight = height >> 1;
+
+        const scale = 1 / -_tempVector.z;
+
+        let screenX = _tempVector.x * scale;
+        let screenY = _tempVector.y * scale;
+        screenX = (screenX * halfWidth) + halfWidth;
+        screenY = halfHeight - (screenY * halfHeight);
+
+        return {
+            x: MathsUtils.fastTrunc(screenX),
+            y: MathsUtils.fastTrunc(screenY),
+            z: _tempVector.z,
+            behindNearPlane,
+        };
+    }
 
     const _vertexProcessor = {
         /**
@@ -78,6 +114,7 @@ export function createVertexProcessor() {
          * @param {number} width
          * @param {number} height
          * @param {boolean} [backfaceCulled=true]
+         * @param {boolean} [handleNearPlane=false]
          * @returns {Array<Object>|null}
          */
         projectTriangle(
@@ -88,51 +125,46 @@ export function createVertexProcessor() {
             width,
             height,
             backfaceCulled = true,
+            handleNearPlane = false,
         ) {
-            _tempVertexBuffer[0] = v1.x;
-            _tempVertexBuffer[1] = v1.y;
-            _tempVertexBuffer[2] = v1.z;
-            _tempVertexBuffer[3] = v2.x;
-            _tempVertexBuffer[4] = v2.y;
-            _tempVertexBuffer[5] = v2.z;
-            _tempVertexBuffer[6] = v3.x;
-            _tempVertexBuffer[7] = v3.y;
-            _tempVertexBuffer[8] = v3.z;
-
             if (!camera || !camera.matrixWorldInverse) return null;
 
-            const halfWidth = width >> 1;
-            const halfHeight = height >> 1;
+            const vertices = [
+                { x: v1.x, y: v1.y, z: v1.z },
+                { x: v2.x, y: v2.y, z: v2.z },
+                { x: v3.x, y: v3.y, z: v3.z },
+            ];
 
-            const result = [null, null, null];
-
-            for (let i = 0; i < 3; i++) {
-                const idx = i * 3;
-
-                _tempVector.set(
-                    _tempVertexBuffer[idx],
-                    _tempVertexBuffer[idx + 1],
-                    _tempVertexBuffer[idx + 2],
-                );
-                _tempVector.applyMatrix4(camera.matrixWorldInverse);
-                if (_tempVector.z > -camera.near) return null;
-                _tempVector.applyMatrix4(camera.projectionMatrix);
-
-                const scale = 1 / -_tempVector.z;
-
-                _tempVector.x = -_tempVector.x;
-
-                let screenX = _tempVector.x * scale;
-                let screenY = _tempVector.y * scale;
-                screenX = (screenX * halfWidth) + halfWidth;
-                screenY = halfHeight - (screenY * halfHeight);
-
-                result[i] = {
-                    x: MathsUtils.fastTrunc(screenX),
-                    y: MathsUtils.fastTrunc(screenY),
-                    z: _tempVector.z,
-                };
-            }
+            const result = [
+                _projectPoint(
+                    vertices[0].x,
+                    vertices[0].y,
+                    vertices[0].z,
+                    camera,
+                    width,
+                    height,
+                    handleNearPlane,
+                ),
+                _projectPoint(
+                    vertices[1].x,
+                    vertices[1].y,
+                    vertices[1].z,
+                    camera,
+                    width,
+                    height,
+                    handleNearPlane,
+                ),
+                _projectPoint(
+                    vertices[2].x,
+                    vertices[2].y,
+                    vertices[2].z,
+                    camera,
+                    width,
+                    height,
+                    handleNearPlane,
+                ),
+            ];
+            if (!result[0] || !result[1] || !result[2]) return null;
 
             if (backfaceCulled) {
                 const p1 = result[0];
@@ -152,32 +184,22 @@ export function createVertexProcessor() {
          * @param {Camera} camera
          * @param {number} width
          * @param {number} height
+         * @param {boolean} [handleNearPlane=false]
          * @returns {Object}
          */
-        projectVertex(vertex, camera, width, height) {
+        projectVertex(vertex, camera, width, height, handleNearPlane = false) {
             if (!vertex || !camera) return null;
             if (!camera.matrixWorldInverse) return null;
 
-            _tempVector.copy(vertex);
-            _tempVector.applyMatrix4(camera.matrixWorldInverse);
-            if (_tempVector.z > -camera.near) return null;
-            _tempVector.applyMatrix4(camera.projectionMatrix);
-
-            const halfWidth = width >> 1;
-            const halfHeight = height >> 1;
-
-            _tempVector.x = -_tempVector.x;
-
-            const scale = 1 / -_tempVector.z;
-
-            let screenX = _tempVector.x * scale;
-            let screenY = _tempVector.y * scale;
-            screenX = (screenX * halfWidth) + halfWidth;
-            screenY = halfHeight - (screenY * halfHeight);
-
-            const x = MathsUtils.fastTrunc(screenX);
-            const y = MathsUtils.fastTrunc(screenY);
-            return { x, y, z: _tempVector.z };
+            return _projectPoint(
+                vertex.x,
+                vertex.y,
+                vertex.z,
+                camera,
+                width,
+                height,
+                handleNearPlane,
+            );
         },
 
         /**

@@ -32,9 +32,9 @@ export function createCullingContext(camera) {
 
         /**
          * @type {boolean}
-         * @default true
+         * @default false
          */
-        backfaceCulled: true,
+        backfaceCulled: false,
 
         /**
          * @type {boolean}
