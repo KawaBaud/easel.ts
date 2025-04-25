@@ -12,42 +12,33 @@ import { MIN_LOGICAL_HEIGHT, MIN_LOGICAL_WIDTH } from "../../constants.js";
  * @returns {RenderTarget}
  */
 export function createRenderTarget(options = {}) {
-    const _width = Math.max(
-        MIN_LOGICAL_WIDTH,
-        options.width ?? MIN_LOGICAL_WIDTH,
-    );
-    const _height = Math.max(
-        MIN_LOGICAL_HEIGHT,
-        options.height ?? MIN_LOGICAL_HEIGHT,
-    );
+    const _width = options.width ?? MIN_LOGICAL_WIDTH;
+    const _height = options.height ?? MIN_LOGICAL_HEIGHT;
 
     const _target = {
         /**
+         * @type {number}
+         */
+        width: _width,
+
+        /**
+         * @type {number}
+         */
+        height: _height,
+
+        /**
+         * @type {number}
+         * @default _width / _height
+         */
+        aspectRatio: _width / _height,
+
+        /**
+         * @type {boolean}
          * @readonly
          * @default true
          */
         isRenderTarget: true,
-
-        /**
-         * @returns {number}
-         */
-        get width() {
-            return _width;
-        },
-
-        /**
-         * @returns {number}
-         */
-        get height() {
-            return _height;
-        },
-
-        /**
-         * @returns {number}
-         */
-        get aspectRatio() {
-            return _width / _height;
-        },
     };
+
     return _target;
 }
