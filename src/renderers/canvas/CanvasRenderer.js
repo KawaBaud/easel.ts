@@ -9,6 +9,7 @@ import { CanvasUtils } from "./CanvasUtils.js";
  * @typedef {import("../../cameras/Camera.js").Camera} Camera
  * @typedef {import("../../scenes/Scene.js").Scene} Scene
  * @typedef {import("../common/RenderTarget.js").RenderTarget} RenderTarget
+ * @typedef {import("../../maths/Vector4.js").Vector4} Vector4
  * @typedef {Object} CanvasRenderer
  * @property {HTMLCanvasElement} domElement
  * @property {boolean} isCanvasRenderer
