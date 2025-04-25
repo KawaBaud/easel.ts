@@ -148,13 +148,16 @@ export function createCanvasRenderer(options = {}) {
                 _canvas.style.height = height + "px";
             }
 
-            _bufferCanvas.width = width;
-            _bufferCanvas.height = height;
+            const bufferWidth = globalThis.innerWidth;
+            const bufferHeight = globalThis.innerHeight;
 
-            _renderer.width = width;
-            _renderer.height = height;
+            _bufferCanvas.width = bufferWidth;
+            _bufferCanvas.height = bufferHeight;
 
-            _renderPipeline.renderTarget.setSize(width, height);
+            _renderer.width = bufferWidth;
+            _renderer.height = bufferHeight;
+
+            _renderPipeline.renderTarget.setSize(bufferWidth, bufferHeight);
 
             return _canvasRenderer;
         },
@@ -179,6 +182,7 @@ export function createCanvasRenderer(options = {}) {
          */
         render(scene, camera) {
             _renderer.render(scene, camera);
+
             _rasteriser.clear(scene.background);
 
             const ctx = _bufferCanvas.getContext("2d");
@@ -212,6 +216,7 @@ export function createCanvasRenderer(options = {}) {
                 _canvas.width,
                 _canvas.height,
             );
+
             displayCtx.drawImage(
                 _bufferCanvas,
                 0,
