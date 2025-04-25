@@ -4,7 +4,6 @@ import { createMatrix4 } from "../maths/Matrix4.js";
  * @typedef {import("../cameras/Camera.js").Camera} Camera
  * @typedef {import("../scenes/Scene.js").Scene} Scene
  * @typedef {Object} Renderer
- * @property {HTMLElement} domElement
  * @property {number} width
  * @property {number} height
  * @property {boolean} isRenderer
