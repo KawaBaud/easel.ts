@@ -42,19 +42,12 @@ export function createRenderer(options = {}) {
          */
         render(_scene, camera) {
             if (!camera.matrixWorldInverse) {
-                camera.matrixWorldInverse = createMatrix4().identity();
+                camera.matrixWorldInverse = createMatrix4();
             }
             if (!camera.projectionMatrix) {
-                camera.projectionMatrix = createMatrix4().identity();
+                camera.projectionMatrix = createMatrix4();
             }
-
-            const fixedAspectRatio = _renderer.width / _renderer.height;
-
-            if (camera.isPerspCamera && camera.aspect !== fixedAspectRatio) {
-                camera.aspect = fixedAspectRatio;
-                camera.updateProjectionMatrix();
-            }
-
+            if (camera.isPerspCamera) camera.updateProjectionMatrix();
             camera.updateMatrixWorld();
 
             return _renderer;
