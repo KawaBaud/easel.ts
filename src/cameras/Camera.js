@@ -30,18 +30,16 @@ export function createCamera() {
 
     Object.assign(_camera, {
         /**
+         * @type {Euler}
+         */
+        rotation: _rotation,
+
+        /**
          * @type {boolean}
          * @readonly
          * @default true
          */
         isCamera: true,
-
-        /**
-         * @returns {Euler}
-         */
-        get rotation() {
-            return _rotation;
-        },
 
         /**
          * @param {Camera} source
