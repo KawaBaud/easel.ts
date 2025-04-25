@@ -10,6 +10,7 @@ const camera = MUSI.PerspCamera(
 camera.position.z = 5;
 
 const renderer = MUSI.CanvasRenderer();
+renderer.setSize(globalThis.innerWidth, globalThis.innerHeight);
 globalThis.document.body.appendChild(renderer.domElement);
 
 const shape = MUSI.CubeShape();
