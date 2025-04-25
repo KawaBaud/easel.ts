@@ -117,8 +117,8 @@ export function createCanvasRasteriser(canvas) {
             }
 
             const index = (MathsUtils.fastTrunc(y) * _imageData.width +
-                MathsUtils.fastTrunc(x)) *
-                4;
+                MathsUtils.fastTrunc(x)) * 4;
+
             return _imageData.data.slice(index, index + 4);
         },
 
@@ -136,9 +136,9 @@ export function createCanvasRasteriser(canvas) {
                 throw new Error("beginFrame must be called before setPixel");
             }
 
-            const index =
-                (Maths.fastTrunc(y) * _imageData.width + Maths.fastTrunc(x)) *
-                4;
+            const index = (MathsUtils.fastTrunc(y) * _imageData.width +
+                MathsUtils.fastTrunc(x)) * 4;
+
             _imageData.data[index] = r;
             _imageData.data[index + 1] = g;
             _imageData.data[index + 2] = b;
