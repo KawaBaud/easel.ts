@@ -9,7 +9,6 @@ import { CanvasUtils } from "./CanvasUtils.js";
  * @typedef {Object} CanvasRenderer
  * @property {HTMLCanvasElement} domElement
  * @property {boolean} isCanvasRenderer
- * @property {HTMLCanvasElement} [bufferCanvas]
  */
 
 /**
@@ -23,23 +22,19 @@ export function createCanvasRenderer(options = {}) {
     const _renderer = createRenderer(options);
     const _useBuffer = options.useBuffer ?? false;
 
-    const _canvas = CanvasUtils.createCanvasElement(
-        options.width,
-        options.height,
-    );
+    const _canvas = CanvasUtils.createCanvasElement();
     _canvas.style.width = "100vw";
     _canvas.style.height = "100vh";
     _canvas.style.objectFit = "contain";
-    _canvas.style.imageRendering = "pixelated";
 
-    let _bufferCanvas = null;
+    let _buffer = null;
     let _rasteriser = null;
 
     if (_useBuffer) {
-        _bufferCanvas = globalThis.document.createElement("canvas");
-        _bufferCanvas.width = _canvas.width;
-        _bufferCanvas.height = _canvas.height;
-        _rasteriser = createCanvasRasteriser(_bufferCanvas);
+        _buffer = globalThis.document.createElement("canvas");
+        _buffer.width = _canvas.width;
+        _buffer.height = _canvas.height;
+        _rasteriser = createCanvasRasteriser(_buffer);
     } else {
         _rasteriser = createCanvasRasteriser(_canvas);
     }
@@ -47,27 +42,17 @@ export function createCanvasRenderer(options = {}) {
     const _renderPipeline = createRenderPipeline(options);
 
     const _canvasRenderer = {
+        /**
+         * @type {HTMLCanvasElement}
+         */
         domElement: _canvas,
 
         /**
+         * @type {boolean}
          * @readonly
          * @default true
          */
         isCanvasRenderer: true,
-
-        /**
-         * @returns {HTMLCanvasElement|null}
-         */
-        get bufferCanvas() {
-            return _bufferCanvas;
-        },
-
-        /**
-         * @returns {boolean}
-         */
-        get useBuffer() {
-            return _useBuffer;
-        },
 
         /**
          * @param {Scene} scene
@@ -83,10 +68,10 @@ export function createCanvasRenderer(options = {}) {
                 _rasteriser.drawTriangle(p1, p2, p3, colour);
             });
 
-            if (_useBuffer && _bufferCanvas) {
+            if (_useBuffer && _buffer) {
                 const ctx = _canvas.getContext("2d");
                 ctx.clearRect(0, 0, _canvas.width, _canvas.height);
-                ctx.drawImage(_bufferCanvas, 0, 0);
+                ctx.drawImage(_buffer, 0, 0);
             }
 
             return _canvasRenderer;
