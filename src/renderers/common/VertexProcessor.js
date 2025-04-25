@@ -100,8 +100,8 @@ export function createVertexProcessor() {
 
             if (!camera || !camera.matrixWorldInverse) return null;
 
-            const halfWidth = width >> 1;
-            const halfHeight = height >> 1;
+            const halfWidth = width * 0.5;
+            const halfHeight = height * 0.5;
 
             const result = [null, null, null];
 
@@ -116,7 +116,7 @@ export function createVertexProcessor() {
                 _tempVector.applyMatrix4(camera.matrixWorldInverse);
                 if (_tempVector.z > -0.1) return null;
 
-                const scale = 1 / -_tempVector.z;
+                const scale = 1.0 / -_tempVector.z;
 
                 let screenX = _tempVector.x * scale;
                 let screenY = _tempVector.y * scale;
@@ -156,20 +156,23 @@ export function createVertexProcessor() {
 
             _tempVector.copy(vertex);
             _tempVector.applyMatrix4(camera.matrixWorldInverse);
+
             if (_tempVector.z > -0.1) return null;
 
-            const halfWidth = width >> 1;
-            const halfHeight = height >> 1;
+            const halfWidth = width * 0.5;
+            const halfHeight = height * 0.5;
 
-            const scale = 1 / -_tempVector.z;
+            const scale = 1.0 / -_tempVector.z;
 
             let screenX = _tempVector.x * scale;
             let screenY = _tempVector.y * scale;
+
             screenX = (screenX * halfWidth) + halfWidth;
             screenY = halfHeight - (screenY * halfHeight);
 
             const x = screenX | 0;
             const y = screenY | 0;
+
             return { x, y, z: _tempVector.z };
         },
 
