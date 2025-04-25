@@ -89,11 +89,14 @@ export function createCanvasRasteriser(canvas) {
          * @returns {void}
          */
         drawTriangle(v1, v2, v3, colour = "#FFFFFF") {
-            if (!v1 || !v2 || !v3) return;
+            if (!v1 || !v2) return;
 
             _rasteriser.drawLine(v1.x, v1.y, v2.x, v2.y, colour);
-            _rasteriser.drawLine(v2.x, v2.y, v3.x, v3.y, colour);
-            _rasteriser.drawLine(v3.x, v3.y, v1.x, v1.y, colour);
+
+            if (v3) {
+                _rasteriser.drawLine(v2.x, v2.y, v3.x, v3.y, colour);
+                _rasteriser.drawLine(v3.x, v3.y, v1.x, v1.y, colour);
+            }
         },
 
         /**

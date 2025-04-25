@@ -104,11 +104,36 @@ export function createPipeline() {
                 _v2.applyMatrix4(mesh.worldMatrix);
                 _v3.applyMatrix4(mesh.worldMatrix);
 
-                const backfaceCulled = material.wireframe
-                    ? false
-                    : (_cullingContext
-                        ? _cullingContext.backfaceCulled
-                        : false);
+                if (material.wireframe) {
+                    const p1 = _processor.projectVertex(
+                        _v1,
+                        camera,
+                        target.width,
+                        target.height,
+                    );
+                    const p2 = _processor.projectVertex(
+                        _v2,
+                        camera,
+                        target.width,
+                        target.height,
+                    );
+                    const p3 = _processor.projectVertex(
+                        _v3,
+                        camera,
+                        target.width,
+                        target.height,
+                    );
+
+                    if (p1 && p2) renderFunction(p1, p2, null, colour);
+                    if (p2 && p3) renderFunction(p2, p3, null, colour);
+                    if (p3 && p1) renderFunction(p3, p1, null, colour);
+
+                    continue;
+                }
+
+                const backfaceCulled = _cullingContext
+                    ? _cullingContext.backfaceCulled
+                    : false;
 
                 const projectedPoints = _processor.projectTriangle(
                     _v1,

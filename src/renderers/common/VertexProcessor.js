@@ -29,15 +29,21 @@ export function createVertexProcessor() {
 
         const behindNearPlane = _tempVector.z > -camera.near;
         if (behindNearPlane && !handleNearPlane) return null;
-        if (behindNearPlane && handleNearPlane) _tempVector.z = -camera.near;
+        if (behindNearPlane && handleNearPlane) {
+            const behindRatio = (_tempVector.z + camera.near) / camera.near;
+
+            _tempVector.z = -camera.near;
+            _tempVector.x *= 1.0 - behindRatio >> 1;
+            _tempVector.y *= 1.0 - behindRatio >> 1;
+        }
 
         _tempVector.applyMatrix4(camera.projectionMatrix);
         _tempVector.x = -_tempVector.x;
 
+        const scale = 1 / -_tempVector.z;
+
         const halfWidth = width >> 1;
         const halfHeight = height >> 1;
-
-        const scale = 1 / -_tempVector.z;
 
         let screenX = _tempVector.x * scale;
         let screenY = _tempVector.y * scale;
