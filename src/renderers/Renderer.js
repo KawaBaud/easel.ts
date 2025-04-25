@@ -18,8 +18,6 @@ export function createRenderer(options = {}) {
     const _width = options.width ?? globalThis.innerWidth;
     const _height = options.height ?? globalThis.innerHeight;
 
-    const _aspectRatio = _width / _height;
-
     const _renderer = {
         /**
          * @type {number}
@@ -50,21 +48,38 @@ export function createRenderer(options = {}) {
             if (!camera.projectionMatrix) {
                 camera.projectionMatrix = createMatrix4().identity();
             }
-            if (camera.isPerspCamera && camera.aspect !== _aspectRatio) {
-                camera.aspect = _aspectRatio;
+
+            const fixedAspectRatio = _renderer.width / _renderer.height;
+
+            if (camera.isPerspCamera && camera.aspect !== fixedAspectRatio) {
+                camera.aspect = fixedAspectRatio;
                 camera.updateProjectionMatrix();
             }
+
             camera.updateMatrixWorld();
 
             return _renderer;
         },
 
         /**
-         * @param {Function} callback
+         * @param {Function} [callback]
+         * @returns {void}
          */
         setupResizeHandler(callback) {
+            const resizeHandler = () => {
+                const width = globalThis.innerWidth;
+                const height = globalThis.innerHeight;
+
+                _renderer.width = width;
+                _renderer.height = height;
+
+                if (callback) callback(width, height);
+            };
+
+            let resizeTimeout;
             globalThis.addEventListener("resize", () => {
-                if (callback) callback();
+                if (resizeTimeout) globalThis.clearTimeout(resizeTimeout);
+                resizeTimeout = globalThis.setTimeout(resizeHandler, 100);
             });
         },
     };
