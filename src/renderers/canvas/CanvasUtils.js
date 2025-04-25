@@ -1,18 +1,12 @@
-import { MIN_LOGICAL_HEIGHT, MIN_LOGICAL_WIDTH } from "../../constants.js";
-
 /**
  * @namespace
  */
 export const CanvasUtils = {
     /**
-     * @param {number} width
-     * @param {number} height
      * @returns {HTMLCanvasElement}
      */
-    createCanvasElement(width, height) {
+    createCanvasElement() {
         const canvas = globalThis.document.createElement("canvas");
-        canvas.width = width || MIN_LOGICAL_WIDTH;
-        canvas.height = height || MIN_LOGICAL_HEIGHT;
         canvas.style.display = "block";
         canvas.style.imageRendering = "pixelated";
         return canvas;

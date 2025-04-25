@@ -13,10 +13,20 @@
  */
 export function createMaterial(options = {}) {
     const _material = {
+        /**
+         * @type {number}
+         * @default 0xFFFFFF
+         */
         colour: options.colour !== undefined ? options.colour : 0xFFFFFF,
+
+        /**
+         * @type {boolean}
+         * @default false
+         */
         wireframe: options.wireframe !== undefined ? options.wireframe : false,
 
         /**
+         * @type {boolean}
          * @readonly
          * @default true
          */

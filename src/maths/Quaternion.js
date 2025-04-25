@@ -24,26 +24,31 @@ import { createVector3 } from "./Vector3.js";
 export function createQuaternion(x = 0, y = 0, z = 0, w = 1) {
     const _q = {
         /**
+         * @type {number}
          * @default 0
          */
         x,
 
         /**
+         * @type {number}
          * @default 0
          */
         y,
 
         /**
+         * @type {number}
          * @default 0
          */
         z,
 
         /**
+         * @type {number}
          * @default 1
          */
         w,
 
         /**
+         * @type {boolean}
          * @readonly
          * @default true
          */

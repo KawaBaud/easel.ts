@@ -39,66 +39,79 @@ const _scale = createVector3();
 export function createObject3D(id = "") {
     const _object = {
         /**
+         * @type {string}
          * @default ""
          */
         id,
 
         /**
+         * @type {Vector3}
          * @default createVector3()
          */
         position: createVector3(),
 
         /**
+         * @type {Quaternion}
          * @default createQuaternion()
          */
         quaternion: createQuaternion(),
 
         /**
+         * @type {Vector3}
          * @default createVector3(1, 1, 1)
          */
         scale: createVector3(1, 1, 1),
 
         /**
+         * @type {Matrix4}
          * @default createMatrix4().identity()
          */
         matrix: createMatrix4().identity(),
 
         /**
+         * @type {Matrix4}
          * @default createMatrix4().identity()
          */
         worldMatrix: createMatrix4().identity(),
 
         /**
+         * @type {boolean}
          * @default true
          */
         autoUpdateMatrix: true,
 
         /**
+         * @type {Object3D|null}
          * @default null
          */
         parent: null,
 
         /**
+         * @type {Array<Object3D>}
          * @default []
          */
         children: [],
 
         /**
+         * @type {boolean}
          * @default true
          */
         visible: true,
 
         /**
+         * @type {number}
          * @default 1
          */
         layers: 1,
 
         /**
+         * @type {Object}
          * @default {}
          */
         userData: {},
 
         /**
+         * @type {boolean}
          * @readonly
          * @default true
          */

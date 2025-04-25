@@ -9,7 +9,7 @@ import { createObject3D } from "../objects/Object3D.js";
  * @property {Float32Array} normals
  * @property {Float32Array} uvs
  * @property {Uint16Array} indices
- * @property {Sphere} [boundingSphere]
+ * @property {Sphere} boundingSphere
  * @property {boolean} isShape
  */
 
@@ -20,12 +20,32 @@ export function createShape() {
     const _shape = createObject3D();
 
     Object.assign(_shape, {
+        /**
+         * @type {Float32Array}
+         * @default new Float32Array()
+         */
         vertices: new Float32Array(),
+
+        /**
+         * @type {Float32Array}
+         * @default new Float32Array()
+         */
         normals: new Float32Array(),
+
+        /**
+         * @type {Float32Array}
+         * @default new Float32Array()
+         */
         uvs: new Float32Array(),
+
+        /**
+         * @type {Uint16Array}
+         * @default new Uint16Array()
+         */
         indices: new Uint16Array(),
 
         /**
+         * @type {boolean}
          * @readonly
          * @default true
          */

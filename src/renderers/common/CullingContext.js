@@ -25,8 +25,21 @@ export function createCullingContext(camera) {
     const _centre = createVector3();
 
     const _context = {
+        /**
+         * @type {Frustum}
+         */
         frustum: _frustum,
+
+        /**
+         * @type {boolean}
+         * @default true
+         */
         backfaceCulled: true,
+
+        /**
+         * @type {boolean}
+         * @default true
+         */
         frustumCulled: true,
 
         /**
@@ -81,7 +94,6 @@ export function createCullingContext(camera) {
 
                 return _context.frustum.intersectsSphere(_centre, radius);
             }
-
             if (object.geometry.vertices) {
                 const vertices = object.geometry.vertices;
                 const worldMatrix = object.worldMatrix;

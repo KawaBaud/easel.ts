@@ -15,11 +15,13 @@ import { MathsUtils } from "./MathsUtils.js";
 export function createMatrix4(elements = new Float32Array(16)) {
     const _m = {
         /**
+         * @type {Float32Array}
          * @default new Float32Array(16)
          */
         elements,
 
         /**
+         * @type {boolean}
          * @readonly
          * @default true
          */

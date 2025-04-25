@@ -25,26 +25,31 @@ export function createTransform() {
 
     const _transform = {
         /**
+         * @type {Vector3}
          * @default createVector3()
          */
         position: _position,
 
         /**
+         * @type {Quaternion}
          * @default createQuaternion()
          */
         rotation: _rotation,
 
         /**
+         * @type {Vector3}
          * @default createVector3(1, 1, 1)
          */
         scale: _scale,
 
         /**
+         * @type {Matrix4}
          * @default createMatrix4()
          */
         matrix: _matrix,
 
         /**
+         * @type {boolean}
          * @readonly
          * @default true
          */

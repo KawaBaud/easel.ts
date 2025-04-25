@@ -27,12 +27,32 @@ export function createPerspCamera(
     const _camera = createCamera();
 
     Object.assign(_camera, {
+        /**
+         * @type {number}
+         * @default 50
+         */
         fov,
+
+        /**
+         * @type {number}
+         * @default 1
+         */
         aspect,
+
+        /**
+         * @type {number}
+         * @default 0.1
+         */
         near,
+
+        /**
+         * @type {number}
+         * @default 2000
+         */
         far,
 
         /**
+         * @type {boolean}
          * @readonly
          * @default true
          */

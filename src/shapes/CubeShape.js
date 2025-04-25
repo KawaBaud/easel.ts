@@ -173,6 +173,7 @@ export function createCubeShape(size = 1) {
 
     Object.assign(_shape, {
         /**
+         * @type {boolean}
          * @readonly
          * @default true
          */

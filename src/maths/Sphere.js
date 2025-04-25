@@ -16,16 +16,19 @@ import { createVector3 } from "./Vector3.js";
 export function createSphere(centre = createVector3(), radius = 0) {
     const _sphere = {
         /**
+         * @type {Vector3}
          * @default createVector3()
          */
         centre,
 
         /**
+         * @type {number}
          * @default 0
          */
         radius,
 
         /**
+         * @type {boolean}
          * @readonly
          * @default true
          */

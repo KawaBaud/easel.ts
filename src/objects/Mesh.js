@@ -17,10 +17,18 @@ export function createMesh(geometry, material) {
     const _mesh = createObject3D();
 
     Object.assign(_mesh, {
+        /**
+         * @type {Object}
+         */
         geometry,
+
+        /**
+         * @type {Object}
+         */
         material,
 
         /**
+         * @type {boolean}
          * @readonly
          * @default true
          */

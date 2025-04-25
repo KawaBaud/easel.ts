@@ -21,16 +21,19 @@ export function createRay() {
 
     const _ray = {
         /**
+         * @type {Vector3}
          * @default createVector3()
          */
         origin: _origin,
 
         /**
+         * @type {Vector3}
          * @default createVector3(0, 0, -1)
          */
         direction: _direction,
 
         /**
+         * @type {boolean}
          * @readonly
          * @default true
          */

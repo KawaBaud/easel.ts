@@ -30,6 +30,7 @@ export function createCamera() {
 
     Object.assign(_camera, {
         /**
+         * @type {boolean}
          * @readonly
          * @default true
          */

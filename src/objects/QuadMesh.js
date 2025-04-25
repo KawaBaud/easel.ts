@@ -27,6 +27,7 @@ export function createQuadMesh(width = 1, height = 1, material) {
 
     Object.assign(_mesh, {
         /**
+         * @type {boolean}
          * @readonly
          * @default true
          */

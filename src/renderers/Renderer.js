@@ -1,10 +1,3 @@
-import {
-    MAX_LOGICAL_HEIGHT,
-    MAX_LOGICAL_WIDTH,
-    MIN_LOGICAL_HEIGHT,
-    MIN_LOGICAL_WIDTH,
-} from "../constants.js";
-import { MathsUtils } from "../maths/MathsUtils.js";
 import { createMatrix4 } from "../maths/Matrix4.js";
 
 /**
@@ -12,6 +5,8 @@ import { createMatrix4 } from "../maths/Matrix4.js";
  * @typedef {import("../scenes/Scene.js").Scene} Scene
  * @typedef {Object} Renderer
  * @property {HTMLElement} domElement
+ * @property {number} width
+ * @property {number} height
  * @property {boolean} isRenderer
  */
 
@@ -20,31 +15,24 @@ import { createMatrix4 } from "../maths/Matrix4.js";
  * @returns {Renderer}
  */
 export function createRenderer(options = {}) {
-    const width = MathsUtils.clamp(
-        options.width ?? MIN_LOGICAL_WIDTH,
-        MIN_LOGICAL_WIDTH,
-        MAX_LOGICAL_WIDTH,
-    );
-    const height = MathsUtils.clamp(
-        options.height ?? MIN_LOGICAL_HEIGHT,
-        MIN_LOGICAL_HEIGHT,
-        MAX_LOGICAL_HEIGHT,
-    );
+    const _width = options.width ?? globalThis.innerWidth;
+    const _height = options.height ?? globalThis.innerHeight;
 
-    const _aspectRatio = width / height;
+    const _aspectRatio = _width / _height;
 
     const _renderer = {
         /**
          * @type {number}
          */
-        width: width,
+        width: _width,
 
         /**
          * @type {number}
          */
-        height: height,
+        height: _height,
 
         /**
+         * @type {boolean}
          * @readonly
          * @default true
          */

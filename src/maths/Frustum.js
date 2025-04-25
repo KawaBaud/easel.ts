@@ -79,6 +79,7 @@ export function createFrustum() {
 
     const _frustum = {
         /**
+         * @type {boolean}
          * @readonly
          * @default true
          */

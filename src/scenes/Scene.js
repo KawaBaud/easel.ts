@@ -14,9 +14,14 @@ export function createScene() {
     const _scene = createObject3D();
 
     Object.assign(_scene, {
+        /**
+         * @type {number}
+         * @default undefined
+         */
         background: undefined,
 
         /**
+         * @type {boolean}
          * @readonly
          * @default true
          */

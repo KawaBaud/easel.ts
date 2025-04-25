@@ -73,6 +73,7 @@ export function createRectangleShape(width = 1, height = 1) {
 
     Object.assign(_shape, {
         /**
+         * @type {boolean}
          * @readonly
          * @default true
          */

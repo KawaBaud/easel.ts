@@ -7,6 +7,7 @@ import { createVertexProcessor } from "./VertexProcessor.js";
  * @typedef {import("../../scenes/Scene.js").Scene} Scene
  * @typedef {import("./RenderTarget.js").RenderTarget} RenderTarget
  * @typedef {import("./CullingContext.js").CullingContext} CullingContext
+ * @typedef {import("./RenderList.js").RenderList} RenderList
  * @typedef {Object} Pipeline
  */
 
@@ -25,11 +26,9 @@ export function createPipeline() {
 
     const _pipeline = {
         /**
-         * @returns {import("./RenderList.js").RenderList}
+         * @type {RenderList}
          */
-        get renderList() {
-            return _renderList;
-        },
+        renderList: _renderList,
 
         /**
          * @param {Scene} scene
@@ -63,12 +62,13 @@ export function createPipeline() {
             camera.updateMatrixWorld();
 
             _renderList.depthSort();
-            _renderList.objects.forEach((object) => {
+            for (let i = 0; i < _renderList.objects.length; i++) {
+                const object = _renderList.objects[i];
                 if (object.isMesh) {
                     object.updateWorldMatrix(true, false);
                     _renderMesh(object, camera, target, renderFunction);
                 }
-            });
+            }
 
             return _pipeline;
         },
