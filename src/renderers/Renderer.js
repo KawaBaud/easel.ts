@@ -47,6 +47,13 @@ export function createRenderer(options = {}) {
             if (!camera.projectionMatrix) {
                 camera.projectionMatrix = createMatrix4();
             }
+
+            const currentAspect = globalThis.innerWidth /
+                globalThis.innerHeight;
+            if (camera.isPerspCamera && camera.aspect !== currentAspect) {
+                camera.aspect = currentAspect;
+            }
+
             if (camera.isPerspCamera) camera.updateProjectionMatrix();
             camera.updateMatrixWorld();
 
