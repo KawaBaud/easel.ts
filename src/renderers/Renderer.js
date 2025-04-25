@@ -68,11 +68,7 @@ export function createRenderer(options = {}) {
                 if (callback) callback(width, height);
             };
 
-            let resizeTimeout;
-            globalThis.addEventListener("resize", () => {
-                if (resizeTimeout) globalThis.clearTimeout(resizeTimeout);
-                resizeTimeout = globalThis.setTimeout(resizeHandler, 100);
-            });
+            globalThis.addEventListener("resize", resizeHandler);
         },
     };
 

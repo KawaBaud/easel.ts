@@ -90,7 +90,6 @@ export function createPerspCamera(
                 _camera.near,
                 _camera.far,
             );
-
             return _camera;
         },
     });

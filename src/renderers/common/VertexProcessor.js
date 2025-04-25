@@ -1,3 +1,4 @@
+import { MathsUtils } from "../../maths/MathsUtils.js";
 import { createVector3 } from "../../maths/Vector3.js";
 
 /**
@@ -124,8 +125,8 @@ export function createVertexProcessor() {
                 screenY = halfHeight - (screenY * halfHeight);
 
                 result[i] = {
-                    x: screenX | 0,
-                    y: screenY | 0,
+                    x: MathsUtils.fastTrunc(screenX),
+                    y: MathsUtils.fastTrunc(screenY),
                     z: _tempVector.z,
                 };
             }
@@ -156,22 +157,19 @@ export function createVertexProcessor() {
 
             _tempVector.copy(vertex);
             _tempVector.applyMatrix4(camera.matrixWorldInverse);
-
             if (_tempVector.z > -0.1) return null;
 
-            const halfWidth = width * 0.5;
-            const halfHeight = height * 0.5;
+            _tempVector.applyMatrix4(camera.projectionMatrix);
+            if (_tempVector.w !== 0) {
+                _tempVector.x /= _tempVector.w;
+                _tempVector.y /= _tempVector.w;
+                _tempVector.z /= _tempVector.w;
+            }
 
-            const scale = 1.0 / -_tempVector.z;
-
-            let screenX = _tempVector.x * scale;
-            let screenY = _tempVector.y * scale;
-
-            screenX = (screenX * halfWidth) + halfWidth;
-            screenY = halfHeight - (screenY * halfHeight);
-
-            const x = screenX | 0;
-            const y = screenY | 0;
+            const screenX = (_tempVector.x * 0.5 + 0.5) * width;
+            const screenY = (0.5 - _tempVector.y * 0.5) * height;
+            const x = MathsUtils.fastTrunc(screenX);
+            const y = MathsUtils.fastTrunc(screenY);
 
             return { x, y, z: _tempVector.z };
         },

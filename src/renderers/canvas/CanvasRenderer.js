@@ -142,7 +142,6 @@ export function createCanvasRenderer(options = {}) {
         setSize(width, height, updateStyle = true) {
             _canvas.width = width;
             _canvas.height = height;
-
             if (updateStyle) {
                 _canvas.style.width = width + "px";
                 _canvas.style.height = height + "px";

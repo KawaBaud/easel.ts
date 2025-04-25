@@ -441,39 +441,36 @@ export function createMatrix4(elements = new Float32Array(16)) {
         },
 
         /**
-         * @param {number} left
-         * @param {number} right
-         * @param {number} top
-         * @param {number} bottom
+         * @param {number} fov
+         * @param {number} aspect
          * @param {number} near
          * @param {number} far
          * @returns {Matrix4}
          */
-        makePerspective(left, right, top, bottom, near, far) {
-            const x = (2 * near) / (right - left);
-            const y = (2 * near) / (top - bottom);
+        makePerspective(fov, aspect, near, far) {
+            const tanHalfFov = Math.tan(fov * 0.5);
 
-            const a = (right + left) / (right - left);
-            const b = (top + bottom) / (top - bottom);
+            const x = 1.0 / (aspect * tanHalfFov);
+            const y = 1.0 / tanHalfFov;
             const c = -(far + near) / (far - near);
-            const d = -(2 * far * near) / (far - near);
+            const d = -(2.0 * far * near) / (far - near);
 
             return _m.set(
                 x,
                 0,
-                a,
+                0,
                 0,
                 0,
                 y,
-                b,
+                0,
                 0,
                 0,
                 0,
                 c,
-                d,
-                0,
-                0,
                 -1,
+                0,
+                0,
+                d,
                 0,
             );
         },
