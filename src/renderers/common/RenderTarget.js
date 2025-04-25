@@ -1,4 +1,3 @@
-import { MIN_LOGICAL_HEIGHT, MIN_LOGICAL_WIDTH } from "../../constants.js";
 import { createVector4 } from "../../maths/Vector4.js";
 
 /**
@@ -17,8 +16,8 @@ import { createVector4 } from "../../maths/Vector4.js";
  * @returns {RenderTarget}
  */
 export function createRenderTarget(options = {}) {
-    const _width = options.width ?? MIN_LOGICAL_WIDTH;
-    const _height = options.height ?? MIN_LOGICAL_HEIGHT;
+    const _width = options.width ?? globalThis.innerWidth;
+    const _height = options.height ?? globalThis.innerHeight;
 
     const _viewport = createVector4(0, 0, _width, _height);
     const _scissor = createVector4(0, 0, _width, _height);

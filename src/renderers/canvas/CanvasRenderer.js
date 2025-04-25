@@ -1,4 +1,3 @@
-import { MIN_LOGICAL_HEIGHT, MIN_LOGICAL_WIDTH } from "../../constants.js";
 import { createVector4 } from "../../maths/Vector4.js";
 import { createRenderer } from "../Renderer.js";
 import { createRenderPipeline } from "../common/RenderPipeline.js";
@@ -26,8 +25,8 @@ export function createCanvasRenderer(options = {}) {
 
     const _canvas = CanvasUtils.createCanvasElement();
     const _bufferCanvas = globalThis.document.createElement("canvas");
-    _bufferCanvas.width = MIN_LOGICAL_WIDTH;
-    _bufferCanvas.height = MIN_LOGICAL_HEIGHT;
+    _bufferCanvas.width = globalThis.innerWidth;
+    _bufferCanvas.height = globalThis.innerHeight;
 
     const _rasteriser = createCanvasRasteriser(_bufferCanvas);
     const _renderPipeline = createRenderPipeline(options);
@@ -149,13 +148,13 @@ export function createCanvasRenderer(options = {}) {
                 _canvas.style.height = height + "px";
             }
 
-            _renderer.width = MIN_LOGICAL_WIDTH;
-            _renderer.height = MIN_LOGICAL_HEIGHT;
+            _bufferCanvas.width = width;
+            _bufferCanvas.height = height;
 
-            _renderPipeline.renderTarget.setSize(
-                MIN_LOGICAL_WIDTH,
-                MIN_LOGICAL_HEIGHT,
-            );
+            _renderer.width = width;
+            _renderer.height = height;
+
+            _renderPipeline.renderTarget.setSize(width, height);
 
             return _canvasRenderer;
         },
