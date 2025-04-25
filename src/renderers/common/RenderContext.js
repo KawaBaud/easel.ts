@@ -13,7 +13,14 @@
  */
 export function createRenderContext(scene, camera) {
     const _context = {
+        /**
+         * @type {Camera}
+         */
         camera,
+
+        /**
+         * @type {Scene}
+         */
         scene,
 
         /**
