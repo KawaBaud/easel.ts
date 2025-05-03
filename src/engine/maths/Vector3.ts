@@ -17,6 +17,26 @@ export class Vector3
 		Copyable<Vector3>,
 		Equatable<Vector3>,
 		Serializable {
+	static add(a: Vector3, b: Vector3): Vector3 {
+		return a.clone().add(b);
+	}
+
+	static cross(a: Vector3, b: Vector3): Vector3 {
+		return a.clone().cross(b);
+	}
+
+	static div(a: Vector3, b: Vector3): Vector3 {
+		return a.clone().div(b);
+	}
+
+	static mul(a: Vector3, b: Vector3): Vector3 {
+		return a.clone().mul(b);
+	}
+
+	static sub(a: Vector3, b: Vector3): Vector3 {
+		return a.clone().sub(b);
+	}
+
 	readonly isVector3 = true;
 
 	get length(): number {
@@ -29,7 +49,7 @@ export class Vector3
 	}
 
 	get unitized(): Vector3 {
-		return this.length === 0 ? this : this.divScalar(this.length);
+		return this.clone().unitize();
 	}
 
 	constructor(public x = 0, public y = 0, public z = 0) {}
@@ -319,6 +339,10 @@ export class Vector3
 		array[offset + 1] = this.y;
 		array[offset + 2] = this.z;
 		return array;
+	}
+
+	unitize(): this {
+		return this.divScalar(this.length || 1);
 	}
 
 	*[Symbol.iterator](): IterableIterator<number> {
