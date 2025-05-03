@@ -5,11 +5,11 @@ import type {
 	Serializable,
 } from "../types/interfaces.ts";
 import { get } from "../utils.ts";
+import type { Euler } from "./Euler.ts";
 import { MathUtils } from "./MathUtils.ts";
 import type { Matrix4 } from "./Matrix4.ts";
 import { Quaternion } from "./Quaternion.ts";
 
-type Euler = object;
 type Camera = object;
 
 export class Vector3
@@ -65,14 +65,13 @@ export class Vector3
 		const denom = Math.sqrt(this.lengthSq * v.lengthSq);
 		if (denom === 0) return MathUtils.TAU;
 
-		const t = this.dot(v) / denom;
-		return Math.acos(MathUtils.clamp(t, -1, 1));
+		const theta = this.dot(v) / denom;
+		return Math.acos(MathUtils.clamp(theta, -1, 1));
 	}
 
-	applyEuler(_euler: Euler): this {
-		// const q = new Quaternion().setFromEuler(euler);
-		// return this.applyQuaternion(q);
-		return this;
+	applyEuler(euler: Euler): this {
+		const q = new Quaternion().setFromEuler(euler);
+		return this.applyQuaternion(q);
 	}
 
 	applyMatrix4(m: Matrix4): this {
