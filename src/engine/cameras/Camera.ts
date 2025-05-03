@@ -1,7 +1,7 @@
 import { Matrix4 } from "../maths/Matrix4.ts";
-import { Object2D } from "../objects/Object2D.ts";
+import { Object3D } from "../objects/Object3D.ts";
 
-export class Camera extends Object2D {
+export class Camera extends Object3D {
 	readonly isCamera = true;
 
 	projectionMatrix: Matrix4 = new Matrix4();
