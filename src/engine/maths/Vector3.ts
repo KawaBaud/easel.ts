@@ -6,11 +6,10 @@ import type {
 } from "../types/interfaces.ts";
 import { get } from "../utils.ts";
 import { MathUtils } from "./MathUtils.ts";
+import type { Matrix4 } from "./Matrix4.ts";
+import { Quaternion } from "./Quaternion.ts";
 
-// Forward declarations - will be implemented later
 type Euler = object;
-type Matrix4 = object;
-type Quaternion = object;
 type Camera = object;
 
 export class Vector3
@@ -66,43 +65,48 @@ export class Vector3
 		const denom = Math.sqrt(this.lengthSq * v.lengthSq);
 		if (denom === 0) return MathUtils.TAU;
 
-		const theta = this.dot(v) / denom;
-		return Math.acos(MathUtils.clamp(theta, -1, 1));
+		const t = this.dot(v) / denom;
+		return Math.acos(MathUtils.clamp(t, -1, 1));
 	}
 
 	applyEuler(_euler: Euler): this {
-		// This will be implemented when Quaternion is available
 		// const q = new Quaternion().setFromEuler(euler);
 		// return this.applyQuaternion(q);
 		return this;
 	}
 
-	applyMatrix4(_m: Matrix4): this {
-		// This will be implemented when Matrix4 is available
-		// const me = m.elements;
-		// const w = (me[3] * this.x) + (me[7] * this.y) + (me[11] * this.z) + me[15];
-		// const iw = w !== 0 ? 1 / w : 1;
-		// return this.set(
-		//     ((me[0] * this.x) + (me[4] * this.y) + (me[8] * this.z) + me[12]) * iw,
-		//     ((me[1] * this.x) + (me[5] * this.y) + (me[9] * this.z) + me[13]) * iw,
-		//     ((me[2] * this.x) + (me[6] * this.y) + (me[10] * this.z) + me[14]) * iw
-		// );
-		return this;
+	applyMatrix4(m: Matrix4): this {
+		const { x, y, z } = this;
+		const me = m.elements;
+
+		const w = (get(me, 3) * x) + (get(me, 7) * y) +
+			(get(me, 11) * z) + get(me, 15);
+		const iw = w !== 0 ? 1 / w : 1;
+
+		return this.set(
+			((get(me, 0) * x) + (get(me, 4) * y) + (get(me, 8) * z) +
+				get(me, 12)) * iw,
+			((get(me, 1) * x) + (get(me, 5) * y) + (get(me, 9) * z) +
+				get(me, 13)) * iw,
+			((get(me, 2) * x) + (get(me, 6) * y) + (get(me, 10) * z) +
+				get(me, 14)) * iw,
+		);
 	}
 
-	applyQuaternion(_q: Quaternion): this {
-		// This will be implemented when Quaternion is available
-		// const qx = q.x, qy = q.y, qz = q.z, qw = q.w;
-		// const ix = (qw * this.x) + (qy * this.z) - (qz * this.y);
-		// const iy = (qw * this.y) + (qz * this.x) - (qx * this.z);
-		// const iz = (qw * this.z) + (qx * this.y) - (qy * this.x);
-		// const iw = (-qx * this.x) - (qy * this.y) - (qz * this.z);
-		// return this.set(
-		//     (ix * qw) + (iw * -qx) + (iy * -qz) - (iz * -qy),
-		//     (iy * qw) + (iw * -qy) + (iz * -qx) - (ix * -qz),
-		//     (iz * qw) + (iw * -qz) + (ix * -qy) - (iy * -qx)
-		// );
-		return this;
+	applyQuaternion(q: Quaternion): this {
+		const { x, y, z } = this;
+		const { x: qx, y: qy, z: qz, w: qw } = q;
+
+		const ix = (q.w * x) + (q.y * z) - (q.z * y);
+		const iy = (qw * y) + (qz * x) - (qx * z);
+		const iz = (qw * z) + (qx * y) - (qy * x);
+		const iw = (-qx * x) - (qy * y) - (qz * z);
+
+		return this.set(
+			(ix * qw) + (iw * -qx) + (iy * -qz) - (iz * -qy),
+			(iy * qw) + (iw * -qy) + (iz * -qx) - (ix * -qz),
+			(iz * qw) + (iw * -qz) + (ix * -qy) - (iy * -qx),
+		);
 	}
 
 	ceil(): this {
@@ -265,7 +269,6 @@ export class Vector3
 	}
 
 	project(_camera: Camera): this {
-		// This will be implemented when Camera is available
 		// return this
 		//     .applyMatrix4(camera.matrixWorldInverse)
 		//     .applyMatrix4(camera.projectionMatrix);
