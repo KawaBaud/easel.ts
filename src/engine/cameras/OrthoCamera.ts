@@ -64,15 +64,21 @@ export class OrthoCamera extends Camera {
 	}
 
 	override updateProjectionMatrix(): void {
-		const height = (this.top - this.bottom) / this.zoom;
-		const width = (this.right - this.left) / this.zoom;
+		const dx = (this.right - this.left) / (2 * this.zoom);
+		const dy = (this.top - this.bottom) / (2 * this.zoom);
+		const cx = (this.right + this.left) / 2;
+		const cy = (this.top + this.bottom) / 2;
 
-		const size = height / 2;
-		const aspect = width / height;
+		const left = cx - dx;
+		const right = cx + dx;
+		const top = cy + dy;
+		const bottom = cy - dy;
 
 		this.projectionMatrix.makeOrthographic(
-			size,
-			aspect,
+			left,
+			right,
+			top,
+			bottom,
 			this.near,
 			this.far,
 		);
