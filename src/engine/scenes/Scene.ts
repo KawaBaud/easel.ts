@@ -1,9 +1,9 @@
-import { Object2D } from "../objects/Object2D.ts";
+import { Object3D } from "../objects/Object3D.ts";
 
-export class Scene extends Object2D {
+export class Scene extends Object3D {
 	readonly isScene = true;
 
-	background: string | null = null;
+	background: string | number | null = null;
 
 	constructor() {
 		super();
