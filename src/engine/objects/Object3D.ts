@@ -89,7 +89,7 @@ export class Object3D implements Cloneable<Object3D>, Copyable<Object3D> {
 	lookAt(target: Vector3): this {
 		const position = this.position;
 		const direction = new Vector3().subVectors(target, position);
-		direction.divScalar(direction.length || 1);
+		direction.unitize();
 		if (direction.lengthSq === 0) return this;
 
 		const m = new Matrix4();
