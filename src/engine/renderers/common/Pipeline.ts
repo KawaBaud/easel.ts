@@ -3,25 +3,28 @@ import { Vector3 } from "../../maths/Vector3.ts";
 import type { Mesh } from "../../objects/Mesh.ts";
 import type { Object3D } from "../../objects/Object3D.ts";
 import type { Scene } from "../../scenes/Scene.ts";
+import type { RenderObject } from "./RenderObject.ts";
 
-export interface ProjectedVertex {
-	x: number;
-	y: number;
-	z: number;
-}
-
-export interface RenderObject {
-	object: Mesh;
-	z: number;
-}
-
-export abstract class Pipeline {
+export class Pipeline {
 	readonly isPipeline = true;
 
 	width = 640;
 	height = 480;
 
-	abstract projectVector(vector: Vector3, camera: Camera): ProjectedVertex;
+	projectVector(
+		vector: Vector3,
+		camera: Camera,
+	): { x: number; y: number; z: number } {
+		const v = new Vector3().copy(vector);
+		v.applyMatrix4(camera.matrixWorldInverse);
+		v.applyMatrix4(camera.projectionMatrix);
+
+		return {
+			x: (v.x + 1) * this.width / 2,
+			y: (-v.y + 1) * this.height / 2,
+			z: v.z,
+		};
+	}
 
 	gatherObjects(scene: Scene, camera: Camera): RenderObject[] {
 		const objects: RenderObject[] = [];
