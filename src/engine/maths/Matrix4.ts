@@ -2,7 +2,7 @@ import type { Cloneable, Copyable, Serializable } from "../types/interfaces.ts";
 import { get, set } from "../utils.ts";
 import { MathUtils } from "./MathUtils.ts";
 import type { Quaternion } from "./Quaternion.ts";
-import type { Vector3 } from "./Vector3.ts";
+import { Vector3 } from "./Vector3.ts";
 
 export class Matrix4
 	implements Cloneable<Matrix4>, Copyable<Matrix4>, Serializable {
@@ -287,22 +287,22 @@ export class Matrix4
 	}
 
 	lookAt(eye: Vector3, target: Vector3, up: Vector3): this {
-		const z = eye.clone().sub(target);
+		const z = new Vector3().subVectors(eye, target);
 		if (z.lengthSq === 0) z.z = 1;
-		z.unitized;
 
-		const x = up.clone().cross(z);
+		z.divScalar(z.length || 1);
+
+		const x = new Vector3().crossVectors(up, z);
+
 		if (x.lengthSq === 0) {
-			Math.abs(up.z) === 1
-				? z.x += MathUtils.EPSILON
-				: z.z += MathUtils.EPSILON;
-			z.unitized;
-
-			x.copy(up).cross(z);
+			z[Math.abs(up.z) === 1 ? "x" : "z"] += MathUtils.EPSILON;
+			z.divScalar(z.length || 1);
+			x.crossVectors(up, z);
 		}
-		x.unitized;
 
-		const y = z.clone().cross(x);
+		x.divScalar(x.length || 1);
+
+		const y = new Vector3().crossVectors(z, x);
 
 		return this.set(
 			x.x,
@@ -325,20 +325,6 @@ export class Matrix4
 	}
 
 	makeOrthographic(
-		size: number,
-		aspect: number,
-		near: number,
-		far: number,
-	): this {
-		const left = -size * aspect;
-		const right = size * aspect;
-		const top = size;
-		const bottom = -size;
-
-		return this.makeOrthographicFromBounds(left, right, top, bottom, near, far);
-	}
-
-	makeOrthographicFromBounds(
 		left: number,
 		right: number,
 		top: number,
