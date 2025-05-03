@@ -92,6 +92,27 @@ export class Quaternion
 		);
 	}
 
+	div(q: Quaternion): this {
+		return this.divQuaternions(this, q);
+	}
+
+	divScalar(scalar: number): this {
+		return this.set(
+			this.x / scalar,
+			this.y / scalar,
+			this.z / scalar,
+			this.w / scalar,
+		);
+	}
+
+	divQuaternions(a: Quaternion, b: Quaternion): this {
+		return this.mulQuaternions(a, b.inverse());
+	}
+
+	inverse(): this {
+		return this.conjugate().unitize();
+	}
+
 	mul(q: Quaternion): this {
 		return this.mulQuaternions(this, q);
 	}
@@ -229,7 +250,7 @@ export class Quaternion
 				r,
 			);
 		}
-		return this.unitized;
+		return this.unitize();
 	}
 
 	slerp(qb: Quaternion, t: number): this {
@@ -278,6 +299,10 @@ export class Quaternion
 		array[offset + 2] = this.z;
 		array[offset + 3] = this.w;
 		return array;
+	}
+
+	unitize(): this {
+		return this.divScalar(this.length || 1);
 	}
 
 	*[Symbol.iterator](): IterableIterator<number> {
