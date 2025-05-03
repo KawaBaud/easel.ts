@@ -24,7 +24,7 @@ export class Vector2
 	}
 
 	get unitized(): Vector2 {
-		return this.length === 0 ? this : this.divScalar(this.length);
+		return this.clone().unitize();
 	}
 
 	constructor(public x = 0, public y = 0) {}
@@ -250,7 +250,7 @@ export class Vector2
 		return array;
 	}
 
-	unit(): this {
+	unitize(): this {
 		return this.divScalar(this.length || 1);
 	}
 
