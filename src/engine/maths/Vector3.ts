@@ -1,3 +1,4 @@
+import type { Camera } from "../cameras/Camera.ts";
 import type {
 	Cloneable,
 	Copyable,
@@ -9,8 +10,6 @@ import type { Euler } from "./Euler.ts";
 import { MathUtils } from "./MathUtils.ts";
 import type { Matrix4 } from "./Matrix4.ts";
 import { Quaternion } from "./Quaternion.ts";
-
-type Camera = object;
 
 export class Vector3
 	implements
@@ -33,11 +32,7 @@ export class Vector3
 		return this.length === 0 ? this : this.divScalar(this.length);
 	}
 
-	constructor(
-		public x: number = 0,
-		public y: number = 0,
-		public z: number = 0,
-	) {}
+	constructor(public x = 0, public y = 0, public z = 0) {}
 
 	add(v: Vector3): this {
 		this.x += v.x;
@@ -267,11 +262,10 @@ export class Vector3
 		return this.set(-this.x, -this.y, -this.z);
 	}
 
-	project(_camera: Camera): this {
-		// return this
-		//     .applyMatrix4(camera.matrixWorldInverse)
-		//     .applyMatrix4(camera.projectionMatrix);
-		return this;
+	project(camera: Camera): this {
+		return this
+			.applyMatrix4(camera.matrixWorldInverse)
+			.applyMatrix4(camera.projectionMatrix);
 	}
 
 	projectOnto(v: Vector3): this {
