@@ -132,8 +132,8 @@ export class Quaternion
 		const angle = this.angleTo(q);
 		if (angle === 0) return this;
 
-		const t = Math.min(1, step / angle);
-		return this.slerp(q, t);
+		const theta = Math.min(1, step / angle);
+		return this.slerp(q, theta);
 	}
 
 	set(x: number, y: number, z: number, w: number): this {
@@ -156,21 +156,60 @@ export class Quaternion
 		);
 	}
 
-	setFromEuler(_euler: Euler): this {
-		// const c1 = Math.cos(_euler.x / 2);
-		// const c2 = Math.cos(_euler.y / 2);
-		// const c3 = Math.cos(_euler.z / 2);
-		// const s1 = Math.sin(_euler.x / 2);
-		// const s2 = Math.sin(_euler.y / 2);
-		// const s3 = Math.sin(_euler.z / 2);
+	setFromEuler(euler: Euler): this {
+		const { x, y, z, order } = euler;
 
-		// return this.set(
-		//     (s1 * c2 * c3) + (c1 * s2 * s3),
-		//     (c1 * s2 * c3) - (s1 * c2 * s3),
-		//     (c1 * c2 * s3) + (s1 * s2 * c3),
-		//     (c1 * c2 * c3) - (s1 * s2 * s3),
-		// );
-		return this;
+		const c1 = Math.cos(x / 2);
+		const c2 = Math.cos(y / 2);
+		const c3 = Math.cos(z / 2);
+		const s1 = Math.sin(x / 2);
+		const s2 = Math.sin(y / 2);
+		const s3 = Math.sin(z / 2);
+
+		switch (order) {
+			case "XYZ":
+				return this.set(
+					(s1 * c2 * c3) + (c1 * s2 * s3),
+					(c1 * s2 * c3) - (s1 * c2 * s3),
+					(c1 * c2 * s3) + (s1 * s2 * c3),
+					(c1 * c2 * c3) - (s1 * s2 * s3),
+				);
+			case "YXZ":
+				return this.set(
+					(s1 * c2 * c3) + (c1 * s2 * s3),
+					(c1 * s2 * c3) - (s1 * c2 * s3),
+					(c1 * c2 * s3) - (s1 * s2 * c3),
+					(c1 * c2 * c3) + (s1 * s2 * s3),
+				);
+			case "ZXY":
+				return this.set(
+					(s1 * c2 * c3) - (c1 * s2 * s3),
+					(c1 * s2 * c3) + (s1 * c2 * s3),
+					(c1 * c2 * s3) + (s1 * s2 * c3),
+					(c1 * c2 * c3) - (s1 * s2 * s3),
+				);
+			case "ZYX":
+				return this.set(
+					(s1 * c2 * c3) - (c1 * s2 * s3),
+					(c1 * s2 * c3) + (s1 * c2 * s3),
+					(c1 * c2 * s3) - (s1 * s2 * c3),
+					(c1 * c2 * c3) + (s1 * s2 * s3),
+				);
+			case "YZX":
+				return this.set(
+					(s1 * c2 * c3) + (c1 * s2 * s3),
+					(c1 * s2 * c3) + (s1 * c2 * s3),
+					(c1 * c2 * s3) - (s1 * s2 * c3),
+					(c1 * c2 * c3) - (s1 * s2 * s3),
+				);
+			case "XZY":
+				return this.set(
+					(s1 * c2 * c3) - (c1 * s2 * s3),
+					(c1 * s2 * c3) - (s1 * c2 * s3),
+					(c1 * c2 * s3) + (s1 * s2 * c3),
+					(c1 * c2 * c3) + (s1 * s2 * s3),
+				);
+		}
 	}
 
 	setFromUnitVectors(vFrom: Vector3, vTo: Vector3): this {
