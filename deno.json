@@ -5,10 +5,8 @@
         "preview": "vite preview"
     },
     "compilerOptions": {
-        "allowJs": true,
         "allowUnreachableCode": false,
         "allowUnusedLabels": false,
-        "checkJs": true,
         "exactOptionalPropertyTypes": true,
         "noFallthroughCasesInSwitch": true,
         "noImplicitOverride": true,
