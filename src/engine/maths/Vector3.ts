@@ -25,6 +25,14 @@ export class Vector3
 		return a.clone().cross(b);
 	}
 
+	static distance(a: Vector3, b: Vector3): number {
+		return a.distanceTo(b);
+	}
+
+	static distanceSq(a: Vector3, b: Vector3): number {
+		return a.distanceSqTo(b);
+	}
+
 	static div(a: Vector3, b: Vector3): Vector3 {
 		return a.clone().div(b);
 	}
@@ -39,6 +47,8 @@ export class Vector3
 
 	readonly isVector3 = true;
 
+	constructor(public x = 0, public y = 0, public z = 0) {}
+
 	get length(): number {
 		return Math.sqrt(this.lengthSq);
 	}
@@ -51,8 +61,6 @@ export class Vector3
 	get unitized(): Vector3 {
 		return this.clone().unitize();
 	}
-
-	constructor(public x = 0, public y = 0, public z = 0) {}
 
 	add(v: Vector3): this {
 		this.x += v.x;
