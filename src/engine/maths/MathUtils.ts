@@ -107,6 +107,10 @@ export class MathUtils {
 			: -((-value) & ~(MathUtils.Q_ONE - 1));
 	}
 
+	static safeAsin(value: number): number {
+		return Math.asin(MathUtils.clamp(value, -1, 1));
+	}
+
 	static smoothstep(value: number): number {
 		const t = MathUtils.clamp(value, 0, 1);
 		return t * t * (3 - 2 * t);
