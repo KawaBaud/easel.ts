@@ -1,3 +1,5 @@
+import { get } from "../utils.ts";
+
 export class MathUtils {
 	static readonly EPSILON = 1e-4;
 
@@ -76,7 +78,7 @@ export class MathUtils {
 	static qcos(angle: number): number {
 		const index = (((angle * MathUtils.#TABLE_SCALE) | 0) +
 			MathUtils.#QUARTER_TABLE_SIZE) & MathUtils.#TABLE_MASK;
-		return MathUtils.#Q_SIN_TABLE[index] ?? 0;
+		return get(MathUtils.#Q_SIN_TABLE, index);
 	}
 
 	static qdiv(a: number, b: number): number {
@@ -96,7 +98,7 @@ export class MathUtils {
 	static qsin(angle: number): number {
 		const index = ((angle * MathUtils.#TABLE_SCALE) | 0) &
 			MathUtils.#TABLE_MASK;
-		return MathUtils.#Q_SIN_TABLE[index] ?? 0;
+		return get(MathUtils.#Q_SIN_TABLE, index);
 	}
 
 	static qtrunc(value: number): number {
