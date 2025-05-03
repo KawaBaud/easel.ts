@@ -6,7 +6,7 @@ import { RendererUtils } from "../RendererUtils.ts";
 
 export class CanvasUtils {
 	static renderMesh(
-		context: CanvasRenderingContext2D,
+		ctx: CanvasRenderingContext2D,
 		mesh: Mesh,
 		camera: Camera,
 		width: number,
@@ -22,8 +22,8 @@ export class CanvasUtils {
 		});
 
 		const colorHex = material.color.toString(16).padStart(6, "0");
-		context.fillStyle = `#${colorHex}`;
-		context.strokeStyle = `#${colorHex}`;
+		ctx.fillStyle = `#${colorHex}`;
+		ctx.strokeStyle = `#${colorHex}`;
 
 		for (let i = 0; i < shape.indices.length; i += 3) {
 			const idx1 = get(shape.indices, i);
@@ -39,16 +39,16 @@ export class CanvasUtils {
 			const area = (b.x - a.x) * (c.y - a.y) - (b.y - a.y) * (c.x - a.x);
 			if (area <= 0) continue;
 
-			context.beginPath();
-			context.moveTo(a.x, a.y);
-			context.lineTo(b.x, b.y);
-			context.lineTo(c.x, c.y);
-			context.closePath();
+			ctx.beginPath();
+			ctx.moveTo(a.x, a.y);
+			ctx.lineTo(b.x, b.y);
+			ctx.lineTo(c.x, c.y);
+			ctx.closePath();
 
-			context.fill();
+			ctx.fill();
 			if (material.wireframe) {
-				context.strokeStyle = "#000000";
-				context.stroke();
+				ctx.strokeStyle = "#000000";
+				ctx.stroke();
 			}
 		}
 
@@ -61,10 +61,10 @@ export class CanvasUtils {
 				height,
 			);
 
-			context.fillStyle = "white";
-			context.font = "12px Arial";
-			context.textAlign = "center";
-			context.fillText(
+			ctx.fillStyle = "white";
+			ctx.font = "12px Arial";
+			ctx.textAlign = "center";
+			ctx.fillText(
 				mesh.name,
 				projected.x,
 				projected.y + 20,
@@ -73,7 +73,7 @@ export class CanvasUtils {
 	}
 
 	static setBackgroundColor(
-		context: CanvasRenderingContext2D,
+		ctx: CanvasRenderingContext2D,
 		width: number,
 		height: number,
 		color: string | number | null,
@@ -81,17 +81,17 @@ export class CanvasUtils {
 		if (!color) return;
 
 		if (typeof color === "string") {
-			context.fillStyle = color;
+			ctx.fillStyle = color;
 		} else if (typeof color === "number") {
-			context.fillStyle = `#${color.toString(16).padStart(6, "0")}`;
+			ctx.fillStyle = `#${color.toString(16).padStart(6, "0")}`;
 		}
 
-		context.fillRect(0, 0, width, height);
+		ctx.fillRect(0, 0, width, height);
 	}
 
 	static setCanvasSize(
 		canvas: HTMLCanvasElement,
-		context: CanvasRenderingContext2D,
+		ctx: CanvasRenderingContext2D,
 		width: number,
 		height: number,
 		pixelRatio: number,
@@ -102,7 +102,7 @@ export class CanvasUtils {
 		canvas.style.width = `${width}px`;
 		canvas.style.height = `${height}px`;
 
-		context.setTransform(
+		ctx.setTransform(
 			pixelRatio,
 			0,
 			0,
