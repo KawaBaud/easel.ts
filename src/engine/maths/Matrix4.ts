@@ -8,41 +8,6 @@ export class Matrix4
 	implements Cloneable<Matrix4>, Copyable<Matrix4>, Serializable {
 	readonly isMatrix4 = true;
 
-	get determinant(): number {
-		const te = this.elements;
-
-		const n11 = get(te, 0);
-		const n12 = get(te, 4);
-		const n13 = get(te, 8);
-		const n14 = get(te, 12);
-		const n21 = get(te, 1);
-		const n22 = get(te, 5);
-		const n23 = get(te, 9);
-		const n24 = get(te, 13);
-		const n31 = get(te, 2);
-		const n32 = get(te, 6);
-		const n33 = get(te, 10);
-		const n34 = get(te, 14);
-		const n41 = get(te, 3);
-		const n42 = get(te, 7);
-		const n43 = get(te, 11);
-		const n44 = get(te, 15);
-
-		const t1 = (n33 * n44) - (n34 * n43);
-		const t2 = (n32 * n44) - (n34 * n42);
-		const t3 = (n32 * n43) - (n33 * n42);
-		const t4 = (n31 * n44) - (n34 * n41);
-		const t5 = (n31 * n43) - (n33 * n41);
-		const t6 = (n31 * n42) - (n32 * n41);
-
-		const det11 = (n22 * t1) - (n23 * t2) + (n24 * t3);
-		const det12 = (n21 * t1) - (n23 * t4) + (n24 * t5);
-		const det13 = (n21 * t2) - (n22 * t4) + (n24 * t6);
-		const det14 = (n21 * t3) - (n22 * t5) + (n23 * t6);
-
-		return (n11 * det11) - (n12 * det12) + (n13 * det13) - (n14 * det14);
-	}
-
 	constructor(public elements = new Float32Array(16)) {
 		this.identity();
 	}
@@ -116,7 +81,7 @@ export class Matrix4
 		const sy = Math.hypot(get(te, 4), get(te, 5), get(te, 6));
 		const sz = Math.hypot(get(te, 8), get(te, 9), get(te, 10));
 
-		const det = this.determinant;
+		const det = this.determinant();
 		if (det < 0) sx = -sx;
 
 		position.x = get(te, 12);
@@ -169,6 +134,41 @@ export class Matrix4
 		scale.z = sz;
 
 		return this;
+	}
+
+	determinant(): number {
+		const te = this.elements;
+
+		const n11 = get(te, 0);
+		const n12 = get(te, 4);
+		const n13 = get(te, 8);
+		const n14 = get(te, 12);
+		const n21 = get(te, 1);
+		const n22 = get(te, 5);
+		const n23 = get(te, 9);
+		const n24 = get(te, 13);
+		const n31 = get(te, 2);
+		const n32 = get(te, 6);
+		const n33 = get(te, 10);
+		const n34 = get(te, 14);
+		const n41 = get(te, 3);
+		const n42 = get(te, 7);
+		const n43 = get(te, 11);
+		const n44 = get(te, 15);
+
+		const t1 = (n33 * n44) - (n34 * n43);
+		const t2 = (n32 * n44) - (n34 * n42);
+		const t3 = (n32 * n43) - (n33 * n42);
+		const t4 = (n31 * n44) - (n34 * n41);
+		const t5 = (n31 * n43) - (n33 * n41);
+		const t6 = (n31 * n42) - (n32 * n41);
+
+		const det11 = (n22 * t1) - (n23 * t2) + (n24 * t3);
+		const det12 = (n21 * t1) - (n23 * t4) + (n24 * t5);
+		const det13 = (n21 * t2) - (n22 * t4) + (n24 * t6);
+		const det14 = (n21 * t3) - (n22 * t5) + (n23 * t6);
+
+		return (n11 * det11) - (n12 * det12) + (n13 * det13) - (n14 * det14);
 	}
 
 	fromArray(array: number[], offset = 0): this {
@@ -297,7 +297,6 @@ export class Matrix4
 				? z.x += MathUtils.EPSILON
 				: z.z += MathUtils.EPSILON;
 			z.unitize();
-
 			x.copy(up).cross(z);
 		}
 		x.unitize();
@@ -308,15 +307,15 @@ export class Matrix4
 			x.x,
 			y.x,
 			z.x,
-			0,
+			-x.dot(eye),
 			x.y,
 			y.y,
 			z.y,
-			0,
+			-y.dot(eye),
 			x.z,
 			y.z,
 			z.z,
-			0,
+			-z.dot(eye),
 			0,
 			0,
 			0,
