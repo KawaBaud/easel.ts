@@ -287,22 +287,22 @@ export class Matrix4
 	}
 
 	lookAt(eye: Vector3, target: Vector3, up: Vector3): this {
-		const z = new Vector3().subVectors(eye, target);
+		const z = Vector3.sub(eye, target);
 		if (z.lengthSq === 0) z.z = 1;
-		z.unitized;
+		z.unitize();
 
-		const x = up.clone().cross(z);
+		const x = Vector3.cross(up, z);
 		if (x.lengthSq === 0) {
 			Math.abs(up.z) === 1
 				? z.x += MathUtils.EPSILON
 				: z.z += MathUtils.EPSILON;
-			z.unitized;
+			z.unitize();
 
 			x.copy(up).cross(z);
 		}
-		x.unitized;
+		x.unitize();
 
-		const y = z.clone().cross(x);
+		const y = Vector3.cross(z, x);
 
 		return this.set(
 			x.x,
