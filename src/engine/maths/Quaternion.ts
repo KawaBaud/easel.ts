@@ -17,6 +17,26 @@ export class Quaternion
 		Serializable {
 	readonly isQuaternion = true;
 
+	constructor(
+		public x: number = 0,
+		public y: number = 0,
+		public z: number = 0,
+		public w: number = 1,
+	) {}
+
+	get length(): number {
+		return Math.sqrt(this.lengthSq);
+	}
+
+	get lengthSq(): number {
+		return (
+			(this.x * this.x) +
+			(this.y * this.y) +
+			(this.z * this.z) +
+			(this.w * this.w)
+		);
+	}
+
 	get unitized(): this {
 		let length = this.length;
 		if (length === 0) return this.identity();
@@ -29,13 +49,6 @@ export class Quaternion
 			this.w * length,
 		);
 	}
-
-	constructor(
-		public x: number = 0,
-		public y: number = 0,
-		public z: number = 0,
-		public w: number = 1,
-	) {}
 
 	angleTo(q: Quaternion): number {
 		return 2 * Math.acos(Math.abs(MathUtils.clamp(this.dot(q), -1, 1)));
@@ -77,19 +90,6 @@ export class Quaternion
 
 	identity(): this {
 		return this.set(0, 0, 0, 1);
-	}
-
-	get length(): number {
-		return Math.sqrt(this.lengthSq);
-	}
-
-	get lengthSq(): number {
-		return (
-			(this.x * this.x) +
-			(this.y * this.y) +
-			(this.z * this.z) +
-			(this.w * this.w)
-		);
 	}
 
 	div(q: Quaternion): this {
