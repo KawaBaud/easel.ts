@@ -1,26 +1,25 @@
+import { Euler } from "../maths/Euler.ts";
 import { Matrix4 } from "../maths/Matrix4.ts";
 import { Quaternion } from "../maths/Quaternion.ts";
-import { Vector2 } from "../maths/Vector2.ts";
 import { Vector3 } from "../maths/Vector3.ts";
-import type { Cloneable, Copyable, Serializable } from "../types/interfaces.ts";
-import { get } from "../utils.ts";
+import type { Cloneable, Copyable } from "../types/interfaces.ts";
 
-export class Object2D
-	implements Cloneable<Object2D>, Copyable<Object2D>, Serializable {
-	readonly isObject2D = true;
+export class Object3D implements Cloneable<Object3D>, Copyable<Object3D> {
+	readonly isObject3D = true;
 
 	id: string = crypto.randomUUID();
 	name = "";
 
-	position: Vector2 = new Vector2();
-	rotation = 0;
-	scale: Vector2 = new Vector2(1, 1);
+	position: Vector3 = new Vector3();
+	rotation: Euler = new Euler();
+	quaternion: Quaternion = new Quaternion();
+	scale: Vector3 = new Vector3(1, 1, 1);
 
 	matrix: Matrix4 = new Matrix4();
 	worldMatrix: Matrix4 = new Matrix4();
 
-	parent: Object2D | null = null;
-	children: Object2D[] = [];
+	parent: Object3D | null = null;
+	children: Object3D[] = [];
 
 	visible = true;
 	userData: Record<string, unknown> = {};
@@ -29,7 +28,7 @@ export class Object2D
 		this.updateMatrix();
 	}
 
-	add(object: Object2D): this {
+	add(object: Object3D): this {
 		if (object === this) return this;
 
 		object.parent?.remove(object);
@@ -39,16 +38,17 @@ export class Object2D
 		return this;
 	}
 
-	clone(): Object2D {
-		return new Object2D().copy(this);
+	clone(): Object3D {
+		return new Object3D().copy(this);
 	}
 
-	copy(source: Object2D): this {
+	copy(source: Object3D): this {
 		this.id = crypto.randomUUID();
 		this.name = source.name;
 
 		this.position.copy(source.position);
-		this.rotation = source.rotation;
+		this.quaternion.copy(source.quaternion);
+		this.rotation.copy(source.rotation);
 		this.scale.copy(source.scale);
 
 		this.matrix.copy(source.matrix);
@@ -64,14 +64,7 @@ export class Object2D
 		return this;
 	}
 
-	fromArray(array: number[], offset = 0): this {
-		this.position.fromArray(array, offset);
-		this.rotation = get(array, offset + 2);
-		this.scale.fromArray(array, offset + 3);
-		return this;
-	}
-
-	getObjectById(id: string): Object2D | undefined {
+	getObjectById(id: string): Object3D | undefined {
 		if (this.id === id) return this;
 
 		for (const child of this.children) {
@@ -82,7 +75,7 @@ export class Object2D
 		return undefined;
 	}
 
-	getObjectByName(name: string): Object2D | undefined {
+	getObjectByName(name: string): Object3D | undefined {
 		if (this.name === name) return this;
 
 		for (const child of this.children) {
@@ -93,7 +86,27 @@ export class Object2D
 		return undefined;
 	}
 
-	remove(object: Object2D): this {
+	lookAt(target: Vector3): this {
+		const position = this.position;
+		const direction = new Vector3().subVectors(target, position);
+		direction.divScalar(direction.length || 1);
+		if (direction.lengthSq === 0) return this;
+
+		const m = new Matrix4();
+		m.lookAt(position, target, new Vector3(0, 1, 0));
+
+		const position2 = new Vector3();
+		const quaternion2 = new Quaternion();
+		const scale = new Vector3();
+		m.decompose(position2, quaternion2, scale);
+
+		this.quaternion.copy(quaternion2);
+		this.rotation.setFromQuaternion(this.quaternion);
+
+		return this;
+	}
+
+	remove(object: Object3D): this {
 		const index = this.children.indexOf(object);
 		if (index !== -1) {
 			object.parent = null;
@@ -104,28 +117,23 @@ export class Object2D
 	}
 
 	removeFromParent(): this {
-		if (this.parent) {
-			this.parent.remove(this);
-		}
-
+		if (this.parent) this.parent.remove(this);
 		return this;
-	}
-
-	toArray(array: number[] = [], offset = 0): number[] {
-		this.position.toArray(array, offset);
-		array[offset + 2] = this.rotation;
-		this.scale.toArray(array, offset + 3);
-		return array;
 	}
 
 	toJSON(): Record<string, unknown> {
 		const output: Record<string, unknown> = {
 			id: this.id,
 			name: this.name,
-			type: "Object2D",
-			position: [this.position.x, this.position.y],
-			rotation: this.rotation,
-			scale: [this.scale.x, this.scale.y],
+			type: "Object3D",
+			position: [this.position.x, this.position.y, this.position.z],
+			rotation: [
+				this.rotation.x,
+				this.rotation.y,
+				this.rotation.z,
+				this.rotation.order,
+			],
+			scale: [this.scale.x, this.scale.y, this.scale.z],
 			visible: this.visible,
 			userData: this.userData,
 		};
@@ -137,7 +145,7 @@ export class Object2D
 		};
 	}
 
-	traverse(callback: (object: Object2D) => void): void {
+	traverse(callback: (object: Object3D) => void): void {
 		callback(this);
 
 		for (const child of this.children) {
@@ -145,7 +153,7 @@ export class Object2D
 		}
 	}
 
-	traverseVisible(callback: (object: Object2D) => void): void {
+	traverseVisible(callback: (object: Object3D) => void): void {
 		if (!this.visible) return;
 
 		callback(this);
@@ -157,9 +165,9 @@ export class Object2D
 
 	updateMatrix(): void {
 		this.matrix.compose(
-			new Vector3(this.position.x, this.position.y, 0),
-			new Quaternion().setFromAxisAngle(new Vector3(0, 0, 1), this.rotation),
-			new Vector3(this.scale.x, this.scale.y, 1),
+			this.position,
+			this.quaternion,
+			this.scale,
 		);
 	}
 
