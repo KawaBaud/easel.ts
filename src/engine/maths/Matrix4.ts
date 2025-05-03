@@ -289,20 +289,20 @@ export class Matrix4
 	lookAt(eye: Vector3, target: Vector3, up: Vector3): this {
 		const z = new Vector3().subVectors(eye, target);
 		if (z.lengthSq === 0) z.z = 1;
+		z.unitized;
 
-		z.divScalar(z.length || 1);
-
-		const x = new Vector3().crossVectors(up, z);
-
+		const x = up.clone().cross(z);
 		if (x.lengthSq === 0) {
-			z[Math.abs(up.z) === 1 ? "x" : "z"] += MathUtils.EPSILON;
-			z.divScalar(z.length || 1);
-			x.crossVectors(up, z);
+			Math.abs(up.z) === 1
+				? z.x += MathUtils.EPSILON
+				: z.z += MathUtils.EPSILON;
+			z.unitized;
+
+			x.copy(up).cross(z);
 		}
+		x.unitized;
 
-		x.divScalar(x.length || 1);
-
-		const y = new Vector3().crossVectors(z, x);
+		const y = z.clone().cross(x);
 
 		return this.set(
 			x.x,
