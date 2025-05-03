@@ -330,24 +330,35 @@ export class Matrix4
 		near: number,
 		far: number,
 	): this {
-		const l = -size * aspect;
-		const r = size * aspect;
-		const t = size;
-		const b = -size;
+		const left = -size * aspect;
+		const right = size * aspect;
+		const top = size;
+		const bottom = -size;
 
-		const lr = 1 / (l - r);
-		const tb = 1 / (t - b);
+		return this.makeOrthographicFromBounds(left, right, top, bottom, near, far);
+	}
+
+	makeOrthographicFromBounds(
+		left: number,
+		right: number,
+		top: number,
+		bottom: number,
+		near: number,
+		far: number,
+	): this {
+		const lr = 1 / (left - right);
+		const tb = 1 / (top - bottom);
 		const nf = 1 / (near - far);
 
 		return this.set(
 			-2 * lr,
 			0,
 			0,
-			(l + r) * lr,
+			(left + right) * lr,
 			0,
 			-2 * tb,
 			0,
-			(t + b) * tb,
+			(top + bottom) * tb,
 			0,
 			0,
 			2 * nf,
