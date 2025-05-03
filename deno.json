@@ -70,7 +70,6 @@
         "exclude": []
     },
     "imports": {
-        "@/": "./",
         "three": "npm:three.js@^0.77.1",
         "vite": "npm:vite@^6.3.4"
     },
