@@ -12,7 +12,37 @@ export class Vector2
 		Copyable<Vector2>,
 		Equatable<Vector2>,
 		Serializable {
+	static add(a: Vector2, b: Vector2): Vector2 {
+		return a.clone().add(b);
+	}
+
+	static cross(a: Vector2, b: Vector2): number {
+		return a.clone().cross(b);
+	}
+
+	static distance(a: Vector2, b: Vector2): number {
+		return a.distanceTo(b);
+	}
+
+	static distanceSq(a: Vector2, b: Vector2): number {
+		return a.distanceSqTo(b);
+	}
+
+	static div(a: Vector2, b: Vector2): Vector2 {
+		return a.clone().div(b);
+	}
+
+	static mul(a: Vector2, b: Vector2): Vector2 {
+		return a.clone().mul(b);
+	}
+
+	static sub(a: Vector2, b: Vector2): Vector2 {
+		return a.clone().sub(b);
+	}
+
 	readonly isVector2 = true;
+
+	constructor(public x = 0, public y = 0) {}
 
 	get length(): number {
 		return Math.sqrt(this.lengthSq);
@@ -26,8 +56,6 @@ export class Vector2
 	get unitized(): Vector2 {
 		return this.clone().unitize();
 	}
-
-	constructor(public x = 0, public y = 0) {}
 
 	add(v: Vector2): this {
 		this.x += v.x;
