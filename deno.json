@@ -1,0 +1,78 @@
+{
+    "tasks": {
+        "dev": "vite",
+        "build": "vite build",
+        "preview": "vite preview"
+    },
+    "compilerOptions": {
+        "allowJs": true,
+        "allowUnreachableCode": false,
+        "allowUnusedLabels": false,
+        "checkJs": true,
+        "exactOptionalPropertyTypes": true,
+        "noFallthroughCasesInSwitch": true,
+        "noImplicitOverride": true,
+        "noImplicitReturns": true,
+        "noPropertyAccessFromIndexSignature": true,
+        "noUncheckedIndexedAccess": true,
+        "noUnusedLocals": true,
+        "noUnusedParameters": true,
+        "lib": [
+            "dom",
+            "dom.iterable",
+            "dom.asynciterable",
+            "deno.ns"
+        ]
+    },
+    "fmt": {
+        "useTabs": true,
+        "lineWidth": 80,
+        "indentWidth": 2,
+        "semiColons": true,
+        "singleQuote": false,
+        "proseWrap": "preserve",
+        "exclude": []
+    },
+    "lock": false,
+    "lint": {
+        "rules": {
+            "tags": [
+                "recommended"
+            ],
+            "include": [
+                "ban-untagged-todo",
+                "camelcase",
+                "default-param-last",
+                "eqeqeq",
+                "explicit-function-return-type",
+                "explicit-module-boundary-types",
+                "guard-for-in",
+                "no-await-in-loop",
+                "no-const-assign",
+                "no-eval",
+                "no-external-import",
+                "no-implicit-declare-namespace-export",
+                "no-inferrable-types",
+                "no-non-null-asserted-optional-chain",
+                "no-non-null-assertion",
+                "no-self-compare",
+                "no-sparse-arrays",
+                "no-sync-fn-in-async-fn",
+                "no-throw-literal",
+                "no-top-level-await",
+                "no-undef",
+                "prefer-ascii",
+                "single-var-declarator",
+                "triple-slash-reference",
+                "verbatim-module-syntax"
+            ]
+        },
+        "exclude": []
+    },
+    "imports": {
+        "@/": "./",
+        "three": "npm:three.js@^0.77.1",
+        "vite": "npm:vite@^6.3.4"
+    },
+    "exclude": []
+}
