@@ -1,7 +1,14 @@
-export function get<T>(array: T[], i: number): T | 0 {
+export function get<T extends ArrayLike<unknown>>(
+	array: T,
+	i: number,
+): T[number] | 0 {
 	return array[i] ?? 0;
 }
 
-export function set<T>(array: T[], i: number, value: T): void {
+export function set<T extends Array<unknown>>(
+	array: T,
+	i: number,
+	value: T[number],
+): void {
 	array[i] = value;
 }
