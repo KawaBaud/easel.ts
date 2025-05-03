@@ -10,7 +10,7 @@ import { Vector3 } from "./maths/Vector3.ts";
 import { Mesh } from "./objects/Mesh.ts";
 import { Object3D } from "./objects/Object3D.ts";
 import { CanvasRenderer } from "./renderers/canvas/CanvasRenderer.ts";
-import { Pipeline } from "./renderers/Pipeline.ts";
+import { Pipeline } from "./renderers/common/Pipeline.ts";
 import { Renderer } from "./renderers/Renderer.ts";
 import { Scene } from "./scenes/Scene.ts";
 import { CubeShape } from "./shapes/CubeShape.ts";

@@ -1,8 +1,8 @@
-import type { Camera } from "../cameras/Camera.ts";
-import { Vector3 } from "../maths/Vector3.ts";
-import type { Mesh } from "../objects/Mesh.ts";
-import type { Object3D } from "../objects/Object3D.ts";
-import type { Scene } from "../scenes/Scene.ts";
+import type { Camera } from "../../cameras/Camera.ts";
+import { Vector3 } from "../../maths/Vector3.ts";
+import type { Mesh } from "../../objects/Mesh.ts";
+import type { Object3D } from "../../objects/Object3D.ts";
+import type { Scene } from "../../scenes/Scene.ts";
 
 export interface ProjectedVertex {
 	x: number;

@@ -1,7 +1,7 @@
 import type { Camera } from "../../cameras/Camera.ts";
 import { Vector3 } from "../../maths/Vector3.ts";
-import type { ProjectedVertex } from "../Pipeline.ts";
-import { Pipeline } from "../Pipeline.ts";
+import type { ProjectedVertex } from "../common/Pipeline.ts";
+import { Pipeline } from "../common/Pipeline.ts";
 
 export class CanvasPipeline extends Pipeline {
 	readonly isCanvasPipeline = true;
