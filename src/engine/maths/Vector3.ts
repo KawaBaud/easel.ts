@@ -4,6 +4,7 @@ import type {
 	Equatable,
 	Serializable,
 } from "../types/interfaces.ts";
+import { get } from "../utils.ts";
 import { MathUtils } from "./MathUtils.ts";
 
 // Forward declarations - will be implemented later
@@ -198,9 +199,9 @@ export class Vector3
 
 	fromArray(array: number[], offset = 0): this {
 		return this.set(
-			array[offset] ?? 0,
-			array[offset + 1] ?? 0,
-			array[offset + 2] ?? 0,
+			get(array, offset),
+			get(array, offset + 1),
+			get(array, offset + 2),
 		);
 	}
 
