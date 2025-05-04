@@ -1,8 +1,8 @@
 import type { Camera } from "../../cameras/Camera.ts";
 import { Color, type ColorValue } from "../../common/Color.ts";
 import type { Scene } from "../../scenes/Scene.ts";
-import { Pipeline } from "../common/Pipeline.ts";
 import { Rasterizer } from "../common/Rasterizer.ts";
+import { RenderPipeline } from "../common/RenderPipeline.ts";
 import { Renderer, type RendererOptions } from "../Renderer.ts";
 import { CanvasUtils } from "./CanvasUtils.ts";
 
@@ -10,7 +10,7 @@ export class CanvasRenderer extends Renderer {
 	domElement: HTMLCanvasElement;
 	context: CanvasRenderingContext2D;
 	rasterizer: Rasterizer;
-	pipeline: Pipeline;
+	pipeline: RenderPipeline;
 	#clearColor = new Color(0, 0, 0);
 
 	constructor(options?: RendererOptions) {
@@ -28,10 +28,12 @@ export class CanvasRenderer extends Renderer {
 			canvas: this.domElement,
 		});
 
-		this.pipeline = new Pipeline();
+		this.pipeline = new RenderPipeline(this.width, this.height);
 	}
 
 	override render(scene: Scene, camera: Camera): this {
+		super.render(scene, camera);
+
 		this.rasterizer.beginFrame();
 		this.rasterizer.clear(this.#clearColor);
 
@@ -47,6 +49,7 @@ export class CanvasRenderer extends Renderer {
 		this.domElement.width = width;
 		this.domElement.height = height;
 		this.rasterizer.setSize(width, height);
+		this.pipeline.setSize(width, height);
 
 		return this;
 	}
