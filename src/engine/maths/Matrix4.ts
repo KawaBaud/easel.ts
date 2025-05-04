@@ -5,7 +5,11 @@ import type { Quaternion } from "./Quaternion.ts";
 import { Vector3 } from "./Vector3.ts";
 
 export class Matrix4
-	implements Cloneable<Matrix4>, Copyable<Matrix4>, Serializable {
+	implements
+		Cloneable<Matrix4>,
+		Copyable<Matrix4>,
+		Iterable<number>,
+		Serializable {
 	readonly isMatrix4 = true;
 
 	constructor(public elements = new Float32Array(16)) {
@@ -305,20 +309,20 @@ export class Matrix4
 
 		return this.set(
 			x.x,
-			y.x,
-			z.x,
-			-x.dot(eye),
 			x.y,
-			y.y,
-			z.y,
-			-y.dot(eye),
 			x.z,
+			0,
+			y.x,
+			y.y,
 			y.z,
+			0,
+			z.x,
+			z.y,
 			z.z,
+			0,
+			-x.dot(eye),
+			-y.dot(eye),
 			-z.dot(eye),
-			0,
-			0,
-			0,
 			1,
 		);
 	}

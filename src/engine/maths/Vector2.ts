@@ -11,6 +11,7 @@ export class Vector2
 		Cloneable<Vector2>,
 		Copyable<Vector2>,
 		Equatable<Vector2>,
+		Iterable<number>,
 		Serializable {
 	static add(a: Vector2, b: Vector2): Vector2 {
 		return a.clone().add(b);
@@ -221,6 +222,9 @@ export class Vector2
 		return this.set(-this.x, -this.y);
 	}
 
+	/**
+	 * @param angle - in radians
+	 */
 	rotate(angle: number): this {
 		const cos = Math.cos(angle);
 		const sin = Math.sin(angle);
@@ -245,6 +249,9 @@ export class Vector2
 		return this;
 	}
 
+	/**
+	 * @param angle - in radians
+	 */
 	setFromPolar(radius: number, angle: number): this {
 		return this.set(
 			radius * Math.cos(angle),

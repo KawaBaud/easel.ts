@@ -14,6 +14,7 @@ export class Quaternion
 		Cloneable<Quaternion>,
 		Copyable<Quaternion>,
 		Equatable<Quaternion>,
+		Iterable<number>,
 		Serializable {
 	readonly isQuaternion = true;
 
@@ -165,6 +166,9 @@ export class Quaternion
 		return this;
 	}
 
+	/**
+	 * @param angle - in radians
+	 */
 	setFromAxisAngle(axis: Vector3, angle: number): this {
 		const halfAngle = angle / 2;
 		const s = Math.sin(halfAngle);

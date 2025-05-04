@@ -16,6 +16,7 @@ export class Vector3
 		Cloneable<Vector3>,
 		Copyable<Vector3>,
 		Equatable<Vector3>,
+		Iterable<number>,
 		Serializable {
 	static add(a: Vector3, b: Vector3): Vector3 {
 		return a.clone().add(b);
@@ -141,6 +142,15 @@ export class Vector3
 
 	clamp(min: Vector3, max: Vector3): this {
 		return this.max(min).min(max);
+	}
+
+	clampLength(min: number, max: number): this {
+		const length = this.length;
+		if (length === 0) return this;
+
+		return this.divScalar(length).mulScalar(
+			MathUtils.clamp(length, min, max),
+		);
 	}
 
 	clampScalar(min: number, max: number): this {
@@ -306,6 +316,14 @@ export class Vector3
 
 	reflect(normal: Vector3): this {
 		return this.sub(normal.clone().mulScalar(2 * this.dot(normal)));
+	}
+
+	round(): this {
+		return this.set(
+			Math.round(this.x),
+			Math.round(this.y),
+			Math.round(this.z),
+		);
 	}
 
 	set(x: number, y: number, z?: number): this {
