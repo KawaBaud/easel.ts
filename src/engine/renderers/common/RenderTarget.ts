@@ -1,5 +1,10 @@
 import { Vector4 } from "../../maths/Vector4.ts";
 
+export type RenderTargetOptions = {
+	width?: number;
+	height?: number;
+};
+
 export class RenderTarget {
 	readonly isRenderTarget: boolean = true;
 
@@ -10,7 +15,7 @@ export class RenderTarget {
 	scissor: Vector4;
 	scissorTest = false;
 
-	constructor(options: { width?: number; height?: number } = {}) {
+	constructor(options: RenderTargetOptions = {}) {
 		this.width = options.width ?? globalThis.innerWidth;
 		this.height = options.height ?? globalThis.innerHeight;
 		this.aspectRatio = this.width / this.height;
