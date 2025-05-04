@@ -1,6 +1,7 @@
 import { Camera } from "./src/cameras/Camera.ts";
 import { OrthoCamera } from "./src/cameras/OrthoCamera.ts";
 import { PerspCamera } from "./src/cameras/PerspCamera.ts";
+import { Color } from "./src/common/Color.ts";
 import { Material } from "./src/materials/Material.ts";
 import { Euler } from "./src/maths/Euler.ts";
 import { MathUtils } from "./src/maths/MathUtils.ts";
@@ -16,33 +17,36 @@ import { PlaneShape } from "./src/shapes/PlaneShape.ts";
 import { Shape } from "./src/shapes/Shape.ts";
 
 export const SCAPE = {
-    // cameras
-    Camera,
-    OrthoCamera,
-    PerspCamera,
+	// cameras
+	Camera,
+	OrthoCamera,
+	PerspCamera,
 
-    // materials
-    Material,
+	// common
+	Color,
 
-    // maths
-    Math: MathUtils,
-    Vector2,
-    Vector3,
-    Matrix4,
-    Quaternion,
-    Euler,
+	// materials
+	Material,
 
-    // objects
-    Object3D,
-    Mesh,
+	// maths
+	Math: MathUtils,
+	Vector2,
+	Vector3,
+	Matrix4,
+	Quaternion,
+	Euler,
 
-    // renderers
+	// objects
+	Object3D,
+	Mesh,
 
-    // scenes
-    Scene,
+	// renderers
 
-    // shapes
-    CubeShape,
-    PlaneShape,
-    Shape,
+	// scenes
+	Scene,
+
+	// shapes
+	CubeShape,
+	PlaneShape,
+	Shape,
 };
