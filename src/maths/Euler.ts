@@ -1,4 +1,4 @@
-import { getArray } from "../utils.ts";
+import { fromArray } from "../utils.ts";
 import { MathUtils } from "./MathUtils.ts";
 import { Matrix4 } from "./Matrix4.ts";
 import type { Quaternion } from "./Quaternion.ts";
@@ -39,15 +39,15 @@ export class Euler {
 	setFromRotationMatrix(m: Matrix4, order?: EulerOrder): this {
 		const te = m.elements;
 
-		const m11 = getArray(te, 0);
-		const m12 = getArray(te, 4);
-		const m13 = getArray(te, 8);
-		const m21 = getArray(te, 1);
-		const m22 = getArray(te, 5);
-		const m23 = getArray(te, 9);
-		const m31 = getArray(te, 2);
-		const m32 = getArray(te, 6);
-		const m33 = getArray(te, 10);
+		const m11 = fromArray(te, 0);
+		const m12 = fromArray(te, 4);
+		const m13 = fromArray(te, 8);
+		const m21 = fromArray(te, 1);
+		const m22 = fromArray(te, 5);
+		const m23 = fromArray(te, 9);
+		const m31 = fromArray(te, 2);
+		const m32 = fromArray(te, 6);
+		const m33 = fromArray(te, 10);
 
 		const currentOrder = order || this.order;
 		switch (currentOrder) {
