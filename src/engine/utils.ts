@@ -1,7 +1,3 @@
-export function createElement(tagName: string): HTMLElement {
-	return globalThis.document.createElement(tagName);
-}
-
 export function get<T extends ArrayLike<unknown>>(
 	array: T,
 	i: number,
