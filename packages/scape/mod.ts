@@ -11,6 +11,7 @@ import { Vector2 } from "./src/maths/Vector2.ts";
 import { Vector3 } from "./src/maths/Vector3.ts";
 import { Mesh } from "./src/objects/Mesh.ts";
 import { Object3D } from "./src/objects/Object3D.ts";
+import { CanvasRenderer } from "./src/renderers/canvas/CanvasRenderer.ts";
 import { Scene } from "./src/scenes/Scene.ts";
 import { CubeShape } from "./src/shapes/CubeShape.ts";
 import { PlaneShape } from "./src/shapes/PlaneShape.ts";
@@ -41,6 +42,7 @@ export const SCAPE = {
 	Mesh,
 
 	// renderers
+	CanvasRenderer,
 
 	// scenes
 	Scene,

@@ -5,6 +5,14 @@ export class Color {
 		public b = 1,
 	) {}
 
+	get hex(): number {
+		return (this.r * 255) << 16 ^ (this.g * 255) << 8 ^ (this.b * 255);
+	}
+
+	get hexString(): string {
+		return this.hex.toString(16).padStart(6, "0");
+	}
+
 	clone(): Color {
 		return new Color(this.r, this.g, this.b);
 	}
@@ -38,8 +46,7 @@ export class Color {
 		if (hex > 0xFFFFFF || hex < 0) {
 			throw new Error("Color: hex value out of range");
 		}
-
-		hex = Math.floor(hex);
+		hex = hex | 0;
 
 		this.r = (hex >> 16) / 255;
 		this.g = (hex >> 8 & 255) / 255;
