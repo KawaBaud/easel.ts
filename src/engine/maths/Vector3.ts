@@ -18,34 +18,6 @@ export class Vector3
 		Equatable<Vector3>,
 		Iterable<number>,
 		Serializable {
-	static add(a: Vector3, b: Vector3): Vector3 {
-		return a.clone().add(b);
-	}
-
-	static cross(a: Vector3, b: Vector3): Vector3 {
-		return a.clone().cross(b);
-	}
-
-	static distance(a: Vector3, b: Vector3): number {
-		return a.distanceTo(b);
-	}
-
-	static distanceSq(a: Vector3, b: Vector3): number {
-		return a.distanceSqTo(b);
-	}
-
-	static div(a: Vector3, b: Vector3): Vector3 {
-		return a.clone().div(b);
-	}
-
-	static mul(a: Vector3, b: Vector3): Vector3 {
-		return a.clone().mul(b);
-	}
-
-	static sub(a: Vector3, b: Vector3): Vector3 {
-		return a.clone().sub(b);
-	}
-
 	readonly isVector3 = true;
 
 	constructor(public x = 0, public y = 0, public z = 0) {}
@@ -301,6 +273,15 @@ export class Vector3
 	}
 
 	project(camera: Camera): this {
+		const viewVertex = this.clone().applyMatrix4(camera.matrixWorldInverse);
+
+		if (viewVertex.z >= 0) {
+			this.x = 0;
+			this.y = 0;
+			this.z = 0;
+			return this;
+		}
+
 		return this
 			.applyMatrix4(camera.matrixWorldInverse)
 			.applyMatrix4(camera.projectionMatrix);

@@ -14,34 +14,6 @@ export class Vector4
 		Equatable<Vector4>,
 		Iterable<number>,
 		Serializable {
-	static add(a: Vector4, b: Vector4): Vector4 {
-		return a.clone().add(b);
-	}
-
-	static cross(a: Vector4, b: Vector4): Vector4 {
-		return a.clone().cross(b);
-	}
-
-	static distance(a: Vector4, b: Vector4): number {
-		return a.distanceTo(b);
-	}
-
-	static distanceSq(a: Vector4, b: Vector4): number {
-		return a.distanceSqTo(b);
-	}
-
-	static div(a: Vector4, b: Vector4): Vector4 {
-		return a.clone().div(b);
-	}
-
-	static mul(a: Vector4, b: Vector4): Vector4 {
-		return a.clone().mul(b);
-	}
-
-	static sub(a: Vector4, b: Vector4): Vector4 {
-		return a.clone().sub(b);
-	}
-
 	readonly isVector4 = true;
 
 	constructor(
