@@ -1,3 +1,5 @@
+export type ColorValue = number | string | Color;
+
 export class Color {
 	static rgbToHex(r: number, g: number, b: number): number {
 		return (r << 16) ^ (g << 8) ^ b;
@@ -38,7 +40,7 @@ export class Color {
 		return this;
 	}
 
-	set(r: number | string | Color, g?: number, b?: number): this {
+	set(r: ColorValue, g?: number, b?: number): this {
 		if (g === undefined && b === undefined) {
 			const value = r;
 
@@ -112,7 +114,7 @@ export class Color {
 		throw new Error("Color: invalid style");
 	}
 
-	parse(value: string | number | Color): this {
+	parse(value: ColorValue): this {
 		if (value instanceof Color) {
 			this.copy(value);
 			return this;
