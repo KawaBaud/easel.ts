@@ -7,6 +7,7 @@ import { Matrix4 } from "./maths/Matrix4.ts";
 import { Quaternion } from "./maths/Quaternion.ts";
 import { Vector2 } from "./maths/Vector2.ts";
 import { Vector3 } from "./maths/Vector3.ts";
+import { Vector4 } from "./maths/Vector4.ts";
 import { Mesh } from "./objects/Mesh.ts";
 import { CanvasRenderer } from "./renderers/CanvasRenderer.ts";
 import { Scene } from "./scenes/Scene.ts";
@@ -30,6 +31,7 @@ export const SCAPE = {
 	Quaternion,
 	Vector2,
 	Vector3,
+	Vector4,
 
 	/* objects */
 	Mesh,
