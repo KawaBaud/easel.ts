@@ -1,4 +1,4 @@
-import { getArray } from "../utils.ts";
+import { fromArray } from "../utils.ts";
 import { MathUtils } from "./MathUtils.ts";
 import type { Quaternion } from "./Quaternion.ts";
 import type { Vector3 } from "./Vector3.ts";
@@ -63,38 +63,41 @@ export class Matrix4 {
 	decompose(position: Vector3, q: Quaternion, scale: Vector3): this {
 		const te = this.elements;
 
-		let sx = Math.hypot(getArray(te, 0), getArray(te, 1), getArray(te, 2));
+		let sx = Math.hypot(
+			fromArray(te, 0),
+			fromArray(te, 1),
+			fromArray(te, 2),
+		);
 		const sy = Math.hypot(
-			getArray(te, 4),
-			getArray(te, 5),
-			getArray(te, 6),
+			fromArray(te, 4),
+			fromArray(te, 5),
+			fromArray(te, 6),
 		);
 		const sz = Math.hypot(
-			getArray(te, 8),
-			getArray(te, 9),
-			getArray(te, 10),
+			fromArray(te, 8),
+			fromArray(te, 9),
+			fromArray(te, 10),
 		);
 
 		const det = this.determinant();
 		if (det < 0) sx = -sx;
 
-		position.x = getArray(te, 12);
-		position.y = getArray(te, 13);
-		position.z = getArray(te, 14);
+		position.x = fromArray(te, 12);
+		position.y = fromArray(te, 13);
+		position.z = fromArray(te, 14);
 		const sxInv = 1 / sx;
 		const syInv = 1 / sy;
 		const szInv = 1 / sz;
 
-		const r11 = getArray(te, 0) * sxInv;
-		const r12 = getArray(te, 4) * syInv;
-		const r13 = getArray(te, 8) * szInv;
-		const r21 = getArray(te, 1) * sxInv;
-		const r22 = getArray(te, 5) * syInv;
-		const r23 = getArray(te, 9) * szInv;
-		const r31 = getArray(te, 2) * sxInv;
-		const r32 = getArray(te, 6) * syInv;
-		const r33 = getArray(te, 10) * szInv;
-
+		const r11 = fromArray(te, 0) * sxInv;
+		const r12 = fromArray(te, 4) * syInv;
+		const r13 = fromArray(te, 8) * szInv;
+		const r21 = fromArray(te, 1) * sxInv;
+		const r22 = fromArray(te, 5) * syInv;
+		const r23 = fromArray(te, 9) * szInv;
+		const r31 = fromArray(te, 2) * sxInv;
+		const r32 = fromArray(te, 6) * syInv;
+		const r33 = fromArray(te, 10) * szInv;
 		const trace = r11 + r22 + r33;
 		let s;
 		if (trace > 0) {
@@ -133,22 +136,22 @@ export class Matrix4 {
 	determinant(): number {
 		const te = this.elements;
 
-		const n11 = getArray(te, 0);
-		const n12 = getArray(te, 4);
-		const n13 = getArray(te, 8);
-		const n14 = getArray(te, 12);
-		const n21 = getArray(te, 1);
-		const n22 = getArray(te, 5);
-		const n23 = getArray(te, 9);
-		const n24 = getArray(te, 13);
-		const n31 = getArray(te, 2);
-		const n32 = getArray(te, 6);
-		const n33 = getArray(te, 10);
-		const n34 = getArray(te, 14);
-		const n41 = getArray(te, 3);
-		const n42 = getArray(te, 7);
-		const n43 = getArray(te, 11);
-		const n44 = getArray(te, 15);
+		const n11 = fromArray(te, 0);
+		const n12 = fromArray(te, 4);
+		const n13 = fromArray(te, 8);
+		const n14 = fromArray(te, 12);
+		const n21 = fromArray(te, 1);
+		const n22 = fromArray(te, 5);
+		const n23 = fromArray(te, 9);
+		const n24 = fromArray(te, 13);
+		const n31 = fromArray(te, 2);
+		const n32 = fromArray(te, 6);
+		const n33 = fromArray(te, 10);
+		const n34 = fromArray(te, 14);
+		const n41 = fromArray(te, 3);
+		const n42 = fromArray(te, 7);
+		const n43 = fromArray(te, 11);
+		const n44 = fromArray(te, 15);
 
 		const t1 = (n33 * n44) - (n34 * n43);
 		const t2 = (n32 * n44) - (n34 * n42);
@@ -189,22 +192,22 @@ export class Matrix4 {
 	invert(): this {
 		const te = this.elements;
 
-		const n11 = getArray(te, 0);
-		const n12 = getArray(te, 4);
-		const n13 = getArray(te, 8);
-		const n14 = getArray(te, 12);
-		const n21 = getArray(te, 1);
-		const n22 = getArray(te, 5);
-		const n23 = getArray(te, 9);
-		const n24 = getArray(te, 13);
-		const n31 = getArray(te, 2);
-		const n32 = getArray(te, 6);
-		const n33 = getArray(te, 10);
-		const n34 = getArray(te, 14);
-		const n41 = getArray(te, 3);
-		const n42 = getArray(te, 7);
-		const n43 = getArray(te, 11);
-		const n44 = getArray(te, 15);
+		const n11 = fromArray(te, 0);
+		const n12 = fromArray(te, 4);
+		const n13 = fromArray(te, 8);
+		const n14 = fromArray(te, 12);
+		const n21 = fromArray(te, 1);
+		const n22 = fromArray(te, 5);
+		const n23 = fromArray(te, 9);
+		const n24 = fromArray(te, 13);
+		const n31 = fromArray(te, 2);
+		const n32 = fromArray(te, 6);
+		const n33 = fromArray(te, 10);
+		const n34 = fromArray(te, 14);
+		const n41 = fromArray(te, 3);
+		const n42 = fromArray(te, 7);
+		const n43 = fromArray(te, 11);
+		const n44 = fromArray(te, 15);
 
 		const t1 = (n33 * n44) - (n34 * n43);
 		const t2 = (n32 * n44) - (n34 * n42);
@@ -404,39 +407,39 @@ export class Matrix4 {
 		const ae = a.elements;
 		const be = b.elements;
 
-		const a11 = getArray(ae, 0);
-		const a12 = getArray(ae, 4);
-		const a13 = getArray(ae, 8);
-		const a14 = getArray(ae, 12);
-		const a21 = getArray(ae, 1);
-		const a22 = getArray(ae, 5);
-		const a23 = getArray(ae, 9);
-		const a24 = getArray(ae, 13);
-		const a31 = getArray(ae, 2);
-		const a32 = getArray(ae, 6);
-		const a33 = getArray(ae, 10);
-		const a34 = getArray(ae, 14);
-		const a41 = getArray(ae, 3);
-		const a42 = getArray(ae, 7);
-		const a43 = getArray(ae, 11);
-		const a44 = getArray(ae, 15);
+		const a11 = fromArray(ae, 0);
+		const a12 = fromArray(ae, 4);
+		const a13 = fromArray(ae, 8);
+		const a14 = fromArray(ae, 12);
+		const a21 = fromArray(ae, 1);
+		const a22 = fromArray(ae, 5);
+		const a23 = fromArray(ae, 9);
+		const a24 = fromArray(ae, 13);
+		const a31 = fromArray(ae, 2);
+		const a32 = fromArray(ae, 6);
+		const a33 = fromArray(ae, 10);
+		const a34 = fromArray(ae, 14);
+		const a41 = fromArray(ae, 3);
+		const a42 = fromArray(ae, 7);
+		const a43 = fromArray(ae, 11);
+		const a44 = fromArray(ae, 15);
 
-		const b11 = getArray(be, 0);
-		const b12 = getArray(be, 4);
-		const b13 = getArray(be, 8);
-		const b14 = getArray(be, 12);
-		const b21 = getArray(be, 1);
-		const b22 = getArray(be, 5);
-		const b23 = getArray(be, 9);
-		const b24 = getArray(be, 13);
-		const b31 = getArray(be, 2);
-		const b32 = getArray(be, 6);
-		const b33 = getArray(be, 10);
-		const b34 = getArray(be, 14);
-		const b41 = getArray(be, 3);
-		const b42 = getArray(be, 7);
-		const b43 = getArray(be, 11);
-		const b44 = getArray(be, 15);
+		const b11 = fromArray(be, 0);
+		const b12 = fromArray(be, 4);
+		const b13 = fromArray(be, 8);
+		const b14 = fromArray(be, 12);
+		const b21 = fromArray(be, 1);
+		const b22 = fromArray(be, 5);
+		const b23 = fromArray(be, 9);
+		const b24 = fromArray(be, 13);
+		const b31 = fromArray(be, 2);
+		const b32 = fromArray(be, 6);
+		const b33 = fromArray(be, 10);
+		const b34 = fromArray(be, 14);
+		const b41 = fromArray(be, 3);
+		const b42 = fromArray(be, 7);
+		const b43 = fromArray(be, 11);
+		const b44 = fromArray(be, 15);
 
 		return this.set(
 			(a11 * b11) + (a12 * b21) + (a13 * b31) + (a14 * b41),
@@ -500,23 +503,23 @@ export class Matrix4 {
 		const te = this.elements;
 
 		let temp;
-		temp = getArray(te, 1);
-		te[1] = getArray(te, 4);
+		temp = fromArray(te, 1);
+		te[1] = fromArray(te, 4);
 		te[4] = temp;
-		temp = getArray(te, 2);
-		te[2] = getArray(te, 8);
+		temp = fromArray(te, 2);
+		te[2] = fromArray(te, 8);
 		te[8] = temp;
-		temp = getArray(te, 3);
-		te[3] = getArray(te, 12);
+		temp = fromArray(te, 3);
+		te[3] = fromArray(te, 12);
 		te[12] = temp;
-		temp = getArray(te, 6);
-		te[6] = getArray(te, 9);
+		temp = fromArray(te, 6);
+		te[6] = fromArray(te, 9);
 		te[9] = temp;
-		temp = getArray(te, 7);
-		te[7] = getArray(te, 13);
+		temp = fromArray(te, 7);
+		te[7] = fromArray(te, 13);
 		te[13] = temp;
-		temp = getArray(te, 11);
-		te[11] = getArray(te, 14);
+		temp = fromArray(te, 11);
+		te[11] = fromArray(te, 14);
 		te[14] = temp;
 		return this;
 	}
@@ -524,21 +527,21 @@ export class Matrix4 {
 	*[Symbol.iterator](): IterableIterator<number> {
 		const te = this.elements;
 
-		yield getArray(te, 0);
-		yield getArray(te, 1);
-		yield getArray(te, 2);
-		yield getArray(te, 3);
-		yield getArray(te, 4);
-		yield getArray(te, 5);
-		yield getArray(te, 6);
-		yield getArray(te, 7);
-		yield getArray(te, 8);
-		yield getArray(te, 9);
-		yield getArray(te, 10);
-		yield getArray(te, 11);
-		yield getArray(te, 12);
-		yield getArray(te, 13);
-		yield getArray(te, 14);
-		yield getArray(te, 15);
+		yield fromArray(te, 0);
+		yield fromArray(te, 1);
+		yield fromArray(te, 2);
+		yield fromArray(te, 3);
+		yield fromArray(te, 4);
+		yield fromArray(te, 5);
+		yield fromArray(te, 6);
+		yield fromArray(te, 7);
+		yield fromArray(te, 8);
+		yield fromArray(te, 9);
+		yield fromArray(te, 10);
+		yield fromArray(te, 11);
+		yield fromArray(te, 12);
+		yield fromArray(te, 13);
+		yield fromArray(te, 14);
+		yield fromArray(te, 15);
 	}
 }
