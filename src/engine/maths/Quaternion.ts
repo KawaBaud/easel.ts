@@ -16,7 +16,7 @@ export class Quaternion
 		Equatable<Quaternion>,
 		Iterable<number>,
 		Serializable {
-	readonly isQuaternion = true;
+	readonly isQuaternion: boolean = true;
 
 	constructor(
 		public x: number = 0,

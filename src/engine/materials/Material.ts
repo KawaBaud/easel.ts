@@ -6,7 +6,7 @@ export interface MaterialOptions {
 }
 
 export class Material implements Cloneable<Material>, Copyable<Material> {
-	readonly isMaterial = true;
+	readonly isMaterial: boolean = true;
 
 	color: number;
 	wireframe: boolean;

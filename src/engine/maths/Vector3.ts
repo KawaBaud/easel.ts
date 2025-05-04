@@ -18,7 +18,7 @@ export class Vector3
 		Equatable<Vector3>,
 		Iterable<number>,
 		Serializable {
-	readonly isVector3 = true;
+	readonly isVector3: boolean = true;
 
 	constructor(public x = 0, public y = 0, public z = 0) {}
 
@@ -273,18 +273,9 @@ export class Vector3
 	}
 
 	project(camera: Camera): this {
-		const viewVertex = this.clone().applyMatrix4(camera.matrixWorldInverse);
-
-		if (viewVertex.z >= 0) {
-			this.x = 0;
-			this.y = 0;
-			this.z = 0;
-			return this;
-		}
-
-		return this
-			.applyMatrix4(camera.matrixWorldInverse)
-			.applyMatrix4(camera.projectionMatrix);
+		return this.applyMatrix4(camera.matrixWorldInverse).applyMatrix4(
+			camera.projectionMatrix,
+		);
 	}
 
 	projectOnto(v: Vector3): this {

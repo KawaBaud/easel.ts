@@ -1,7 +1,7 @@
 import { Object3D } from "../objects/Object3D.ts";
 
 export class Scene extends Object3D {
-	readonly isScene = true;
+	readonly isScene: boolean = true;
 
 	background: string | number | null = null;
 

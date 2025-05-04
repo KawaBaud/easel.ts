@@ -10,7 +10,7 @@ export class Matrix4
 		Copyable<Matrix4>,
 		Iterable<number>,
 		Serializable {
-	readonly isMatrix4 = true;
+	readonly isMatrix4: boolean = true;
 
 	constructor(public elements = new Float32Array(16)) {
 		this.identity();

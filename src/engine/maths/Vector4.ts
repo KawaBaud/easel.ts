@@ -14,7 +14,7 @@ export class Vector4
 		Equatable<Vector4>,
 		Iterable<number>,
 		Serializable {
-	readonly isVector4 = true;
+	readonly isVector4: boolean = true;
 
 	constructor(
 		public x = 0,

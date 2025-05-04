@@ -13,7 +13,7 @@ export class Vector2
 		Equatable<Vector2>,
 		Iterable<number>,
 		Serializable {
-	readonly isVector2 = true;
+	readonly isVector2: boolean = true;
 
 	constructor(public x = 0, public y = 0) {}
 

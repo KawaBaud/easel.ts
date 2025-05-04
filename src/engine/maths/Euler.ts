@@ -18,9 +18,9 @@ function getEulerOrderValue(order: EulerOrder): number {
 
 export class Euler
 	implements Cloneable<Euler>, Copyable<Euler>, Equatable<Euler>, Serializable {
-	static readonly GIMBAL_LOCK_THRESHOLD = 0.9999999;
+	static readonly GIMBAL_LOCK_THRESHOLD: number = 0.9999999;
 
-	readonly isEuler = true;
+	readonly isEuler: boolean = true;
 
 	constructor(
 		public x = 0,

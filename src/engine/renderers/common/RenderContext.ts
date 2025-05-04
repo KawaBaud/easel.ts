@@ -2,7 +2,7 @@ import type { Camera } from "../../cameras/Camera.ts";
 import type { Scene } from "../../scenes/Scene.ts";
 
 export class RenderContext {
-	readonly isRenderContext = true;
+	readonly isRenderContext: boolean = true;
 
 	constructor(
 		public scene: Scene,

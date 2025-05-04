@@ -2,7 +2,7 @@ import { Vector3 } from "../maths/Vector3.ts";
 import { Shape } from "./Shape.ts";
 
 export class CubeShape extends Shape {
-	readonly isCubeShape = true;
+	readonly isCubeShape: boolean = true;
 
 	constructor(width = 1, height = 1, depth = 1) {
 		super();

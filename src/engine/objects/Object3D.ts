@@ -5,7 +5,7 @@ import { Vector3 } from "../maths/Vector3.ts";
 import type { Cloneable, Copyable } from "../types/interfaces.ts";
 
 export class Object3D implements Cloneable<Object3D>, Copyable<Object3D> {
-	readonly isObject3D = true;
+	readonly isObject3D: boolean = true;
 
 	id: string = crypto.randomUUID();
 	name = "";

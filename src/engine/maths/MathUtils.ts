@@ -1,17 +1,17 @@
 import { get } from "../utils.ts";
 
 export class MathUtils {
-	static readonly EPSILON = 1e-4;
+	static readonly EPSILON: number = 1e-4;
 
-	static readonly TAU = 6.283185307179586;
-	static readonly PISQ = 9.869604401089358;
-	static readonly HALF_PI = 1.5707963267948966;
-	static readonly THIRD_PI = 1.0471975511965976;
-	static readonly QUARTER_PI = 0.7853981633974483;
-	static readonly SIXTH_PI = 0.5235987755982988;
+	static readonly TAU: number = 6.283185307179586;
+	static readonly PISQ: number = 9.869604401089358;
+	static readonly HALF_PI: number = 1.5707963267948966;
+	static readonly THIRD_PI: number = 1.0471975511965976;
+	static readonly QUARTER_PI: number = 0.7853981633974483;
+	static readonly SIXTH_PI: number = 0.5235987755982988;
 
-	static readonly RAD2DEG = 57.29577951308232;
-	static readonly DEG2RAD = 0.017453292519943295;
+	static readonly RAD2DEG: number = 57.29577951308232;
+	static readonly DEG2RAD: number = 0.017453292519943295;
 
 	static readonly Q_ONE = 1 << 12;
 

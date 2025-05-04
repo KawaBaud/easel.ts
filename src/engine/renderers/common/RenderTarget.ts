@@ -1,7 +1,7 @@
 import { Vector4 } from "../../maths/Vector4.ts";
 
 export class RenderTarget {
-	readonly isRenderTarget = true;
+	readonly isRenderTarget: boolean = true;
 
 	width: number;
 	height: number;
