@@ -29,9 +29,6 @@
         "semiColons": true,
         "singleQuote": false,
         "proseWrap": "preserve",
-        "include": [
-            "./packages/**/*.ts"
-        ],
         "exclude": []
     },
     "lock": false,
@@ -68,17 +65,11 @@
                 "verbatim-module-syntax"
             ]
         },
-        "include": [
-            "./packages/**/*.ts"
-        ],
         "exclude": []
     },
     "imports": {
         "three": "npm:three.js@^0.77.1",
         "vite": "npm:vite@^6.3.4"
     },
-    "exclude": [],
-    "workspace": [
-        "./packages/scape"
-    ]
+    "exclude": []
 }

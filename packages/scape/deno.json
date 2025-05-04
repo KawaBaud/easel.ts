@@ -1,5 +1,0 @@
-{
-    "name": "@scope/scape",
-    "version": "0.1.0",
-    "exports": "./mod.ts"
-}
