@@ -1,4 +1,4 @@
-import type { Color } from "../../common/Color.ts";
+import { Color, type ColorValue } from "../../common/Color.ts";
 import { Vector3 } from "../../maths/Vector3.ts";
 import { CanvasUtils } from "../canvas/CanvasUtils.ts";
 
@@ -13,6 +13,9 @@ export class Rasterizer {
 	height: number;
 	canvas: HTMLCanvasElement;
 	ctx: CanvasRenderingContext2D;
+	imageData: ImageData;
+	data: Uint8ClampedArray;
+	#tempColor = new Color();
 
 	constructor(options: RasterizerOptions = {}) {
 		this.width = options.width ?? globalThis.innerWidth;
@@ -26,16 +29,36 @@ export class Rasterizer {
 			willReadFrequently: true,
 		});
 		this.ctx.imageSmoothingEnabled = false;
+
+		this.imageData = this.ctx.createImageData(this.width, this.height);
+		this.data = this.imageData.data;
 	}
 
-	clear(color: Color | string): this {
-		const colorStr = typeof color === "string" ? color : `#${color.hexString}`;
-		this.ctx.fillStyle = colorStr;
-		this.ctx.fillRect(0, 0, this.width, this.height);
+	beginFrame(): this {
+		this.data = this.imageData.data;
 		return this;
 	}
 
-	drawLine(start: Vector3, end: Vector3, color: Color | string): this {
+	clear(color: ColorValue): this {
+		this.#tempColor.parse(color);
+		const r = this.#tempColor.r;
+		const g = this.#tempColor.g;
+		const b = this.#tempColor.b;
+
+		for (let i = 0; i < this.data.length; i += 4) {
+			this.data[i] = r;
+			this.data[i + 1] = g;
+			this.data[i + 2] = b;
+		}
+		return this;
+	}
+
+	endFrame(): this {
+		this.ctx.putImageData(this.imageData, 0, 0);
+		return this;
+	}
+
+	drawLine(start: Vector3, end: Vector3, color: ColorValue): this {
 		const p1 = this.#projectToScreen(start);
 		const p2 = this.#projectToScreen(end);
 
@@ -50,17 +73,19 @@ export class Rasterizer {
 		const sy = y1 < y2 ? 1 : -1;
 		let err = dx - dy;
 
-		this.ctx.fillStyle = color.toString();
-
+		this.#tempColor.parse(color);
 		let x = x1;
 		let y = y1;
 
 		while (true) {
-			this.ctx.fillRect(x, y, 1, 1);
+			if (
+				(x >= 0 && x < this.width) &&
+				(y >= 0 && y < this.height)
+			) this.setPixel(x, y, color);
 
 			if (x === x2 && y === y2) break;
 
-			const e2 = err >> 1;
+			const e2 = err << 1;
 			if (e2 > -dy) {
 				err -= dy;
 				x += sx;
@@ -74,14 +99,17 @@ export class Rasterizer {
 		return this;
 	}
 
-	drawPoint(point: Vector3, color: Color): this {
+	drawPoint(point: Vector3, color: ColorValue): this {
 		const screenPoint = this.#projectToScreen(point);
-		const x = screenPoint.x | 0;
-		const y = screenPoint.y | 0;
 
-		this.ctx.fillStyle = color.toString();
-		this.ctx.fillRect(x, y, 1, 1);
+		const screenX = screenPoint.x | 0;
+		const screenY = screenPoint.y | 0;
+		if (
+			(screenX < 0 || screenX >= this.width) ||
+			(screenY < 0 || screenY >= this.height)
+		) return this;
 
+		this.setPixel(screenX, screenY, color);
 		return this;
 	}
 
@@ -89,36 +117,39 @@ export class Rasterizer {
 		v1: Vector3,
 		v2: Vector3,
 		v3: Vector3,
-		color: Color,
+		color: ColorValue,
 		wireframe = false,
 	): this {
-		const p1 = this.#projectToScreen(v1);
-		const p2 = this.#projectToScreen(v2);
-		const p3 = this.#projectToScreen(v3);
-
-		const x1 = p1.x | 0;
-		const y1 = p1.y | 0;
-		const x2 = p2.x | 0;
-		const y2 = p2.y | 0;
-		const x3 = p3.x | 0;
-		const y3 = p3.y | 0;
-
-		const colorStr = color.toString();
-
 		if (wireframe) {
-			this.drawLine(v1, v2, colorStr);
-			this.drawLine(v2, v3, colorStr);
-			this.drawLine(v3, v1, colorStr);
-		} else {
-			// TODO(@KawaBaud): filled triangles pixel-perfect later
-			this.ctx.fillStyle = colorStr;
-			this.ctx.beginPath();
-			this.ctx.moveTo(x1, y1);
-			this.ctx.lineTo(x2, y2);
-			this.ctx.lineTo(x3, y3);
-			this.ctx.closePath();
-			this.ctx.fill();
+			this.drawLine(v1, v2, color);
+			this.drawLine(v2, v3, color);
+			this.drawLine(v3, v1, color);
+			return this;
 		}
+
+		return this;
+	}
+
+	getPixel(x: number, y: number): ColorValue {
+		const idx = (y * this.width + x) * 4;
+
+		const r = this.data[idx];
+		const g = this.data[idx + 1];
+		const b = this.data[idx + 2];
+		return `rgb(${r}, ${g}, ${b})`;
+	}
+
+	setPixel(x: number, y: number, color: ColorValue): this {
+		this.#tempColor.parse(color);
+		const r = (this.#tempColor.r * 255) | 0;
+		const g = (this.#tempColor.g * 255) | 0;
+		const b = (this.#tempColor.b * 255) | 0;
+
+		const idx = (y * this.width + x) * 4;
+		this.data[idx] = r;
+		this.data[idx + 1] = g;
+		this.data[idx + 2] = b;
+		this.data[idx + 3] = 255;
 
 		return this;
 	}
@@ -129,6 +160,10 @@ export class Rasterizer {
 		this.canvas.width = width;
 		this.canvas.height = height;
 		this.ctx.imageSmoothingEnabled = false;
+
+		this.imageData = this.ctx.createImageData(width, height);
+		this.data = this.imageData.data;
+
 		return this;
 	}
 
