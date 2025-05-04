@@ -1,6 +1,6 @@
 import type { Camera } from "../../cameras/Camera.ts";
 import { Vector3 } from "../../maths/Vector3.ts";
-import type { Mesh } from "../../objects/Mesh.ts";
+import { Mesh } from "../../objects/Mesh.ts";
 import type { Object3D } from "../../objects/Object3D.ts";
 import type { Scene } from "../../scenes/Scene.ts";
 import { fromArray } from "../../utils.ts";
@@ -26,7 +26,7 @@ export class Pipeline {
 		this.cull(scene, camera);
 
 		for (const object of this.renderList.objects) {
-			if (object.isMesh) {
+			if (object instanceof Mesh) {
 				object.updateWorldMatrix(true, false);
 				this.#renderMesh(object, camera, rasterizer);
 			}
@@ -59,21 +59,23 @@ export class Pipeline {
 			const v3 = vertices[idx3];
 			if (!v1 || !v2 || !v3) continue;
 
-			_v1.copy(v1);
-			_v2.copy(v2);
-			_v3.copy(v3);
-
-			_v1.applyMatrix4(mesh.worldMatrix);
-			_v2.applyMatrix4(mesh.worldMatrix);
-			_v3.applyMatrix4(mesh.worldMatrix);
+			_v1.copy(v1).applyMatrix4(mesh.worldMatrix);
+			_v2.copy(v2).applyMatrix4(mesh.worldMatrix);
+			_v3.copy(v3).applyMatrix4(mesh.worldMatrix);
 
 			_v1.applyMatrix4(camera.matrixWorldInverse);
 			_v2.applyMatrix4(camera.matrixWorldInverse);
 			_v3.applyMatrix4(camera.matrixWorldInverse);
+			if (_v1.z < -0.1 || _v2.z < -0.1 || _v3.z < -0.1) continue;
 
 			_v1.applyMatrix4(camera.projectionMatrix);
 			_v2.applyMatrix4(camera.projectionMatrix);
 			_v3.applyMatrix4(camera.projectionMatrix);
+
+			if (
+				(Math.abs(_v1.x) > 1 && Math.abs(_v2.x) > 1 && Math.abs(_v3.x) > 1) ||
+				(Math.abs(_v1.y) > 1 && Math.abs(_v2.y) > 1 && Math.abs(_v3.y) > 1)
+			) continue;
 
 			rasterizer.drawTriangle(
 				_v1,
@@ -86,7 +88,7 @@ export class Pipeline {
 	}
 
 	#traverseScene(object: Object3D): void {
-		if (object.isMesh) this.renderList.add(object);
+		if (object instanceof Mesh) this.renderList.add(object);
 
 		for (const child of object.children) {
 			if (child.visible) this.#traverseScene(child);
