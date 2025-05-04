@@ -32,20 +32,20 @@ export class Vector3 {
 		const { x, y, z } = this;
 		const me = m.elements;
 
-		const w = (fromArray(me, 3) * x) + (fromArray(me, 7) * y) +
+		const denom = (fromArray(me, 3) * x) + (fromArray(me, 7) * y) +
 			(fromArray(me, 11) * z) + fromArray(me, 15);
-		const iw = w !== 0 ? 1 / w : 1;
+		const w = denom !== 0 ? 1 / denom : 1;
 
 		return this.set(
 			((fromArray(me, 0) * x) + (fromArray(me, 4) * y) +
 				(fromArray(me, 8) * z) +
-				fromArray(me, 12)) * iw,
+				fromArray(me, 12)) * w,
 			((fromArray(me, 1) * x) + (fromArray(me, 5) * y) +
 				(fromArray(me, 9) * z) +
-				fromArray(me, 13)) * iw,
+				fromArray(me, 13)) * w,
 			((fromArray(me, 2) * x) + (fromArray(me, 6) * y) +
 				(fromArray(me, 10) * z) +
-				fromArray(me, 14)) * iw,
+				fromArray(me, 14)) * w,
 		);
 	}
 
@@ -102,6 +102,14 @@ export class Vector3 {
 		return this;
 	}
 
+	project(
+		camera: Camera,
+	): this {
+		return this.applyMatrix4(camera.matrixWorldInverse).applyMatrix4(
+			camera.projectionMatrix,
+		);
+	}
+
 	set(x: number, y: number, z?: number): this {
 		const _z = this.z;
 		this.x = x;
@@ -123,14 +131,6 @@ export class Vector3 {
 
 	unitize(): this {
 		return this.divScalar(this.length || 1);
-	}
-
-	project(
-		camera: Camera,
-	): this {
-		return this.applyMatrix4(camera.matrixWorldInverse).applyMatrix4(
-			camera.projectionMatrix,
-		);
 	}
 
 	*[Symbol.iterator](): IterableIterator<number> {
