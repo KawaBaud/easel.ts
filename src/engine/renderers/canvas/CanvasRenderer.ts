@@ -1,47 +1,31 @@
 import type { Camera } from "../../cameras/Camera.ts";
+import { Color } from "../../core/Color.ts";
+import "../../maths/Vector3.ts";
 import type { Vector3 } from "../../maths/Vector3.ts";
-import { Vector4 } from "../../maths/Vector4.ts";
+import type { Vector4 } from "../../maths/Vector4.ts";
+import type { Mesh } from "../../objects/Mesh.ts";
+import "../../objects/Object3D.ts";
+import type { Object3D } from "../../objects/Object3D.ts";
 import type { Scene } from "../../scenes/Scene.ts";
 import { Renderer } from "../Renderer.ts";
 import { RenderPipeline } from "../common/RenderPipeline.ts";
+import type { RenderTargetOptions } from "../common/RenderTarget.ts";
 import { CanvasRasterizer } from "./CanvasRasterizer.ts";
 import { CanvasUtils } from "./CanvasUtils.ts";
 
 export class CanvasRenderer extends Renderer {
-	readonly isCanvasRenderer = true;
+	readonly isCanvasRenderer: boolean = true;
 
 	domElement: HTMLCanvasElement;
-	#bufferCanvas: HTMLCanvasElement;
 	#rasterizer: CanvasRasterizer;
-	#renderPipeline: RenderPipeline;
-	#currentViewport: Vector4;
-	#currentScissor: Vector4;
-	#currentScissorTest = false;
+	#pipeline = new RenderPipeline();
 	#pixelRatio = 1;
 
-	constructor(options: { width?: number; height?: number } = {}) {
+	constructor(options: RenderTargetOptions = {}) {
 		super();
 
 		this.domElement = CanvasUtils.createCanvasElement();
-		this.#bufferCanvas = globalThis.document.createElement("canvas");
-		this.#bufferCanvas.width = options.width ?? globalThis.innerWidth;
-		this.#bufferCanvas.height = options.height ?? globalThis.innerHeight;
-
-		this.#rasterizer = new CanvasRasterizer(this.#bufferCanvas);
-		this.#renderPipeline = new RenderPipeline();
-
-		this.#currentViewport = new Vector4(
-			0,
-			0,
-			this.#bufferCanvas.width,
-			this.#bufferCanvas.height,
-		);
-		this.#currentScissor = new Vector4(
-			0,
-			0,
-			this.#bufferCanvas.width,
-			this.#bufferCanvas.height,
-		);
+		this.#rasterizer = new CanvasRasterizer(this.domElement);
 
 		this.setSize(
 			options.width ?? globalThis.innerWidth,
@@ -49,106 +33,101 @@ export class CanvasRenderer extends Renderer {
 		);
 	}
 
-	clear(color: string | number = "#000000"): void {
+	clear(color?: Color): void {
 		this.#rasterizer.clear(color);
 	}
 
 	render(scene: Scene, camera: Camera): void {
-		this.#rasterizer.clear(scene.background ?? "#000000");
+		camera.updateMatrixWorld();
+		scene.updateWorldMatrix(true, false);
+
+		const bgColor = scene.background
+			? new Color().setHex(Number(scene.background))
+			: undefined;
+		this.clear(bgColor);
+
 		this.#rasterizer.beginFrame();
 
-		const ctx = this.#bufferCanvas.getContext("2d");
-		if (ctx) {
-			if (this.#currentScissorTest) {
-				ctx.save();
-				ctx.beginPath();
-				ctx.rect(
-					this.#currentScissor.x,
-					this.#currentScissor.y,
-					this.#currentScissor.z,
-					this.#currentScissor.w,
-				);
-				ctx.clip();
+		this.#pipeline.renderList.clear();
+		scene.traverseVisible((object: Object3D) => {
+			if ("isMesh" in object) {
+				this.#pipeline.renderList.add(object as Mesh);
 			}
+		});
 
-			this.#renderPipeline.render(
-				scene,
-				camera,
-				(
-					p1: Vector3,
-					p2: Vector3,
-					p3: Vector3,
-					color: number,
-					wireframe: boolean,
-				) => {
-					if (wireframe) {
-						this.#rasterizer.drawTriangle(p1, p2, p3, color);
-					} else {
-						this.#rasterizer.drawTriangleFilled(p1, p2, p3, color);
-					}
-				},
-			);
-
-			if (this.#currentScissorTest) ctx.restore();
+		for (const mesh of this.#pipeline.renderList.items) {
+			this.#renderMesh(mesh, camera);
 		}
 
 		this.#rasterizer.endFrame();
-
-		const displayCtx = this.domElement.getContext("2d");
-		if (!displayCtx) return;
-		displayCtx.imageSmoothingEnabled = false;
-
-		displayCtx.clearRect(
-			0,
-			0,
-			this.domElement.width,
-			this.domElement.height,
-		);
-		displayCtx.drawImage(
-			this.#bufferCanvas,
-			0,
-			0,
-			this.#bufferCanvas.width,
-			this.#bufferCanvas.height,
-			0,
-			0,
-			this.domElement.width,
-			this.domElement.height,
-		);
 	}
 
 	setPixelRatio(ratio: number): void {
 		this.#pixelRatio = ratio;
-		this.setSize(this.domElement.width, this.domElement.height);
-	}
 
-	setScissor(scissor: Vector4): this {
-		this.#currentScissor.copy(scissor);
-		return this;
-	}
+		const width = this.domElement.width / this.#pixelRatio;
+		const height = this.domElement.height / this.#pixelRatio;
 
-	setScissorTest(enable: boolean): this {
-		this.#currentScissorTest = enable;
-		return this;
+		this.setSize(width, height);
 	}
 
 	setSize(width: number, height: number): void {
-		this.domElement.width = width * this.#pixelRatio;
-		this.domElement.height = height * this.#pixelRatio;
+		this.domElement.width = Math.floor(width * this.#pixelRatio);
+		this.domElement.height = Math.floor(height * this.#pixelRatio);
+
 		this.domElement.style.width = `${width}px`;
 		this.domElement.style.height = `${height}px`;
 
-		this.#bufferCanvas.width = width;
-		this.#bufferCanvas.height = height;
-
-		this.#currentViewport.set(0, 0, width, height);
-		this.#currentScissor.set(0, 0, width, height);
-
-		this.#renderPipeline.renderTarget.setSize(width, height);
+		this.#pipeline.renderTarget.setSize(width, height);
 	}
 
 	setViewport(viewport: Vector4): this {
-		this.#currentViewport.copy(viewport);
+		this.#pipeline.renderTarget.viewport.copy(viewport);
 		return this;
+	}
+
+	#renderMesh(mesh: Mesh, camera: Camera): void {
+		const { shape, material } = mesh;
+		if (!shape.vertices.length) return;
+
+		const color = new Color().setHex(material.color);
+		const { width, height } = this.#pipeline.renderTarget;
+
+		const indices = shape.indices;
+		const vertices = shape.vertices;
+		const screenVertices: Vector3[] = [];
+
+		for (let i = 0; i < vertices.length; i++) {
+			const vertex = vertices[i];
+			if (!vertex) continue;
+
+			const worldVertex = vertex.clone();
+			worldVertex.applyMatrix4(mesh.worldMatrix);
+
+			const screenVertex = worldVertex.clone().project(camera);
+			screenVertex.x = ((screenVertex.x + 1) / 2) * width;
+			screenVertex.y = ((1 - screenVertex.y) / 2) * height;
+
+			screenVertices.push(screenVertex);
+		}
+
+		for (let i = 0; i < indices.length; i += 3) {
+			const idx1 = indices[i];
+			const idx2 = indices[i + 1];
+			const idx3 = indices[i + 2];
+
+			if (
+				idx1 === undefined ||
+				idx2 === undefined ||
+				idx3 === undefined
+			) continue;
+
+			const v1 = screenVertices[idx1];
+			const v2 = screenVertices[idx2];
+			const v3 = screenVertices[idx3];
+			if (!v1 || !v2 || !v3) continue;
+
+			this.#rasterizer.drawTriangle(v1, v2, v3, color);
+		}
 	}
 }
