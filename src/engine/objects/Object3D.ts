@@ -158,9 +158,7 @@ export class Object3D implements Cloneable<Object3D>, Copyable<Object3D> {
 
 		callback(this);
 
-		for (const child of this.children) {
-			child.traverseVisible(callback);
-		}
+		for (const child of this.children) child.traverseVisible(callback);
 	}
 
 	updateMatrix(): void {
