@@ -1,5 +1,6 @@
 import { Camera } from "./cameras/Camera.ts";
 import { OrthoCamera } from "./cameras/OrthoCamera.ts";
+import { PerspCamera } from "./cameras/PerspCamera.ts";
 import { Material } from "./materials/Material.ts";
 import { Euler } from "./maths/Euler.ts";
 import { MathUtils } from "./maths/MathUtils.ts";
@@ -21,6 +22,7 @@ export const SCAPE = {
 	// cameras
 	Camera,
 	OrthoCamera,
+	PerspCamera,
 
 	// materials
 	Material,
@@ -39,14 +41,14 @@ export const SCAPE = {
 
 	// renderers
 	CanvasRenderer,
-	Renderer,
 	Pipeline,
+	Renderer,
 
 	// scenes
 	Scene,
 
 	// shapes
-	Shape,
 	CubeShape,
 	PlaneShape,
+	Shape,
 };
