@@ -68,6 +68,13 @@ export class Rasterizer {
 		const x2 = p2.x | 0;
 		const y2 = p2.y | 0;
 
+		if (
+			(x1 < 0 && x2 < 0) ||
+			(y1 < 0 && y2 < 0) ||
+			(x1 >= this.width && x2 >= this.width) ||
+			(y1 >= this.height && y2 >= this.height)
+		) return this;
+
 		const dx = Math.abs(x2 - x1);
 		const dy = Math.abs(y2 - y1);
 		const sx = x1 < x2 ? 1 : -1;
@@ -169,8 +176,8 @@ export class Rasterizer {
 	}
 
 	#projectToScreen(point: Vector3): Vector3 {
-		const x = (point.x + 1) * this.width / 2;
-		const y = (-point.y + 1) * this.height / 2;
+		const x = ((point.x + 1) * this.width / 2) | 0;
+		const y = ((-point.y + 1) * this.height / 2) | 0;
 		return new Vector3(x, y, point.z);
 	}
 }
