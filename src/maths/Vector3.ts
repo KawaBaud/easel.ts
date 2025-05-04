@@ -1,4 +1,4 @@
-import { getArray } from "../utils.ts";
+import { fromArray } from "../utils.ts";
 import type { Euler } from "./Euler.ts";
 import type { Matrix4 } from "./Matrix4.ts";
 import { Quaternion } from "./Quaternion.ts";
@@ -31,20 +31,20 @@ export class Vector3 {
 		const { x, y, z } = this;
 		const me = m.elements;
 
-		const w = (getArray(me, 3) * x) + (getArray(me, 7) * y) +
-			(getArray(me, 11) * z) + getArray(me, 15);
+		const w = (fromArray(me, 3) * x) + (fromArray(me, 7) * y) +
+			(fromArray(me, 11) * z) + fromArray(me, 15);
 		const iw = w !== 0 ? 1 / w : 1;
 
 		return this.set(
-			((getArray(me, 0) * x) + (getArray(me, 4) * y) +
-				(getArray(me, 8) * z) +
-				getArray(me, 12)) * iw,
-			((getArray(me, 1) * x) + (getArray(me, 5) * y) +
-				(getArray(me, 9) * z) +
-				getArray(me, 13)) * iw,
-			((getArray(me, 2) * x) + (getArray(me, 6) * y) +
-				(getArray(me, 10) * z) +
-				getArray(me, 14)) * iw,
+			((fromArray(me, 0) * x) + (fromArray(me, 4) * y) +
+				(fromArray(me, 8) * z) +
+				fromArray(me, 12)) * iw,
+			((fromArray(me, 1) * x) + (fromArray(me, 5) * y) +
+				(fromArray(me, 9) * z) +
+				fromArray(me, 13)) * iw,
+			((fromArray(me, 2) * x) + (fromArray(me, 6) * y) +
+				(fromArray(me, 10) * z) +
+				fromArray(me, 14)) * iw,
 		);
 	}
 
