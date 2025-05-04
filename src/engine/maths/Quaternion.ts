@@ -39,15 +39,15 @@ export class Quaternion
 	}
 
 	get unitized(): this {
-		let length = this.length;
+		const length = this.length;
 		if (length === 0) return this.identity();
 
-		length = 1 / length;
+		const scale = 1 / length;
 		return this.set(
-			this.x * length,
-			this.y * length,
-			this.z * length,
-			this.w * length,
+			this.x * scale,
+			this.y * scale,
+			this.z * scale,
+			this.w * scale,
 		);
 	}
 
@@ -280,7 +280,7 @@ export class Quaternion
 				y + t * (by - y),
 				z + t * (bz - z),
 				w + t * (bw - w),
-			).unitized;
+			).unitize();
 		}
 
 		const sHalfTheta = Math.sqrt(1.0 - cHalfTheta * cHalfTheta);
