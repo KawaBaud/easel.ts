@@ -7,13 +7,14 @@ export class Object3D {
 	id: string = crypto.randomUUID();
 	name = "";
 
-	position: Vector3 = new Vector3();
-	rotation: Euler = new Euler();
+	position = new Vector3();
+	rotation = new Euler();
 	quaternion: Quaternion = new Quaternion();
-	scale: Vector3 = new Vector3(1, 1, 1);
+	scale = new Vector3(1, 1, 1);
 
-	matrix: Matrix4 = new Matrix4();
-	worldMatrix: Matrix4 = new Matrix4();
+	matrix = new Matrix4();
+	worldMatrix = new Matrix4();
+	autoUpdateMatrix = true;
 
 	parent: Object3D | null = null;
 	children: Object3D[] = [];
@@ -39,7 +40,7 @@ export class Object3D {
 		return new Object3D().copy(this);
 	}
 
-	copy(source: Object3D): this {
+	copy(source: Object3D, recursive = true): this {
 		this.id = crypto.randomUUID();
 		this.name = source.name;
 
@@ -54,10 +55,11 @@ export class Object3D {
 		this.visible = source.visible;
 		this.userData = JSON.parse(JSON.stringify(source.userData));
 
-		for (const child of source.children) {
-			this.add(child.clone());
+		if (recursive) {
+			for (const child of source.children) {
+				this.add(child.clone());
+			}
 		}
-
 		return this;
 	}
 
@@ -103,8 +105,8 @@ export class Object3D {
 		if (updateParents && this.parent) {
 			this.parent.updateWorldMatrix(true, false);
 		}
-		this.updateMatrix();
 
+		if (this.autoUpdateMatrix) this.updateMatrix();
 		this.worldMatrix = this.parent
 			? this.worldMatrix.mulMatrices(this.parent.worldMatrix, this.matrix)
 			: this.worldMatrix.copy(this.matrix);
