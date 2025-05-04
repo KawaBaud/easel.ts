@@ -41,14 +41,15 @@ export class Rasterizer {
 
 	clear(color: ColorValue): this {
 		this.#tempColor.parse(color);
-		const r = this.#tempColor.r;
-		const g = this.#tempColor.g;
-		const b = this.#tempColor.b;
+		const r = (this.#tempColor.r * 255) | 0;
+		const g = (this.#tempColor.g * 255) | 0;
+		const b = (this.#tempColor.b * 255) | 0;
 
 		for (let i = 0; i < this.data.length; i += 4) {
 			this.data[i] = r;
 			this.data[i + 1] = g;
 			this.data[i + 2] = b;
+			this.data[i + 3] = 255; // alpha
 		}
 		return this;
 	}
