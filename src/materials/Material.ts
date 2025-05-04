@@ -1,16 +1,16 @@
-import { Color } from "../common/Color.ts";
+import type { ColorValue } from "../common/Color.ts";
 
 export interface MaterialOptions {
-	color?: Color;
+	color?: ColorValue;
 	wireframe?: boolean;
 }
 
 export class Material {
-	color: Color;
+	color: ColorValue;
 	wireframe: boolean;
 
 	constructor(options: MaterialOptions = {}) {
-		this.color = options.color ?? new Color(0xFFFFFF);
+		this.color = options.color ?? 0xFFFFFF;
 		this.wireframe = options.wireframe ?? false;
 	}
 
