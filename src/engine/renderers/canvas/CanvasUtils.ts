@@ -8,8 +8,9 @@ export const CanvasUtils = {
 
 	createCanvasRenderingContext2D(
 		canvas: HTMLCanvasElement,
+		options: CanvasRenderingContext2DSettings = {},
 	): CanvasRenderingContext2D {
-		const ctx = canvas.getContext("2d");
+		const ctx = canvas.getContext("2d", options);
 		if (!ctx) throw new Error("2D context not supported");
 		return ctx;
 	},

@@ -1,85 +1,154 @@
 import type { Camera } from "../../cameras/Camera.ts";
+import type { Vector3 } from "../../maths/Vector3.ts";
+import { Vector4 } from "../../maths/Vector4.ts";
 import type { Scene } from "../../scenes/Scene.ts";
 import { Renderer } from "../Renderer.ts";
-import { RendererUtils } from "../RendererUtils.ts";
+import { RenderPipeline } from "../common/RenderPipeline.ts";
+import { CanvasRasterizer } from "./CanvasRasterizer.ts";
 import { CanvasUtils } from "./CanvasUtils.ts";
 
 export class CanvasRenderer extends Renderer {
 	readonly isCanvasRenderer = true;
 
 	domElement: HTMLCanvasElement;
-	context: CanvasRenderingContext2D;
+	#bufferCanvas: HTMLCanvasElement;
+	#rasterizer: CanvasRasterizer;
+	#renderPipeline: RenderPipeline;
+	#currentViewport: Vector4;
+	#currentScissor: Vector4;
+	#currentScissorTest = false;
+	#pixelRatio = 1;
 
-	constructor() {
+	constructor(options: { width?: number; height?: number } = {}) {
 		super();
-		this.domElement = globalThis.document.createElement("canvas");
 
-		const context = this.domElement.getContext("2d");
-		if (!context) {
-			throw new Error("CanvasRenderer: unable to get 2D context");
-		}
+		this.domElement = CanvasUtils.createCanvasElement();
+		this.#bufferCanvas = globalThis.document.createElement("canvas");
+		this.#bufferCanvas.width = options.width ?? globalThis.innerWidth;
+		this.#bufferCanvas.height = options.height ?? globalThis.innerHeight;
 
-		this.context = context;
-		this.setSize(this.width, this.height);
+		this.#rasterizer = new CanvasRasterizer(this.#bufferCanvas);
+		this.#renderPipeline = new RenderPipeline();
+
+		this.#currentViewport = new Vector4(
+			0,
+			0,
+			this.#bufferCanvas.width,
+			this.#bufferCanvas.height,
+		);
+		this.#currentScissor = new Vector4(
+			0,
+			0,
+			this.#bufferCanvas.width,
+			this.#bufferCanvas.height,
+		);
+
+		this.setSize(
+			options.width ?? globalThis.innerWidth,
+			options.height ?? globalThis.innerHeight,
+		);
 	}
 
-	clear(): void {
-		const { context, width, height } = this;
-		context.clearRect(0, 0, width, height);
+	clear(color: string | number = "#000000"): void {
+		this.#rasterizer.clear(color);
 	}
 
 	render(scene: Scene, camera: Camera): void {
-		if (this.autoClear) this.clear();
+		this.#rasterizer.clear(scene.background ?? "#000000");
+		this.#rasterizer.beginFrame();
 
-		CanvasUtils.setBackgroundColor(
-			this.context,
-			this.width,
-			this.height,
-			scene.background,
-		);
+		const ctx = this.#bufferCanvas.getContext("2d");
+		if (ctx) {
+			if (this.#currentScissorTest) {
+				ctx.save();
+				ctx.beginPath();
+				ctx.rect(
+					this.#currentScissor.x,
+					this.#currentScissor.y,
+					this.#currentScissor.z,
+					this.#currentScissor.w,
+				);
+				ctx.clip();
+			}
 
-		camera.updateMatrixWorld();
-
-		const objects = RendererUtils.gatherObjects(
-			scene,
-			camera,
-			this.width,
-			this.height,
-		);
-
-		for (const { object } of objects) {
-			CanvasUtils.renderMesh(
-				this.context,
-				object,
+			this.#renderPipeline.render(
+				scene,
 				camera,
-				this.width,
-				this.height,
+				(
+					p1: Vector3,
+					p2: Vector3,
+					p3: Vector3,
+					color: number,
+					wireframe: boolean,
+				) => {
+					if (wireframe) {
+						this.#rasterizer.drawTriangle(p1, p2, p3, color);
+					} else {
+						this.#rasterizer.drawTriangleFilled(p1, p2, p3, color);
+					}
+				},
 			);
+
+			if (this.#currentScissorTest) ctx.restore();
 		}
+
+		this.#rasterizer.endFrame();
+
+		const displayCtx = this.domElement.getContext("2d");
+		if (!displayCtx) return;
+		displayCtx.imageSmoothingEnabled = false;
+
+		displayCtx.clearRect(
+			0,
+			0,
+			this.domElement.width,
+			this.domElement.height,
+		);
+		displayCtx.drawImage(
+			this.#bufferCanvas,
+			0,
+			0,
+			this.#bufferCanvas.width,
+			this.#bufferCanvas.height,
+			0,
+			0,
+			this.domElement.width,
+			this.domElement.height,
+		);
 	}
 
 	setPixelRatio(ratio: number): void {
-		this.pixelRatio = ratio;
-		this.setSize(this.width, this.height);
+		this.#pixelRatio = ratio;
+		this.setSize(this.domElement.width, this.domElement.height);
+	}
+
+	setScissor(scissor: Vector4): this {
+		this.#currentScissor.copy(scissor);
+		return this;
+	}
+
+	setScissorTest(enable: boolean): this {
+		this.#currentScissorTest = enable;
+		return this;
 	}
 
 	setSize(width: number, height: number): void {
-		this.width = width;
-		this.height = height;
-
-		this.domElement.width = width * this.pixelRatio;
-		this.domElement.height = height * this.pixelRatio;
-
+		this.domElement.width = width * this.#pixelRatio;
+		this.domElement.height = height * this.#pixelRatio;
 		this.domElement.style.width = `${width}px`;
 		this.domElement.style.height = `${height}px`;
 
-		this.context.setTransform(
-			this.pixelRatio,
-			0,
-			0,
-			this.pixelRatio,
-			0,
-			0,
-		);
+		this.#bufferCanvas.width = width;
+		this.#bufferCanvas.height = height;
+
+		this.#currentViewport.set(0, 0, width, height);
+		this.#currentScissor.set(0, 0, width, height);
+
+		this.#renderPipeline.renderTarget.setSize(width, height);
+	}
+
+	setViewport(viewport: Vector4): this {
+		this.#currentViewport.copy(viewport);
+		return this;
 	}
 }
