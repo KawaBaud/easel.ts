@@ -25,10 +25,6 @@ export class Object3D {
 		this.updateMatrix();
 	}
 
-	get isMesh(): boolean {
-		return "shape" in this && "material" in this;
-	}
-
 	add(object: Object3D): this {
 		if (object === this) return this;
 
