@@ -2,7 +2,7 @@ import { MathUtils } from "../maths/MathUtils.ts";
 import { Camera } from "./Camera.ts";
 
 export class PerspCamera extends Camera {
-	readonly isPerspCamera = true;
+	readonly isPerspCamera: boolean = true;
 
 	constructor(
 		public fov = 50,

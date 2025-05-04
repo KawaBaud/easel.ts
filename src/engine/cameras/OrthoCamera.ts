@@ -1,7 +1,7 @@
 import { Camera } from "./Camera.ts";
 
 export class OrthoCamera extends Camera {
-	readonly isOrthoCamera = true;
+	readonly isOrthoCamera: boolean = true;
 
 	constructor(
 		public left = -1,

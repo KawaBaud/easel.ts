@@ -2,7 +2,7 @@ import { Matrix4 } from "../maths/Matrix4.ts";
 import { Object3D } from "../objects/Object3D.ts";
 
 export class Camera extends Object3D {
-	readonly isCamera = true;
+	readonly isCamera: boolean = true;
 
 	projectionMatrix = new Matrix4();
 	matrixWorldInverse = new Matrix4();
@@ -13,7 +13,7 @@ export class Camera extends Object3D {
 	}
 
 	updateMatrixWorld(_force = false): void {
-		super.updateWorldMatrix(false, false);
+		super.updateWorldMatrix(true, false);
 		this.matrixWorldInverse.copy(this.worldMatrix).invert();
 	}
 
