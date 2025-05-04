@@ -1,6 +1,6 @@
 import { Color, type ColorValue } from "../../common/Color.ts";
 import { Vector3 } from "../../maths/Vector3.ts";
-import { CanvasUtils } from "../canvas/CanvasUtils.ts";
+import { CanvasUtils } from "../CanvasUtils.ts";
 
 export interface RasterizerOptions {
 	width?: number;

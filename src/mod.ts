@@ -8,8 +8,7 @@ import { Quaternion } from "./maths/Quaternion.ts";
 import { Vector2 } from "./maths/Vector2.ts";
 import { Vector3 } from "./maths/Vector3.ts";
 import { Mesh } from "./objects/Mesh.ts";
-import { CanvasRenderer } from "./renderers/canvas/CanvasRenderer.ts";
-import { RenderPipeline } from "./renderers/common/RenderPipeline.ts";
+import { CanvasRenderer } from "./renderers/CanvasRenderer.ts";
 import { Scene } from "./scenes/Scene.ts";
 import { CubeShape } from "./shapes/CubeShape.ts";
 import { PlaneShape } from "./shapes/PlaneShape.ts";
@@ -37,7 +36,6 @@ export const SCAPE = {
 
 	/* renderers */
 	CanvasRenderer,
-	RenderPipeline,
 
 	/* scenes */
 	Scene,

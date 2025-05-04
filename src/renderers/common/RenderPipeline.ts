@@ -13,12 +13,7 @@ export class RenderPipeline extends Pipeline {
 	}
 
 	override render(scene: Scene, camera: Camera, rasterizer: Rasterizer): this {
-		camera.updateMatrixWorld();
-
-		this.cull(scene, camera);
-
 		super.render(scene, camera, rasterizer);
-
 		return this;
 	}
 

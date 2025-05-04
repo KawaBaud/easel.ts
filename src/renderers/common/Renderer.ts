@@ -1,6 +1,6 @@
-import type { Camera } from "../cameras/Camera.ts";
-import { PerspCamera } from "../cameras/PerspCamera.ts";
-import type { Scene } from "../scenes/Scene.ts";
+import type { Camera } from "../../cameras/Camera.ts";
+import { PerspCamera } from "../../cameras/PerspCamera.ts";
+import type { Scene } from "../../scenes/Scene.ts";
 
 export interface RendererOptions {
 	width?: number;

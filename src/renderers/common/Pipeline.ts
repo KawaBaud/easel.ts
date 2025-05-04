@@ -4,8 +4,8 @@ import { Mesh } from "../../objects/Mesh.ts";
 import type { Object3D } from "../../objects/Object3D.ts";
 import type { Scene } from "../../scenes/Scene.ts";
 import { fromArray } from "../../utils.ts";
-import type { Rasterizer } from "./Rasterizer.ts";
-import { RenderList } from "./RenderList.ts";
+import type { Rasterizer } from "../common/Rasterizer.ts";
+import { RenderList } from "../common/RenderList.ts";
 
 const _v1 = new Vector3();
 const _v2 = new Vector3();
@@ -66,16 +66,10 @@ export class Pipeline {
 			_v1.applyMatrix4(camera.matrixWorldInverse);
 			_v2.applyMatrix4(camera.matrixWorldInverse);
 			_v3.applyMatrix4(camera.matrixWorldInverse);
-			if (_v1.z < -0.1 || _v2.z < -0.1 || _v3.z < -0.1) continue;
 
 			_v1.applyMatrix4(camera.projectionMatrix);
 			_v2.applyMatrix4(camera.projectionMatrix);
 			_v3.applyMatrix4(camera.projectionMatrix);
-
-			if (
-				(Math.abs(_v1.x) > 1 && Math.abs(_v2.x) > 1 && Math.abs(_v3.x) > 1) ||
-				(Math.abs(_v1.y) > 1 && Math.abs(_v2.y) > 1 && Math.abs(_v3.y) > 1)
-			) continue;
 
 			rasterizer.drawTriangle(
 				_v1,

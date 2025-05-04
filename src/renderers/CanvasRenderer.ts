@@ -1,26 +1,25 @@
-import type { Camera } from "../../cameras/Camera.ts";
-import { Color, type ColorValue } from "../../common/Color.ts";
-import type { Scene } from "../../scenes/Scene.ts";
-import { Rasterizer } from "../common/Rasterizer.ts";
-import { RenderPipeline } from "../common/RenderPipeline.ts";
-import { Renderer, type RendererOptions } from "../Renderer.ts";
-import { CanvasUtils } from "./CanvasUtils.ts";
+import type { Camera } from "../cameras/Camera.ts";
+import { Color, type ColorValue } from "../common/Color.ts";
+import type { Scene } from "../scenes/Scene.ts";
+import { CanvasRenderTarget } from "./CanvasRenderTarget.ts";
+import { Rasterizer } from "./common/Rasterizer.ts";
+import { RenderPipeline } from "./common/RenderPipeline.ts";
+import { Renderer, type RendererOptions } from "./common/Renderer.ts";
 
 export class CanvasRenderer extends Renderer {
 	domElement: HTMLCanvasElement;
 	context: CanvasRenderingContext2D;
 	rasterizer: Rasterizer;
 	pipeline: RenderPipeline;
+	renderTarget: CanvasRenderTarget;
 	#clearColor = new Color(0, 0, 0);
 
 	constructor(options?: RendererOptions) {
 		super(options);
 
-		this.domElement = CanvasUtils.createCanvasElement();
-		this.domElement.width = this.width;
-		this.domElement.height = this.height;
-
-		this.context = CanvasUtils.createCanvasRenderingContext2D(this.domElement);
+		this.renderTarget = new CanvasRenderTarget(this.width, this.height);
+		this.domElement = this.renderTarget.canvas;
+		this.context = this.renderTarget.ctx;
 
 		this.rasterizer = new Rasterizer({
 			width: this.width,
@@ -46,8 +45,7 @@ export class CanvasRenderer extends Renderer {
 	override setSize(width: number, height: number): this {
 		super.setSize(width, height);
 
-		this.domElement.width = width;
-		this.domElement.height = height;
+		this.renderTarget.setSize(width, height);
 		this.rasterizer.setSize(width, height);
 		this.pipeline.setSize(width, height);
 
