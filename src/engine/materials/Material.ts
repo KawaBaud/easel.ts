@@ -1,13 +1,9 @@
-import type { Cloneable, Copyable } from "../types/interfaces.ts";
-
 export interface MaterialOptions {
 	color?: number;
 	wireframe?: boolean;
 }
 
-export class Material implements Cloneable<Material>, Copyable<Material> {
-	readonly isMaterial: boolean = true;
-
+export class Material {
 	color: number;
 	wireframe: boolean;
 
