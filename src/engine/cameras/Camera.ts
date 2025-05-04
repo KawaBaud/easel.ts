@@ -4,10 +4,8 @@ import { Object3D } from "../objects/Object3D.ts";
 export class Camera extends Object3D {
 	readonly isCamera = true;
 
-	projectionMatrix: Matrix4 = new Matrix4();
-	matrixWorldInverse: Matrix4 = new Matrix4();
-
-	zoom = 1;
+	projectionMatrix = new Matrix4();
+	matrixWorldInverse = new Matrix4();
 
 	constructor() {
 		super();
@@ -28,7 +26,6 @@ export class Camera extends Object3D {
 	override copy(source: Camera): this {
 		super.copy(source);
 
-		this.zoom = source.zoom;
 		this.projectionMatrix.copy(source.projectionMatrix);
 		this.matrixWorldInverse.copy(source.matrixWorldInverse);
 
