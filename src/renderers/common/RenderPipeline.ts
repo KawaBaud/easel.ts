@@ -67,13 +67,9 @@ export class RenderPipeline extends Pipeline {
 			_v2.copy(v2).applyMatrix4(mesh.worldMatrix);
 			_v3.copy(v3).applyMatrix4(mesh.worldMatrix);
 
-			_v1.applyMatrix4(camera.matrixWorldInverse);
-			_v2.applyMatrix4(camera.matrixWorldInverse);
-			_v3.applyMatrix4(camera.matrixWorldInverse);
-
-			_v1.applyMatrix4(camera.projectionMatrix);
-			_v2.applyMatrix4(camera.projectionMatrix);
-			_v3.applyMatrix4(camera.projectionMatrix);
+			_v1.project(camera);
+			_v2.project(camera);
+			_v3.project(camera);
 
 			rasterizer.drawTriangle(
 				_v1,
