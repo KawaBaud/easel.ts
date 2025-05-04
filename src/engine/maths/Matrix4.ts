@@ -2,7 +2,7 @@ import type { Cloneable, Copyable, Serializable } from "../types/interfaces.ts";
 import { get, set } from "../utils.ts";
 import { MathUtils } from "./MathUtils.ts";
 import type { Quaternion } from "./Quaternion.ts";
-import { Vector3 } from "./Vector3.ts";
+import type { Vector3 } from "./Vector3.ts";
 
 export class Matrix4
 	implements
@@ -291,38 +291,39 @@ export class Matrix4
 	}
 
 	lookAt(eye: Vector3, target: Vector3, up: Vector3): this {
-		const z = Vector3.sub(eye, target);
+		const z = eye.clone().sub(target);
 		if (z.lengthSq === 0) z.z = 1;
 		z.unitize();
 
-		const x = Vector3.cross(up, z);
+		const x = up.clone().cross(z);
 		if (x.lengthSq === 0) {
 			Math.abs(up.z) === 1
 				? z.x += MathUtils.EPSILON
 				: z.z += MathUtils.EPSILON;
 			z.unitize();
+
 			x.copy(up).cross(z);
 		}
 		x.unitize();
 
-		const y = Vector3.cross(z, x);
+		const y = z.clone().cross(x);
 
 		return this.set(
 			x.x,
-			x.y,
-			x.z,
-			0,
 			y.x,
-			y.y,
-			y.z,
-			0,
 			z.x,
+			0,
+			x.y,
+			y.y,
 			z.y,
+			0,
+			x.z,
+			y.z,
 			z.z,
 			0,
-			-x.dot(eye),
-			-y.dot(eye),
-			-z.dot(eye),
+			0,
+			0,
+			0,
 			1,
 		);
 	}
