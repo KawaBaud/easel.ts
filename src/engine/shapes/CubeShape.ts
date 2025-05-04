@@ -22,43 +22,20 @@ export class CubeShape extends Shape {
 			new Vector3(-halfWidth, halfHeight, halfDepth),
 		];
 
+		const frontIndices = [0, 1, 2, 3];
+		const backIndices = [4, 5, 6, 7];
+		const rightIndices = [1, 5, 6, 2];
+		const leftIndices = [4, 0, 3, 7];
+		const topIndices = [3, 2, 6, 7];
+		const bottomIndices = [4, 5, 1, 0];
+
 		this.indices = [
-			0,
-			1,
-			2,
-			0,
-			2,
-			3,
-			1,
-			5,
-			6,
-			1,
-			6,
-			2,
-			5,
-			4,
-			7,
-			5,
-			7,
-			6,
-			4,
-			0,
-			3,
-			4,
-			3,
-			7,
-			3,
-			2,
-			6,
-			3,
-			6,
-			7,
-			4,
-			5,
-			1,
-			4,
-			1,
-			0,
+			...frontIndices,
+			...backIndices,
+			...rightIndices,
+			...leftIndices,
+			...topIndices,
+			...bottomIndices,
 		];
 	}
 
