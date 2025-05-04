@@ -1,4 +1,4 @@
-import { Color } from "../core/Color.ts";
+import { Color } from "../common/Color.ts";
 import { Object3D } from "../objects/Object3D.ts";
 
 export class Scene extends Object3D {

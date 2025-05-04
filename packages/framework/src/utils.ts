@@ -10,5 +10,6 @@ export function setArray<T extends Array<unknown>>(
 	i: number,
 	value: T[number],
 ): void {
+	if (i >= array.length) return;
 	array[i] = value;
 }

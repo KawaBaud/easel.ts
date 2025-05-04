@@ -36,11 +36,14 @@ export class Vector3 {
 		const iw = w !== 0 ? 1 / w : 1;
 
 		return this.set(
-			((getArray(me, 0) * x) + (getArray(me, 4) * y) + (getArray(me, 8) * z) +
+			((getArray(me, 0) * x) + (getArray(me, 4) * y) +
+				(getArray(me, 8) * z) +
 				getArray(me, 12)) * iw,
-			((getArray(me, 1) * x) + (getArray(me, 5) * y) + (getArray(me, 9) * z) +
+			((getArray(me, 1) * x) + (getArray(me, 5) * y) +
+				(getArray(me, 9) * z) +
 				getArray(me, 13)) * iw,
-			((getArray(me, 2) * x) + (getArray(me, 6) * y) + (getArray(me, 10) * z) +
+			((getArray(me, 2) * x) + (getArray(me, 6) * y) +
+				(getArray(me, 10) * z) +
 				getArray(me, 14)) * iw,
 		);
 	}

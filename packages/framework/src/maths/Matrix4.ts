@@ -64,8 +64,16 @@ export class Matrix4 {
 		const te = this.elements;
 
 		let sx = Math.hypot(getArray(te, 0), getArray(te, 1), getArray(te, 2));
-		const sy = Math.hypot(getArray(te, 4), getArray(te, 5), getArray(te, 6));
-		const sz = Math.hypot(getArray(te, 8), getArray(te, 9), getArray(te, 10));
+		const sy = Math.hypot(
+			getArray(te, 4),
+			getArray(te, 5),
+			getArray(te, 6),
+		);
+		const sz = Math.hypot(
+			getArray(te, 8),
+			getArray(te, 9),
+			getArray(te, 10),
+		);
 
 		const det = this.determinant();
 		if (det < 0) sx = -sx;
@@ -210,7 +218,8 @@ export class Matrix4 {
 		const det13 = (n21 * t2) - (n22 * t4) + (n24 * t6);
 		const det14 = (n21 * t3) - (n22 * t5) + (n23 * t6);
 
-		const det = (n11 * det11) - (n12 * det12) + (n13 * det13) - (n14 * det14);
+		const det = (n11 * det11) - (n12 * det12) + (n13 * det13) -
+			(n14 * det14);
 		if (det === 0) {
 			return this.set(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
 		}
