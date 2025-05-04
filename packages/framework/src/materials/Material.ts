@@ -1,14 +1,16 @@
+import { Color } from "../common/Color.ts";
+
 export interface MaterialOptions {
-	color?: number;
+	color?: Color;
 	wireframe?: boolean;
 }
 
 export class Material {
-	color: number;
+	color: Color;
 	wireframe: boolean;
 
 	constructor(options: MaterialOptions = {}) {
-		this.color = options.color ?? 0xFFFFFF;
+		this.color = options.color ?? new Color(0xFFFFFF);
 		this.wireframe = options.wireframe ?? false;
 	}
 
