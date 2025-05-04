@@ -2,11 +2,8 @@ import { Euler } from "../maths/Euler.ts";
 import { Matrix4 } from "../maths/Matrix4.ts";
 import { Quaternion } from "../maths/Quaternion.ts";
 import { Vector3 } from "../maths/Vector3.ts";
-import type { Cloneable, Copyable } from "../types/interfaces.ts";
 
-export class Object3D implements Cloneable<Object3D>, Copyable<Object3D> {
-	readonly isObject3D: boolean = true;
-
+export class Object3D {
 	id: string = crypto.randomUUID();
 	name = "";
 
@@ -64,28 +61,6 @@ export class Object3D implements Cloneable<Object3D>, Copyable<Object3D> {
 		return this;
 	}
 
-	getObjectById(id: string): Object3D | undefined {
-		if (this.id === id) return this;
-
-		for (const child of this.children) {
-			const object = child.getObjectById(id);
-			if (object) return object;
-		}
-
-		return undefined;
-	}
-
-	getObjectByName(name: string): Object3D | undefined {
-		if (this.name === name) return this;
-
-		for (const child of this.children) {
-			const object = child.getObjectByName(name);
-			if (object) return object;
-		}
-
-		return undefined;
-	}
-
 	lookAt(target: Vector3): this {
 		const position = this.position;
 		const direction = new Vector3().subVectors(target, position);
@@ -114,51 +89,6 @@ export class Object3D implements Cloneable<Object3D>, Copyable<Object3D> {
 		}
 
 		return this;
-	}
-
-	removeFromParent(): this {
-		if (this.parent) this.parent.remove(this);
-		return this;
-	}
-
-	toJSON(): Record<string, unknown> {
-		const output: Record<string, unknown> = {
-			id: this.id,
-			name: this.name,
-			type: "Object3D",
-			position: [this.position.x, this.position.y, this.position.z],
-			rotation: [
-				this.rotation.x,
-				this.rotation.y,
-				this.rotation.z,
-				this.rotation.order,
-			],
-			scale: [this.scale.x, this.scale.y, this.scale.z],
-			visible: this.visible,
-			userData: this.userData,
-		};
-		return {
-			...output,
-			...(this.children.length > 0
-				? { children: this.children.map((child) => child.toJSON()) }
-				: {}),
-		};
-	}
-
-	traverse(callback: (object: Object3D) => void): void {
-		callback(this);
-
-		for (const child of this.children) {
-			child.traverse(callback);
-		}
-	}
-
-	traverseVisible(callback: (object: Object3D) => void): void {
-		if (!this.visible) return;
-
-		callback(this);
-
-		for (const child of this.children) child.traverseVisible(callback);
 	}
 
 	updateMatrix(): void {

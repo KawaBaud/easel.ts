@@ -3,8 +3,6 @@ import type { Shape } from "../shapes/Shape.ts";
 import { Object3D } from "./Object3D.ts";
 
 export class Mesh extends Object3D {
-	readonly isMesh: boolean = true;
-
 	constructor(
 		public shape: Shape,
 		public material: Material,

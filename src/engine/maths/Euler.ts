@@ -1,26 +1,12 @@
-import type {
-	Cloneable,
-	Copyable,
-	Equatable,
-	Serializable,
-} from "../types/interfaces.ts";
-import { get } from "../utils.ts";
+import { getArray } from "../utils.ts";
 import { MathUtils } from "./MathUtils.ts";
 import { Matrix4 } from "./Matrix4.ts";
-import { Quaternion } from "./Quaternion.ts";
-import type { Vector3 } from "./Vector3.ts";
+import type { Quaternion } from "./Quaternion.ts";
 
 export type EulerOrder = "XYZ" | "YXZ" | "ZXY" | "ZYX" | "YZX" | "XZY";
 
-function getEulerOrderValue(order: EulerOrder): number {
-	return ["XYZ", "YXZ", "ZXY", "ZYX", "YZX", "XZY"].indexOf(order);
-}
-
-export class Euler
-	implements Cloneable<Euler>, Copyable<Euler>, Equatable<Euler>, Serializable {
+export class Euler {
 	static readonly GIMBAL_LOCK_THRESHOLD: number = 0.9999999;
-
-	readonly isEuler: boolean = true;
 
 	constructor(
 		public x = 0,
@@ -35,38 +21,6 @@ export class Euler
 
 	copy(euler: Euler): this {
 		return this.set(euler.x, euler.y, euler.z, euler.order);
-	}
-
-	equals(euler: Euler): boolean {
-		return (
-			(euler.x === this.x) &&
-			(euler.y === this.y) &&
-			(euler.z === this.z) &&
-			(euler.order === this.order)
-		);
-	}
-
-	fromArray(array: number[], offset = 0): this {
-		this.x = get(array, offset);
-		this.y = get(array, offset + 1);
-		this.z = get(array, offset + 2);
-		if (array[offset + 3] !== undefined) {
-			const orderValue = get(array, offset + 3);
-			this.order = [
-				"XYZ",
-				"YXZ",
-				"ZXY",
-				"ZYX",
-				"YZX",
-				"XZY",
-			][orderValue] as EulerOrder;
-		}
-		return this;
-	}
-
-	reorder(newOrder: EulerOrder): this {
-		const q = new Quaternion().setFromEuler(this);
-		return this.setFromQuaternion(q, newOrder);
 	}
 
 	set(x: number, y: number, z: number, order?: EulerOrder): this {
@@ -85,15 +39,15 @@ export class Euler
 	setFromRotationMatrix(m: Matrix4, order?: EulerOrder): this {
 		const te = m.elements;
 
-		const m11 = get(te, 0);
-		const m12 = get(te, 4);
-		const m13 = get(te, 8);
-		const m21 = get(te, 1);
-		const m22 = get(te, 5);
-		const m23 = get(te, 9);
-		const m31 = get(te, 2);
-		const m32 = get(te, 6);
-		const m33 = get(te, 10);
+		const m11 = getArray(te, 0);
+		const m12 = getArray(te, 4);
+		const m13 = getArray(te, 8);
+		const m21 = getArray(te, 1);
+		const m22 = getArray(te, 5);
+		const m23 = getArray(te, 9);
+		const m31 = getArray(te, 2);
+		const m32 = getArray(te, 6);
+		const m33 = getArray(te, 10);
 
 		const currentOrder = order || this.order;
 		switch (currentOrder) {
@@ -136,22 +90,6 @@ export class Euler
 		}
 		this.order = currentOrder;
 		return this;
-	}
-
-	setFromVector3(v: Vector3, order?: EulerOrder): this {
-		return this.set(v.x, v.y, v.z, order);
-	}
-
-	toArray(array: number[] = [], offset = 0): number[] {
-		array[offset] = this.x;
-		array[offset + 1] = this.y;
-		array[offset + 2] = this.z;
-		array[offset + 3] = getEulerOrderValue(this.order);
-		return array;
-	}
-
-	toVector3(v: Vector3): Vector3 {
-		return v.set(this.x, this.y, this.z);
 	}
 
 	#isGimbalLock(value: number): boolean {

@@ -1,17 +1,9 @@
-import type { Cloneable, Copyable, Serializable } from "../types/interfaces.ts";
-import { get, set } from "../utils.ts";
+import { getArray } from "../utils.ts";
 import { MathUtils } from "./MathUtils.ts";
 import type { Quaternion } from "./Quaternion.ts";
 import type { Vector3 } from "./Vector3.ts";
 
-export class Matrix4
-	implements
-		Cloneable<Matrix4>,
-		Copyable<Matrix4>,
-		Iterable<number>,
-		Serializable {
-	readonly isMatrix4: boolean = true;
-
+export class Matrix4 {
 	constructor(public elements = new Float32Array(16)) {
 		this.identity();
 	}
@@ -68,42 +60,32 @@ export class Matrix4
 		return this;
 	}
 
-	copyPosition(m: Matrix4): this {
-		const te = this.elements;
-		const me = m.elements;
-
-		te[12] = get(me, 12);
-		te[13] = get(me, 13);
-		te[14] = get(me, 14);
-		return this;
-	}
-
 	decompose(position: Vector3, q: Quaternion, scale: Vector3): this {
 		const te = this.elements;
 
-		let sx = Math.hypot(get(te, 0), get(te, 1), get(te, 2));
-		const sy = Math.hypot(get(te, 4), get(te, 5), get(te, 6));
-		const sz = Math.hypot(get(te, 8), get(te, 9), get(te, 10));
+		let sx = Math.hypot(getArray(te, 0), getArray(te, 1), getArray(te, 2));
+		const sy = Math.hypot(getArray(te, 4), getArray(te, 5), getArray(te, 6));
+		const sz = Math.hypot(getArray(te, 8), getArray(te, 9), getArray(te, 10));
 
 		const det = this.determinant();
 		if (det < 0) sx = -sx;
 
-		position.x = get(te, 12);
-		position.y = get(te, 13);
-		position.z = get(te, 14);
+		position.x = getArray(te, 12);
+		position.y = getArray(te, 13);
+		position.z = getArray(te, 14);
 		const sxInv = 1 / sx;
 		const syInv = 1 / sy;
 		const szInv = 1 / sz;
 
-		const r11 = get(te, 0) * sxInv;
-		const r12 = get(te, 4) * syInv;
-		const r13 = get(te, 8) * szInv;
-		const r21 = get(te, 1) * sxInv;
-		const r22 = get(te, 5) * syInv;
-		const r23 = get(te, 9) * szInv;
-		const r31 = get(te, 2) * sxInv;
-		const r32 = get(te, 6) * syInv;
-		const r33 = get(te, 10) * szInv;
+		const r11 = getArray(te, 0) * sxInv;
+		const r12 = getArray(te, 4) * syInv;
+		const r13 = getArray(te, 8) * szInv;
+		const r21 = getArray(te, 1) * sxInv;
+		const r22 = getArray(te, 5) * syInv;
+		const r23 = getArray(te, 9) * szInv;
+		const r31 = getArray(te, 2) * sxInv;
+		const r32 = getArray(te, 6) * syInv;
+		const r33 = getArray(te, 10) * szInv;
 
 		const trace = r11 + r22 + r33;
 		let s;
@@ -143,22 +125,22 @@ export class Matrix4
 	determinant(): number {
 		const te = this.elements;
 
-		const n11 = get(te, 0);
-		const n12 = get(te, 4);
-		const n13 = get(te, 8);
-		const n14 = get(te, 12);
-		const n21 = get(te, 1);
-		const n22 = get(te, 5);
-		const n23 = get(te, 9);
-		const n24 = get(te, 13);
-		const n31 = get(te, 2);
-		const n32 = get(te, 6);
-		const n33 = get(te, 10);
-		const n34 = get(te, 14);
-		const n41 = get(te, 3);
-		const n42 = get(te, 7);
-		const n43 = get(te, 11);
-		const n44 = get(te, 15);
+		const n11 = getArray(te, 0);
+		const n12 = getArray(te, 4);
+		const n13 = getArray(te, 8);
+		const n14 = getArray(te, 12);
+		const n21 = getArray(te, 1);
+		const n22 = getArray(te, 5);
+		const n23 = getArray(te, 9);
+		const n24 = getArray(te, 13);
+		const n31 = getArray(te, 2);
+		const n32 = getArray(te, 6);
+		const n33 = getArray(te, 10);
+		const n34 = getArray(te, 14);
+		const n41 = getArray(te, 3);
+		const n42 = getArray(te, 7);
+		const n43 = getArray(te, 11);
+		const n44 = getArray(te, 15);
 
 		const t1 = (n33 * n44) - (n34 * n43);
 		const t2 = (n32 * n44) - (n34 * n42);
@@ -173,27 +155,6 @@ export class Matrix4
 		const det14 = (n21 * t3) - (n22 * t5) + (n23 * t6);
 
 		return (n11 * det11) - (n12 * det12) + (n13 * det13) - (n14 * det14);
-	}
-
-	fromArray(array: number[], offset = 0): this {
-		const te = this.elements;
-		te[0] = get(array, offset + 0);
-		te[1] = get(array, offset + 1);
-		te[2] = get(array, offset + 2);
-		te[3] = get(array, offset + 3);
-		te[4] = get(array, offset + 4);
-		te[5] = get(array, offset + 5);
-		te[6] = get(array, offset + 6);
-		te[7] = get(array, offset + 7);
-		te[8] = get(array, offset + 8);
-		te[9] = get(array, offset + 9);
-		te[10] = get(array, offset + 10);
-		te[11] = get(array, offset + 11);
-		te[12] = get(array, offset + 12);
-		te[13] = get(array, offset + 13);
-		te[14] = get(array, offset + 14);
-		te[15] = get(array, offset + 15);
-		return this;
 	}
 
 	identity(): this {
@@ -220,22 +181,22 @@ export class Matrix4
 	invert(): this {
 		const te = this.elements;
 
-		const n11 = get(te, 0);
-		const n12 = get(te, 4);
-		const n13 = get(te, 8);
-		const n14 = get(te, 12);
-		const n21 = get(te, 1);
-		const n22 = get(te, 5);
-		const n23 = get(te, 9);
-		const n24 = get(te, 13);
-		const n31 = get(te, 2);
-		const n32 = get(te, 6);
-		const n33 = get(te, 10);
-		const n34 = get(te, 14);
-		const n41 = get(te, 3);
-		const n42 = get(te, 7);
-		const n43 = get(te, 11);
-		const n44 = get(te, 15);
+		const n11 = getArray(te, 0);
+		const n12 = getArray(te, 4);
+		const n13 = getArray(te, 8);
+		const n14 = getArray(te, 12);
+		const n21 = getArray(te, 1);
+		const n22 = getArray(te, 5);
+		const n23 = getArray(te, 9);
+		const n24 = getArray(te, 13);
+		const n31 = getArray(te, 2);
+		const n32 = getArray(te, 6);
+		const n33 = getArray(te, 10);
+		const n34 = getArray(te, 14);
+		const n41 = getArray(te, 3);
+		const n42 = getArray(te, 7);
+		const n43 = getArray(te, 11);
+		const n44 = getArray(te, 15);
 
 		const t1 = (n33 * n44) - (n34 * n43);
 		const t2 = (n32 * n44) - (n34 * n42);
@@ -371,8 +332,8 @@ export class Matrix4
 		const x = 1 / (aspect * tHalfFov);
 		const y = 1 / tHalfFov;
 
-		const c = -(far + near) / (far - near);
-		const d = (-2 * far * near) / (far - near);
+		const c = far === Infinity ? -1 : -(far + near) / (far - near);
+		const d = far === Infinity ? -2 * near : (-2 * far * near) / (far - near);
 
 		return this.set(
 			x,
@@ -386,10 +347,10 @@ export class Matrix4
 			0,
 			0,
 			c,
-			d,
-			0,
-			0,
 			-1,
+			0,
+			0,
+			d,
 			0,
 		);
 	}
@@ -430,189 +391,43 @@ export class Matrix4
 		);
 	}
 
-	makeRotationX(theta: number): this {
-		const c = Math.cos(theta);
-		const s = Math.sin(theta);
-
-		return this.set(
-			1,
-			0,
-			0,
-			0,
-			0,
-			c,
-			-s,
-			0,
-			0,
-			s,
-			c,
-			0,
-			0,
-			0,
-			0,
-			1,
-		);
-	}
-
-	makeRotationY(theta: number): this {
-		const c = Math.cos(theta);
-		const s = Math.sin(theta);
-
-		return this.set(
-			c,
-			0,
-			s,
-			0,
-			0,
-			1,
-			0,
-			0,
-			-s,
-			0,
-			c,
-			0,
-			0,
-			0,
-			0,
-			1,
-		);
-	}
-
-	makeRotationZ(theta: number): this {
-		const c = Math.cos(theta);
-		const s = Math.sin(theta);
-
-		return this.set(
-			c,
-			-s,
-			0,
-			0,
-			s,
-			c,
-			0,
-			0,
-			0,
-			0,
-			1,
-			0,
-			0,
-			0,
-			0,
-			1,
-		);
-	}
-
-	makeScale(x: number, y: number, z: number): this {
-		return this.set(
-			x,
-			0,
-			0,
-			0,
-			0,
-			y,
-			0,
-			0,
-			0,
-			0,
-			z,
-			0,
-			0,
-			0,
-			0,
-			1,
-		);
-	}
-
-	makeShear(
-		xy: number,
-		xz: number,
-		yx: number,
-		yz: number,
-		zx: number,
-		zy: number,
-	): this {
-		return this.set(
-			1,
-			yx,
-			zx,
-			0,
-			xy,
-			1,
-			zy,
-			0,
-			xz,
-			yz,
-			1,
-			0,
-			0,
-			0,
-			0,
-			1,
-		);
-	}
-
-	makeTranslation(x: number, y: number, z: number): this {
-		return this.set(
-			1,
-			0,
-			0,
-			x,
-			0,
-			1,
-			0,
-			y,
-			0,
-			0,
-			1,
-			z,
-			0,
-			0,
-			0,
-			1,
-		);
-	}
-
-	mul(m: Matrix4): this {
-		return this.mulMatrices(this, m);
-	}
-
 	mulMatrices(a: Matrix4, b: Matrix4): this {
 		const ae = a.elements;
 		const be = b.elements;
 
-		const a11 = get(ae, 0);
-		const a12 = get(ae, 4);
-		const a13 = get(ae, 8);
-		const a14 = get(ae, 12);
-		const a21 = get(ae, 1);
-		const a22 = get(ae, 5);
-		const a23 = get(ae, 9);
-		const a24 = get(ae, 13);
-		const a31 = get(ae, 2);
-		const a32 = get(ae, 6);
-		const a33 = get(ae, 10);
-		const a34 = get(ae, 14);
-		const a41 = get(ae, 3);
-		const a42 = get(ae, 7);
-		const a43 = get(ae, 11);
-		const a44 = get(ae, 15);
+		const a11 = getArray(ae, 0);
+		const a12 = getArray(ae, 4);
+		const a13 = getArray(ae, 8);
+		const a14 = getArray(ae, 12);
+		const a21 = getArray(ae, 1);
+		const a22 = getArray(ae, 5);
+		const a23 = getArray(ae, 9);
+		const a24 = getArray(ae, 13);
+		const a31 = getArray(ae, 2);
+		const a32 = getArray(ae, 6);
+		const a33 = getArray(ae, 10);
+		const a34 = getArray(ae, 14);
+		const a41 = getArray(ae, 3);
+		const a42 = getArray(ae, 7);
+		const a43 = getArray(ae, 11);
+		const a44 = getArray(ae, 15);
 
-		const b11 = get(be, 0);
-		const b12 = get(be, 4);
-		const b13 = get(be, 8);
-		const b14 = get(be, 12);
-		const b21 = get(be, 1);
-		const b22 = get(be, 5);
-		const b23 = get(be, 9);
-		const b24 = get(be, 13);
-		const b31 = get(be, 2);
-		const b32 = get(be, 6);
-		const b33 = get(be, 10);
-		const b34 = get(be, 14);
-		const b41 = get(be, 3);
-		const b42 = get(be, 7);
-		const b43 = get(be, 11);
-		const b44 = get(be, 15);
+		const b11 = getArray(be, 0);
+		const b12 = getArray(be, 4);
+		const b13 = getArray(be, 8);
+		const b14 = getArray(be, 12);
+		const b21 = getArray(be, 1);
+		const b22 = getArray(be, 5);
+		const b23 = getArray(be, 9);
+		const b24 = getArray(be, 13);
+		const b31 = getArray(be, 2);
+		const b32 = getArray(be, 6);
+		const b33 = getArray(be, 10);
+		const b34 = getArray(be, 14);
+		const b41 = getArray(be, 3);
+		const b42 = getArray(be, 7);
+		const b43 = getArray(be, 11);
+		const b44 = getArray(be, 15);
 
 		return this.set(
 			(a11 * b11) + (a12 * b21) + (a13 * b31) + (a14 * b41),
@@ -632,33 +447,6 @@ export class Matrix4
 			(a41 * b13) + (a42 * b23) + (a43 * b33) + (a44 * b43),
 			(a41 * b14) + (a42 * b24) + (a43 * b34) + (a44 * b44),
 		);
-	}
-
-	mulScalar(scalar: number): this {
-		const te = this.elements;
-
-		return this.set(
-			get(te, 0) * scalar,
-			get(te, 4) * scalar,
-			get(te, 8) * scalar,
-			get(te, 12) * scalar,
-			get(te, 1) * scalar,
-			get(te, 5) * scalar,
-			get(te, 9) * scalar,
-			get(te, 13) * scalar,
-			get(te, 2) * scalar,
-			get(te, 6) * scalar,
-			get(te, 10) * scalar,
-			get(te, 14) * scalar,
-			get(te, 3) * scalar,
-			get(te, 7) * scalar,
-			get(te, 11) * scalar,
-			get(te, 15) * scalar,
-		);
-	}
-
-	premul(m: Matrix4): this {
-		return this.mulMatrices(m, this);
 	}
 
 	set(
@@ -699,49 +487,27 @@ export class Matrix4
 		return this;
 	}
 
-	toArray(array: number[] = [], offset = 0): number[] {
-		const te = this.elements;
-
-		set(array, offset + 0, get(te, 0));
-		set(array, offset + 1, get(te, 1));
-		set(array, offset + 2, get(te, 2));
-		set(array, offset + 3, get(te, 3));
-		set(array, offset + 4, get(te, 4));
-		set(array, offset + 5, get(te, 5));
-		set(array, offset + 6, get(te, 6));
-		set(array, offset + 7, get(te, 7));
-		set(array, offset + 8, get(te, 8));
-		set(array, offset + 9, get(te, 9));
-		set(array, offset + 10, get(te, 10));
-		set(array, offset + 11, get(te, 11));
-		set(array, offset + 12, get(te, 12));
-		set(array, offset + 13, get(te, 13));
-		set(array, offset + 14, get(te, 14));
-		set(array, offset + 15, get(te, 15));
-		return array;
-	}
-
 	transpose(): this {
 		const te = this.elements;
 
 		let temp;
-		temp = get(te, 1);
-		te[1] = get(te, 4);
+		temp = getArray(te, 1);
+		te[1] = getArray(te, 4);
 		te[4] = temp;
-		temp = get(te, 2);
-		te[2] = get(te, 8);
+		temp = getArray(te, 2);
+		te[2] = getArray(te, 8);
 		te[8] = temp;
-		temp = get(te, 3);
-		te[3] = get(te, 12);
+		temp = getArray(te, 3);
+		te[3] = getArray(te, 12);
 		te[12] = temp;
-		temp = get(te, 6);
-		te[6] = get(te, 9);
+		temp = getArray(te, 6);
+		te[6] = getArray(te, 9);
 		te[9] = temp;
-		temp = get(te, 7);
-		te[7] = get(te, 13);
+		temp = getArray(te, 7);
+		te[7] = getArray(te, 13);
 		te[13] = temp;
-		temp = get(te, 11);
-		te[11] = get(te, 14);
+		temp = getArray(te, 11);
+		te[11] = getArray(te, 14);
 		te[14] = temp;
 		return this;
 	}
@@ -749,21 +515,21 @@ export class Matrix4
 	*[Symbol.iterator](): IterableIterator<number> {
 		const te = this.elements;
 
-		yield get(te, 0);
-		yield get(te, 1);
-		yield get(te, 2);
-		yield get(te, 3);
-		yield get(te, 4);
-		yield get(te, 5);
-		yield get(te, 6);
-		yield get(te, 7);
-		yield get(te, 8);
-		yield get(te, 9);
-		yield get(te, 10);
-		yield get(te, 11);
-		yield get(te, 12);
-		yield get(te, 13);
-		yield get(te, 14);
-		yield get(te, 15);
+		yield getArray(te, 0);
+		yield getArray(te, 1);
+		yield getArray(te, 2);
+		yield getArray(te, 3);
+		yield getArray(te, 4);
+		yield getArray(te, 5);
+		yield getArray(te, 6);
+		yield getArray(te, 7);
+		yield getArray(te, 8);
+		yield getArray(te, 9);
+		yield getArray(te, 10);
+		yield getArray(te, 11);
+		yield getArray(te, 12);
+		yield getArray(te, 13);
+		yield getArray(te, 14);
+		yield getArray(te, 15);
 	}
 }
