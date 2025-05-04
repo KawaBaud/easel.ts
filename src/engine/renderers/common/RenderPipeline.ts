@@ -1,6 +1,6 @@
 import type { Camera } from "../../cameras/Camera.ts";
 import type { Color } from "../../core/Color.ts";
-import type { Vector3 } from "../../maths/Vector3.ts";
+import { Vector3 } from "../../maths/Vector3.ts";
 import type { Mesh } from "../../objects/Mesh.ts";
 import type { Object3D } from "../../objects/Object3D.ts";
 import type { Scene } from "../../scenes/Scene.ts";
@@ -31,9 +31,12 @@ export class RenderPipeline extends Pipeline {
 		if (!shape.vertices.length) return;
 
 		const { width, height } = this.renderTarget;
+
 		const indices = shape.indices;
 		const vertices = shape.vertices;
 		const screenVertices: Vector3[] = [];
+
+		mesh.updateWorldMatrix(true, false);
 
 		for (let i = 0; i < vertices.length; i++) {
 			const vertex = vertices[i];
@@ -42,9 +45,18 @@ export class RenderPipeline extends Pipeline {
 			const worldVertex = vertex.clone();
 			worldVertex.applyMatrix4(mesh.worldMatrix);
 
-			const screenVertex = worldVertex.clone().project(camera);
-			screenVertex.x = ((screenVertex.x + 1) / 2) * width;
-			screenVertex.y = ((1 - screenVertex.y) / 2) * height;
+			const viewVertex = worldVertex.clone().applyMatrix4(
+				camera.matrixWorldInverse,
+			);
+			const projVertex = viewVertex.clone().applyMatrix4(
+				camera.projectionMatrix,
+			);
+
+			const screenVertex = new Vector3();
+			const w = projVertex.z !== 0 ? projVertex.z : 1;
+			screenVertex.x = ((projVertex.x / w) + 1) / 2 * width;
+			screenVertex.y = ((1 - (projVertex.y / w)) / 2) * height;
+			screenVertex.z = -viewVertex.z;
 
 			screenVertices.push(screenVertex);
 		}
@@ -53,7 +65,6 @@ export class RenderPipeline extends Pipeline {
 			const idx1 = indices[i];
 			const idx2 = indices[i + 1];
 			const idx3 = indices[i + 2];
-
 			if (
 				(idx1 === undefined) ||
 				(idx2 === undefined) ||
