@@ -75,6 +75,9 @@ export class MathUtils {
 		return result;
 	}
 
+	/**
+	 * @param angle - in radians
+	 */
 	static qcos(angle: number): number {
 		const index = (((angle * MathUtils.#TABLE_SCALE) | 0) +
 			MathUtils.#QUARTER_TABLE_SIZE) & MathUtils.#TABLE_MASK;
@@ -95,6 +98,9 @@ export class MathUtils {
 		return ((a * b) / MathUtils.Q_ONE) | 0;
 	}
 
+	/**
+	 * @param angle - in radians
+	 */
 	static qsin(angle: number): number {
 		const index = ((angle * MathUtils.#TABLE_SCALE) | 0) &
 			MathUtils.#TABLE_MASK;
