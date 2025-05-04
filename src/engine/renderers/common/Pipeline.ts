@@ -92,7 +92,7 @@ export class Pipeline {
 			const v3 = worldVertices[idx3];
 			if (!v1 || !v2 || !v3) continue;
 
-			if (v1.z < 0 || v2.z < 0 || v3.z < 0) continue;
+			if (v1.z === 0 || v2.z === 0 || v3.z === 0) continue;
 
 			_render(v1, v2, v3, material.color, material.wireframe);
 		}
