@@ -1,3 +1,4 @@
+import type { Camera } from "../cameras/Camera.ts";
 import { fromArray } from "../utils.ts";
 import type { Euler } from "./Euler.ts";
 import type { Matrix4 } from "./Matrix4.ts";
@@ -122,6 +123,14 @@ export class Vector3 {
 
 	unitize(): this {
 		return this.divScalar(this.length || 1);
+	}
+
+	project(
+		camera: Camera,
+	): this {
+		return this.applyMatrix4(camera.matrixWorldInverse).applyMatrix4(
+			camera.projectionMatrix,
+		);
 	}
 
 	*[Symbol.iterator](): IterableIterator<number> {
