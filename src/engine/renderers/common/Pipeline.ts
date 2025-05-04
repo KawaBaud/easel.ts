@@ -1,7 +1,7 @@
 import { RenderList } from "./RenderList.ts";
 
 export class Pipeline {
-	readonly isPipeline = true;
+	readonly isPipeline: boolean = true;
 
-	renderList: RenderList = new RenderList();
+	renderList = new RenderList();
 }
