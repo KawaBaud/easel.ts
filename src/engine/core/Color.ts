@@ -9,6 +9,55 @@ export class Color implements Cloneable<Color>, Copyable<Color> {
 		public b = 1,
 	) {}
 
+	get hex(): number {
+		return (this.r * 255) << 16 | (this.g * 255) << 8 | (this.b * 255);
+	}
+
+	get hexStyle(): string {
+		return `#${this.hex.toString(16).padStart(6, "0")}`;
+	}
+
+	get rgb(): number[] {
+		return [this.r, this.g, this.b];
+	}
+
+	get rgbStyle(): string {
+		return `rgb(${this.r * 255}, ${this.g * 255}, ${this.b * 255})`;
+	}
+
+	get hsl(): number[] {
+		const { r, g, b } = this;
+
+		const max = Math.max(r, g, b);
+		const min = Math.min(r, g, b);
+		const l = (max + min) / 2;
+
+		if (max === min) return [0, 0, l];
+
+		const d = max - min;
+		const s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+
+		let h = 0;
+		switch (max) {
+			case r:
+				h = (g - b) / d + (g < b ? 6 : 0);
+				break;
+			case g:
+				h = (b - r) / d + 2;
+				break;
+			case b:
+				h = (r - g) / d + 4;
+				break;
+		}
+
+		return [(h / 6) * 360, s * 100, l * 100];
+	}
+
+	get hslStyle(): string {
+		const [h, s, l] = this.hsl;
+		return `hsl(${h}, ${s}%, ${l}%)`;
+	}
+
 	clone(): Color {
 		return new Color(this.r, this.g, this.b);
 	}
