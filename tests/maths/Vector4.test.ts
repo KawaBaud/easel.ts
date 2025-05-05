@@ -69,9 +69,7 @@ Deno.test("Vector4: fromArray", () => {
 });
 
 Deno.test("Vector4: set", () => {
-	const a = new Vector4();
-	const threeA = new ThreeVector4();
-	a.set(4, 5, 6, 7);
-	threeA.set(4, 5, 6, 7);
+	const a = new Vector4().set(4, 5, 6, 7);
+	const threeA = new ThreeVector4().set(4, 5, 6, 7);
 	compareVectors(a, threeA, "set(x, y)");
 });

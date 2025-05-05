@@ -244,18 +244,14 @@ Deno.test("Vector3: applyQuaternion", () => {
 });
 
 Deno.test("Vector3: divScalar", () => {
-	const a = new Vector3(3, 6, 9);
-	const threeA = new ThreeVector3(3, 6, 9);
 	const scalar = 3;
 
-	a.divScalar(scalar);
-	threeA.divideScalar(scalar);
+	const a = new Vector3(3, 6, 9).divScalar(scalar);
+	const threeA = new ThreeVector3(3, 6, 9).divideScalar(scalar);
 	compareVectors(a, threeA, "divScalar");
 
-	const b = new Vector3(1, 1, 1);
-	const threeB = new ThreeVector3(1, 1, 1);
-	b.divScalar(0);
-	threeB.divideScalar(0);
+	const b = new Vector3(1, 1, 1).divScalar(0);
+	const threeB = new ThreeVector3(1, 1, 1).divideScalar(0);
 	assertEquals(b.x, Infinity, "divScalar by zero (x)");
 	assertEquals(b.y, Infinity, "divScalar by zero (y)");
 	assertEquals(b.z, Infinity, "divScalar by zero (z)");
@@ -263,20 +259,16 @@ Deno.test("Vector3: divScalar", () => {
 });
 
 Deno.test("Vector3: mulScalar", () => {
-	const a = new Vector3(1, 2, 3);
-	const threeA = new ThreeVector3(1, 2, 3);
 	const scalar = 3;
 
-	a.mulScalar(scalar);
-	threeA.multiplyScalar(scalar);
+	const a = new Vector3(1, 2, 3).mulScalar(scalar);
+	const threeA = new ThreeVector3(1, 2, 3).multiplyScalar(scalar);
 	compareVectors(a, threeA, "mulScalar");
 });
 
 Deno.test("Vector3: set", () => {
-	const a = new Vector3();
-	const threeA = new ThreeVector3();
-	a.set(4, 5, 6);
-	threeA.set(4, 5, 6);
+	const a = new Vector3().set(4, 5, 6);
+	const threeA = new ThreeVector3().set(4, 5, 6);
 	compareVectors(a, threeA, "set(x, y, z)");
 
 	a.set(7, 8);
@@ -286,34 +278,26 @@ Deno.test("Vector3: set", () => {
 });
 
 Deno.test("Vector3: sub", () => {
-	const a = new Vector3(10, 8, 6);
 	const b = new Vector3(1, 2, 3);
-	const threeA = new ThreeVector3(10, 8, 6);
+	const a = new Vector3(10, 8, 6).sub(b);
 	const threeB = new ThreeVector3(1, 2, 3);
-
-	a.sub(b);
-	threeA.sub(threeB);
+	const threeA = new ThreeVector3(10, 8, 6).sub(threeB);
 	compareVectors(a, threeA, "sub");
 });
 
 Deno.test("Vector3: subVectors", () => {
 	const a = new Vector3(10, 8, 6);
 	const b = new Vector3(1, 2, 3);
-	const c = new Vector3();
+	const c = new Vector3().subVectors(a, b);
 	const threeA = new ThreeVector3(10, 8, 6);
 	const threeB = new ThreeVector3(1, 2, 3);
-	const threeC = new ThreeVector3();
-
-	c.subVectors(a, b);
-	threeC.subVectors(threeA, threeB);
+	const threeC = new ThreeVector3().subVectors(threeA, threeB);
 	compareVectors(c, threeC, "subVectors");
 });
 
 Deno.test("Vector3: unitize", () => {
-	const a = new Vector3(3, 4, 0);
-	const threeA = new ThreeVector3(3, 4, 0);
-	a.unitize();
-	threeA.normalize();
+	const a = new Vector3(3, 4, 0).unitize();
+	const threeA = new ThreeVector3(3, 4, 0).normalize();
 	compareVectors(a, threeA, "unitize");
 	assertAlmostEquals(
 		a.length,
@@ -322,9 +306,7 @@ Deno.test("Vector3: unitize", () => {
 		"unitize results in length 1",
 	);
 
-	const b = new Vector3(0, 0, 0);
-	const threeB = new ThreeVector3(0, 0, 0);
-	b.unitize();
-	threeB.normalize();
+	const b = new Vector3(0, 0, 0).unitize();
+	const threeB = new ThreeVector3(0, 0, 0).normalize();
 	compareVectors(b, threeB, "unitize zero vector");
 });

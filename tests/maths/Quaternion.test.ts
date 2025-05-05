@@ -3,10 +3,17 @@ import {
 	assertEquals,
 	assertNotStrictEquals,
 } from "@std/assert";
-import { Euler as ThreeEuler, Quaternion as ThreeQuaternion } from "three";
+import {
+	Euler as ThreeEuler,
+	Matrix4 as ThreeMatrix4,
+	Quaternion as ThreeQuaternion,
+	Vector3 as ThreeVector3,
+} from "three";
 import { Euler } from "../../src/maths/Euler.ts";
 import { MathUtils } from "../../src/maths/MathUtils.ts";
+import { Matrix4 } from "../../src/maths/Matrix4.ts";
 import { Quaternion } from "../../src/maths/Quaternion.ts";
+import { Vector3 } from "../../src/maths/Vector3.ts";
 
 function compareQuaternions(
 	ourQuat: Quaternion,
@@ -108,11 +115,15 @@ Deno.test("Quaternion: fromArray", () => {
 	compareQuaternions(a, threeA, "fromArray");
 });
 
+Deno.test("Quaternion: invert", () => {
+	const a = new Quaternion(1, 2, 3, 4).invert();
+	const threeA = new ThreeQuaternion(1, 2, 3, 4).invert();
+	compareQuaternions(a, threeA, "invert");
+});
+
 Deno.test("Quaternion: set", () => {
-	const a = new Quaternion();
-	const threeA = new ThreeQuaternion();
-	a.set(4, 5, 6, 7);
-	threeA.set(4, 5, 6, 7);
+	const a = new Quaternion().set(4, 5, 6, 7);
+	const threeA = new ThreeQuaternion().set(4, 5, 6, 7);
 	compareQuaternions(a, threeA, "set(x, y, z, w)");
 });
 
@@ -167,11 +178,26 @@ Deno.test("Quaternion: setFromEuler", () => {
 	compareQuaternions(c, threeC, "setFromEuler (ZXY)");
 });
 
+Deno.test("Quaternion: setFromRotationMatrix", () => {
+	const m = new Matrix4().lookAt(
+		new Vector3(1, 2, 3),
+		new Vector3(4, 5, 6),
+		new Vector3(0, 1, 0),
+	);
+	const threeM = new ThreeMatrix4().lookAt(
+		new ThreeVector3(1, 2, 3),
+		new ThreeVector3(4, 5, 6),
+		new ThreeVector3(0, 1, 0),
+	);
+
+	const a = new Quaternion().setFromRotationMatrix(m);
+	const threeA = new ThreeQuaternion().setFromRotationMatrix(threeM);
+	compareQuaternions(a, threeA, "setFromRotationMatrix");
+});
+
 Deno.test("Quaternion: unitize", () => {
-	const a = new Quaternion(3, 4, 0, 0);
-	const threeA = new ThreeQuaternion(3, 4, 0, 0);
-	a.unitize();
-	threeA.normalize();
+	const a = new Quaternion(3, 4, 0, 0).unitize();
+	const threeA = new ThreeQuaternion(3, 4, 0, 0).normalize();
 	compareQuaternions(a, threeA, "unitize");
 	assertAlmostEquals(
 		a.length,
