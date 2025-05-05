@@ -3,9 +3,14 @@ import {
 	assertEquals,
 	assertNotStrictEquals,
 } from "@std/assert";
-import { Matrix4 as ThreeMatrix4, Vector3 as ThreeVector3 } from "three";
+import {
+	Matrix4 as ThreeMatrix4,
+	Quaternion as ThreeQuaternion,
+	Vector3 as ThreeVector3,
+} from "three";
 import { MathUtils } from "../../src/maths/MathUtils.ts";
 import { Matrix4 } from "../../src/maths/Matrix4.ts";
+import { Quaternion } from "../../src/maths/Quaternion.ts";
 import { Vector3 } from "../../src/maths/Vector3.ts";
 
 function compareVectors(
@@ -127,60 +132,77 @@ Deno.test("Vector3: add", () => {
 
 Deno.test("Vector3: applyMatrix4", () => {
 	const v = new Vector3(1, 2, 3);
-	const threeV = new ThreeVector3(1, 2, 3);
+	const vThree = new ThreeVector3(1, 2, 3);
 
 	const m = new Matrix4();
-	const threeM = new ThreeMatrix4();
+	const mThree = new ThreeMatrix4();
 	v.applyMatrix4(m);
-	threeV.applyMatrix4(threeM);
-	compareVectors(v, threeV, "applyMatrix4 (identity)");
+	vThree.applyMatrix4(mThree);
+	compareVectors(v, vThree, "applyMatrix4 (identity)");
 
-	// const vTrans = new Vector3(1, 2, 3);
-	// const threeVTrans = new ThreeVector3(1, 2, 3);
-	// const mTrans = new Matrix4().makeTranslation(5, 6, 7);
-	// const threeMTrans = new ThreeMatrix4().makeTranslation(5, 6, 7);
-	// vTrans.applyMatrix4(mTrans);
-	// threeVTrans.applyMatrix4(threeMTrans);
-	// compareVectors(vTrans, threeVTrans, "applyMatrix4 (translation)");
+	const tv = new Vector3(1, 2, 3);
+	const tvThree = new ThreeVector3(1, 2, 3);
+	const tm = new Matrix4().makeTranslation(5, 6, 7);
+	const tmThree = new ThreeMatrix4().makeTranslation(5, 6, 7);
+	tv.applyMatrix4(tm);
+	tvThree.applyMatrix4(tmThree);
+	compareVectors(tv, tvThree, "applyMatrix4 (translation)");
 
-	// const vRot = new Vector3(1, 0, 0);
-	// const threeVRot = new ThreeVector3(1, 0, 0);
-	// const angle = MathUtils.HALF_PI;
-	// const mRot = new Matrix4().makeRotationZ(angle);
-	// const threeMRot = new ThreeMatrix4().makeRotationZ(angle);
-	// vRot.applyMatrix4(mRot);
-	// threeVRot.applyMatrix4(threeMRot);
-	// compareVectors(vRot, threeVRot, "applyMatrix4 (rotation Z)");
+	const rx = new Vector3(1, 0, 0);
+	const ry = new Vector3(0, 1, 0);
+	const rz = new Vector3(0, 0, 1);
+	const rxThree = new ThreeVector3(1, 0, 0);
+	const ryThree = new ThreeVector3(0, 1, 0);
+	const rzThree = new ThreeVector3(0, 0, 1);
 
-	// const vScale = new Vector3(1, 2, 3);
-	// const threeVScale = new ThreeVector3(1, 2, 3);
-	// const mScale = new Matrix4().makeScale(2, 3, 4);
-	// const threeMScale = new ThreeMatrix4().makeScale(2, 3, 4);
-	// vScale.applyMatrix4(mScale);
-	// threeVScale.applyMatrix4(threeMScale);
-	// compareVectors(vScale, threeVScale, "applyMatrix4 (scale)");
+	const angle = MathUtils.HALF_PI;
+
+	const mrx = new Matrix4().makeRotationX(angle);
+	const mry = new Matrix4().makeRotationY(angle);
+	const mrz = new Matrix4().makeRotationZ(angle);
+	const mrxThree = new ThreeMatrix4().makeRotationX(angle);
+	const mryThree = new ThreeMatrix4().makeRotationY(angle);
+	const mrzThree = new ThreeMatrix4().makeRotationZ(angle);
+	rx.applyMatrix4(mrx);
+	ry.applyMatrix4(mry);
+	rz.applyMatrix4(mrz);
+	rxThree.applyMatrix4(mrxThree);
+	ryThree.applyMatrix4(mryThree);
+	rzThree.applyMatrix4(mrzThree);
+	compareVectors(rx, rxThree, "applyMatrix4 (rotation X)");
+	compareVectors(ry, ryThree, "applyMatrix4 (rotation Y)");
+	compareVectors(rz, rzThree, "applyMatrix4 (rotation Z)");
+
+	const sv = new Vector3(1, 2, 3);
+	const svThree = new ThreeVector3(1, 2, 3);
+	const ms = new Matrix4().makeScale(2, 3, 4);
+	const msThree = new ThreeMatrix4().makeScale(2, 3, 4);
+	sv.applyMatrix4(ms);
+	svThree.applyMatrix4(msThree);
+	compareVectors(sv, svThree, "applyMatrix4 (scale)");
 });
 
-// Deno.test("Vector3: applyQuaternion", () => {
-// 	const v = new Vector3(1, 0, 0);
-// 	const threeV = new ThreeVector3(1, 0, 0);
-// 	const axis = new Vector3(0, 0, 1);
-// 	const angle = MathUtils.HALF_PI;
+Deno.test("Vector3: applyQuaternion", () => {
+	const v = new Vector3(1, 0, 0);
+	const threeV = new ThreeVector3(1, 0, 0);
 
-// 	const q = new Quaternion().setFromAxisAngle(axis, angle);
-// 	const threeQ = new ThreeQuaternion().setFromAxisAngle(
-// 		new ThreeVector3(0, 0, 1),
-// 		angle,
-// 	);
+	const axis = new Vector3(0, 0, 1);
+	const angle = MathUtils.HALF_PI;
 
-// 	v.applyQuaternion(q);
-// 	threeV.applyQuaternion(threeQ);
-// 	compareVectors(
-// 		v,
-// 		threeV,
-// 		"applyQuaternion (rotate (1,0,0) around Z by PI/2)",
-// 	);
-// });
+	const q = new Quaternion().setFromAxisAngle(axis, angle);
+	const threeQ = new ThreeQuaternion().setFromAxisAngle(
+		new ThreeVector3(0, 0, 1),
+		angle,
+	);
+
+	v.applyQuaternion(q);
+	threeV.applyQuaternion(threeQ);
+	compareVectors(
+		v,
+		threeV,
+		"applyQuaternion (rotate (1,0,0) around Z by PI/2)",
+	);
+});
 
 Deno.test("Vector3: divScalar", () => {
 	const a = new Vector3(3, 6, 9);
