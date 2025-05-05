@@ -312,10 +312,10 @@ export class Matrix4 {
 		const tz = -((far + near) * p);
 
 		const te = this.elements;
-		te[0] = x, te[1] = 0, te[2] = 0, te[3] = tx;
-		te[4] = 0, te[5] = y, te[6] = 0, te[7] = ty;
-		te[8] = 0, te[9] = 0, te[10] = z, te[11] = tz;
-		te[12] = 0, te[13] = 0, te[14] = 0, te[15] = 1;
+		te[0] = x, te[1] = 0, te[2] = 0, te[3] = 0;
+		te[4] = 0, te[5] = y, te[6] = 0, te[7] = 0;
+		te[8] = 0, te[9] = 0, te[10] = z, te[11] = 0;
+		te[12] = tx, te[13] = ty, te[14] = tz, te[15] = 1;
 		return this;
 	}
 
@@ -327,16 +327,18 @@ export class Matrix4 {
 	): this {
 		const tHalfFov = Math.tan(fov / 2);
 
-		const xScale = 0.1 / (aspect * tHalfFov);
-		const yScale = 0.1 / tHalfFov;
+		const nearPlane = 0.1;
+
+		const xScale = nearPlane / (aspect * tHalfFov);
+		const yScale = nearPlane / tHalfFov;
 		const zScale = -(far + near) / (far - near);
 		const zOffset = -(2 * far * near) / (far - near);
 
 		const te = this.elements;
 		te[0] = xScale, te[1] = 0, te[2] = 0, te[3] = 0;
 		te[4] = 0, te[5] = yScale, te[6] = 0, te[7] = 0;
-		te[8] = 0, te[9] = 0, te[10] = zScale, te[11] = zOffset;
-		te[12] = 0, te[13] = 0, te[14] = -1, te[15] = 0;
+		te[8] = 0, te[9] = 0, te[10] = zScale, te[11] = -1;
+		te[12] = 0, te[13] = 0, te[14] = zOffset, te[15] = 0;
 		return this;
 	}
 
