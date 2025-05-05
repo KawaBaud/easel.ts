@@ -32,14 +32,6 @@ export class Quaternion {
 		return this;
 	}
 
-	div(q: Quaternion): this {
-		this.x /= q.x;
-		this.y /= q.y;
-		this.z /= q.z;
-		this.w /= q.w;
-		return this;
-	}
-
 	divScalar(scalar: number): this {
 		this.x /= scalar;
 		this.y /= scalar;
@@ -62,6 +54,17 @@ export class Quaternion {
 		this.x = -this.x;
 		this.y = -this.y;
 		this.z = -this.z;
+		return this;
+	}
+
+	premul(q: Quaternion): this {
+		const { x, y, z, w } = this;
+		const { x: qx, y: qy, z: qz, w: qw } = q;
+
+		this.x = (qx * w) + (qw * x) + (qy * z) - (qz * y);
+		this.y = (qy * w) + (qw * y) + (qz * x) - (qx * z);
+		this.z = (qz * w) + (qw * z) + (qx * y) - (qy * x);
+		this.w = (qw * w) - (qx * x) - (qy * y) - (qz * z);
 		return this;
 	}
 
