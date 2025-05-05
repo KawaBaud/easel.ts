@@ -121,6 +121,14 @@ Deno.test("Quaternion: invert", () => {
 	compareQuaternions(a, threeA, "invert");
 });
 
+Deno.test("Quaternion: premul", () => {
+	const a = new Quaternion(1, 2, 3, 4);
+	const b = a.premul(new Quaternion(5, 6, 7, 8));
+	const threeA = new ThreeQuaternion(1, 2, 3, 4);
+	const threeB = threeA.premultiply(new ThreeQuaternion(5, 6, 7, 8));
+	compareQuaternions(b, threeB, "premul");
+});
+
 Deno.test("Quaternion: set", () => {
 	const a = new Quaternion().set(4, 5, 6, 7);
 	const threeA = new ThreeQuaternion().set(4, 5, 6, 7);
