@@ -2,6 +2,7 @@ import type { Camera } from "../../cameras/Camera.ts";
 import { Vector3 } from "../../maths/Vector3.ts";
 import { Mesh } from "../../objects/Mesh.ts";
 import type { Scene } from "../../scenes/Scene.ts";
+import { ShapeUtils } from "../../shapes/ShapeUtils.ts";
 import "../../types.ts";
 import { Pipeline } from "./Pipeline.ts";
 import type { Rasterizer } from "./Rasterizer.ts";
@@ -43,15 +44,20 @@ export class RenderPipeline extends Pipeline {
 		const shape = mesh.shape;
 		const material = mesh.material;
 
-		if (!shape || !shape.indices || shape.indices.length === 0) return;
+		if (!shape || (!shape.vertices || (shape.vertices.length === 0))) return;
 
 		const vertices = shape.vertices;
-		const indices = shape.indices;
+		let indices = shape.indices;
+		if (!indices || indices.length === 0) {
+			indices = ShapeUtils.triangulate(vertices);
+			shape.indices = indices;
+		}
 
 		for (let i = 0; i < indices.length; i += 3) {
 			const idx1 = indices.safeAt(i);
 			const idx2 = indices.safeAt(i + 1);
 			const idx3 = indices.safeAt(i + 2);
+
 			if (
 				(idx1 >= vertices.length) ||
 				(idx2 >= vertices.length) ||
