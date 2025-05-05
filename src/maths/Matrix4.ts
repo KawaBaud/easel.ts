@@ -66,7 +66,7 @@ export class Matrix4 {
 
 	decompose(position: Vector3, q: Quaternion, scale: Vector3): this {
 		this.extractPosition(position);
-		this.extractScale(this, scale);
+		this.extractScale(scale);
 
 		const rotationMatrix = new Matrix4().extractRotation(this);
 		q.setFromRotationMatrix(rotationMatrix);
@@ -120,11 +120,10 @@ export class Matrix4 {
 	}
 
 	extractRotation(m: Matrix4): this {
-		const te = this.elements;
 		const me = m.elements;
 
 		const scale = new Vector3();
-		this.extractScale(m, scale);
+		m.extractScale(scale);
 
 		const invScaleX = 1 / scale.x;
 		const invScaleY = 1 / scale.y;
@@ -133,13 +132,14 @@ export class Matrix4 {
 		const m11 = fromArray(me, 0) * invScaleX,
 			m12 = fromArray(me, 1) * invScaleX,
 			m13 = fromArray(me, 2) * invScaleX;
-		const m31 = fromArray(me, 8) * invScaleZ,
-			m32 = fromArray(me, 9) * invScaleZ,
-			m33 = fromArray(me, 10) * invScaleZ;
 		const m21 = fromArray(me, 4) * invScaleY,
 			m22 = fromArray(me, 5) * invScaleY,
 			m23 = fromArray(me, 6) * invScaleY;
+		const m31 = fromArray(me, 8) * invScaleZ,
+			m32 = fromArray(me, 9) * invScaleZ,
+			m33 = fromArray(me, 10) * invScaleZ;
 
+		const te = this.elements;
 		te[0] = m11, te[1] = m12, te[2] = m13, te[3] = 0;
 		te[4] = m21, te[5] = m22, te[6] = m23, te[7] = 0;
 		te[8] = m31, te[9] = m32, te[10] = m33, te[11] = 0;
@@ -147,8 +147,8 @@ export class Matrix4 {
 		return this;
 	}
 
-	extractScale(m: Matrix4, scale: Vector3): this {
-		const me = m.elements;
+	extractScale(scale: Vector3): this {
+		const me = this.elements;
 
 		let sx = Math.hypot(
 			fromArray(me, 0),
@@ -166,7 +166,7 @@ export class Matrix4 {
 			fromArray(me, 10),
 		);
 
-		const det = m.determinant();
+		const det = this.determinant();
 		if (det < 0) sx = -sx;
 
 		scale.x = sx;
