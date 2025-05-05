@@ -4,15 +4,62 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SCAPE</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=DotGothic16&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="css/style.css">
+    <title>Our | Three</title>
+    <style>
+        body {
+            margin: 0;
+        }
+
+        .container {
+            display: flex;
+            width: 100vw;
+            height: 100vh;
+        }
+
+        .left,
+        .right {
+            flex: 1;
+            position: relative;
+        }
+
+        canvas {
+            width: 100%;
+            height: 100%;
+        }
+    </style>
 </head>
 
 <body>
-    <script type="module" src="examples/scape.ts"></script>
+    <div class="container">
+        <div id="left" class="left"></div>
+        <div id="right" class="right"></div>
+    </div>
+
+    <script type="module">
+        const leftContainer = document.getElementById('left');
+        const rightContainer = document.getElementById('right');
+
+        async function loadModules() {
+            try {
+                const [ourModule, threeModule] = await Promise.all([
+                    import('./examples/3d_1.ts'),
+                    import('./examples/three_3d_1.ts')
+                ]);
+
+                setTimeout(() => {
+                    const canvases = document.querySelectorAll('canvas');
+                    if (canvases.length >= 2) {
+                        leftContainer.appendChild(canvases[1]);
+                        rightContainer.appendChild(canvases[0]);
+                    }
+                }, 100);
+            } catch (error) {
+                console.error("Error loading modules:", error);
+            }
+        }
+
+        loadModules();
+    </script>
 </body>
 
 </html>
