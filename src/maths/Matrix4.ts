@@ -146,6 +146,7 @@ export class Matrix4 {
 		te[12] = 0, te[13] = 0, te[14] = 0, te[15] = 1;
 		return this;
 	}
+
 	extractScale(m: Matrix4, scale: Vector3): this {
 		const me = m.elements;
 
@@ -339,15 +340,6 @@ export class Matrix4 {
 		return this;
 	}
 
-	makeTranslation(x: number, y: number, z: number): this {
-		const te = this.elements;
-		te[0] = 1, te[1] = 0, te[2] = 0, te[3] = 0;
-		te[4] = 0, te[5] = 1, te[6] = 0, te[7] = 0;
-		te[8] = 0, te[9] = 0, te[10] = 1, te[11] = 0;
-		te[12] = x, te[13] = y, te[14] = z, te[15] = 1;
-		return this;
-	}
-
 	makeRotationFromEuler(euler: Euler): this {
 		return this.makeRotationFromQuaternion(
 			new Quaternion().setFromEuler(euler),
@@ -404,6 +396,15 @@ export class Matrix4 {
 		te[4] = 0, te[5] = y, te[6] = 0, te[7] = 0;
 		te[8] = 0, te[9] = 0, te[10] = z, te[11] = 0;
 		te[12] = 0, te[13] = 0, te[14] = 0, te[15] = 1;
+		return this;
+	}
+
+	makeTranslation(x: number, y: number, z: number): this {
+		const te = this.elements;
+		te[0] = 1, te[1] = 0, te[2] = 0, te[3] = 0;
+		te[4] = 0, te[5] = 1, te[6] = 0, te[7] = 0;
+		te[8] = 0, te[9] = 0, te[10] = 1, te[11] = 0;
+		te[12] = x, te[13] = y, te[14] = z, te[15] = 1;
 		return this;
 	}
 
