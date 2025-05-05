@@ -122,10 +122,8 @@ Deno.test("Euler: fromArray", () => {
 });
 
 Deno.test("Euler: set", () => {
-	const a = new Euler();
-	const threeA = new ThreeEuler();
-	a.set(4, 5, 6, "ZYX");
-	threeA.set(4, 5, 6, "ZYX");
+	const a = new Euler().set(4, 5, 6, "ZYX");
+	const threeA = new ThreeEuler().set(4, 5, 6, "ZYX");
 	compareEulers(a, threeA, "set(x, y, z, order)");
 });
 
