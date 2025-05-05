@@ -3,6 +3,7 @@ export class MathUtils {
 
 	static readonly TAU: number = 6.283185307179586;
 	static readonly HALF_PI: number = 1.5707963267948966;
+	static readonly QUARTER_PI: number = 0.7853981633974483;
 
 	static readonly RAD2DEG: number = 57.29577951308232;
 	static readonly DEG2RAD: number = 0.017453292519943295;
