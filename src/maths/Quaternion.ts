@@ -1,4 +1,5 @@
 import type { Euler } from "./Euler.ts";
+import type { Vector3 } from "./Vector3.ts";
 
 export class Quaternion {
 	constructor(
@@ -22,6 +23,18 @@ export class Quaternion {
 		this.z = z;
 		this.w = w;
 		return this;
+	}
+
+	setFromAxisAngle(axis: Vector3, angle: number): this {
+		const halfAngle = angle / 2;
+		const s = Math.sin(halfAngle);
+
+		return this.set(
+			axis.x * s,
+			axis.y * s,
+			axis.z * s,
+			Math.cos(halfAngle),
+		);
 	}
 
 	setFromEuler(euler: Euler): this {
