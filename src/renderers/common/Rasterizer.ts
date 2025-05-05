@@ -134,7 +134,6 @@ export class Rasterizer {
 			this.drawLine(v3, v1, color);
 			return this;
 		}
-
 		return this;
 	}
 
