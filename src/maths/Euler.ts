@@ -23,6 +23,15 @@ export class Euler {
 		return this.set(euler.x, euler.y, euler.z, euler.order);
 	}
 
+	fromArray(array: [number, number, number, EulerOrder?]): this {
+		return this.set(
+			array[0],
+			array[1],
+			array[2],
+			array[3] ?? this.order,
+		);
+	}
+
 	reorder(newOrder: EulerOrder): this {
 		const q = new Quaternion().setFromEuler(this);
 		return this.setFromQuaternion(q, newOrder);

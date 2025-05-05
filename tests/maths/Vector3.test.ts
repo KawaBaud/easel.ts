@@ -58,12 +58,50 @@ Deno.test("Vector3: constructor", () => {
 	compareVectors(b, threeB, "constructor w/ values");
 });
 
+Deno.test("Vector3: get->length", () => {
+	const a = new Vector3(3, 4, 0);
+	const threeA = new ThreeVector3(3, 4, 0);
+	assertEquals(a.length, 5);
+	assertAlmostEquals(a.length, threeA.length(), MathUtils.EPSILON, "length");
+
+	const b = new Vector3(0, 0, 0);
+	const threeB = new ThreeVector3(0, 0, 0);
+	assertEquals(b.length, 0);
+	assertAlmostEquals(
+		b.length,
+		threeB.length(),
+		MathUtils.EPSILON,
+		"length zero vector",
+	);
+});
+
+Deno.test("Vector3: get->lengthSq", () => {
+	const a = new Vector3(3, 4, 0);
+	const threeA = new ThreeVector3(3, 4, 0);
+	assertEquals(a.lengthSq, 25);
+	assertAlmostEquals(
+		a.lengthSq,
+		threeA.lengthSq(),
+		MathUtils.EPSILON,
+		"lengthSq",
+	);
+
+	const b = new Vector3(1, 2, 3);
+	const threeB = new ThreeVector3(1, 2, 3);
+	assertEquals(b.lengthSq, 1 * 1 + 2 * 2 + 3 * 3);
+	assertAlmostEquals(
+		b.lengthSq,
+		threeB.lengthSq(),
+		MathUtils.EPSILON,
+		"lengthSq non-zero z",
+	);
+});
+
 Deno.test("Vector3: clone", () => {
 	const a = new Vector3(1, 2, 3);
 	const b = a.clone();
 	const threeA = new ThreeVector3(1, 2, 3);
 	const threeB = threeA.clone();
-
 	compareVectors(b, threeB, "clone");
 	assertNotStrictEquals(a, b, "clone creates new instance");
 });
@@ -114,9 +152,10 @@ Deno.test("Vector3: crossVectors", () => {
 	const threeD = new ThreeVector3(2, 3, 4);
 	const threeE = new ThreeVector3(5, 6, 7);
 	const threeF = new ThreeVector3();
+
 	f.crossVectors(d, e);
 	threeF.crossVectors(threeD, threeE);
-	compareVectors(f, threeF, "crossVectors general");
+	compareVectors(f, threeF, "crossVectors");
 });
 
 Deno.test("Vector3: add", () => {
@@ -221,45 +260,6 @@ Deno.test("Vector3: divScalar", () => {
 	assertEquals(b.y, Infinity, "divScalar by zero (y)");
 	assertEquals(b.z, Infinity, "divScalar by zero (z)");
 	compareVectors(b, threeB, "divScalar by zero");
-});
-
-Deno.test("Vector3: length", () => {
-	const a = new Vector3(3, 4, 0);
-	const threeA = new ThreeVector3(3, 4, 0);
-	assertEquals(a.length, 5);
-	assertAlmostEquals(a.length, threeA.length(), MathUtils.EPSILON, "length");
-
-	const b = new Vector3(0, 0, 0);
-	const threeB = new ThreeVector3(0, 0, 0);
-	assertEquals(b.length, 0);
-	assertAlmostEquals(
-		b.length,
-		threeB.length(),
-		MathUtils.EPSILON,
-		"length zero vector",
-	);
-});
-
-Deno.test("Vector3: lengthSq", () => {
-	const a = new Vector3(3, 4, 0);
-	const threeA = new ThreeVector3(3, 4, 0);
-	assertEquals(a.lengthSq, 25);
-	assertAlmostEquals(
-		a.lengthSq,
-		threeA.lengthSq(),
-		MathUtils.EPSILON,
-		"lengthSq",
-	);
-
-	const b = new Vector3(1, 2, 3);
-	const threeB = new ThreeVector3(1, 2, 3);
-	assertEquals(b.lengthSq, 1 * 1 + 2 * 2 + 3 * 3);
-	assertAlmostEquals(
-		b.lengthSq,
-		threeB.lengthSq(),
-		MathUtils.EPSILON,
-		"lengthSq non-zero z",
-	);
 });
 
 Deno.test("Vector3: mulScalar", () => {

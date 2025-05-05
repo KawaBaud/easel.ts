@@ -95,6 +95,15 @@ export class Vector3 {
 		return this;
 	}
 
+	fromArray(array: number[]): this {
+		const slice = array.slice(0, 3);
+		return this.set(
+			fromArray(slice, 0),
+			fromArray(slice, 1),
+			fromArray(slice, 2),
+		);
+	}
+
 	mulScalar(scalar: number): this {
 		this.x *= scalar;
 		this.y *= scalar;

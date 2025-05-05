@@ -49,7 +49,6 @@ Deno.test("Vector2: clone", () => {
 	const b = a.clone();
 	const threeA = new ThreeVector2(1, 2);
 	const threeB = threeA.clone();
-
 	compareVectors(b, threeB, "clone");
 	assertNotStrictEquals(a, b, "clone creates new instance");
 });
@@ -61,6 +60,12 @@ Deno.test("Vector2: copy", () => {
 	const threeB = new ThreeVector2().copy(threeA);
 	compareVectors(b, threeB, "copy");
 	compareVectors(a, threeA, "copy (original unchanged)");
+});
+
+Deno.test("Vector2: fromArray", () => {
+	const a = new Vector2().fromArray([1, 2]);
+	const threeA = new ThreeVector2(1, 2);
+	compareVectors(a, threeA, "fromArray");
 });
 
 Deno.test("Vector2: set", () => {

@@ -1,3 +1,5 @@
+import { fromArray } from "../utils.ts";
+
 export class Vector2 {
 	constructor(public x = 0, public y = 0) {}
 
@@ -7,6 +9,14 @@ export class Vector2 {
 
 	copy(v: Vector2): this {
 		return this.set(v.x, v.y);
+	}
+
+	fromArray(array: number[]): this {
+		const slice = array.slice(0, 3);
+		return this.set(
+			fromArray(slice, 0),
+			fromArray(slice, 1),
+		);
 	}
 
 	set(x: number, y: number): this {
