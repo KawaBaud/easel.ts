@@ -113,8 +113,8 @@ export class Rasterizer {
 		const screenX = screenPoint.x | 0;
 		const screenY = screenPoint.y | 0;
 		if (
-			(screenX < 0 || screenX >= this.width) ||
-			(screenY < 0 || screenY >= this.height)
+			(screenX < 0 || (screenX >= this.width)) ||
+			(screenY < 0 || (screenY >= this.height))
 		) return this;
 
 		this.setPixel(screenX, screenY, color);
@@ -176,14 +176,8 @@ export class Rasterizer {
 	}
 
 	#projectToScreen(point: Vector3): Vector3 {
-		const invW = (point.z !== 0) ? 1 / point.z : 1;
-
-		const ndcX = point.x * invW;
-		const ndcY = point.y * invW;
-
-		const x = ((ndcX + 1) * this.width / 2) | 0;
-		const y = ((-ndcY + 1) * this.height / 2) | 0;
-
+		const x = ((point.x + 1) * this.width / 2) | 0;
+		const y = ((-point.y + 1) * this.height / 2) | 0;
 		return new Vector3(x, y, point.z);
 	}
 }
