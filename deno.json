@@ -68,7 +68,8 @@
         "exclude": []
     },
     "imports": {
-        "three": "npm:three.js@^0.77.1",
+        "@std/assert": "jsr:@std/assert@^1.0.13",
+        "three": "https://esm.sh/three",
         "vite": "npm:vite@^6.3.4"
     },
     "exclude": []
