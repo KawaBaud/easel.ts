@@ -60,7 +60,6 @@
                 "no-top-level-await",
                 "no-undef",
                 "prefer-ascii",
-                "single-var-declarator",
                 "triple-slash-reference",
                 "verbatim-module-syntax"
             ]
