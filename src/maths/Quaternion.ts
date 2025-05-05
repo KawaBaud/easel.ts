@@ -1,5 +1,6 @@
 import { fromArray } from "../utils.ts";
 import type { Euler } from "./Euler.ts";
+import type { Matrix4 } from "./Matrix4.ts";
 import type { Vector3 } from "./Vector3.ts";
 
 export class Quaternion {
@@ -53,6 +54,10 @@ export class Quaternion {
 			fromArray(slice, 2),
 			fromArray(slice, 3),
 		);
+	}
+
+	invert(): this {
+		return this.set(-this.x, -this.y, -this.z, this.w);
 	}
 
 	set(x: number, y: number, z: number, w: number): this {
@@ -129,6 +134,52 @@ export class Quaternion {
 					(c1 * c2 * c3) + (s1 * s2 * s3),
 				);
 		}
+	}
+
+	setFromRotationMatrix(m: Matrix4): this {
+		const te = m.elements;
+
+		const m11 = fromArray(te, 0);
+		const m12 = fromArray(te, 4);
+		const m13 = fromArray(te, 8);
+		const m21 = fromArray(te, 1);
+		const m22 = fromArray(te, 5);
+		const m23 = fromArray(te, 9);
+		const m31 = fromArray(te, 2);
+		const m32 = fromArray(te, 6);
+		const m33 = fromArray(te, 10);
+
+		const trace = m11 + m22 + m33;
+		if (trace > 0) {
+			const s = 0.5 / Math.sqrt(trace + 1.0);
+
+			this.w = 0.25 / s;
+			this.x = (m32 - m23) * s;
+			this.y = (m13 - m31) * s;
+			this.z = (m21 - m12) * s;
+		} else if (m11 > m22 && m11 > m33) {
+			const s = 2.0 * Math.sqrt(1.0 + m11 - m22 - m33);
+
+			this.w = (m32 - m23) / s;
+			this.x = 0.25 * s;
+			this.y = (m12 + m21) / s;
+			this.z = (m13 + m31) / s;
+		} else if (m22 > m33) {
+			const s = 2.0 * Math.sqrt(1.0 + m22 - m11 - m33);
+
+			this.w = (m13 - m31) / s;
+			this.x = (m12 + m21) / s;
+			this.y = 0.25 * s;
+			this.z = (m23 + m32) / s;
+		} else {
+			const s = 2.0 * Math.sqrt(1.0 + m33 - m11 - m22);
+
+			this.w = (m21 - m12) / s;
+			this.x = (m13 + m31) / s;
+			this.y = (m23 + m32) / s;
+			this.z = 0.25 * s;
+		}
+		return this;
 	}
 
 	unitize(): this {
