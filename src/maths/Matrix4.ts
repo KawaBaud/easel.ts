@@ -2,7 +2,7 @@ import { fromArray } from "../utils.ts";
 import type { Euler } from "./Euler.ts";
 import { MathUtils } from "./MathUtils.ts";
 import { Quaternion } from "./Quaternion.ts";
-import type { Vector3 } from "./Vector3.ts";
+import { Vector3 } from "./Vector3.ts";
 
 export class Matrix4 {
 	constructor(public elements = new Float32Array(16)) {
@@ -14,6 +14,8 @@ export class Matrix4 {
 	}
 
 	compose(position: Vector3, q: Quaternion, scale: Vector3): this {
+		const te = this.elements;
+
 		const { x: qx, y: qy, z: qz, w: qw } = q;
 		const qx2 = qx + qx;
 		const qy2 = qy + qy;
@@ -31,24 +33,26 @@ export class Matrix4 {
 
 		const { x: sx, y: sy, z: sz } = scale;
 
-		const m11 = (1 - (yy + zz)) * sx;
-		const m12 = (xy - wz) * sy;
-		const m13 = (xz + wy) * sz;
-		const m21 = (xy + wz) * sx;
-		const m22 = (1 - (xx + zz)) * sy;
-		const m23 = (yz - wx) * sz;
-		const m31 = (xz - wy) * sx;
-		const m32 = (yz + wx) * sy;
-		const m33 = (1 - (xx + yy)) * sz;
-		const m41 = position.x;
-		const m42 = position.y;
-		const m43 = position.z;
+		te[0] = (1 - (yy + zz)) * sx;
+		te[1] = (xy + wz) * sx;
+		te[2] = (xz - wy) * sx;
+		te[3] = 0;
 
-		const te = this.elements;
-		te[0] = m11, te[1] = m12, te[2] = m13, te[3] = 0;
-		te[4] = m21, te[5] = m22, te[6] = m23, te[7] = 0;
-		te[8] = m31, te[9] = m32, te[10] = m33, te[11] = 0;
-		te[12] = m41, te[13] = m42, te[14] = m43, te[15] = 1;
+		te[4] = (xy - wz) * sy;
+		te[5] = (1 - (xx + zz)) * sy;
+		te[6] = (yz + wx) * sy;
+		te[7] = 0;
+
+		te[8] = (xz + wy) * sz;
+		te[9] = (yz - wx) * sz;
+		te[10] = (1 - (xx + yy)) * sz;
+		te[11] = 0;
+
+		te[12] = position.x;
+		te[13] = position.y;
+		te[14] = position.z;
+		te[15] = 1;
+
 		return this;
 	}
 
@@ -61,76 +65,11 @@ export class Matrix4 {
 	}
 
 	decompose(position: Vector3, q: Quaternion, scale: Vector3): this {
-		const te = this.elements;
+		this.extractPosition(position);
+		this.extractScale(this, scale);
 
-		let sx = Math.hypot(
-			fromArray(te, 0),
-			fromArray(te, 1),
-			fromArray(te, 2),
-		);
-		const sy = Math.hypot(
-			fromArray(te, 4),
-			fromArray(te, 5),
-			fromArray(te, 6),
-		);
-		const sz = Math.hypot(
-			fromArray(te, 8),
-			fromArray(te, 9),
-			fromArray(te, 10),
-		);
-
-		const det = this.determinant();
-		if (det < 0) sx = -sx;
-
-		position.x = fromArray(te, 12);
-		position.y = fromArray(te, 13);
-		position.z = fromArray(te, 14);
-
-		const sxInv = 1 / sx;
-		const syInv = 1 / sy;
-		const szInv = 1 / sz;
-
-		const r11 = fromArray(te, 0) * sxInv;
-		const r12 = fromArray(te, 4) * syInv;
-		const r13 = fromArray(te, 8) * szInv;
-		const r21 = fromArray(te, 1) * sxInv;
-		const r22 = fromArray(te, 5) * syInv;
-		const r23 = fromArray(te, 9) * szInv;
-		const r31 = fromArray(te, 2) * sxInv;
-		const r32 = fromArray(te, 6) * syInv;
-		const r33 = fromArray(te, 10) * szInv;
-
-		const trace = r11 + r22 + r33;
-		let s;
-		if (trace > 0) {
-			s = 0.5 / Math.sqrt(trace + 1.0);
-			q.w = 0.25 / s;
-			q.x = (r32 - r23) * s;
-			q.y = (r13 - r31) * s;
-			q.z = (r21 - r12) * s;
-		} else if (r11 > r22 && r11 > r33) {
-			s = 2.0 * Math.sqrt(1.0 + r11 - r22 - r33);
-			q.w = (r32 - r23) / s;
-			q.x = 0.25 * s;
-			q.y = (r12 + r21) / s;
-			q.z = (r13 + r31) / s;
-		} else if (r22 > r33) {
-			s = 2.0 * Math.sqrt(1.0 + r22 - r11 - r33);
-			q.w = (r13 - r31) / s;
-			q.x = (r12 + r21) / s;
-			q.y = 0.25 * s;
-			q.z = (r23 + r32) / s;
-		} else {
-			s = 2.0 * Math.sqrt(1.0 + r33 - r11 - r22);
-			q.w = (r21 - r12) / s;
-			q.x = (r13 + r31) / s;
-			q.y = (r23 + r32) / s;
-			q.z = 0.25 * s;
-		}
-
-		scale.x = sx;
-		scale.y = sy;
-		scale.z = sz;
+		const rotationMatrix = new Matrix4().extractRotation(this);
+		q.setFromRotationMatrix(rotationMatrix);
 
 		return this;
 	}
@@ -168,6 +107,72 @@ export class Matrix4 {
 		const det14 = (n21 * t3) - (n22 * t5) + (n23 * t6);
 
 		return (n11 * det11) - (n12 * det12) + (n13 * det13) - (n14 * det14);
+	}
+
+	extractPosition(position: Vector3): this {
+		const te = this.elements;
+		position.set(
+			fromArray(te, 12),
+			fromArray(te, 13),
+			fromArray(te, 14),
+		);
+		return this;
+	}
+
+	extractRotation(m: Matrix4): this {
+		const te = this.elements;
+		const me = m.elements;
+
+		const scale = new Vector3();
+		this.extractScale(m, scale);
+
+		const invScaleX = 1 / scale.x;
+		const invScaleY = 1 / scale.y;
+		const invScaleZ = 1 / scale.z;
+
+		const m11 = fromArray(me, 0) * invScaleX,
+			m12 = fromArray(me, 1) * invScaleX,
+			m13 = fromArray(me, 2) * invScaleX;
+		const m31 = fromArray(me, 8) * invScaleZ,
+			m32 = fromArray(me, 9) * invScaleZ,
+			m33 = fromArray(me, 10) * invScaleZ;
+		const m21 = fromArray(me, 4) * invScaleY,
+			m22 = fromArray(me, 5) * invScaleY,
+			m23 = fromArray(me, 6) * invScaleY;
+
+		te[0] = m11, te[1] = m12, te[2] = m13, te[3] = 0;
+		te[4] = m21, te[5] = m22, te[6] = m23, te[7] = 0;
+		te[8] = m31, te[9] = m32, te[10] = m33, te[11] = 0;
+		te[12] = 0, te[13] = 0, te[14] = 0, te[15] = 1;
+		return this;
+	}
+	extractScale(m: Matrix4, scale: Vector3): this {
+		const me = m.elements;
+
+		let sx = Math.hypot(
+			fromArray(me, 0),
+			fromArray(me, 1),
+			fromArray(me, 2),
+		);
+		const sy = Math.hypot(
+			fromArray(me, 4),
+			fromArray(me, 5),
+			fromArray(me, 6),
+		);
+		const sz = Math.hypot(
+			fromArray(me, 8),
+			fromArray(me, 9),
+			fromArray(me, 10),
+		);
+
+		const det = m.determinant();
+		if (det < 0) sx = -sx;
+
+		scale.x = sx;
+		scale.y = sy;
+		scale.z = sz;
+
+		return this;
 	}
 
 	identity(): this {
@@ -334,46 +339,6 @@ export class Matrix4 {
 		return this;
 	}
 
-	makeRotationFromEuler(euler: Euler): this {
-		return this.makeRotationFromQuaternion(
-			new Quaternion().setFromEuler(euler),
-		);
-	}
-
-	makeRotationFromQuaternion(q: Quaternion): this {
-		const { x: qx, y: qy, z: qz, w: qw } = q;
-		const qx2 = qx + qx;
-		const qy2 = qy + qy;
-		const qz2 = qz + qz;
-
-		const xx = qx * qx2;
-		const xy = qx * qy2;
-		const xz = qx * qz2;
-		const yy = qy * qy2;
-		const yz = qy * qz2;
-		const zz = qz * qz2;
-		const wx = qw * qx2;
-		const wy = qw * qy2;
-		const wz = qw * qz2;
-
-		const m11 = 1 - (yy + zz);
-		const m12 = xy - wz;
-		const m13 = xz + wy;
-		const m21 = xy + wz;
-		const m22 = 1 - (xx + zz);
-		const m23 = yz - wx;
-		const m31 = xz - wy;
-		const m32 = yz + wx;
-		const m33 = 1 - (xx + yy);
-
-		const te = this.elements;
-		te[0] = m11, te[1] = m12, te[2] = m13, te[3] = 0;
-		te[4] = m21, te[5] = m22, te[6] = m23, te[7] = 0;
-		te[8] = m31, te[9] = m32, te[10] = m33, te[11] = 0;
-		te[12] = 0, te[13] = 0, te[14] = 0, te[15] = 1;
-		return this;
-	}
-
 	makeTranslation(x: number, y: number, z: number): this {
 		const te = this.elements;
 		te[0] = 1, te[1] = 0, te[2] = 0, te[3] = 0;
@@ -381,6 +346,20 @@ export class Matrix4 {
 		te[8] = 0, te[9] = 0, te[10] = 1, te[11] = 0;
 		te[12] = x, te[13] = y, te[14] = z, te[15] = 1;
 		return this;
+	}
+
+	makeRotationFromEuler(euler: Euler): this {
+		return this.makeRotationFromQuaternion(
+			new Quaternion().setFromEuler(euler),
+		);
+	}
+
+	makeRotationFromQuaternion(q: Quaternion): this {
+		return this.compose(
+			new Vector3(0, 0, 0),
+			q,
+			new Vector3(1, 1, 1),
+		);
 	}
 
 	makeRotationX(radians: number): this {
