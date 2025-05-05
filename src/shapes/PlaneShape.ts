@@ -15,7 +15,7 @@ export class PlaneShape extends Shape {
 			new Vector3(-halfWidth, 0, halfHeight),
 		];
 
-		this.indices = [0, 3, 2, 0, 2, 1];
+		this.indices = [0, 1, 2, 0, 2, 3];
 	}
 
 	override clone(): PlaneShape {
