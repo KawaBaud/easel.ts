@@ -3,13 +3,17 @@ import { Matrix4 } from "../maths/Matrix4.ts";
 import { Quaternion } from "../maths/Quaternion.ts";
 import { Vector3 } from "../maths/Vector3.ts";
 
+const _position = new Vector3();
+const _m1 = new Matrix4();
+const _q1 = new Quaternion();
+
 export class Object3D {
 	id: string = crypto.randomUUID();
 	name = "";
 
 	position = new Vector3();
 	rotation = new Euler();
-	quaternion: Quaternion = new Quaternion();
+	quaternion = new Quaternion();
 	scale = new Vector3(1, 1, 1);
 
 	matrix = new Matrix4();
@@ -21,6 +25,10 @@ export class Object3D {
 
 	visible = true;
 	userData: Record<string, unknown> = {};
+
+	get isCamera(): boolean {
+		return ("projectionMatrix" in this) && ("matrixWorldInverse" in this);
+	}
 
 	constructor() {
 		this.updateMatrix();
@@ -64,10 +72,23 @@ export class Object3D {
 	}
 
 	lookAt(target: Vector3): this {
-		const m = new Matrix4();
-		m.lookAt(this.position, target, new Vector3(0, 1, 0));
+		this.updateWorldMatrix(true, false);
 
-		this.quaternion.setFromRotationMatrix(m);
+		_position.setFromMatrixPosition(this.worldMatrix);
+
+		_m1.lookAt(
+			this.isCamera ? _position : target,
+			this.isCamera ? target : _position,
+			Vector3.UP,
+		);
+
+		this.quaternion.setFromRotationMatrix(_m1);
+
+		this.parent &&
+			(_m1.extractRotation(this.parent.worldMatrix),
+				_q1.setFromRotationMatrix(_m1),
+				this.quaternion.premul(_q1.invert()));
+
 		this.rotation.setFromQuaternion(this.quaternion);
 
 		return this;
@@ -79,7 +100,6 @@ export class Object3D {
 			object.parent = null;
 			this.children.splice(index, 1);
 		}
-
 		return this;
 	}
 
@@ -95,8 +115,8 @@ export class Object3D {
 		if (updateParents && this.parent) {
 			this.parent.updateWorldMatrix(true, false);
 		}
-
 		if (this.autoUpdateMatrix) this.updateMatrix();
+
 		this.worldMatrix = this.parent
 			? this.worldMatrix.mulMatrices(this.parent.worldMatrix, this.matrix)
 			: this.worldMatrix.copy(this.matrix);
