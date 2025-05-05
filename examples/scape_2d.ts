@@ -49,7 +49,7 @@ const planeMaterial = new SCAPE.Material({
 	color: 0xCCCCCC,
 });
 const plane = new SCAPE.Mesh(planeShape, planeMaterial);
-plane.rotation.x = -Math.PI / 2;
+plane.rotation.x = -SCAPE.MathUtils.HALF_PI;
 scene.add(plane);
 
 function animate(): void {
