@@ -491,11 +491,18 @@ Deno.test("Matrix4: makePerspective", () => {
 	const far = 100;
 
 	const a = new Matrix4().makePerspective(fov, aspect, near, far);
+
+	const tHalfFov = Math.tan(fov / 2);
+	const left = -aspect * tHalfFov * near;
+	const right = aspect * tHalfFov * near;
+	const top = tHalfFov * near;
+	const bottom = -tHalfFov * near;
+
 	const threeA = new ThreeMatrix4().makePerspective(
-		-aspect * Math.tan(fov / 2),
-		aspect * Math.tan(fov / 2),
-		Math.tan(fov / 2),
-		-Math.tan(fov / 2),
+		left,
+		right,
+		top,
+		bottom,
 		near,
 		far,
 	);
