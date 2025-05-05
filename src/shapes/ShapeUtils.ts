@@ -5,6 +5,7 @@ export class ShapeUtils {
 	static triangulate(vertices: Vector3[]): number[] {
 		if (vertices.length < 3) return [];
 		if (vertices.length === 3) return [0, 1, 2];
+		if (vertices.length === 4) return [0, 1, 3, 1, 2, 3];
 
 		const indices: number[] = [];
 		for (let i = 0; i < vertices.length; i++) {
