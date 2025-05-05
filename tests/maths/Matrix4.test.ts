@@ -340,6 +340,54 @@ Deno.test("Matrix4: determinant", () => {
 	}
 });
 
+Deno.test("Matrix4: extractPosition", () => {
+	const m = new Matrix4().makeTranslation(1, 2, 3);
+	const position = new Vector3();
+	m.extractPosition(position);
+	const threeM = new ThreeMatrix4().makeTranslation(1, 2, 3);
+	const threePosition = new ThreeVector3();
+	threePosition.setFromMatrixColumn(threeM, 3);
+	assertAlmostEquals(
+		position.x,
+		threePosition.x,
+		MathUtils.EPSILON,
+		"extractPosition",
+	);
+	assertAlmostEquals(
+		position.y,
+		threePosition.y,
+		MathUtils.EPSILON,
+		"extractPosition",
+	);
+	assertAlmostEquals(
+		position.z,
+		threePosition.z,
+		MathUtils.EPSILON,
+		"extractPosition",
+	);
+});
+
+Deno.test("Matrix4: extractRotation", () => {
+	const m = new Matrix4().makeRotationX(Math.PI / 3);
+	const rotation = new Matrix4();
+	rotation.extractRotation(m);
+
+	const threeM = new ThreeMatrix4().makeRotationX(Math.PI / 3);
+	const threeRotation = new ThreeMatrix4();
+	threeRotation.extractRotation(threeM);
+
+	compareMatrices(rotation, threeRotation, "extractRotation");
+});
+
+Deno.test("Matrix4: extractScale", () => {
+	const m = new Matrix4().makeScale(2, 3, 4);
+	const scale = new Vector3();
+	m.extractScale(scale);
+	assertEquals(scale.x, 2, "extractScale x");
+	assertEquals(scale.y, 3, "extractScale y");
+	assertEquals(scale.z, 4, "extractScale z");
+});
+
 Deno.test("Matrix4: identity", () => {
 	const a = new Matrix4().set(
 		1,
@@ -482,12 +530,6 @@ Deno.test("Matrix4: makeRotationFromQuaternion", () => {
 	compareMatrices(a, threeA, "makeRotationFromQuaternion");
 });
 
-Deno.test("Matrix4: makeTranslation", () => {
-	const a = new Matrix4().makeTranslation(1, 2, 3);
-	const threeA = new ThreeMatrix4().makeTranslation(1, 2, 3);
-	compareMatrices(a, threeA, "makeTranslation");
-});
-
 Deno.test("Matrix4: makeRotationX", () => {
 	const angle = MathUtils.QUARTER_PI;
 	const a = new Matrix4().makeRotationX(angle);
@@ -513,6 +555,12 @@ Deno.test("Matrix4: makeScale", () => {
 	const a = new Matrix4().makeScale(2, 3, 4);
 	const threeA = new ThreeMatrix4().makeScale(2, 3, 4);
 	compareMatrices(a, threeA, "makeScale");
+});
+
+Deno.test("Matrix4: makeTranslation", () => {
+	const a = new Matrix4().makeTranslation(1, 2, 3);
+	const threeA = new ThreeMatrix4().makeTranslation(1, 2, 3);
+	compareMatrices(a, threeA, "makeTranslation");
 });
 
 Deno.test("Matrix4: mulMatrices", () => {
