@@ -347,11 +347,7 @@ export class Matrix4 {
 	}
 
 	makeRotationFromQuaternion(q: Quaternion): this {
-		return this.compose(
-			new Vector3(0, 0, 0),
-			q,
-			new Vector3(1, 1, 1),
-		);
+		return this.compose(new Vector3(0, 0, 0), q, new Vector3(1, 1, 1));
 	}
 
 	makeRotationX(radians: number): this {
