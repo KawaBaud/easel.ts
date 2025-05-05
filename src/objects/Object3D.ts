@@ -64,20 +64,10 @@ export class Object3D {
 	}
 
 	lookAt(target: Vector3): this {
-		const position = this.position;
-		const direction = new Vector3().subVectors(target, position);
-		direction.unitize();
-		if (direction.lengthSq === 0) return this;
-
 		const m = new Matrix4();
-		m.lookAt(position, target, new Vector3(0, 1, 0));
+		m.lookAt(this.position, target, new Vector3(0, 1, 0));
 
-		const position2 = new Vector3();
-		const quaternion2 = new Quaternion();
-		const scale = new Vector3();
-		m.decompose(position2, quaternion2, scale);
-
-		this.quaternion.copy(quaternion2);
+		this.quaternion.setFromRotationMatrix(m);
 		this.rotation.setFromQuaternion(this.quaternion);
 
 		return this;
