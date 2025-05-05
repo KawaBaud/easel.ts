@@ -14,7 +14,7 @@ import { MathUtils } from "../../src/maths/MathUtils.ts";
 import { Matrix4 } from "../../src/maths/Matrix4.ts";
 import { Quaternion } from "../../src/maths/Quaternion.ts";
 import { Vector3 } from "../../src/maths/Vector3.ts";
-import { fromArray } from "../../src/utils.ts";
+import "../../src/types.ts";
 
 function compareMatrices(
 	ourMatrix: Matrix4,
@@ -27,8 +27,8 @@ function compareMatrices(
 
 	for (let i = 0; i < 16; i++) {
 		assertAlmostEquals(
-			fromArray(ourMatrix.elements, i),
-			fromArray(threeMatrix.elements, i),
+			ourMatrix.elements.safeAt(i),
+			threeMatrix.elements.safeAt(i),
 			MathUtils.EPSILON,
 			`${message} (element ${i})`,
 		);
@@ -329,8 +329,8 @@ Deno.test("Matrix4: determinant", () => {
 	];
 
 	for (let i = 0; i < matrices.length; i++) {
-		const det = fromArray(matrices, i).determinant();
-		const threeDet = fromArray(threeMatrices, i).determinant();
+		const det = matrices.safeAt(i).determinant();
+		const threeDet = threeMatrices.safeAt(i).determinant();
 		assertAlmostEquals(
 			det,
 			threeDet,
@@ -444,8 +444,8 @@ Deno.test("Matrix4: invert", () => {
 	];
 
 	for (let i = 0; i < matrices.length; i++) {
-		const a = fromArray(matrices, i).clone().invert();
-		const threeA = fromArray(threeMatrices, i).clone().invert();
+		const a = matrices.safeAt(i).clone().invert();
+		const threeA = threeMatrices.safeAt(i).clone().invert();
 		compareMatrices(a, threeA, `invert case ${i}`);
 	}
 });

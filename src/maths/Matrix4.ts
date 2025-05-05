@@ -1,4 +1,4 @@
-import { fromArray } from "../utils.ts";
+import "../types.ts";
 import type { Euler } from "./Euler.ts";
 import { MathUtils } from "./MathUtils.ts";
 import { Quaternion } from "./Quaternion.ts";
@@ -77,22 +77,22 @@ export class Matrix4 {
 	determinant(): number {
 		const te = this.elements;
 
-		const n11 = fromArray(te, 0),
-			n12 = fromArray(te, 4),
-			n13 = fromArray(te, 8),
-			n14 = fromArray(te, 12);
-		const n21 = fromArray(te, 1),
-			n22 = fromArray(te, 5),
-			n23 = fromArray(te, 9),
-			n24 = fromArray(te, 13);
-		const n31 = fromArray(te, 2),
-			n32 = fromArray(te, 6),
-			n33 = fromArray(te, 10),
-			n34 = fromArray(te, 14);
-		const n41 = fromArray(te, 3),
-			n42 = fromArray(te, 7),
-			n43 = fromArray(te, 11),
-			n44 = fromArray(te, 15);
+		const n11 = te.safeAt(0),
+			n12 = te.safeAt(4),
+			n13 = te.safeAt(8),
+			n14 = te.safeAt(12);
+		const n21 = te.safeAt(1),
+			n22 = te.safeAt(5),
+			n23 = te.safeAt(9),
+			n24 = te.safeAt(13);
+		const n31 = te.safeAt(2),
+			n32 = te.safeAt(6),
+			n33 = te.safeAt(10),
+			n34 = te.safeAt(14);
+		const n41 = te.safeAt(3),
+			n42 = te.safeAt(7),
+			n43 = te.safeAt(11),
+			n44 = te.safeAt(15);
 
 		const t1 = (n33 * n44) - (n34 * n43);
 		const t2 = (n32 * n44) - (n34 * n42);
@@ -111,11 +111,9 @@ export class Matrix4 {
 
 	extractPosition(position: Vector3): this {
 		const te = this.elements;
-		position.set(
-			fromArray(te, 12),
-			fromArray(te, 13),
-			fromArray(te, 14),
-		);
+		position.x = te.safeAt(12);
+		position.y = te.safeAt(13);
+		position.z = te.safeAt(14);
 		return this;
 	}
 
@@ -129,15 +127,15 @@ export class Matrix4 {
 		const invScaleY = 1 / scale.y;
 		const invScaleZ = 1 / scale.z;
 
-		const m11 = fromArray(me, 0) * invScaleX,
-			m12 = fromArray(me, 1) * invScaleX,
-			m13 = fromArray(me, 2) * invScaleX;
-		const m21 = fromArray(me, 4) * invScaleY,
-			m22 = fromArray(me, 5) * invScaleY,
-			m23 = fromArray(me, 6) * invScaleY;
-		const m31 = fromArray(me, 8) * invScaleZ,
-			m32 = fromArray(me, 9) * invScaleZ,
-			m33 = fromArray(me, 10) * invScaleZ;
+		const m11 = me.safeAt(0) * invScaleX,
+			m12 = me.safeAt(1) * invScaleX,
+			m13 = me.safeAt(2) * invScaleX;
+		const m21 = me.safeAt(4) * invScaleY,
+			m22 = me.safeAt(5) * invScaleY,
+			m23 = me.safeAt(6) * invScaleY;
+		const m31 = me.safeAt(8) * invScaleZ,
+			m32 = me.safeAt(9) * invScaleZ,
+			m33 = me.safeAt(10) * invScaleZ;
 
 		const te = this.elements;
 		te[0] = m11, te[1] = m12, te[2] = m13, te[3] = 0;
@@ -150,21 +148,9 @@ export class Matrix4 {
 	extractScale(scale: Vector3): this {
 		const me = this.elements;
 
-		let sx = Math.hypot(
-			fromArray(me, 0),
-			fromArray(me, 1),
-			fromArray(me, 2),
-		);
-		const sy = Math.hypot(
-			fromArray(me, 4),
-			fromArray(me, 5),
-			fromArray(me, 6),
-		);
-		const sz = Math.hypot(
-			fromArray(me, 8),
-			fromArray(me, 9),
-			fromArray(me, 10),
-		);
+		let sx = Math.hypot(me.safeAt(0), me.safeAt(1), me.safeAt(2));
+		const sy = Math.hypot(me.safeAt(4), me.safeAt(5), me.safeAt(6));
+		const sz = Math.hypot(me.safeAt(8), me.safeAt(9), me.safeAt(10));
 
 		const det = this.determinant();
 		if (det < 0) sx = -sx;
@@ -188,22 +174,22 @@ export class Matrix4 {
 	invert(): this {
 		const te = this.elements;
 
-		const n11 = fromArray(te, 0),
-			n21 = fromArray(te, 1),
-			n31 = fromArray(te, 2),
-			n41 = fromArray(te, 3);
-		const n12 = fromArray(te, 4),
-			n22 = fromArray(te, 5),
-			n32 = fromArray(te, 6),
-			n42 = fromArray(te, 7);
-		const n13 = fromArray(te, 8),
-			n23 = fromArray(te, 9),
-			n33 = fromArray(te, 10),
-			n43 = fromArray(te, 11);
-		const n14 = fromArray(te, 12),
-			n24 = fromArray(te, 13),
-			n34 = fromArray(te, 14),
-			n44 = fromArray(te, 15);
+		const n11 = te.safeAt(0),
+			n21 = te.safeAt(1),
+			n31 = te.safeAt(2),
+			n41 = te.safeAt(3);
+		const n12 = te.safeAt(4),
+			n22 = te.safeAt(5),
+			n32 = te.safeAt(6),
+			n42 = te.safeAt(7);
+		const n13 = te.safeAt(8),
+			n23 = te.safeAt(9),
+			n33 = te.safeAt(10),
+			n43 = te.safeAt(11);
+		const n14 = te.safeAt(12),
+			n24 = te.safeAt(13),
+			n34 = te.safeAt(14),
+			n44 = te.safeAt(15);
 
 		const t11 = (n23 * n34 * n42) - (n24 * n33 * n42) +
 			(n24 * n32 * n43) - (n22 * n34 * n43) -
@@ -420,39 +406,39 @@ export class Matrix4 {
 		const ae = a.elements;
 		const be = b.elements;
 
-		const a11 = fromArray(ae, 0),
-			a21 = fromArray(ae, 1),
-			a31 = fromArray(ae, 2),
-			a41 = fromArray(ae, 3);
-		const a12 = fromArray(ae, 4),
-			a22 = fromArray(ae, 5),
-			a32 = fromArray(ae, 6),
-			a42 = fromArray(ae, 7);
-		const a13 = fromArray(ae, 8),
-			a23 = fromArray(ae, 9),
-			a33 = fromArray(ae, 10),
-			a43 = fromArray(ae, 11);
-		const a14 = fromArray(ae, 12),
-			a24 = fromArray(ae, 13),
-			a34 = fromArray(ae, 14),
-			a44 = fromArray(ae, 15);
+		const a11 = ae.safeAt(0),
+			a21 = ae.safeAt(1),
+			a31 = ae.safeAt(2),
+			a41 = ae.safeAt(3);
+		const a12 = ae.safeAt(4),
+			a22 = ae.safeAt(5),
+			a32 = ae.safeAt(6),
+			a42 = ae.safeAt(7);
+		const a13 = ae.safeAt(8),
+			a23 = ae.safeAt(9),
+			a33 = ae.safeAt(10),
+			a43 = ae.safeAt(11);
+		const a14 = ae.safeAt(12),
+			a24 = ae.safeAt(13),
+			a34 = ae.safeAt(14),
+			a44 = ae.safeAt(15);
 
-		const b11 = fromArray(be, 0),
-			b21 = fromArray(be, 1),
-			b31 = fromArray(be, 2),
-			b41 = fromArray(be, 3);
-		const b12 = fromArray(be, 4),
-			b22 = fromArray(be, 5),
-			b32 = fromArray(be, 6),
-			b42 = fromArray(be, 7);
-		const b13 = fromArray(be, 8),
-			b23 = fromArray(be, 9),
-			b33 = fromArray(be, 10),
-			b43 = fromArray(be, 11);
-		const b14 = fromArray(be, 12),
-			b24 = fromArray(be, 13),
-			b34 = fromArray(be, 14),
-			b44 = fromArray(be, 15);
+		const b11 = be.safeAt(0),
+			b21 = be.safeAt(1),
+			b31 = be.safeAt(2),
+			b41 = be.safeAt(3);
+		const b12 = be.safeAt(4),
+			b22 = be.safeAt(5),
+			b32 = be.safeAt(6),
+			b42 = be.safeAt(7);
+		const b13 = be.safeAt(8),
+			b23 = be.safeAt(9),
+			b33 = be.safeAt(10),
+			b43 = be.safeAt(11);
+		const b14 = be.safeAt(12),
+			b24 = be.safeAt(13),
+			b34 = be.safeAt(14),
+			b44 = be.safeAt(15);
 
 		const n11 = (a11 * b11) + (a12 * b21) + (a13 * b31) + (a14 * b41),
 			n21 = (a21 * b11) + (a22 * b21) + (a23 * b31) + (a24 * b41),
@@ -509,12 +495,12 @@ export class Matrix4 {
 		const te = this.elements;
 
 		let temp;
-		temp = fromArray(te, 1), te[1] = fromArray(te, 4), te[4] = temp;
-		temp = fromArray(te, 2), te[2] = fromArray(te, 8), te[8] = temp;
-		temp = fromArray(te, 3), te[3] = fromArray(te, 12), te[12] = temp;
-		temp = fromArray(te, 6), te[6] = fromArray(te, 9), te[9] = temp;
-		temp = fromArray(te, 7), te[7] = fromArray(te, 13), te[13] = temp;
-		temp = fromArray(te, 11), te[11] = fromArray(te, 14), te[14] = temp;
+		temp = te.safeAt(1), te[1] = te.safeAt(4), te[4] = temp;
+		temp = te.safeAt(2), te[2] = te.safeAt(8), te[8] = temp;
+		temp = te.safeAt(3), te[3] = te.safeAt(12), te[12] = temp;
+		temp = te.safeAt(6), te[6] = te.safeAt(9), te[9] = temp;
+		temp = te.safeAt(7), te[7] = te.safeAt(13), te[13] = temp;
+		temp = te.safeAt(11), te[11] = te.safeAt(14), te[14] = temp;
 
 		return this;
 	}
@@ -522,21 +508,21 @@ export class Matrix4 {
 	*[Symbol.iterator](): IterableIterator<number> {
 		const te = this.elements;
 
-		yield fromArray(te, 0),
-			yield fromArray(te, 1),
-			yield fromArray(te, 2),
-			yield fromArray(te, 3);
-		yield fromArray(te, 4),
-			yield fromArray(te, 5),
-			yield fromArray(te, 6),
-			yield fromArray(te, 7);
-		yield fromArray(te, 8),
-			yield fromArray(te, 9),
-			yield fromArray(te, 10),
-			yield fromArray(te, 11);
-		yield fromArray(te, 12),
-			yield fromArray(te, 13),
-			yield fromArray(te, 14),
-			yield fromArray(te, 15);
+		yield te.safeAt(0),
+			yield te.safeAt(1),
+			yield te.safeAt(2),
+			yield te.safeAt(3);
+		yield te.safeAt(4),
+			yield te.safeAt(5),
+			yield te.safeAt(6),
+			yield te.safeAt(7);
+		yield te.safeAt(8),
+			yield te.safeAt(9),
+			yield te.safeAt(10),
+			yield te.safeAt(11);
+		yield te.safeAt(12),
+			yield te.safeAt(13),
+			yield te.safeAt(14),
+			yield te.safeAt(15);
 	}
 }

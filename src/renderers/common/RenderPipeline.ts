@@ -2,7 +2,7 @@ import type { Camera } from "../../cameras/Camera.ts";
 import { Vector3 } from "../../maths/Vector3.ts";
 import { Mesh } from "../../objects/Mesh.ts";
 import type { Scene } from "../../scenes/Scene.ts";
-import { fromArray } from "../../utils.ts";
+import "../../types.ts";
 import { Pipeline } from "./Pipeline.ts";
 import type { Rasterizer } from "./Rasterizer.ts";
 import { RenderTarget } from "./RenderTarget.ts";
@@ -49,9 +49,9 @@ export class RenderPipeline extends Pipeline {
 		const indices = shape.indices;
 
 		for (let i = 0; i < indices.length; i += 3) {
-			const idx1 = fromArray(indices, i);
-			const idx2 = fromArray(indices, i + 1);
-			const idx3 = fromArray(indices, i + 2);
+			const idx1 = indices.safeAt(i);
+			const idx2 = indices.safeAt(i + 1);
+			const idx3 = indices.safeAt(i + 2);
 			if (
 				(idx1 >= vertices.length) ||
 				(idx2 >= vertices.length) ||

@@ -7,7 +7,7 @@ import { Object3D as ThreeObject3D, Vector3 as ThreeVector3 } from "three";
 import { MathUtils } from "../../src/maths/MathUtils.ts";
 import { Vector3 } from "../../src/maths/Vector3.ts";
 import { Object3D } from "../../src/objects/Object3D.ts";
-import { fromArray } from "../../src/utils.ts";
+import "../../src/types.ts";
 
 function compareObject3D(
 	ourObj: Object3D,
@@ -305,8 +305,8 @@ Deno.test("Object3D: updateMatrix", () => {
 
 	for (let i = 0; i < 16; i++) {
 		assertAlmostEquals(
-			fromArray(me, i),
-			fromArray(threeMe, i),
+			me.safeAt(i),
+			threeMe.safeAt(i),
 			MathUtils.EPSILON,
 			`updateMatrix (matrix.elements[${i}])`,
 		);
@@ -338,8 +338,8 @@ Deno.test("Object3D: updateWorldMatrix", () => {
 
 	for (let i = 0; i < 16; i++) {
 		assertAlmostEquals(
-			fromArray(parentWe, i),
-			fromArray(threeParentWe, i),
+			parentWe.safeAt(i),
+			threeParentWe.safeAt(i),
 			MathUtils.EPSILON,
 			`updateWorldMatrix parent (worldMatrix.elements[${i}])`,
 		);
@@ -350,8 +350,8 @@ Deno.test("Object3D: updateWorldMatrix", () => {
 
 	for (let i = 0; i < 16; i++) {
 		assertAlmostEquals(
-			fromArray(childWe, i),
-			fromArray(threeChildWe, i),
+			childWe.safeAt(i),
+			threeChildWe.safeAt(i),
 			MathUtils.EPSILON,
 			`updateWorldMatrix child (worldMatrix.elements[${i}])`,
 		);

@@ -1,5 +1,5 @@
 import type { Camera } from "../cameras/Camera.ts";
-import { fromArray } from "../utils.ts";
+import "../types.ts";
 import type { Euler } from "./Euler.ts";
 import type { Matrix4 } from "./Matrix4.ts";
 import { Quaternion } from "./Quaternion.ts";
@@ -34,22 +34,16 @@ export class Vector3 {
 		const { x, y, z } = this;
 		const me = m.elements;
 
-		const denom = (fromArray(me, 3) * x) + (fromArray(me, 7) * y) +
-			(fromArray(me, 11) * z) + fromArray(me, 15);
+		const denom = (me.safeAt(3) * x) + (me.safeAt(7) * y) +
+			(me.safeAt(11) * z) + me.safeAt(15);
 		const w = denom !== 0 ? 1 / denom : 1;
 
-		const nx = ((fromArray(me, 0) * x) +
-			(fromArray(me, 4) * y) +
-			(fromArray(me, 8) * z) +
-			fromArray(me, 12)) * w;
-		const ny = ((fromArray(me, 1) * x) +
-			(fromArray(me, 5) * y) +
-			(fromArray(me, 9) * z) +
-			fromArray(me, 13)) * w;
-		const nz = ((fromArray(me, 2) * x) +
-			(fromArray(me, 6) * y) +
-			(fromArray(me, 10) * z) +
-			fromArray(me, 14)) * w;
+		const nx = ((me.safeAt(0) * x) + (me.safeAt(4) * y) + (me.safeAt(8) * z) +
+			me.safeAt(12)) * w;
+		const ny = ((me.safeAt(1) * x) + (me.safeAt(5) * y) + (me.safeAt(9) * z) +
+			me.safeAt(13)) * w;
+		const nz = ((me.safeAt(2) * x) + (me.safeAt(6) * y) + (me.safeAt(10) * z) +
+			me.safeAt(14)) * w;
 
 		this.x = nx;
 		this.y = ny;
@@ -105,11 +99,9 @@ export class Vector3 {
 	}
 
 	fromArray(array: number[]): this {
-		const slice = array.slice(0, 3);
-
-		this.x = fromArray(slice, 0);
-		this.y = fromArray(slice, 1);
-		this.z = fromArray(slice, 2);
+		this.x = array.safeAt(0);
+		this.y = array.safeAt(1);
+		this.z = array.safeAt(2);
 		return this;
 	}
 
@@ -139,9 +131,9 @@ export class Vector3 {
 	setFromMatrixPosition(m: Matrix4): this {
 		const me = m.elements;
 
-		this.x = fromArray(me, 12);
-		this.y = fromArray(me, 13);
-		this.z = fromArray(me, 14);
+		this.x = me.safeAt(12);
+		this.y = me.safeAt(13);
+		this.z = me.safeAt(14);
 		return this;
 	}
 

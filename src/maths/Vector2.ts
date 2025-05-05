@@ -1,4 +1,4 @@
-import { fromArray } from "../utils.ts";
+import "../types.ts";
 
 export class Vector2 {
 	constructor(public x = 0, public y = 0) {}
@@ -14,10 +14,8 @@ export class Vector2 {
 	}
 
 	fromArray(array: number[]): this {
-		const slice = array.slice(0, 2);
-
-		this.x = fromArray(slice, 0);
-		this.y = fromArray(slice, 1);
+		this.x = array.safeAt(0);
+		this.y = array.safeAt(1);
 		return this;
 	}
 

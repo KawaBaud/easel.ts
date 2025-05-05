@@ -1,4 +1,4 @@
-import { fromArray } from "../utils.ts";
+import "../types.ts";
 import { MathUtils } from "./MathUtils.ts";
 import { Matrix4 } from "./Matrix4.ts";
 import { Quaternion } from "./Quaternion.ts";
@@ -56,15 +56,9 @@ export class Euler {
 	setFromRotationMatrix(m: Matrix4, order?: EulerOrder): this {
 		const te = m.elements;
 
-		const m11 = fromArray(te, 0);
-		const m12 = fromArray(te, 4);
-		const m13 = fromArray(te, 8);
-		const m21 = fromArray(te, 1);
-		const m22 = fromArray(te, 5);
-		const m23 = fromArray(te, 9);
-		const m31 = fromArray(te, 2);
-		const m32 = fromArray(te, 6);
-		const m33 = fromArray(te, 10);
+		const m11 = te.safeAt(0), m12 = te.safeAt(4), m13 = te.safeAt(8);
+		const m21 = te.safeAt(1), m22 = te.safeAt(5), m23 = te.safeAt(9);
+		const m31 = te.safeAt(2), m32 = te.safeAt(6), m33 = te.safeAt(10);
 
 		const currentOrder = order || this.order;
 		const isGimbalLock = (value: number) =>

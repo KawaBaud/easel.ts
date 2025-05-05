@@ -258,6 +258,12 @@ Deno.test("Vector3: divScalar", () => {
 	compareVectors(b, threeB, "divScalar by zero");
 });
 
+Deno.test("Vector3: fromArray", () => {
+	const a = new Vector3().fromArray([1, 2, 3]);
+	const threeA = new ThreeVector3().fromArray([1, 2, 3]);
+	compareVectors(a, threeA, "fromArray");
+});
+
 Deno.test("Vector3: mulScalar", () => {
 	const scalar = 3;
 

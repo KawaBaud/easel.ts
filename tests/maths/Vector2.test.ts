@@ -64,7 +64,7 @@ Deno.test("Vector2: copy", () => {
 
 Deno.test("Vector2: fromArray", () => {
 	const a = new Vector2().fromArray([1, 2]);
-	const threeA = new ThreeVector2(1, 2);
+	const threeA = new ThreeVector2().fromArray([1, 2]);
 	compareVectors(a, threeA, "fromArray");
 });
 

@@ -6,11 +6,11 @@ import {
 import { PerspectiveCamera as ThreePerspCamera } from "three";
 import { PerspCamera } from "../../src/cameras/PerspCamera.ts";
 import { MathUtils } from "../../src/maths/MathUtils.ts";
-import { fromArray } from "../../src/utils.ts";
+import "../../src/types.ts";
 
 function compareMatrices(
-	ourMatrix: { elements: Float32Array | number[] },
-	threeMatrix: { elements: Float32Array | number[] },
+	ourMatrix: { elements: Float32Array },
+	threeMatrix: { elements: number[] },
 	message: string,
 ): void {
 	console.log(`${message}:`);
@@ -19,8 +19,8 @@ function compareMatrices(
 
 	for (let i = 0; i < 16; i++) {
 		assertAlmostEquals(
-			fromArray(ourMatrix.elements, i),
-			fromArray(threeMatrix.elements, i),
+			ourMatrix.elements.safeAt(i),
+			threeMatrix.elements.safeAt(i),
 			MathUtils.EPSILON,
 			`${message} (element ${i})`,
 		);
