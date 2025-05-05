@@ -1,6 +1,7 @@
 import { fromArray } from "../utils.ts";
+import type { Euler } from "./Euler.ts";
 import { MathUtils } from "./MathUtils.ts";
-import type { Quaternion } from "./Quaternion.ts";
+import { Quaternion } from "./Quaternion.ts";
 import type { Vector3 } from "./Vector3.ts";
 
 export class Matrix4 {
@@ -367,6 +368,12 @@ export class Matrix4 {
 		);
 	}
 
+	makeRotationFromEuler(euler: Euler): this {
+		return this.makeRotationFromQuaternion(
+			new Quaternion().setFromEuler(euler),
+		);
+	}
+
 	makeRotationFromQuaternion(q: Quaternion): this {
 		const { x: qx, y: qy, z: qz, w: qw } = q;
 		const qx2 = qx + qx;
@@ -401,6 +408,32 @@ export class Matrix4 {
 			0,
 			1,
 		);
+	}
+
+	makeTranslation(x: number, y: number, z: number): this {
+		return this.set(1, 0, 0, x, 0, 1, 0, y, 0, 0, 1, z, 0, 0, 0, 1);
+	}
+
+	makeRotationX(radians: number): this {
+		const c = Math.cos(radians);
+		const s = Math.sin(radians);
+		return this.set(1, 0, 0, 0, 0, c, -s, 0, 0, s, c, 0, 0, 0, 0, 1);
+	}
+
+	makeRotationY(radians: number): this {
+		const c = Math.cos(radians);
+		const s = Math.sin(radians);
+		return this.set(c, 0, s, 0, 0, 1, 0, 0, -s, 0, c, 0, 0, 0, 0, 1);
+	}
+
+	makeRotationZ(radians: number): this {
+		const c = Math.cos(radians);
+		const s = Math.sin(radians);
+		return this.set(c, -s, 0, 0, s, c, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+	}
+
+	makeScale(x: number, y: number, z: number): this {
+		return this.set(x, 0, 0, 0, 0, y, 0, 0, 0, 0, z, 0, 0, 0, 0, 1);
 	}
 
 	mulMatrices(a: Matrix4, b: Matrix4): this {
