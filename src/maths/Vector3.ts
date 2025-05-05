@@ -36,17 +36,23 @@ export class Vector3 {
 			(fromArray(me, 11) * z) + fromArray(me, 15);
 		const w = denom !== 0 ? 1 / denom : 1;
 
-		return this.set(
-			((fromArray(me, 0) * x) + (fromArray(me, 4) * y) +
-				(fromArray(me, 8) * z) +
-				fromArray(me, 12)) * w,
-			((fromArray(me, 1) * x) + (fromArray(me, 5) * y) +
-				(fromArray(me, 9) * z) +
-				fromArray(me, 13)) * w,
-			((fromArray(me, 2) * x) + (fromArray(me, 6) * y) +
-				(fromArray(me, 10) * z) +
-				fromArray(me, 14)) * w,
-		);
+		const nx = ((fromArray(me, 0) * x) +
+			(fromArray(me, 4) * y) +
+			(fromArray(me, 8) * z) +
+			fromArray(me, 12)) * w;
+		const ny = ((fromArray(me, 1) * x) +
+			(fromArray(me, 5) * y) +
+			(fromArray(me, 9) * z) +
+			fromArray(me, 13)) * w;
+		const nz = ((fromArray(me, 2) * x) +
+			(fromArray(me, 6) * y) +
+			(fromArray(me, 10) * z) +
+			fromArray(me, 14)) * w;
+
+		this.x = nx;
+		this.y = ny;
+		this.z = nz;
+		return this;
 	}
 
 	applyQuaternion(q: Quaternion): this {
@@ -58,11 +64,10 @@ export class Vector3 {
 		const iz = (qw * z) + (qx * y) - (qy * x);
 		const iw = (-qx * x) - (qy * y) - (qz * z);
 
-		return this.set(
-			(ix * qw) + (iw * -qx) + (iy * -qz) - (iz * -qy),
-			(iy * qw) + (iw * -qy) + (iz * -qx) - (ix * -qz),
-			(iz * qw) + (iw * -qz) + (ix * -qy) - (iy * -qx),
-		);
+		this.x = (ix * qw) + (iw * -qx) + (iy * -qz) - (iz * -qy);
+		this.y = (iy * qw) + (iw * -qy) + (iz * -qx) - (ix * -qz);
+		this.z = (iz * qw) + (iw * -qz) + (ix * -qy) - (iy * -qx);
+		return this;
 	}
 
 	clone(): Vector3 {
@@ -70,7 +75,10 @@ export class Vector3 {
 	}
 
 	copy(v: Vector3): this {
-		return this.set(v.x, v.y, v.z);
+		this.x = v.x;
+		this.y = v.y;
+		this.z = v.z;
+		return this;
 	}
 
 	cross(v: Vector3): this {
@@ -81,11 +89,10 @@ export class Vector3 {
 		const { x: ax, y: ay, z: az } = a;
 		const { x: bx, y: by, z: bz } = b;
 
-		return this.set(
-			(ay * bz) - (az * by),
-			(az * bx) - (ax * bz),
-			(ax * by) - (ay * bx),
-		);
+		this.x = (ay * bz) - (az * by);
+		this.y = (az * bx) - (ax * bz);
+		this.z = (ax * by) - (ay * bx);
+		return this;
 	}
 
 	divScalar(scalar: number): this {
@@ -97,11 +104,11 @@ export class Vector3 {
 
 	fromArray(array: number[]): this {
 		const slice = array.slice(0, 3);
-		return this.set(
-			fromArray(slice, 0),
-			fromArray(slice, 1),
-			fromArray(slice, 2),
-		);
+
+		this.x = fromArray(slice, 0);
+		this.y = fromArray(slice, 1);
+		this.z = fromArray(slice, 2);
+		return this;
 	}
 
 	mulScalar(scalar: number): this {
@@ -114,9 +121,9 @@ export class Vector3 {
 	project(
 		camera: Camera,
 	): this {
-		return this.applyMatrix4(camera.matrixWorldInverse).applyMatrix4(
-			camera.projectionMatrix,
-		);
+		return this
+			.applyMatrix4(camera.matrixWorldInverse)
+			.applyMatrix4(camera.projectionMatrix);
 	}
 
 	set(x: number, y: number, z?: number): this {
@@ -135,7 +142,10 @@ export class Vector3 {
 	}
 
 	subVectors(a: Vector3, b: Vector3): this {
-		return this.set(a.x - b.x, a.y - b.y, a.z - b.z);
+		this.x = a.x - b.x;
+		this.y = a.y - b.y;
+		this.z = a.z - b.z;
+		return this;
 	}
 
 	unitize(): this {

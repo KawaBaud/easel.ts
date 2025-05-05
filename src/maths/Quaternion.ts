@@ -25,39 +25,44 @@ export class Quaternion {
 	}
 
 	copy(q: Quaternion): this {
-		return this.set(q.x, q.y, q.z, q.w);
+		this.x = q.x;
+		this.y = q.y;
+		this.z = q.z;
+		this.w = q.w;
+		return this;
 	}
 
 	div(q: Quaternion): this {
-		return this.set(
-			this.x / q.x,
-			this.y / q.y,
-			this.z / q.z,
-			this.w / q.w,
-		);
+		this.x /= q.x;
+		this.y /= q.y;
+		this.z /= q.z;
+		this.w /= q.w;
+		return this;
 	}
 
 	divScalar(scalar: number): this {
-		return this.set(
-			this.x / scalar,
-			this.y / scalar,
-			this.z / scalar,
-			this.w / scalar,
-		);
+		this.x /= scalar;
+		this.y /= scalar;
+		this.z /= scalar;
+		this.w /= scalar;
+		return this;
 	}
 
 	fromArray(array: number[]): this {
 		const slice = array.slice(0, 4);
-		return this.set(
-			fromArray(slice, 0),
-			fromArray(slice, 1),
-			fromArray(slice, 2),
-			fromArray(slice, 3),
-		);
+
+		this.x = fromArray(slice, 0);
+		this.y = fromArray(slice, 1);
+		this.z = fromArray(slice, 2);
+		this.w = fromArray(slice, 3);
+		return this;
 	}
 
 	invert(): this {
-		return this.set(-this.x, -this.y, -this.z, this.w);
+		this.x = -this.x;
+		this.y = -this.y;
+		this.z = -this.z;
+		return this;
 	}
 
 	set(x: number, y: number, z: number, w: number): this {
@@ -72,12 +77,11 @@ export class Quaternion {
 		const halfAngle = angle / 2;
 		const s = Math.sin(halfAngle);
 
-		return this.set(
-			axis.x * s,
-			axis.y * s,
-			axis.z * s,
-			Math.cos(halfAngle),
-		);
+		this.x = axis.x * s;
+		this.y = axis.y * s;
+		this.z = axis.z * s;
+		this.w = Math.cos(halfAngle);
+		return this;
 	}
 
 	setFromEuler(euler: Euler): this {
@@ -92,47 +96,41 @@ export class Quaternion {
 
 		switch (order) {
 			case "XYZ":
-				return this.set(
-					(s1 * c2 * c3) + (c1 * s2 * s3),
-					(c1 * s2 * c3) - (s1 * c2 * s3),
-					(c1 * c2 * s3) + (s1 * s2 * c3),
-					(c1 * c2 * c3) - (s1 * s2 * s3),
-				);
+				this.x = (s1 * c2 * c3) + (c1 * s2 * s3);
+				this.y = (c1 * s2 * c3) - (s1 * c2 * s3);
+				this.z = (c1 * c2 * s3) + (s1 * s2 * c3);
+				this.w = (c1 * c2 * c3) - (s1 * s2 * s3);
+				return this;
 			case "YXZ":
-				return this.set(
-					(s1 * c2 * c3) + (c1 * s2 * s3),
-					(c1 * s2 * c3) - (s1 * c2 * s3),
-					(c1 * c2 * s3) - (s1 * s2 * c3),
-					(c1 * c2 * c3) + (s1 * s2 * s3),
-				);
+				this.x = (s1 * c2 * c3) + (c1 * s2 * s3);
+				this.y = (c1 * s2 * c3) - (s1 * c2 * s3);
+				this.z = (c1 * c2 * s3) - (s1 * s2 * c3);
+				this.w = (c1 * c2 * c3) + (s1 * s2 * s3);
+				return this;
 			case "ZXY":
-				return this.set(
-					(s1 * c2 * c3) - (c1 * s2 * s3),
-					(c1 * s2 * c3) + (s1 * c2 * s3),
-					(c1 * c2 * s3) + (s1 * s2 * c3),
-					(c1 * c2 * c3) - (s1 * s2 * s3),
-				);
+				this.x = (s1 * c2 * c3) - (c1 * s2 * s3);
+				this.y = (c1 * s2 * c3) + (s1 * c2 * s3);
+				this.z = (c1 * c2 * s3) + (s1 * s2 * c3);
+				this.w = (c1 * c2 * c3) - (s1 * s2 * s3);
+				return this;
 			case "ZYX":
-				return this.set(
-					(s1 * c2 * c3) - (c1 * s2 * s3),
-					(c1 * s2 * c3) + (s1 * c2 * s3),
-					(c1 * c2 * s3) - (s1 * s2 * c3),
-					(c1 * c2 * c3) + (s1 * s2 * s3),
-				);
+				this.x = (s1 * c2 * c3) - (c1 * s2 * s3);
+				this.y = (c1 * s2 * c3) + (s1 * c2 * s3);
+				this.z = (c1 * c2 * s3) - (s1 * s2 * c3);
+				this.w = (c1 * c2 * c3) + (s1 * s2 * s3);
+				return this;
 			case "YZX":
-				return this.set(
-					(s1 * c2 * c3) + (c1 * s2 * s3),
-					(c1 * s2 * c3) + (s1 * c2 * s3),
-					(c1 * c2 * s3) - (s1 * s2 * c3),
-					(c1 * c2 * c3) - (s1 * s2 * s3),
-				);
+				this.x = (s1 * c2 * c3) + (c1 * s2 * s3);
+				this.y = (c1 * s2 * c3) + (s1 * c2 * s3);
+				this.z = (c1 * c2 * s3) - (s1 * s2 * c3);
+				this.w = (c1 * c2 * c3) - (s1 * s2 * s3);
+				return this;
 			case "XZY":
-				return this.set(
-					(s1 * c2 * c3) - (c1 * s2 * s3),
-					(c1 * s2 * c3) - (s1 * c2 * s3),
-					(c1 * c2 * s3) + (s1 * s2 * c3),
-					(c1 * c2 * c3) + (s1 * s2 * s3),
-				);
+				this.x = (s1 * c2 * c3) - (c1 * s2 * s3);
+				this.y = (c1 * s2 * c3) - (s1 * c2 * s3);
+				this.z = (c1 * c2 * s3) + (s1 * s2 * c3);
+				this.w = (c1 * c2 * c3) + (s1 * s2 * s3);
+				return this;
 		}
 	}
 

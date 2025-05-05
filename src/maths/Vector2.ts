@@ -8,15 +8,17 @@ export class Vector2 {
 	}
 
 	copy(v: Vector2): this {
-		return this.set(v.x, v.y);
+		this.x = v.x;
+		this.y = v.y;
+		return this;
 	}
 
 	fromArray(array: number[]): this {
-		const slice = array.slice(0, 3);
-		return this.set(
-			fromArray(slice, 0),
-			fromArray(slice, 1),
-		);
+		const slice = array.slice(0, 2);
+
+		this.x = fromArray(slice, 0);
+		this.y = fromArray(slice, 1);
+		return this;
 	}
 
 	set(x: number, y: number): this {

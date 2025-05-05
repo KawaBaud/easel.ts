@@ -22,12 +22,12 @@ export class Vector4 {
 
 	fromArray(array: number[]): this {
 		const slice = array.slice(0, 4);
-		return this.set(
-			fromArray(slice, 0),
-			fromArray(slice, 1),
-			fromArray(slice, 2),
-			fromArray(slice, 3),
-		);
+
+		this.x = fromArray(slice, 0);
+		this.y = fromArray(slice, 1);
+		this.z = fromArray(slice, 2);
+		this.w = fromArray(slice, 3);
+		return this;
 	}
 
 	set(x: number, y: number, z: number, w: number): this {
