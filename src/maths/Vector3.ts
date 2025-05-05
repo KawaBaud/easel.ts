@@ -5,6 +5,8 @@ import type { Matrix4 } from "./Matrix4.ts";
 import { Quaternion } from "./Quaternion.ts";
 
 export class Vector3 {
+	static UP = new Vector3(0, 1, 0);
+
 	constructor(public x = 0, public y = 0, public z = 0) {}
 
 	get length(): number {
@@ -131,6 +133,15 @@ export class Vector3 {
 		this.x = x;
 		this.y = y;
 		this.z = z !== undefined ? z : _z;
+		return this;
+	}
+
+	setFromMatrixPosition(m: Matrix4): this {
+		const me = m.elements;
+
+		this.x = fromArray(me, 12);
+		this.y = fromArray(me, 13);
+		this.z = fromArray(me, 14);
 		return this;
 	}
 
