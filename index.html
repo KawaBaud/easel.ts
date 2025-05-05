@@ -36,8 +36,8 @@
     </div>
 
     <script type="module">
-        const leftContainer = document.getElementById('left');
-        const rightContainer = document.getElementById('right');
+        const leftContainer = globalThis.document.getElementById('left');
+        const rightContainer = globalThis.document.getElementById('right');
 
         async function loadModules() {
             try {
@@ -46,8 +46,8 @@
                     import('./examples/three_3d_1.ts')
                 ]);
 
-                setTimeout(() => {
-                    const canvases = document.querySelectorAll('canvas');
+                globalThis.setTimeout(() => {
+                    const canvases = globalThis.document.querySelectorAll('canvas');
                     if (canvases.length >= 2) {
                         leftContainer.appendChild(canvases[1]);
                         rightContainer.appendChild(canvases[0]);
@@ -57,7 +57,6 @@
                 console.error("Error loading modules:", error);
             }
         }
-
         loadModules();
     </script>
 </body>
