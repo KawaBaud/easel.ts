@@ -1,3 +1,4 @@
+import { fromArray } from "../utils.ts";
 import type { Euler } from "./Euler.ts";
 import type { Vector3 } from "./Vector3.ts";
 
@@ -9,12 +10,49 @@ export class Quaternion {
 		public w: number = 1,
 	) {}
 
+	get length(): number {
+		return Math.sqrt(this.lengthSq);
+	}
+
+	get lengthSq(): number {
+		const { x, y, z, w } = this;
+		return (x * x) + (y * y) + (z * z) + (w * w);
+	}
+
 	clone(): Quaternion {
 		return new Quaternion().copy(this);
 	}
 
 	copy(q: Quaternion): this {
 		return this.set(q.x, q.y, q.z, q.w);
+	}
+
+	div(q: Quaternion): this {
+		return this.set(
+			this.x / q.x,
+			this.y / q.y,
+			this.z / q.z,
+			this.w / q.w,
+		);
+	}
+
+	divScalar(scalar: number): this {
+		return this.set(
+			this.x / scalar,
+			this.y / scalar,
+			this.z / scalar,
+			this.w / scalar,
+		);
+	}
+
+	fromArray(array: number[]): this {
+		const slice = array.slice(0, 4);
+		return this.set(
+			fromArray(slice, 0),
+			fromArray(slice, 1),
+			fromArray(slice, 2),
+			fromArray(slice, 3),
+		);
 	}
 
 	set(x: number, y: number, z: number, w: number): this {
@@ -91,6 +129,10 @@ export class Quaternion {
 					(c1 * c2 * c3) + (s1 * s2 * s3),
 				);
 		}
+	}
+
+	unitize(): this {
+		return this.divScalar(this.length || 1);
 	}
 
 	*[Symbol.iterator](): IterableIterator<number> {
