@@ -2,6 +2,15 @@ import type { Vector3 } from "../maths/Vector3.ts";
 import "../types.ts";
 
 export class ShapeUtils {
+	static isConvex(
+		a: Vector3,
+		b: Vector3,
+		c: Vector3,
+	): boolean {
+		const crossProduct = (b.x - a.x) * (c.z - a.z) - (b.z - a.z) * (c.x - a.x);
+		return crossProduct > 0;
+	}
+
 	static triangulate(vertices: Vector3[]): number[] {
 		if (vertices.length < 3) return [];
 		if (vertices.length === 3) return [0, 1, 2];
@@ -62,11 +71,6 @@ export class ShapeUtils {
 		return triangles;
 	}
 
-	static #isConvex(a: Vector3, b: Vector3, c: Vector3): boolean {
-		const cross = (b.x - a.x) * (c.z - a.z) - (b.z - a.z) * (c.x - a.x);
-		return cross >= 0;
-	}
-
 	static #isEar(
 		indices: number[],
 		vertices: Vector3[],
@@ -80,7 +84,7 @@ export class ShapeUtils {
 		const c = vertices[indices.safeAt(next)];
 		if (!a || !b || !c) return false;
 
-		if (!ShapeUtils.#isConvex(a, b, c)) return false;
+		if (!ShapeUtils.isConvex(a, b, c)) return false;
 
 		for (let i = 0; i < count; i++) {
 			if (i === prev || i === curr || i === next) continue;

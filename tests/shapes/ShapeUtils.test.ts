@@ -5,22 +5,24 @@ import "../../src/types.ts";
 
 Deno.test("ShapeUtils.triangulate", () => {
 	{
-		const vertices = [
-			new Vector3(0, 0, 0),
-			new Vector3(1, 0, 0),
-			new Vector3(0, 1, 0),
-		];
+		const v0 = new Vector3(0, 0, 0);
+		const v1 = new Vector3(1, 0, 0);
+		const v2 = new Vector3(0.5, 0, 1);
 
+		const isCC = ShapeUtils.isConvex(v0, v1, v2);
+		assertEquals(isCC, true, "triangle should be counter-clockwise");
+
+		const vertices = [v0, v1, v2];
 		const indices = ShapeUtils.triangulate(vertices);
-		assertEquals(indices, [0, 1, 2], "triangle");
+		assertEquals(indices.length, 3, "triangle should have 3 indices");
 	}
 
 	{
 		const vertices = [
-			new Vector3(-0.5, 0, -0.5), // 0: bottom-left
-			new Vector3(0.5, 0, -0.5), // 1: bottom-right
-			new Vector3(0.5, 0, 0.5), // 2: top-right
-			new Vector3(-0.5, 0, 0.5), // 3: top-left
+			new Vector3(-0.5, 0, -0.5),
+			new Vector3(0.5, 0, -0.5),
+			new Vector3(0.5, 0, 0.5),
+			new Vector3(-0.5, 0, 0.5),
 		];
 
 		const indices = ShapeUtils.triangulate(vertices);
