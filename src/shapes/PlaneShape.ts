@@ -15,7 +15,10 @@ export class PlaneShape extends Shape {
 			new Vector3(-halfWidth, 0, halfHeight),
 		];
 
-		this.indices = [0, 1, 2, 0, 2, 3];
+		const triangleA = [0, 1, 2];
+		const triangleB = [0, 2, 3];
+
+		this.indices = [...triangleA, ...triangleB];
 	}
 
 	override clone(): PlaneShape {
