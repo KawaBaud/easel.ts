@@ -115,16 +115,15 @@ export class Vector3 {
 	project(
 		camera: Camera,
 	): this {
-		return this
-			.applyMatrix4(camera.matrixWorldInverse)
-			.applyMatrix4(camera.projectionMatrix);
+		return this.applyMatrix4(camera.matrixWorldInverse).applyMatrix4(
+			camera.projectionMatrix,
+		);
 	}
 
-	set(x: number, y: number, z?: number): this {
-		const _z = this.z;
+	set(x: number, y: number, z: number): this {
 		this.x = x;
 		this.y = y;
-		this.z = z !== undefined ? z : _z;
+		this.z = z;
 		return this;
 	}
 

@@ -116,45 +116,34 @@ Deno.test("Vector3: copy", () => {
 });
 
 Deno.test("Vector3: cross", () => {
-	const a = new Vector3(1, 0, 0);
-	const b = new Vector3(0, 1, 0);
-	const threeA = new ThreeVector3(1, 0, 0);
-	const threeB = new ThreeVector3(0, 1, 0);
+	const a = new Vector3(0, 1, 0);
+	const b = new Vector3(1, 0, 0).cross(a);
+	const threeA = new ThreeVector3(0, 1, 0);
+	const threeB = new ThreeVector3(1, 0, 0).cross(threeA);
+	compareVectors(b, threeB, "cross (x cross y)");
 
-	a.cross(b);
-	threeA.cross(threeB);
-	compareVectors(a, threeA, "cross (x cross y)");
-
-	const c = new Vector3(2, 3, 4);
-	const d = new Vector3(5, 6, 7);
-	const threeC = new ThreeVector3(2, 3, 4);
-	const threeD = new ThreeVector3(5, 6, 7);
-	c.cross(d);
-	threeC.cross(threeD);
-	compareVectors(c, threeC, "cross");
+	const c = new Vector3(5, 6, 7);
+	const d = new Vector3(2, 3, 4).cross(c);
+	const threeC = new ThreeVector3(5, 6, 7);
+	const threeD = new ThreeVector3(2, 3, 4).cross(threeC);
+	compareVectors(d, threeD, "cross");
 });
 
 Deno.test("Vector3: crossVectors", () => {
 	const a = new Vector3(1, 0, 0);
 	const b = new Vector3(0, 1, 0);
-	const c = new Vector3();
+	const c = new Vector3().crossVectors(a, b);
 	const threeA = new ThreeVector3(1, 0, 0);
 	const threeB = new ThreeVector3(0, 1, 0);
-	const threeC = new ThreeVector3();
-
-	c.crossVectors(a, b);
-	threeC.crossVectors(threeA, threeB);
+	const threeC = new ThreeVector3().crossVectors(threeA, threeB);
 	compareVectors(c, threeC, "crossVectors (x cross y)");
 
 	const d = new Vector3(2, 3, 4);
 	const e = new Vector3(5, 6, 7);
-	const f = new Vector3();
+	const f = new Vector3().crossVectors(d, e);
 	const threeD = new ThreeVector3(2, 3, 4);
 	const threeE = new ThreeVector3(5, 6, 7);
-	const threeF = new ThreeVector3();
-
-	f.crossVectors(d, e);
-	threeF.crossVectors(threeD, threeE);
+	const threeF = new ThreeVector3().crossVectors(threeD, threeE);
 	compareVectors(f, threeF, "crossVectors");
 });
 
@@ -163,7 +152,6 @@ Deno.test("Vector3: add", () => {
 	const b = new Vector3(4, 5, 6);
 	const threeA = new ThreeVector3(1, 2, 3);
 	const threeB = new ThreeVector3(4, 5, 6);
-
 	a.add(b);
 	threeA.add(threeB);
 	compareVectors(a, threeA, "add");
@@ -276,11 +264,6 @@ Deno.test("Vector3: set", () => {
 	const a = new Vector3().set(4, 5, 6);
 	const threeA = new ThreeVector3().set(4, 5, 6);
 	compareVectors(a, threeA, "set(x, y, z)");
-
-	a.set(7, 8);
-	assertEquals(a.x, 7, "set(x, y) - x");
-	assertEquals(a.y, 8, "set(x, y) - y");
-	assertEquals(a.z, 6, "set(x, y) - z (should be unchanged)");
 });
 
 Deno.test("Vector3: sub", () => {
