@@ -11,7 +11,9 @@ export class CanvasUtils {
 		settings?: CanvasRenderingContext2DSettings,
 	): CanvasRenderingContext2D {
 		return canvas.getContext("2d", settings) ?? (() => {
-			throw new Error("2D context not supported");
+			throw new Error(
+				"EASEL.CanvasUtils.createCanvasRenderingContext2D(): 2D context not supported",
+			);
 		})();
 	}
 }
