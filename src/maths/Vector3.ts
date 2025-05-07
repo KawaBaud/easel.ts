@@ -175,6 +175,13 @@ export class Vector3 {
 		return this;
 	}
 
+	lerp(v: Vector3, t: number): this {
+		this.x = this.x + (v.x - this.x) * t;
+		this.y = this.y + (v.y - this.y) * t;
+		this.z = this.z + (v.z - this.z) * t;
+		return this;
+	}
+
 	mulScalar(scalar: number): this {
 		this.x *= scalar;
 		this.y *= scalar;
