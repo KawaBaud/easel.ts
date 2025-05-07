@@ -83,7 +83,7 @@ Deno.test("Line3: constructor", () => {
 		new ThreeVector3(1, 2, 3),
 		new ThreeVector3(4, 5, 6),
 	);
-	compareLines(b, threeB, "constructor with values");
+	compareLines(b, threeB, "constructor w/ values");
 });
 
 Deno.test("Line3: get->delta", () => {
