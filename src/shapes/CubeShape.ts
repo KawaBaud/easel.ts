@@ -20,12 +20,12 @@ export class CubeShape extends Shape {
 			new Vector3(-halfWidth, halfHeight, halfDepth), // 7: back-top-left
 		];
 
-		const frontFace = [0, 1, 2, 0, 2, 3];
-		const backFace = [4, 7, 6, 4, 6, 5];
-		const rightFace = [1, 5, 6, 1, 6, 2];
-		const leftFace = [4, 0, 3, 4, 3, 7];
-		const topFace = [3, 2, 6, 3, 6, 7];
-		const bottomFace = [1, 0, 4, 1, 4, 5];
+		const frontFace = [0, 1, 2, 2, 3, 0];
+		const backFace = [5, 4, 7, 7, 6, 5];
+		const rightFace = [1, 5, 6, 6, 2, 1];
+		const leftFace = [4, 0, 3, 3, 7, 4];
+		const topFace = [3, 2, 6, 6, 7, 3];
+		const bottomFace = [1, 0, 4, 4, 5, 1];
 
 		this.indices = [
 			...frontFace,

@@ -16,7 +16,7 @@ export class PlaneShape extends Shape {
 		];
 
 		const triangleA = [0, 1, 2];
-		const triangleB = [0, 2, 3];
+		const triangleB = [2, 3, 0];
 
 		this.indices = [...triangleA, ...triangleB];
 	}
