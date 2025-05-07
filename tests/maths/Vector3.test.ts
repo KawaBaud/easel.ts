@@ -340,12 +340,14 @@ Deno.test("Vector3: fromArray", () => {
 });
 
 Deno.test("Vector3: lerp", () => {
+	const t = 0.5;
+
 	const a = new Vector3(1, 2, 3);
 	const b = new Vector3(4, 5, 6);
-	const t = 0.5;
-	const result = a.lerp(b, t);
 	const threeA = new ThreeVector3(1, 2, 3);
 	const threeB = new ThreeVector3(4, 5, 6);
+
+	const result = a.lerp(b, t);
 	const threeResult = threeA.lerp(threeB, t);
 	compareVectors(result, threeResult, "lerp");
 });
