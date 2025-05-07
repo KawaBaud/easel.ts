@@ -6,32 +6,34 @@ import "../../types.ts";
 const _v1 = new Vector3();
 const _v2 = new Vector3();
 const _v3 = new Vector3();
+const _v4 = new Vector3();
+const _v5 = new Vector3();
 
 export class ClippingContext {
 	frustum = new Frustum();
 
 	clipLine(start: Vector3, end: Vector3): Vector3[] | null {
-		if (this.isPointVisible(start) && this.isPointVisible(end)) {
-			return [start.clone(), end.clone()];
-		}
+		if (
+			this.frustum.containsPoint(start) &&
+			this.frustum.containsPoint(end)
+		) return [start.clone(), end.clone()];
 
 		let t0 = 0;
 		let t1 = 1;
-		const dir = _v3.copy(end).sub(start);
+		const direction = _v3.subVectors(end, start);
 
 		for (let i = 0; i < 6; i++) {
 			const plane = this.frustum.planes.safeAt(i);
 			const normal = plane.normal;
-			const denom = normal.dot(dir);
+			const denom = normal.dot(direction);
 			const dist = plane.distanceToPoint(start);
 
 			if (denom === 0) {
-				if (!this.#handleParallelLine(dist)) return null;
+				if (dist < 0) return null;
 			} else {
-				const result = this.#handleIntersectingLine(denom, dist, t0, t1);
-				if (!result) return null;
-				t0 = result.t0;
-				t1 = result.t1;
+				const t = -dist / denom;
+				denom < 0 ? (t > t0 ? t0 = t : null) : (t < t1 ? t1 = t : null);
+				if (t0 > t1) return null;
 			}
 		}
 
@@ -39,16 +41,19 @@ export class ClippingContext {
 		t1 = Math.min(1, t1);
 		if (t0 > t1) return null;
 
-		const clippedStart = _v1.copy(start).add(dir.clone().mulScalar(t0));
-		const clippedEnd = _v2.copy(start).add(dir.clone().mulScalar(t1));
-
+		const clippedStart = _v1.copy(start).add(
+			_v4.copy(direction).mulScalar(t0),
+		);
+		const clippedEnd = _v2.copy(start).add(
+			_v5.copy(direction).mulScalar(t1),
+		);
 		return [clippedStart.clone(), clippedEnd.clone()];
 	}
 
 	clipTriangle(v1: Vector3, v2: Vector3, v3: Vector3): Vector3[][] {
 		if (
-			this.isPointVisible(v1) && this.isPointVisible(v2) &&
-			this.isPointVisible(v3)
+			this.frustum.containsPoint(v1) && this.frustum.containsPoint(v2) &&
+			this.frustum.containsPoint(v3)
 		) return [[v1.clone(), v2.clone(), v3.clone()]];
 
 		let triangles = [[v1.clone(), v2.clone(), v3.clone()]];
@@ -59,24 +64,44 @@ export class ClippingContext {
 			newTriangles = [];
 
 			for (const triangle of triangles) {
-				const d1 = plane.distanceToPoint(triangle.safeAt(0));
-				const d2 = plane.distanceToPoint(triangle.safeAt(1));
-				const d3 = plane.distanceToPoint(triangle.safeAt(2));
+				const p1 = triangle.safeAt(0);
+				const p2 = triangle.safeAt(1);
+				const p3 = triangle.safeAt(2);
 
-				const behindCount = (d1 < 0 ? 1 : 0) + (d2 < 0 ? 1 : 0) +
-					(d3 < 0 ? 1 : 0);
+				const d1 = plane.distanceToPoint(p1);
+				const d2 = plane.distanceToPoint(p2);
+				const d3 = plane.distanceToPoint(p3);
+
+				const p1Behind = d1 < 0;
+				const p2Behind = d2 < 0;
+				const p3Behind = d3 < 0;
+
+				const behindCount = (p1Behind ? 1 : 0) +
+					(p2Behind ? 1 : 0) + (p3Behind ? 1 : 0);
 				switch (behindCount) {
 					case 0:
 						newTriangles.push(triangle);
 						break;
 					case 1:
-						newTriangles.push(
-							...this.#handleOnePointBehind(triangle, d1, d2, d3),
+						this.#clipOnePointBehind(
+							triangle,
+							d1,
+							d2,
+							d3,
+							p1Behind,
+							p2Behind,
+							newTriangles,
 						);
 						break;
 					case 2:
-						newTriangles.push(
-							...this.#handleTwoPointsBehind(triangle, d1, d2, d3),
+						this.#clipTwoPointsBehind(
+							triangle,
+							d1,
+							d2,
+							d3,
+							p1Behind,
+							p2Behind,
+							newTriangles,
 						);
 						break;
 				}
@@ -98,79 +123,68 @@ export class ClippingContext {
 		return this;
 	}
 
-	#handleIntersectingLine(
-		denom: number,
-		dist: number,
-		t0: number,
-		t1: number,
-	): { t0: number; t1: number } | null {
-		const t = -dist / denom;
-		denom < 0 ? (t > t0 && (t0 = t)) : (t < t1 && (t1 = t));
-		return t0 > t1 ? null : { t0, t1 };
-	}
-
-	#handleOnePointBehind(
+	#clipOnePointBehind(
 		triangle: Vector3[],
 		d1: number,
 		d2: number,
 		d3: number,
-	): Vector3[][] {
-		let a: Vector3, b: Vector3, c: Vector3;
-		let da: number, db: number, dc: number;
+		p1Behind: boolean,
+		p2Behind: boolean,
+		newTriangles: Vector3[][],
+	): void {
+		const p1 = triangle.safeAt(0);
+		const p2 = triangle.safeAt(1);
+		const p3 = triangle.safeAt(2);
 
-		if (d1 < 0) {
-			a = triangle.safeAt(0), b = triangle.safeAt(1), c = triangle.safeAt(2);
-			da = d1, db = d2, dc = d3;
-		} else if (d2 < 0) {
-			a = triangle.safeAt(1), b = triangle.safeAt(2), c = triangle.safeAt(0);
-			da = d2, db = d3, dc = d1;
-		} else {
-			a = triangle.safeAt(2), b = triangle.safeAt(0), c = triangle.safeAt(1);
-			da = d3, db = d1, dc = d2;
-		}
+		const a = p1Behind ? p1 : p2Behind ? p2 : p3,
+			b = p1Behind ? p2 : p2Behind ? p3 : p1,
+			c = p1Behind ? p3 : p2Behind ? p1 : p2;
+		const da = p1Behind ? d1 : p2Behind ? d2 : d3,
+			db = p1Behind ? d2 : p2Behind ? d3 : d1,
+			dc = p1Behind ? d3 : p2Behind ? d1 : d2;
 
 		const t1 = da / (da - db);
 		const t2 = da / (da - dc);
 
-		_v1.copy(a).lerp(b, t1);
-		_v2.copy(a).lerp(c, t2);
+		_v4.copy(a).lerp(b, t1);
+		_v5.copy(a).lerp(c, t2);
 
-		return [
-			[_v1.clone(), b.clone(), c.clone()],
-			[_v1.clone(), c.clone(), _v2.clone()],
-		];
+		newTriangles.push(
+			[_v4.clone(), b.clone(), c.clone()],
+			[_v4.clone(), c.clone(), _v5.clone()],
+		);
 	}
 
-	#handleParallelLine(dist: number): boolean {
-		return dist >= 0;
-	}
-
-	#handleTwoPointsBehind(
+	#clipTwoPointsBehind(
 		triangle: Vector3[],
 		d1: number,
 		d2: number,
 		d3: number,
-	): Vector3[][] {
-		let a: Vector3, b: Vector3, c: Vector3;
-		let da: number, db: number, dc: number;
+		p1Behind: boolean,
+		p2Behind: boolean,
+		newTriangles: Vector3[][],
+	): void {
+		const p1 = triangle.safeAt(0);
+		const p2 = triangle.safeAt(1);
+		const p3 = triangle.safeAt(2);
 
-		if (d1 >= 0) {
-			a = triangle.safeAt(1), b = triangle.safeAt(2), c = triangle.safeAt(0);
-			da = d2, db = d3, dc = d1;
-		} else if (d2 >= 0) {
-			a = triangle.safeAt(2), b = triangle.safeAt(0), c = triangle.safeAt(1);
-			da = d3, db = d1, dc = d2;
-		} else {
-			a = triangle.safeAt(0), b = triangle.safeAt(1), c = triangle.safeAt(2);
-			da = d1, db = d2, dc = d3;
-		}
+		const a = !p1Behind ? p2 : !p2Behind ? p3 : p1,
+			b = !p1Behind ? p3 : !p2Behind ? p1 : p2,
+			c = !p1Behind
+				? p1
+				: !p2Behind
+				? p2
+				: p3; /* a, b are behind, c is in front */
+		const da = !p1Behind ? d2 : !p2Behind ? d3 : d1,
+			db = !p1Behind ? d3 : !p2Behind ? d1 : d2,
+			dc = !p1Behind ? d1 : !p2Behind ? d2 : d3;
 
 		const t1 = dc / (dc - da);
 		const t2 = dc / (dc - db);
 
-		_v1.copy(c).lerp(a, t1);
-		_v2.copy(c).lerp(b, t2);
+		_v4.copy(c).lerp(a, t1);
+		_v5.copy(c).lerp(b, t2);
 
-		return [[c.clone(), _v1.clone(), _v2.clone()]];
+		newTriangles.push([c.clone(), _v4.clone(), _v5.clone()]);
 	}
 }
