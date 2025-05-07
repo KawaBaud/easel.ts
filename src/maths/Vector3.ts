@@ -123,6 +123,17 @@ export class Vector3 {
 		return this;
 	}
 
+	distanceTo(v: Vector3): number {
+		return Math.sqrt(this.distanceToSq(v));
+	}
+
+	distanceToSq(v: Vector3): number {
+		const dx = this.x - v.x;
+		const dy = this.y - v.y;
+		const dz = this.z - v.z;
+		return (dx * dx) + (dy * dy) + (dz * dz);
+	}
+
 	divScalar(scalar: number): this {
 		this.x /= scalar;
 		this.y /= scalar;
