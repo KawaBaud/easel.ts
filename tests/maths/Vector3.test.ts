@@ -246,6 +246,26 @@ Deno.test("Vector3: divScalar", () => {
 	compareVectors(b, threeB, "divScalar by zero");
 });
 
+Deno.test("Vector3: distanceTo", () => {
+	const a = new Vector3(1, 2, 3);
+	const b = new Vector3(4, 5, 6);
+	const result = a.distanceTo(b);
+	const threeA = new ThreeVector3(1, 2, 3);
+	const threeB = new ThreeVector3(4, 5, 6);
+	const threeResult = threeA.distanceTo(threeB);
+	assertEquals(result, threeResult, "distanceTo");
+});
+
+Deno.test("Vector3: distanceSqTo", () => {
+	const a = new Vector3(1, 2, 3);
+	const b = new Vector3(4, 5, 6);
+	const result = a.distanceSqTo(b);
+	const threeA = new ThreeVector3(1, 2, 3);
+	const threeB = new ThreeVector3(4, 5, 6);
+	const threeResult = threeA.distanceToSquared(threeB);
+	assertEquals(result, threeResult, "distanceToSq");
+});
+
 Deno.test("Vector3: dot", () => {
 	const a = new Vector3(1, 2, 3);
 	const b = new Vector3(4, 5, 6);
