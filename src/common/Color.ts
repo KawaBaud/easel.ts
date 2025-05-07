@@ -1,11 +1,14 @@
-export type ColorValue = number | string | Color;
+export type ColorValue = string | number | Color;
+
+export type HSL = [h: number, s: number, l: number];
+export type RGB = [r: number, g: number, b: number];
 
 export class Color {
 	static rgbToHex(r: number, g: number, b: number): number {
 		return (r << 16) ^ (g << 8) ^ b;
 	}
 
-	static rgbToHsl(r: number, g: number, b: number): number[] {
+	static rgbToHsl(r: number, g: number, b: number): HSL {
 		const max = Math.max(r, g, b);
 		const min = Math.min(r, g, b);
 		const l = (max + min) / 2;
@@ -27,22 +30,49 @@ export class Color {
 		return [h, s, l];
 	}
 
-	constructor(
-		public r = 1,
-		public g = 1,
-		public b = 1,
-	) {}
+	r = 1;
+	g = 1;
+	b = 1;
 
-	copy(source: Color): Color {
+	constructor(...args: [color: ColorValue] | RGB) {
+		if (args.length > 0) this.set(...args);
+	}
+
+	get hex(): number {
+		return Color.rgbToHex(this.r, this.g, this.b);
+	}
+
+	get hexString(): string {
+		return `#${this.hex.toString(16).padStart(6, "0")}`;
+	}
+
+	clone(): Color {
+		return new Color(this);
+	}
+
+	copy(source: Color): this {
 		this.r = source.r;
 		this.g = source.g;
 		this.b = source.b;
 		return this;
 	}
 
-	set(r: ColorValue, g?: number, b?: number): this {
-		if (g === undefined && b === undefined) {
-			const value = r;
+	parse(value: ColorValue): this {
+		if (value instanceof Color) {
+			this.copy(value);
+			return this;
+		} else if (typeof value === "number") {
+			return this.setHex(value);
+		} else if (typeof value === "string") {
+			return this.setStyle(value);
+		}
+
+		throw new Error(`[Color] invalid value: ${value}`);
+	}
+
+	set(...args: [color: ColorValue] | RGB): this {
+		if (args.length === 1) {
+			const value = args[0];
 
 			if (value instanceof Color) {
 				this.copy(value);
@@ -51,8 +81,8 @@ export class Color {
 			} else if (typeof value === "string") {
 				this.setStyle(value);
 			}
-		} else if (typeof r === "number") {
-			this.setRGB(r, g ?? 1, b ?? 1);
+		} else if (args.length === 3) {
+			this.setRGB(args[0], args[1], args[2]);
 		}
 
 		return this;
@@ -60,14 +90,13 @@ export class Color {
 
 	setHex(hex: number): this {
 		if (hex > 0xFFFFFF || hex < 0) {
-			throw new Error("Color: hex value out of range");
+			throw new Error("[Color] hex out of range");
 		}
 		hex = hex | 0;
 
 		this.r = (hex >> 16) / 255;
 		this.g = (hex >> 8 & 255) / 255;
 		this.b = (hex & 255) / 255;
-
 		return this;
 	}
 
@@ -97,7 +126,7 @@ export class Color {
 
 	setRGB(r: number, g: number, b: number): this {
 		if (r > 255 || g > 255 || b > 255) {
-			throw new Error("Color: rgb value out of range");
+			throw new Error("[Color] rgb out of range");
 		}
 
 		this.r = r;
@@ -111,36 +140,26 @@ export class Color {
 		if (style.startsWith("#")) return this.#parseHex(style);
 		if (style.startsWith("rgb")) return this.#parseRGB(style);
 		if (style.startsWith("hsl")) return this.#parseHSL(style);
-		throw new Error("Color: invalid style");
-	}
 
-	parse(value: ColorValue): this {
-		if (value instanceof Color) {
-			this.copy(value);
-			return this;
-		} else if (typeof value === "number") {
-			return this.setHex(value);
-		} else if (typeof value === "string") {
-			return this.setStyle(value);
-		}
-		throw new Error("Color: invalid value type");
+		throw new Error(`[Color] invalid style: ${style}`);
 	}
 
 	#parseHex(style: string): this {
 		if (style.length !== 7) {
-			throw new Error("Color: hex style must be in '#rrggbb' format");
+			throw new Error("[Color] hex style must be in '#rrggbb' format");
 		}
-		this.setHex(parseInt(style.slice(1), 16));
-		return this;
+
+		return this.setHex(parseInt(style.slice(1), 16));
 	}
 
 	#parseHSL(style: string): this {
 		const values = style.match(/\d+/g);
 		if (!values || values.length < 3) {
 			throw new Error(
-				"Color: hsl(a) style must be in 'hsl(h,s%,l%)' or 'hsla(h,s%,l%,a)' format",
+				"[Color] hsl(a) style must be in 'hsl(h,s%,l%)' or 'hsla(h,s%,l%,a)' format",
 			);
 		}
+
 		const h = Number(values[0]) / 360;
 		const s = Number(values[1]) / 100;
 		const l = Number(values[2]) / 100;
@@ -167,14 +186,14 @@ export class Color {
 		const values = style.match(/\d+/g);
 		if (!values || values.length < 3) {
 			throw new Error(
-				"Color: rgb(a) style must be in 'rgb(r,g,b)' or 'rgba(r,g,b,a)' format",
+				"[Color] rgb style must be in 'rgb(r,g,b)' or 'rgba(r,g,b,a)' format",
 			);
 		}
-		this.setRGB(
+
+		return this.setRGB(
 			Number(values[0]) / 255,
 			Number(values[1]) / 255,
 			Number(values[2]) / 255,
 		);
-		return this;
 	}
 }
