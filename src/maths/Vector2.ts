@@ -25,6 +25,12 @@ export class Vector2 {
 		this.#y = value;
 	}
 
+	add(v: Vector2): this {
+		this.x += v.x;
+		this.y += v.y;
+		return this;
+	}
+
 	clone(): Vector2 {
 		return new Vector2(this.x, this.y);
 	}
@@ -35,15 +41,31 @@ export class Vector2 {
 		return this;
 	}
 
+	equals(v: Vector2): boolean {
+		return (this.x === v.x) && (this.y === v.y);
+	}
+
 	fromArray(array: number[]): this {
 		this.x = array.safeAt(0);
 		this.y = array.safeAt(1);
 		return this;
 	}
 
+	mulScalar(scalar: number): this {
+		this.x *= scalar;
+		this.y *= scalar;
+		return this;
+	}
+
 	set(x: number, y: number): this {
 		this.x = x;
 		this.y = y;
+		return this;
+	}
+
+	sub(v: Vector2): this {
+		this.x -= v.x;
+		this.y -= v.y;
 		return this;
 	}
 
