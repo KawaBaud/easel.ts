@@ -1,6 +1,8 @@
+import type { Camera } from "../../cameras/Camera.ts";
 import { Color, type ColorValue } from "../../common/Color.ts";
 import { MathUtils } from "../../maths/MathUtils.ts";
 import { Vector3 } from "../../maths/Vector3.ts";
+import type { Mesh } from "../../objects/Mesh.ts";
 import { CanvasUtils } from "../CanvasUtils.ts";
 
 export interface RasterizerOptions {
@@ -145,6 +147,32 @@ export class Rasterizer {
 		const g = this.data[idx + 1];
 		const b = this.data[idx + 2];
 		return `rgb(${r}, ${g}, ${b})`;
+	}
+
+	rasterizeTriangle(
+		triangle: Vector3[],
+		camera: Camera,
+		material: Mesh["material"],
+	): void {
+		if (triangle.length === 3) {
+			const cv1 = triangle[0];
+			const cv2 = triangle[1];
+			const cv3 = triangle[2];
+
+			if (cv1 && cv2 && cv3) {
+				cv1.applyMatrix4(camera.projectionMatrix);
+				cv2.applyMatrix4(camera.projectionMatrix);
+				cv3.applyMatrix4(camera.projectionMatrix);
+
+				this.drawTriangle(
+					cv1,
+					cv2,
+					cv3,
+					material.color,
+					material.wireframe,
+				);
+			}
+		}
 	}
 
 	setPixel(x: number, y: number, color: ColorValue): this {

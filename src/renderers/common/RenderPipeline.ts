@@ -45,6 +45,47 @@ export class RenderPipeline extends Pipeline {
 		return this;
 	}
 
+	#processTriangle(
+		indices: number[],
+		startIndex: number,
+		vertices: Vector3[],
+		mesh: Mesh,
+		camera: Camera,
+		rasterizer: Rasterizer,
+		material: Mesh["material"],
+	): void {
+		const idx1 = indices.safeAt(startIndex);
+		const idx2 = indices.safeAt(startIndex + 1);
+		const idx3 = indices.safeAt(startIndex + 2);
+
+		if (
+			(idx1 >= vertices.length) ||
+			(idx2 >= vertices.length) ||
+			(idx3 >= vertices.length)
+		) return;
+
+		const v1 = vertices[idx1];
+		const v2 = vertices[idx2];
+		const v3 = vertices[idx3];
+		if (!v1 || !v2 || !v3) return;
+
+		_v1.copy(v1).applyMatrix4(mesh.worldMatrix);
+		_v2.copy(v2).applyMatrix4(mesh.worldMatrix);
+		_v3.copy(v3).applyMatrix4(mesh.worldMatrix);
+
+		const worldV1 = _v1.clone().applyMatrix4(camera.matrixWorldInverse);
+		const worldV2 = _v2.clone().applyMatrix4(camera.matrixWorldInverse);
+		const worldV3 = _v3.clone().applyMatrix4(camera.matrixWorldInverse);
+
+		const clippedTriangles = this.#clippingContext
+			.clipTriangle(worldV1, worldV2, worldV3);
+		if (clippedTriangles.length === 0) return;
+
+		for (const triangle of clippedTriangles) {
+			rasterizer.rasterizeTriangle(triangle, camera, material);
+		}
+	}
+
 	#renderMesh(mesh: Mesh, camera: Camera, rasterizer: Rasterizer): void {
 		const shape = mesh.shape;
 		const material = mesh.material;
@@ -59,60 +100,15 @@ export class RenderPipeline extends Pipeline {
 		}
 
 		for (let i = 0; i < indices.length; i += 3) {
-			const idx1 = indices.safeAt(i);
-			const idx2 = indices.safeAt(i + 1);
-			const idx3 = indices.safeAt(i + 2);
-
-			if (
-				(idx1 >= vertices.length) ||
-				(idx2 >= vertices.length) ||
-				(idx3 >= vertices.length)
-			) continue;
-
-			const v1 = vertices[idx1];
-			const v2 = vertices[idx2];
-			const v3 = vertices[idx3];
-			if (!v1 || !v2 || !v3) continue;
-
-			_v1.copy(v1).applyMatrix4(mesh.worldMatrix);
-			_v2.copy(v2).applyMatrix4(mesh.worldMatrix);
-			_v3.copy(v3).applyMatrix4(mesh.worldMatrix);
-
-			const worldV1 = _v1.clone();
-			const worldV2 = _v2.clone();
-			const worldV3 = _v3.clone();
-			worldV1.applyMatrix4(camera.matrixWorldInverse);
-			worldV2.applyMatrix4(camera.matrixWorldInverse);
-			worldV3.applyMatrix4(camera.matrixWorldInverse);
-
-			const clippedTriangles = this.#clippingContext.clipTriangle(
-				worldV1,
-				worldV2,
-				worldV3,
+			this.#processTriangle(
+				indices,
+				i,
+				vertices,
+				mesh,
+				camera,
+				rasterizer,
+				material,
 			);
-			if (clippedTriangles.length === 0) continue;
-
-			for (const triangle of clippedTriangles) {
-				if (triangle.length === 3) {
-					const cv1 = triangle[0];
-					const cv2 = triangle[1];
-					const cv3 = triangle[2];
-
-					if (cv1 && cv2 && cv3) {
-						cv1.applyMatrix4(camera.projectionMatrix);
-						cv2.applyMatrix4(camera.projectionMatrix);
-						cv3.applyMatrix4(camera.projectionMatrix);
-
-						rasterizer.drawTriangle(
-							cv1,
-							cv2,
-							cv3,
-							material.color,
-							material.wireframe,
-						);
-					}
-				}
-			}
 		}
 	}
 }
