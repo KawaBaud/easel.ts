@@ -4,12 +4,54 @@ import type { Matrix4 } from "./Matrix4.ts";
 import type { Vector3 } from "./Vector3.ts";
 
 export class Quaternion {
+	#x = 0;
+	#y = 0;
+	#z = 0;
+	#w = 1;
+
 	constructor(
-		public x: number = 0,
-		public y: number = 0,
-		public z: number = 0,
-		public w: number = 1,
-	) {}
+		x = 0,
+		y = 0,
+		z = 0,
+		w = 1,
+	) {
+		this.#x = x;
+		this.#y = y;
+		this.#z = z;
+		this.#w = w;
+	}
+
+	get x(): number {
+		return this.#x;
+	}
+
+	set x(value: number) {
+		this.#x = value;
+	}
+
+	get y(): number {
+		return this.#y;
+	}
+
+	set y(value: number) {
+		this.#y = value;
+	}
+
+	get z(): number {
+		return this.#z;
+	}
+
+	set z(value: number) {
+		this.#z = value;
+	}
+
+	get w(): number {
+		return this.#w;
+	}
+
+	set w(value: number) {
+		this.#w = value;
+	}
 
 	get length(): number {
 		return Math.sqrt(this.lengthSq);

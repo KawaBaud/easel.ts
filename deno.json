@@ -7,6 +7,8 @@
     "compilerOptions": {
         "allowUnreachableCode": false,
         "allowUnusedLabels": false,
+        "checkJs": true,
+        "erasableSyntaxOnly": true,
         "exactOptionalPropertyTypes": true,
         "noFallthroughCasesInSwitch": true,
         "noImplicitOverride": true,
@@ -64,6 +66,10 @@
                 "verbatim-module-syntax"
             ]
         },
+        "include": [
+            "src/",
+            "tests/"
+        ],
         "exclude": []
     },
     "imports": {

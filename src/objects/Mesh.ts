@@ -3,12 +3,34 @@ import type { Shape } from "../shapes/Shape.ts";
 import { Object3D } from "./Object3D.ts";
 
 export class Mesh extends Object3D {
+	#shape: Shape;
+	#material: Material;
+
 	constructor(
-		public shape: Shape,
-		public material: Material,
+		shape: Shape,
+		material: Material,
 	) {
 		super();
+		this.#shape = shape;
+		this.#material = material;
 		this.updateMatrix();
+	}
+
+	get shape(): Shape {
+		return this.#shape;
+	}
+
+	set shape(value: Shape) {
+		this.#shape = value;
+		this.updateMatrix();
+	}
+
+	get material(): Material {
+		return this.#material;
+	}
+
+	set material(value: Material) {
+		this.#material = value;
 	}
 
 	override clone(): Mesh {
@@ -17,10 +39,8 @@ export class Mesh extends Object3D {
 
 	override copy(source: Mesh): this {
 		super.copy(source);
-
 		this.shape = source.shape.clone();
 		this.material = source.material.clone();
-
 		return this;
 	}
 }

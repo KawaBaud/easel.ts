@@ -1,12 +1,54 @@
 import "../types.ts";
 
 export class Vector4 {
+	#x = 0;
+	#y = 0;
+	#z = 0;
+	#w = 1;
+
 	constructor(
-		public x = 0,
-		public y = 0,
-		public z = 0,
-		public w = 1,
-	) {}
+		x = 0,
+		y = 0,
+		z = 0,
+		w = 1,
+	) {
+		this.#x = x;
+		this.#y = y;
+		this.#z = z;
+		this.#w = w;
+	}
+
+	get x(): number {
+		return this.#x;
+	}
+
+	set x(value: number) {
+		this.#x = value;
+	}
+
+	get y(): number {
+		return this.#y;
+	}
+
+	set y(value: number) {
+		this.#y = value;
+	}
+
+	get z(): number {
+		return this.#z;
+	}
+
+	set z(value: number) {
+		this.#z = value;
+	}
+
+	get w(): number {
+		return this.#w;
+	}
+
+	set w(value: number) {
+		this.#w = value;
+	}
 
 	clone(): Vector4 {
 		return new Vector4(this.x, this.y, this.z, this.w);

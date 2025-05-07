@@ -15,7 +15,7 @@ export class Rasterizer {
 	ctx: CanvasRenderingContext2D;
 	imageData: ImageData;
 	data: Uint8ClampedArray;
-	#tempColor = new Color();
+	#tempColor = new Color(0, 0, 0);
 
 	constructor(options: RasterizerOptions = {}) {
 		this.width = options.width ?? globalThis.innerWidth;

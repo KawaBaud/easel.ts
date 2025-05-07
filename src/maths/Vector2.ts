@@ -1,7 +1,29 @@
 import "../types.ts";
 
 export class Vector2 {
-	constructor(public x = 0, public y = 0) {}
+	#x = 0;
+	#y = 0;
+
+	constructor(x = 0, y = 0) {
+		this.#x = x;
+		this.#y = y;
+	}
+
+	get x(): number {
+		return this.#x;
+	}
+
+	set x(value: number) {
+		this.#x = value;
+	}
+
+	get y(): number {
+		return this.#y;
+	}
+
+	set y(value: number) {
+		this.#y = value;
+	}
 
 	clone(): Vector2 {
 		return new Vector2(this.x, this.y);

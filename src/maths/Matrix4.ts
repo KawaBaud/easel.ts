@@ -5,8 +5,14 @@ import { Quaternion } from "./Quaternion.ts";
 import { Vector3 } from "./Vector3.ts";
 
 export class Matrix4 {
-	constructor(public elements = new Float32Array(16)) {
-		this.identity();
+	#elements = new Float32Array(16);
+
+	constructor(elements?: Float32Array<ArrayBuffer>) {
+		elements ? (this.#elements = elements) : this.identity();
+	}
+
+	get elements(): Float32Array {
+		return this.#elements;
 	}
 
 	clone(): Matrix4 {

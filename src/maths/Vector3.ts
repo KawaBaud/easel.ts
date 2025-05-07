@@ -7,7 +7,39 @@ import { Quaternion } from "./Quaternion.ts";
 export class Vector3 {
 	static UP = new Vector3(0, 1, 0);
 
-	constructor(public x = 0, public y = 0, public z = 0) {}
+	#x = 0;
+	#y = 0;
+	#z = 0;
+
+	constructor(x = 0, y = 0, z = 0) {
+		this.#x = x;
+		this.#y = y;
+		this.#z = z;
+	}
+
+	get x(): number {
+		return this.#x;
+	}
+
+	set x(value: number) {
+		this.#x = value;
+	}
+
+	get y(): number {
+		return this.#y;
+	}
+
+	set y(value: number) {
+		this.#y = value;
+	}
+
+	get z(): number {
+		return this.#z;
+	}
+
+	set z(value: number) {
+		this.#z = value;
+	}
 
 	get length(): number {
 		return Math.sqrt(this.lengthSq);
