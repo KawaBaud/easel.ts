@@ -104,6 +104,7 @@ export class Euler {
 		const m31 = te.safeAt(2), m32 = te.safeAt(6), m33 = te.safeAt(10);
 
 		const currentOrder = order || this.order;
+
 		const isGimbalLock = (value: number) =>
 			Math.abs(value) >= Euler.#GIMBAL_LOCK_THRESHOLD;
 
