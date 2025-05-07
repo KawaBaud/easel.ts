@@ -1,6 +1,7 @@
 import type { Camera } from "../cameras/Camera.ts";
 import "../types.ts";
 import type { Euler } from "./Euler.ts";
+import type { Matrix3 } from "./Matrix3.ts";
 import type { Matrix4 } from "./Matrix4.ts";
 import { Quaternion } from "./Quaternion.ts";
 
@@ -60,6 +61,20 @@ export class Vector3 {
 	applyEuler(euler: Euler): this {
 		const q = new Quaternion().setFromEuler(euler);
 		return this.applyQuaternion(q);
+	}
+
+	applyMatrix3(m: Matrix3): this {
+		const { x, y, z } = this;
+		const me = m.elements;
+
+		const nx = (me.safeAt(0) * x) + (me.safeAt(3) * y) + (me.safeAt(6) * z);
+		const ny = (me.safeAt(1) * x) + (me.safeAt(4) * y) + (me.safeAt(7) * z);
+		const nz = (me.safeAt(2) * x) + (me.safeAt(5) * y) + (me.safeAt(8) * z);
+
+		this.x = nx;
+		this.y = ny;
+		this.z = nz;
+		return this;
 	}
 
 	applyMatrix4(m: Matrix4): this {

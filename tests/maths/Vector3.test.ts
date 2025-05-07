@@ -4,11 +4,13 @@ import {
 	assertNotStrictEquals,
 } from "@std/assert";
 import {
+	Matrix3 as ThreeMatrix3,
 	Matrix4 as ThreeMatrix4,
 	Quaternion as ThreeQuaternion,
 	Vector3 as ThreeVector3,
 } from "three";
 import { MathUtils } from "../../src/maths/MathUtils.ts";
+import { Matrix3 } from "../../src/maths/Matrix3.ts";
 import { Matrix4 } from "../../src/maths/Matrix4.ts";
 import { Quaternion } from "../../src/maths/Quaternion.ts";
 import { Vector3 } from "../../src/maths/Vector3.ts";
@@ -123,6 +125,50 @@ Deno.test("Vector3: add", () => {
 	a.add(b);
 	threeA.add(threeB);
 	compareVectors(a, threeA, "add");
+});
+
+Deno.test("Vector3: applyMatrix3", () => {
+	const v = new Vector3(1, 2, 3);
+	const vThree = new ThreeVector3(1, 2, 3);
+
+	const m = new Matrix3();
+	const threeM = new ThreeMatrix3();
+	v.applyMatrix3(m);
+	vThree.applyMatrix3(threeM);
+	compareVectors(v, vThree, "applyMatrix3 (identity)");
+
+	const v1 = new Vector3(1, 0, 0);
+	const v2 = new Vector3(0, 1, 0);
+	const v3 = new Vector3(0, 0, 1);
+	const threeV1 = new ThreeVector3(1, 0, 0);
+	const threeV2 = new ThreeVector3(0, 1, 0);
+	const threeV3 = new ThreeVector3(0, 0, 1);
+
+	const angle = MathUtils.HALF_PI;
+
+	const mX = new Matrix3().makeRotation(angle);
+	const mY = new Matrix3().makeRotation(angle);
+	const mZ = new Matrix3().makeRotation(angle);
+	const threeMX = new ThreeMatrix3().makeRotation(angle);
+	const threeMY = new ThreeMatrix3().makeRotation(angle);
+	const threeMZ = new ThreeMatrix3().makeRotation(angle);
+	v1.applyMatrix3(mX);
+	v2.applyMatrix3(mY);
+	v3.applyMatrix3(mZ);
+	threeV1.applyMatrix3(threeMX);
+	threeV2.applyMatrix3(threeMY);
+	threeV3.applyMatrix3(threeMZ);
+	compareVectors(v1, threeV1, "applyMatrix3 (rotation X)");
+	compareVectors(v2, threeV2, "applyMatrix3 (rotation Y)");
+	compareVectors(v3, threeV3, "applyMatrix3 (rotation Z)");
+
+	const vScale = new Vector3(1, 2, 3);
+	const threeVScale = new ThreeVector3(1, 2, 3);
+	const mScale = new Matrix3().makeScale(2, 3);
+	const threeMScale = new ThreeMatrix3().makeScale(2, 3);
+	vScale.applyMatrix3(mScale);
+	threeVScale.applyMatrix3(threeMScale);
+	compareVectors(vScale, threeVScale, "applyMatrix3 (scale)");
 });
 
 Deno.test("Vector3: applyMatrix4", () => {
