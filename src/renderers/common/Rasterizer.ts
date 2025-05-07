@@ -1,4 +1,5 @@
 import { Color, type ColorValue } from "../../common/Color.ts";
+import { MathUtils } from "../../maths/MathUtils.ts";
 import { Vector3 } from "../../maths/Vector3.ts";
 import { CanvasUtils } from "../CanvasUtils.ts";
 
@@ -41,9 +42,9 @@ export class Rasterizer {
 
 	clear(color: ColorValue): this {
 		this.#tempColor.parse(color);
-		const r = (this.#tempColor.r * 255) | 0;
-		const g = (this.#tempColor.g * 255) | 0;
-		const b = (this.#tempColor.b * 255) | 0;
+		const r = MathUtils.fastTrunc(this.#tempColor.r * 255);
+		const g = MathUtils.fastTrunc(this.#tempColor.g * 255);
+		const b = MathUtils.fastTrunc(this.#tempColor.b * 255);
 
 		for (let i = 0; i < this.data.length; i += 4) {
 			this.data[i] = r;
@@ -63,10 +64,10 @@ export class Rasterizer {
 		const p1 = this.#projectToScreen(start);
 		const p2 = this.#projectToScreen(end);
 
-		const x1 = p1.x | 0;
-		const y1 = p1.y | 0;
-		const x2 = p2.x | 0;
-		const y2 = p2.y | 0;
+		const x1 = MathUtils.fastTrunc(p1.x);
+		const y1 = MathUtils.fastTrunc(p1.y);
+		const x2 = MathUtils.fastTrunc(p2.x);
+		const y2 = MathUtils.fastTrunc(p2.y);
 
 		if (
 			(x1 < 0 && x2 < 0) ||
@@ -110,8 +111,8 @@ export class Rasterizer {
 	drawPoint(point: Vector3, color: ColorValue): this {
 		const screenPoint = this.#projectToScreen(point);
 
-		const screenX = screenPoint.x | 0;
-		const screenY = screenPoint.y | 0;
+		const screenX = MathUtils.fastTrunc(screenPoint.x);
+		const screenY = MathUtils.fastTrunc(screenPoint.y);
 		if (
 			(screenX < 0 || (screenX >= this.width)) ||
 			(screenY < 0 || (screenY >= this.height))
@@ -148,9 +149,9 @@ export class Rasterizer {
 
 	setPixel(x: number, y: number, color: ColorValue): this {
 		this.#tempColor.parse(color);
-		const r = (this.#tempColor.r * 255) | 0;
-		const g = (this.#tempColor.g * 255) | 0;
-		const b = (this.#tempColor.b * 255) | 0;
+		const r = MathUtils.fastTrunc(this.#tempColor.r * 255);
+		const g = MathUtils.fastTrunc(this.#tempColor.g * 255);
+		const b = MathUtils.fastTrunc(this.#tempColor.b * 255);
 
 		const idx = (y * this.width + x) * 4;
 		this.data[idx] = r;
@@ -175,8 +176,8 @@ export class Rasterizer {
 	}
 
 	#projectToScreen(point: Vector3): Vector3 {
-		const x = ((point.x + 1) * this.width / 2) | 0;
-		const y = ((-point.y + 1) * this.height / 2) | 0;
+		const x = MathUtils.fastTrunc((point.x + 1) * this.width / 2);
+		const y = MathUtils.fastTrunc((-point.y + 1) * this.height / 2);
 		return new Vector3(x, y, point.z);
 	}
 }

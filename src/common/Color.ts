@@ -1,3 +1,5 @@
+import { MathUtils } from "../maths/MathUtils.ts";
+
 export type ColorValue = string | number | Color;
 
 export type HSL = [h: number, s: number, l: number];
@@ -68,7 +70,7 @@ export class Color {
 		if (hex > 0xFFFFFF || hex < 0) {
 			throw new Error("EASEL.Color.setHex(): hex out of range");
 		}
-		hex = hex | 0;
+		hex = MathUtils.fastTrunc(hex);
 
 		this.r = (hex >> 16) / 255;
 		this.g = (hex >> 8 & 255) / 255;
