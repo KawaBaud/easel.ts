@@ -1,40 +1,35 @@
 {
-    "tasks": {
-        "dev": "vite",
-        "build": "vite build",
-        "preview": "vite preview"
-    },
     "compilerOptions": {
-        "allowUnreachableCode": false,
-        "allowUnusedLabels": false,
         "checkJs": true,
         "erasableSyntaxOnly": true,
         "exactOptionalPropertyTypes": true,
         "noFallthroughCasesInSwitch": true,
-        "noImplicitOverride": true,
         "noImplicitReturns": true,
         "noPropertyAccessFromIndexSignature": true,
         "noUncheckedIndexedAccess": true,
         "noUnusedLocals": true,
         "noUnusedParameters": true,
         "lib": [
+            "deno.ns",
+            "deno.window",
+            "deno.worker",
             "dom",
             "dom.iterable",
-            "dom.asynciterable",
-            "deno.ns"
+            "dom.asynciterable"
         ]
     },
-    "fmt": {
-        "useTabs": true,
-        "lineWidth": 80,
-        "indentWidth": 2,
-        "semiColons": true,
-        "singleQuote": false,
-        "proseWrap": "preserve",
-        "exclude": []
+    "imports": {
+        "@std/assert": "jsr:@std/assert@^1.0.13",
+        "three": "https://esm.sh/three",
+        "vite": "npm:vite@^6.3.4"
     },
-    "lock": false,
+    "exclude": [],
     "lint": {
+        "include": [
+            "src/",
+            "tests/"
+        ],
+        "exclude": [],
         "rules": {
             "tags": [
                 "recommended"
@@ -65,17 +60,25 @@
                 "triple-slash-reference",
                 "verbatim-module-syntax"
             ]
-        },
-        "include": [
-            "src/",
-            "tests/"
-        ],
-        "exclude": []
+        }
     },
-    "imports": {
-        "@std/assert": "jsr:@std/assert@^1.0.13",
-        "three": "https://esm.sh/three",
-        "vite": "npm:vite@^6.3.4"
+    "fmt": {
+        "exclude": [],
+        "useTabs": true,
+        "semiColons": true,
+        "proseWrap": "preserve",
+        "quoteProps": "asNeeded"
     },
-    "exclude": []
+    "tasks": {
+        "dev": "vite",
+        "build": "vite build",
+        "preview": "vite preview"
+    },
+    "license": "MIT",
+    "name": "@kawabaud/easel",
+    "version": "0.0.1",
+    "exports": {
+        ".": "./src/mod.ts",
+        "./src/*": "./src/*"
+    }
 }
