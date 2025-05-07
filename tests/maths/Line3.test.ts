@@ -148,7 +148,6 @@ Deno.test("Line3: applyMatrix4", () => {
 
 	a.applyMatrix4(m);
 	threeA.applyMatrix4(threeM);
-
 	compareLines(a, threeA, "applyMatrix4 (translation)");
 
 	const b = new Line3(
@@ -165,7 +164,6 @@ Deno.test("Line3: applyMatrix4", () => {
 
 	b.applyMatrix4(rotM);
 	threeB.applyMatrix4(threeRotM);
-
 	compareLines(b, threeB, "applyMatrix4 (rotation)");
 });
 
@@ -212,7 +210,6 @@ Deno.test("Line3: clone", () => {
 		new ThreeVector3(4, 5, 6),
 	);
 	const threeB = threeA.clone();
-
 	compareLines(b, threeB, "clone");
 	assertNotStrictEquals(a, b, "clone creates new instance");
 });
@@ -341,7 +338,6 @@ Deno.test("Line3: copy", () => {
 		new ThreeVector3(4, 5, 6),
 	);
 	const threeB = new ThreeLine3().copy(threeA);
-
 	compareLines(b, threeB, "copy");
 	compareLines(a, threeA, "copy (original unchanged)");
 });
@@ -401,9 +397,7 @@ Deno.test("Line3: getCenter", () => {
 Deno.test("Line3: set", () => {
 	const a = new Line3();
 	const threeA = new ThreeLine3();
-
 	a.set(new Vector3(1, 2, 3), new Vector3(4, 5, 6));
 	threeA.set(new ThreeVector3(1, 2, 3), new ThreeVector3(4, 5, 6));
-
 	compareLines(a, threeA, "set");
 });
