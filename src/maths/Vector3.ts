@@ -124,10 +124,10 @@ export class Vector3 {
 	}
 
 	distanceTo(v: Vector3): number {
-		return Math.sqrt(this.distanceToSq(v));
+		return Math.sqrt(this.distanceSqTo(v));
 	}
 
-	distanceToSq(v: Vector3): number {
+	distanceSqTo(v: Vector3): number {
 		const dx = this.x - v.x;
 		const dy = this.y - v.y;
 		const dz = this.z - v.z;
