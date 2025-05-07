@@ -12,8 +12,8 @@ export class Object3D {
 	name = "";
 
 	position = new Vector3();
-	rotation = new Euler();
-	quaternion = new Quaternion();
+	#rotation = new Euler();
+	#quaternion = new Quaternion();
 	scale = new Vector3(1, 1, 1);
 
 	matrix = new Matrix4();
@@ -26,12 +26,32 @@ export class Object3D {
 	visible = true;
 	userData: Record<string, unknown> = {};
 
-	get isCamera(): boolean {
-		return ("projectionMatrix" in this) && ("matrixWorldInverse" in this);
+	constructor() {
+		this.#rotation.setOnChangeCallback(() => {
+			this.#quaternion.setFromEuler(this.#rotation);
+		});
+		this.updateMatrix();
 	}
 
-	constructor() {
-		this.updateMatrix();
+	get rotation(): Euler {
+		return this.#rotation;
+	}
+
+	set rotation(value: Euler) {
+		this.#rotation.copy(value);
+	}
+
+	get quaternion(): Quaternion {
+		return this.#quaternion;
+	}
+
+	set quaternion(value: Quaternion) {
+		this.#quaternion.copy(value);
+		this.#rotation.setFromQuaternion(this.#quaternion);
+	}
+
+	get isCamera(): boolean {
+		return ("projectionMatrix" in this) && ("matrixWorldInverse" in this);
 	}
 
 	add(object: Object3D): this {

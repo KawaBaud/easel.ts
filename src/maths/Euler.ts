@@ -8,30 +8,78 @@ export type EulerOrder = "XYZ" | "YXZ" | "ZXY" | "ZYX" | "YZX" | "XZY";
 export class Euler {
 	static readonly #GIMBAL_LOCK_THRESHOLD: number = 0.9999999;
 
+	#x = 0;
+	#y = 0;
+	#z = 0;
+
 	constructor(
-		public x = 0,
-		public y = 0,
-		public z = 0,
+		x = 0,
+		y = 0,
+		z = 0,
 		public order: EulerOrder = "XYZ",
-	) {}
+	) {
+		this.#x = x;
+		this.#y = y;
+		this.#z = z;
+	}
+
+	#onChangeCallback: (() => void) | null = null;
+
+	get x(): number {
+		return this.#x;
+	}
+
+	set x(value: number) {
+		this.#x = value;
+		this.#onChange();
+	}
+
+	get y(): number {
+		return this.#y;
+	}
+
+	set y(value: number) {
+		this.#y = value;
+		this.#onChange();
+	}
+
+	get z(): number {
+		return this.#z;
+	}
+
+	set z(value: number) {
+		this.#z = value;
+		this.#onChange();
+	}
+
+	#onChange(): void {
+		if (this.#onChangeCallback) this.#onChangeCallback();
+	}
+
+	setOnChangeCallback(callback: () => void): this {
+		this.#onChangeCallback = callback;
+		return this;
+	}
 
 	clone(): Euler {
 		return new Euler(this.x, this.y, this.z, this.order);
 	}
 
 	copy(euler: Euler): this {
-		this.x = euler.x;
-		this.y = euler.y;
-		this.z = euler.z;
+		this.#x = euler.x;
+		this.#y = euler.y;
+		this.#z = euler.z;
 		this.order = euler.order;
+		this.#onChange();
 		return this;
 	}
 
 	fromArray(array: [number, number, number, EulerOrder?]): this {
-		this.x = array[0];
-		this.y = array[1];
-		this.z = array[2];
+		this.#x = array[0];
+		this.#y = array[1];
+		this.#z = array[2];
 		this.order = array[3] ?? this.order;
+		this.#onChange();
 		return this;
 	}
 
@@ -41,10 +89,11 @@ export class Euler {
 	}
 
 	set(x: number, y: number, z: number, order?: EulerOrder): this {
-		this.x = x;
-		this.y = y;
-		this.z = z;
+		this.#x = x;
+		this.#y = y;
+		this.#z = z;
 		if (order !== undefined) this.order = order;
+		this.#onChange();
 		return this;
 	}
 
@@ -66,67 +115,68 @@ export class Euler {
 
 		switch (currentOrder) {
 			case "XYZ":
-				this.y = MathUtils.safeAsin(m13);
+				this.#y = MathUtils.safeAsin(m13);
 				if (isGimbalLock(m13)) {
-					this.x = Math.atan2(m32, m22);
-					this.z = this.z === 0 ? Math.atan2(-m12, m11) : this.z;
+					this.#x = Math.atan2(m32, m22);
+					this.#z = this.z === 0 ? Math.atan2(-m12, m11) : this.z;
 				} else {
-					this.x = Math.atan2(-m23, m33);
-					this.z = Math.atan2(-m12, m11);
+					this.#x = Math.atan2(-m23, m33);
+					this.#z = Math.atan2(-m12, m11);
 				}
 				break;
 			case "YXZ":
-				this.x = MathUtils.safeAsin(-m23);
+				this.#x = MathUtils.safeAsin(-m23);
 				if (isGimbalLock(m23)) {
-					this.y = Math.atan2(-m31, m11);
-					this.z = this.z === 0 ? Math.atan2(m21, m22) : this.z;
+					this.#y = Math.atan2(-m31, m11);
+					this.#z = this.z === 0 ? Math.atan2(m21, m22) : this.z;
 				} else {
-					this.y = Math.atan2(m13, m33);
-					this.z = Math.atan2(m21, m22);
+					this.#y = Math.atan2(m13, m33);
+					this.#z = Math.atan2(m21, m22);
 				}
 				break;
 			case "ZXY":
-				this.x = MathUtils.safeAsin(m32);
+				this.#x = MathUtils.safeAsin(m32);
 				if (isGimbalLock(m32)) {
-					this.z = Math.atan2(m21, m11);
-					this.y = this.y === 0 ? Math.atan2(-m31, m33) : this.y;
+					this.#z = Math.atan2(m21, m11);
+					this.#y = this.y === 0 ? Math.atan2(-m31, m33) : this.y;
 				} else {
-					this.y = Math.atan2(-m31, m33);
-					this.z = Math.atan2(-m12, m22);
+					this.#y = Math.atan2(-m31, m33);
+					this.#z = Math.atan2(-m12, m22);
 				}
 				break;
 			case "ZYX":
-				this.y = MathUtils.safeAsin(-m31);
+				this.#y = MathUtils.safeAsin(-m31);
 				if (isGimbalLock(m31)) {
-					this.z = Math.atan2(-m12, m22);
-					this.x = this.x === 0 ? Math.atan2(m32, m33) : this.x;
+					this.#z = Math.atan2(-m12, m22);
+					this.#x = this.x === 0 ? Math.atan2(m32, m33) : this.x;
 				} else {
-					this.x = Math.atan2(m32, m33);
-					this.z = Math.atan2(m21, m11);
+					this.#x = Math.atan2(m32, m33);
+					this.#z = Math.atan2(m21, m11);
 				}
 				break;
 			case "YZX":
-				this.z = MathUtils.safeAsin(m21);
+				this.#z = MathUtils.safeAsin(m21);
 				if (isGimbalLock(m21)) {
-					this.y = Math.atan2(m13, m33);
-					this.x = this.x === 0 ? Math.atan2(-m23, m22) : this.x;
+					this.#y = Math.atan2(m13, m33);
+					this.#x = this.x === 0 ? Math.atan2(-m23, m22) : this.x;
 				} else {
-					this.x = Math.atan2(-m23, m22);
-					this.y = Math.atan2(-m31, m11);
+					this.#x = Math.atan2(-m23, m22);
+					this.#y = Math.atan2(-m31, m11);
 				}
 				break;
 			case "XZY":
-				this.z = MathUtils.safeAsin(-m12);
+				this.#z = MathUtils.safeAsin(-m12);
 				if (isGimbalLock(m12)) {
-					this.x = Math.atan2(m32, m22);
-					this.y = this.y === 0 ? Math.atan2(m13, m11) : this.y;
+					this.#x = Math.atan2(m32, m22);
+					this.#y = this.y === 0 ? Math.atan2(m13, m11) : this.y;
 				} else {
-					this.x = Math.atan2(m32, m22);
-					this.y = Math.atan2(m13, m11);
+					this.#x = Math.atan2(m32, m22);
+					this.#y = Math.atan2(m13, m11);
 				}
 				break;
 		}
 		this.order = currentOrder;
+		this.#onChange();
 		return this;
 	}
 }
