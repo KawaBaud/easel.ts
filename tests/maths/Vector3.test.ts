@@ -339,6 +339,17 @@ Deno.test("Vector3: fromArray", () => {
 	compareVectors(a, threeA, "fromArray");
 });
 
+Deno.test("Vector3: lerp", () => {
+	const a = new Vector3(1, 2, 3);
+	const b = new Vector3(4, 5, 6);
+	const t = 0.5;
+	const result = a.lerp(b, t);
+	const threeA = new ThreeVector3(1, 2, 3);
+	const threeB = new ThreeVector3(4, 5, 6);
+	const threeResult = threeA.lerp(threeB, t);
+	compareVectors(result, threeResult, "lerp");
+});
+
 Deno.test("Vector3: mulScalar", () => {
 	const scalar = 3;
 
