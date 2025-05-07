@@ -212,7 +212,9 @@ export class Matrix4 {
 
 		const det = (n11 * t11) + (n21 * t12) + (n31 * t13) + (n41 * t14);
 		if (det === 0) {
-			throw new Error("Matrix4: non-invertible matrix (det === 0)");
+			throw new Error(
+				"EASEL.Matrix4.invert(): non-invertible matrix (det === 0)",
+			);
 		}
 		const detInv = 1 / det;
 

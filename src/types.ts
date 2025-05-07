@@ -56,7 +56,7 @@ declare global {
 
 Array.prototype.safeAt = function <T>(this: ArrayLike<T>, index: number): T {
 	if (this.length === 0) {
-		throw new Error("cannot call safeAt() on empty array");
+		throw new Error("EASEL: cannot call safeAt() on empty array");
 	}
 
 	const unitIndex = ((index % this.length) + this.length) % this.length;

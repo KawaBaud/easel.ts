@@ -43,7 +43,7 @@ export class Color {
 			return this.setStyle(value);
 		}
 
-		throw new Error(`[Color] invalid value: ${value}`);
+		throw new Error(`EASEL.Color.parse(): invalid value: ${value}`);
 	}
 
 	set(...args: [color: ColorValue] | RGB): this {
@@ -66,7 +66,7 @@ export class Color {
 
 	setHex(hex: number): this {
 		if (hex > 0xFFFFFF || hex < 0) {
-			throw new Error("Color: hex out of range");
+			throw new Error("EASEL.Color.setHex(): hex out of range");
 		}
 		hex = hex | 0;
 
@@ -102,7 +102,7 @@ export class Color {
 
 	setRGB(r: number, g: number, b: number): this {
 		if (r > 255 || g > 255 || b > 255) {
-			throw new Error("Color: rgb out of range");
+			throw new Error("EASEL.Color.setRGB(): rgb out of range");
 		}
 
 		this.r = r;
@@ -117,12 +117,14 @@ export class Color {
 		if (style.startsWith("rgb")) return this.#parseRGB(style);
 		if (style.startsWith("hsl")) return this.#parseHSL(style);
 
-		throw new Error(`Color: invalid style: ${style}`);
+		throw new Error(`EASEL.Color.setStyle(): invalid style: ${style}`);
 	}
 
 	#parseHex(style: string): this {
 		if (style.length !== 7) {
-			throw new Error("Color: hex style must be in '#rrggbb' format");
+			throw new Error(
+				"EASEL.Color.#parseHex(): hex style must be in '#rrggbb' format",
+			);
 		}
 
 		return this.setHex(parseInt(style.slice(1), 16));
@@ -132,7 +134,7 @@ export class Color {
 		const values = style.match(/\d+/g);
 		if (!values || values.length < 3) {
 			throw new Error(
-				"[Color] hsl(a) style must be in 'hsl(h,s%,l%)' or 'hsla(h,s%,l%,a)' format",
+				"EASEL.Color.#parseHSL(): hsl(a) style must be in 'hsl(h,s%,l%)' or 'hsla(h,s%,l%,a)' format",
 			);
 		}
 
@@ -162,7 +164,7 @@ export class Color {
 		const values = style.match(/\d+/g);
 		if (!values || values.length < 3) {
 			throw new Error(
-				"[Color] rgb style must be in 'rgb(r,g,b)' or 'rgba(r,g,b,a)' format",
+				"EASEL.Color.#parseRGB(): rgb style must be in 'rgb(r,g,b)' or 'rgba(r,g,b,a)' format",
 			);
 		}
 
