@@ -1,8 +1,21 @@
 {
   "version": "5",
   "specifiers": {
+    "jsr:@std/assert@^1.0.13": "1.0.13",
+    "jsr:@std/internal@^1.0.6": "1.0.6",
     "npm:vite@6.3.4": "6.3.4_picomatch@4.0.2",
     "npm:vite@^6.3.4": "6.3.4_picomatch@4.0.2"
+  },
+  "jsr": {
+    "@std/assert@1.0.13": {
+      "integrity": "ae0d31e41919b12c656c742b22522c32fb26ed0cba32975cb0de2a273cb68b29",
+      "dependencies": [
+        "jsr:@std/internal"
+      ]
+    },
+    "@std/internal@1.0.6": {
+      "integrity": "9533b128f230f73bd209408bb07a4b12f8d4255ab2a4d22a1fd6d87304aca9a4"
+    }
   },
   "npm": {
     "@esbuild/aix-ppc64@0.25.3": {
@@ -352,6 +365,15 @@
       ],
       "bin": true
     }
+  },
+  "redirects": {
+    "https://esm.sh/@types/three@~0.175.0/index.d.ts": "https://esm.sh/@types/three@0.175.0/index.d.ts",
+    "https://esm.sh/three": "https://esm.sh/three@0.176.0"
+  },
+  "remote": {
+    "https://esm.sh/three@0.176.0": "508cbac751eb5eedaa7189b8e40972dcfa2586e7870e128ec13cfd4af5eb7b2d",
+    "https://esm.sh/three@0.176.0/denonext/build/three.core.mjs": "bded52f83de7af40de5f63beb5aa8c26d1b7bf8c4a4a8a7919796c121f80f3b9",
+    "https://esm.sh/three@0.176.0/denonext/three.mjs": "45ea4482442d4fd280256a0837c594a4e43f1712d8c8b1d3aa144dba5006440c"
   },
   "workspace": {
     "dependencies": [
