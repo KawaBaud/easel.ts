@@ -6,10 +6,16 @@ import "../../src/types.ts";
 
 function compareShapes(
 	ourShape: Shape,
-	_threeGeometry: BufferGeometry,
+	threeGeometry: BufferGeometry,
 	message: string,
 ): void {
 	console.log(`${message}:`);
+	console.log(
+		`  Our: ${ourShape.vertices.length} vertices, ${ourShape.indices.length} indices`,
+	);
+	console.log(
+		`  Three: ${threeGeometry.attributes["position"]?.count ?? 0} vertices`,
+	);
 
 	assertEquals(
 		Array.isArray(ourShape.vertices),

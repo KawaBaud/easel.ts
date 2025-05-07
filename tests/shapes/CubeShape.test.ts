@@ -5,10 +5,16 @@ import "../../src/types.ts";
 
 function compareCubeShapes(
 	ourShape: CubeShape,
-	_threeGeometry: BoxGeometry,
+	threeGeometry: BoxGeometry,
 	message: string,
 ): void {
 	console.log(`${message}:`);
+	console.log(
+		`  Our: ${ourShape.vertices.length} vertices, ${ourShape.indices.length} indices`,
+	);
+	console.log(
+		`  Three: ${threeGeometry.attributes["position"]?.count ?? 0} vertices`,
+	);
 
 	assertEquals(ourShape.vertices.length, 8, `${message} (has 8 vertices)`);
 	assertEquals(ourShape.indices.length, 36, `${message} (has 36 indices)`);

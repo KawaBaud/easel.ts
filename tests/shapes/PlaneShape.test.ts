@@ -5,10 +5,16 @@ import "../../src/types.ts";
 
 function comparePlaneShapes(
 	ourShape: PlaneShape,
-	_threeGeometry: PlaneGeometry,
+	threeGeometry: PlaneGeometry,
 	message: string,
 ): void {
 	console.log(`${message}:`);
+	console.log(
+		`  Our: ${ourShape.vertices.length} vertices, ${ourShape.indices.length} indices`,
+	);
+	console.log(
+		`  Three: ${threeGeometry.attributes["position"]?.count ?? 0} vertices`,
+	);
 
 	assertEquals(ourShape.vertices.length, 4, `${message} (has 4 vertices)`);
 	assertEquals(ourShape.indices.length, 6, `${message} (has 6 indices)`);
