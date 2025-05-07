@@ -4,32 +4,6 @@ export type HSL = [h: number, s: number, l: number];
 export type RGB = [r: number, g: number, b: number];
 
 export class Color {
-	static rgbToHex(r: number, g: number, b: number): number {
-		return (r << 16) ^ (g << 8) ^ b;
-	}
-
-	static rgbToHsl(r: number, g: number, b: number): HSL {
-		const max = Math.max(r, g, b);
-		const min = Math.min(r, g, b);
-		const l = (max + min) / 2;
-
-		if (max === min) return [0, 0, l];
-
-		const d = max - min;
-		const s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
-
-		let h;
-		if (max === r) {
-			h = (g - b) / d + (g < b ? 6 : 0);
-		} else if (max === g) {
-			h = (b - r) / d + 2;
-		} else {
-			h = (r - g) / d + 4;
-		}
-		h /= 6;
-		return [h, s, l];
-	}
-
 	r = 1;
 	g = 1;
 	b = 1;
@@ -39,7 +13,9 @@ export class Color {
 	}
 
 	get hex(): number {
-		return Color.rgbToHex(this.r, this.g, this.b);
+		return ((this.r * 255) << 16) ^
+			(this.g * 255) << 8 ^
+			(this.b * 255) << 0;
 	}
 
 	get hexString(): string {
