@@ -41,7 +41,7 @@ export class MathUtils {
 	}
 
 	static safeAsin(value: number): number {
-		return Math.asin(MathUtils.clamp(value, -1, 1));
+		return Math.asin(value < -1 ? -1 : value > 1 ? 1 : value);
 	}
 
 	static toDegrees(radians: number): number {
