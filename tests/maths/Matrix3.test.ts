@@ -136,14 +136,14 @@ Deno.test("Matrix3: decompose", () => {
 
 Deno.test("Matrix3: determinant", () => {
 	const matrices = [
-		new Matrix3(), // identity
+		new Matrix3(),
 		new Matrix3().set(1, 2, 3, 4, 5, 6, 7, 8, 9),
 		new Matrix3().makeRotation(Math.PI / 3),
 		new Matrix3().makeTranslation(1, 2),
 	];
 
 	const threeMatrices = [
-		new ThreeMatrix3(), // identity
+		new ThreeMatrix3(),
 		new ThreeMatrix3().set(1, 2, 3, 4, 5, 6, 7, 8, 9),
 		new ThreeMatrix3().makeRotation(Math.PI / 3),
 		new ThreeMatrix3().makeTranslation(1, 2),
@@ -209,13 +209,13 @@ Deno.test("Matrix3: identity", () => {
 
 Deno.test("Matrix3: invert", () => {
 	const matrices = [
-		new Matrix3(), // identity
+		new Matrix3(),
 		new Matrix3().makeRotation(Math.PI / 3),
 		new Matrix3().makeTranslation(1, 2),
 		new Matrix3().makeScale(2, 3),
 	];
 	const threeMatrices = [
-		new ThreeMatrix3(), // identity
+		new ThreeMatrix3(),
 		new ThreeMatrix3().makeRotation(Math.PI / 3),
 		new ThreeMatrix3().makeTranslation(1, 2),
 		new ThreeMatrix3().makeScale(2, 3),

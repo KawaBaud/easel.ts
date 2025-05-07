@@ -59,11 +59,11 @@ Deno.test("PerspCamera: constructor", () => {
 	const threeA = new ThreePerspCamera(50, 1, 0.1, 2000);
 	assertEquals(a.name, "PerspCamera");
 	assertEquals(a.isCamera, true);
-	comparePerspCameras(a, threeA, "constructor (default)");
+	comparePerspCameras(a, threeA, "constructor");
 
 	const b = new PerspCamera(75, 16 / 9, 1, 1000);
 	const threeB = new ThreePerspCamera(75, 16 / 9, 1, 1000);
-	comparePerspCameras(b, threeB, "constructor (with params)");
+	comparePerspCameras(b, threeB, "constructor (w/ params)");
 });
 
 Deno.test("PerspCamera: clone", () => {

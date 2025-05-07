@@ -65,11 +65,11 @@ Deno.test("OrthoCamera: constructor", () => {
 	const threeA = new ThreeOrthoCamera(-1, 1, 1, -1, 0.1, 2000);
 	assertEquals(a.name, "OrthoCamera");
 	assertEquals(a.isCamera, true);
-	compareOrthoCameras(a, threeA, "constructor (default)");
+	compareOrthoCameras(a, threeA, "constructor");
 
 	const b = new OrthoCamera(-2, 2, 3, -3, 1, 1000);
 	const threeB = new ThreeOrthoCamera(-2, 2, 3, -3, 1, 1000);
-	compareOrthoCameras(b, threeB, "constructor (with params)");
+	compareOrthoCameras(b, threeB, "constructor (w/ params)");
 });
 
 Deno.test("OrthoCamera: clone", () => {
