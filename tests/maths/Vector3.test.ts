@@ -97,38 +97,6 @@ Deno.test("Vector3: get->lengthSq", () => {
 	);
 });
 
-Deno.test("Vector3: clone", () => {
-	const a = new Vector3(1, 2, 3);
-	const b = a.clone();
-	const threeA = new ThreeVector3(1, 2, 3);
-	const threeB = threeA.clone();
-	compareVectors(b, threeB, "clone");
-	assertNotStrictEquals(a, b, "clone creates new instance");
-});
-
-Deno.test("Vector3: copy", () => {
-	const a = new Vector3(1, 2, 3);
-	const b = new Vector3().copy(a);
-	const threeA = new ThreeVector3(1, 2, 3);
-	const threeB = new ThreeVector3().copy(threeA);
-	compareVectors(b, threeB, "copy");
-	compareVectors(a, threeA, "copy (original unchanged)");
-});
-
-Deno.test("Vector3: cross", () => {
-	const a = new Vector3(0, 1, 0);
-	const b = new Vector3(1, 0, 0).cross(a);
-	const threeA = new ThreeVector3(0, 1, 0);
-	const threeB = new ThreeVector3(1, 0, 0).cross(threeA);
-	compareVectors(b, threeB, "cross (x cross y)");
-
-	const c = new Vector3(5, 6, 7);
-	const d = new Vector3(2, 3, 4).cross(c);
-	const threeC = new ThreeVector3(5, 6, 7);
-	const threeD = new ThreeVector3(2, 3, 4).cross(threeC);
-	compareVectors(d, threeD, "cross");
-});
-
 Deno.test("Vector3: crossVectors", () => {
 	const a = new Vector3(1, 0, 0);
 	const b = new Vector3(0, 1, 0);
@@ -231,6 +199,38 @@ Deno.test("Vector3: applyQuaternion", () => {
 	);
 });
 
+Deno.test("Vector3: clone", () => {
+	const a = new Vector3(1, 2, 3);
+	const b = a.clone();
+	const threeA = new ThreeVector3(1, 2, 3);
+	const threeB = threeA.clone();
+	compareVectors(b, threeB, "clone");
+	assertNotStrictEquals(a, b, "clone creates new instance");
+});
+
+Deno.test("Vector3: copy", () => {
+	const a = new Vector3(1, 2, 3);
+	const b = new Vector3().copy(a);
+	const threeA = new ThreeVector3(1, 2, 3);
+	const threeB = new ThreeVector3().copy(threeA);
+	compareVectors(b, threeB, "copy");
+	compareVectors(a, threeA, "copy (original unchanged)");
+});
+
+Deno.test("Vector3: cross", () => {
+	const a = new Vector3(0, 1, 0);
+	const b = new Vector3(1, 0, 0).cross(a);
+	const threeA = new ThreeVector3(0, 1, 0);
+	const threeB = new ThreeVector3(1, 0, 0).cross(threeA);
+	compareVectors(b, threeB, "cross (x cross y)");
+
+	const c = new Vector3(5, 6, 7);
+	const d = new Vector3(2, 3, 4).cross(c);
+	const threeC = new ThreeVector3(5, 6, 7);
+	const threeD = new ThreeVector3(2, 3, 4).cross(threeC);
+	compareVectors(d, threeD, "cross");
+});
+
 Deno.test("Vector3: divScalar", () => {
 	const scalar = 3;
 
@@ -244,6 +244,27 @@ Deno.test("Vector3: divScalar", () => {
 	assertEquals(b.y, Infinity, "divScalar by zero (y)");
 	assertEquals(b.z, Infinity, "divScalar by zero (z)");
 	compareVectors(b, threeB, "divScalar by zero");
+});
+
+Deno.test("Vector3: dot", () => {
+	const a = new Vector3(1, 2, 3);
+	const b = new Vector3(4, 5, 6);
+	const result = a.dot(b);
+	const threeA = new ThreeVector3(1, 2, 3);
+	const threeB = new ThreeVector3(4, 5, 6);
+	const threeResult = threeA.dot(threeB);
+	assertEquals(result, threeResult, "dot");
+});
+
+Deno.test("Vector3: equals", () => {
+	const a = new Vector3(1, 2, 3);
+	const b = new Vector3(1, 2, 3);
+	const c = new Vector3(1, 2, 4);
+	const threeA = new ThreeVector3(1, 2, 3);
+	const threeB = new ThreeVector3(1, 2, 3);
+	const threeC = new ThreeVector3(1, 2, 4);
+	assertEquals(a.equals(b), threeA.equals(threeB), "equals (true)");
+	assertEquals(a.equals(c), threeA.equals(threeC), "equals (false)");
 });
 
 Deno.test("Vector3: fromArray", () => {

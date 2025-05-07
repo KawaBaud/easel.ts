@@ -50,6 +50,15 @@ export class Vector4 {
 		this.#w = value;
 	}
 
+	get length(): number {
+		return Math.sqrt(this.lengthSq);
+	}
+
+	get lengthSq(): number {
+		const { x, y, z, w } = this;
+		return (x * x) + (y * y) + (z * z) + (w * w);
+	}
+
 	clone(): Vector4 {
 		return new Vector4(this.x, this.y, this.z, this.w);
 	}
@@ -59,6 +68,14 @@ export class Vector4 {
 		this.y = v.y;
 		this.z = v.z;
 		this.w = v.w;
+		return this;
+	}
+
+	divScalar(scalar: number): this {
+		this.x /= scalar;
+		this.y /= scalar;
+		this.z /= scalar;
+		this.w /= scalar;
 		return this;
 	}
 
@@ -76,6 +93,10 @@ export class Vector4 {
 		this.z = z;
 		this.w = w;
 		return this;
+	}
+
+	unitize(): this {
+		return this.divScalar(this.length || 1);
 	}
 
 	*[Symbol.iterator](): IterableIterator<number> {

@@ -130,6 +130,18 @@ export class Vector3 {
 		return this;
 	}
 
+	dot(v: Vector3): number {
+		return (this.x * v.x) + (this.y * v.y) + (this.z * v.z);
+	}
+
+	equals(v: Vector3): boolean {
+		return (
+			(this.x === v.x) &&
+			(this.y === v.y) &&
+			(this.z === v.z)
+		);
+	}
+
 	fromArray(array: number[]): this {
 		this.x = array.safeAt(0);
 		this.y = array.safeAt(1);

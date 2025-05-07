@@ -44,6 +44,23 @@ Deno.test("Vector4: constructor", () => {
 	compareVectors(b, threeB, "constructor w/ values");
 });
 
+Deno.test("Vector4: get->length", () => {
+	const a = new Vector4(1, 2, 3, 4);
+	const threeA = new ThreeVector4(1, 2, 3, 4);
+	assertAlmostEquals(a.length, threeA.length(), MathUtils.EPSILON, "length");
+});
+
+Deno.test("Vector4: get->lengthSq", () => {
+	const a = new Vector4(1, 2, 3, 4);
+	const threeA = new ThreeVector4(1, 2, 3, 4);
+	assertAlmostEquals(
+		a.lengthSq,
+		threeA.lengthSq(),
+		MathUtils.EPSILON,
+		"lengthSq",
+	);
+});
+
 Deno.test("Vector4: clone", () => {
 	const a = new Vector4(1, 2, 3, 4);
 	const b = a.clone();
@@ -62,6 +79,15 @@ Deno.test("Vector4: copy", () => {
 	compareVectors(a, threeA, "copy (original unchanged)");
 });
 
+Deno.test("Vector4: divScalar", () => {
+	const a = new Vector4(1, 2, 3, 4);
+	const b = a.clone().divScalar(2);
+	const threeA = new ThreeVector4(1, 2, 3, 4);
+	const threeB = threeA.clone().divideScalar(2);
+	compareVectors(b, threeB, "divScalar");
+	compareVectors(a, threeA, "divScalar (original unchanged)");
+});
+
 Deno.test("Vector4: fromArray", () => {
 	const a = new Vector4().fromArray([1, 2, 3, 4]);
 	const threeA = new ThreeVector4().fromArray([1, 2, 3, 4]);
@@ -72,4 +98,13 @@ Deno.test("Vector4: set", () => {
 	const a = new Vector4().set(4, 5, 6, 7);
 	const threeA = new ThreeVector4().set(4, 5, 6, 7);
 	compareVectors(a, threeA, "set(x, y)");
+});
+
+Deno.test("Vector4: unitize", () => {
+	const a = new Vector4(1, 2, 3, 4);
+	const b = a.clone().unitize();
+	const threeA = new ThreeVector4(1, 2, 3, 4);
+	const threeB = threeA.clone().normalize();
+	compareVectors(b, threeB, "unitize");
+	compareVectors(a, threeA, "unitize (original unchanged)");
 });
