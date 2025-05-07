@@ -27,45 +27,41 @@ export class Matrix4 {
 		const qy2 = qy + qy;
 		const qz2 = qz + qz;
 
-		const xx = qx * qx2;
-		const xy = qx * qy2;
-		const xz = qx * qz2;
-		const yy = qy * qy2;
-		const yz = qy * qz2;
-		const zz = qz * qz2;
-		const wx = qw * qx2;
-		const wy = qw * qy2;
-		const wz = qw * qz2;
+		const xx = qx * qx2,
+			xy = qx * qy2,
+			xz = qx * qz2;
+		const yy = qy * qy2,
+			yz = qy * qz2,
+			zz = qz * qz2;
+		const wx = qw * qx2,
+			wy = qw * qy2,
+			wz = qw * qz2;
 
 		const { x: sx, y: sy, z: sz } = scale;
 
-		te[0] = (1 - (yy + zz)) * sx;
-		te[1] = (xy + wz) * sx;
-		te[2] = (xz - wy) * sx;
-		te[3] = 0;
+		const m11 = (1 - (yy + zz)) * sx,
+			m12 = (xy + wz) * sx,
+			m13 = (xz - wy) * sx;
+		const m21 = (xy - wz) * sy,
+			m22 = (1 - (xx + zz)) * sy,
+			m23 = (yz + wx) * sy;
+		const m31 = (xz + wy) * sz,
+			m32 = (yz - wx) * sz,
+			m33 = (1 - (xx + yy)) * sz;
+		const m41 = position.x,
+			m42 = position.y,
+			m43 = position.z;
 
-		te[4] = (xy - wz) * sy;
-		te[5] = (1 - (xx + zz)) * sy;
-		te[6] = (yz + wx) * sy;
-		te[7] = 0;
-
-		te[8] = (xz + wy) * sz;
-		te[9] = (yz - wx) * sz;
-		te[10] = (1 - (xx + yy)) * sz;
-		te[11] = 0;
-
-		te[12] = position.x;
-		te[13] = position.y;
-		te[14] = position.z;
-		te[15] = 1;
-
+		te[0] = m11, te[1] = m12, te[2] = m13, te[3] = 0;
+		te[4] = m21, te[5] = m22, te[6] = m23, te[7] = 0;
+		te[8] = m31, te[9] = m32, te[10] = m33, te[11] = 0;
+		te[12] = m41, te[13] = m42, te[14] = m43, te[15] = 1;
 		return this;
 	}
 
 	copy(m: Matrix4): this {
 		const me = m.elements;
 		if (me === this.elements) return this;
-
 		this.elements.set(me);
 		return this;
 	}
