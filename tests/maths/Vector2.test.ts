@@ -44,6 +44,16 @@ Deno.test("Vector2: constructor", () => {
 	compareVectors(b, threeB, "constructor w/ values");
 });
 
+Deno.test("Vector2: add", () => {
+	const a = new Vector2(1, 2);
+	const b = new Vector2(4, 5);
+	const threeA = new ThreeVector2(1, 2);
+	const threeB = new ThreeVector2(4, 5);
+	a.add(b);
+	threeA.add(threeB);
+	compareVectors(a, threeA, "add");
+});
+
 Deno.test("Vector2: clone", () => {
 	const a = new Vector2(1, 2);
 	const b = a.clone();
@@ -62,10 +72,27 @@ Deno.test("Vector2: copy", () => {
 	compareVectors(a, threeA, "copy (original unchanged)");
 });
 
+Deno.test("Vector2: equals", () => {
+	const a = new Vector2(1, 2);
+	const b = new Vector2(1, 2);
+	const c = new Vector2(2, 1);
+	const threeA = new ThreeVector2(1, 2);
+	const threeB = new ThreeVector2(1, 2);
+	const threeC = new ThreeVector2(2, 1);
+	assertEquals(a.equals(b), threeA.equals(threeB), "equals (true)");
+	assertEquals(a.equals(c), threeA.equals(threeC), "equals (false)");
+});
+
 Deno.test("Vector2: fromArray", () => {
 	const a = new Vector2().fromArray([1, 2]);
 	const threeA = new ThreeVector2().fromArray([1, 2]);
 	compareVectors(a, threeA, "fromArray");
+});
+
+Deno.test("Vector2: mulScalar", () => {
+	const a = new Vector2(1, 2).mulScalar(2);
+	const threeA = new ThreeVector2(1, 2).multiplyScalar(2);
+	compareVectors(a, threeA, "mulScalar");
 });
 
 Deno.test("Vector2: set", () => {
