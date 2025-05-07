@@ -156,6 +156,13 @@ export class Vector3 {
 		return this;
 	}
 
+	negate(): this {
+		this.x = -this.x;
+		this.y = -this.y;
+		this.z = -this.z;
+		return this;
+	}
+
 	project(
 		camera: Camera,
 	): this {

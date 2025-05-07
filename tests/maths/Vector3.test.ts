@@ -281,6 +281,12 @@ Deno.test("Vector3: mulScalar", () => {
 	compareVectors(a, threeA, "mulScalar");
 });
 
+Deno.test("Vector3: negate", () => {
+	const a = new Vector3(1, 2, 3).negate();
+	const threeA = new ThreeVector3(1, 2, 3).negate();
+	compareVectors(a, threeA, "negate");
+});
+
 Deno.test("Vector3: set", () => {
 	const a = new Vector3().set(4, 5, 6);
 	const threeA = new ThreeVector3().set(4, 5, 6);
