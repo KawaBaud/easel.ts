@@ -15,6 +15,7 @@ const _v3 = new Vector3();
 
 export class RenderPipeline extends Pipeline {
 	renderTarget: RenderTarget;
+
 	#clippingContext = new ClippingContext();
 
 	constructor(width?: number, height?: number) {
@@ -80,7 +81,6 @@ export class RenderPipeline extends Pipeline {
 			const worldV1 = _v1.clone();
 			const worldV2 = _v2.clone();
 			const worldV3 = _v3.clone();
-
 			worldV1.applyMatrix4(camera.matrixWorldInverse);
 			worldV2.applyMatrix4(camera.matrixWorldInverse);
 			worldV3.applyMatrix4(camera.matrixWorldInverse);
