@@ -74,7 +74,6 @@ export class Object3D {
 
 		this.position.copy(source.position);
 		this.quaternion.copy(source.quaternion);
-		this.rotation.copy(source.rotation);
 		this.scale.copy(source.scale);
 
 		this.matrix.copy(source.matrix);
@@ -116,10 +115,9 @@ export class Object3D {
 
 	remove(object: Object3D): this {
 		const index = this.children.indexOf(object);
-		if (index !== -1) {
-			object.parent = null;
-			this.children.splice(index, 1);
-		}
+		index !== -1
+			? (object.parent = null, this.children.splice(index, 1))
+			: null;
 		return this;
 	}
 
