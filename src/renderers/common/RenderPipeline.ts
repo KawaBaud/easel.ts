@@ -4,6 +4,7 @@ import { Mesh } from "../../objects/Mesh.ts";
 import type { Scene } from "../../scenes/Scene.ts";
 import { ShapeUtils } from "../../shapes/ShapeUtils.ts";
 import "../../types.ts";
+import { ClippingContext } from "./ClippingContext.ts";
 import { Pipeline } from "./Pipeline.ts";
 import type { Rasterizer } from "./Rasterizer.ts";
 import { RenderTarget } from "./RenderTarget.ts";
@@ -14,6 +15,7 @@ const _v3 = new Vector3();
 
 export class RenderPipeline extends Pipeline {
 	renderTarget: RenderTarget;
+	#clippingContext = new ClippingContext();
 
 	constructor(width?: number, height?: number) {
 		super();
@@ -22,6 +24,8 @@ export class RenderPipeline extends Pipeline {
 
 	render(scene: Scene, camera: Camera, rasterizer: Rasterizer): this {
 		camera.updateMatrixWorld();
+
+		this.#clippingContext.setFromCamera(camera);
 
 		this.cull(scene, camera);
 
@@ -73,17 +77,42 @@ export class RenderPipeline extends Pipeline {
 			_v2.copy(v2).applyMatrix4(mesh.worldMatrix);
 			_v3.copy(v3).applyMatrix4(mesh.worldMatrix);
 
-			_v1.project(camera);
-			_v2.project(camera);
-			_v3.project(camera);
+			const worldV1 = _v1.clone();
+			const worldV2 = _v2.clone();
+			const worldV3 = _v3.clone();
 
-			rasterizer.drawTriangle(
-				_v1,
-				_v2,
-				_v3,
-				material.color,
-				material.wireframe,
+			worldV1.applyMatrix4(camera.matrixWorldInverse);
+			worldV2.applyMatrix4(camera.matrixWorldInverse);
+			worldV3.applyMatrix4(camera.matrixWorldInverse);
+
+			const clippedTriangles = this.#clippingContext.clipTriangle(
+				worldV1,
+				worldV2,
+				worldV3,
 			);
+			if (clippedTriangles.length === 0) continue;
+
+			for (const triangle of clippedTriangles) {
+				if (triangle.length === 3) {
+					const cv1 = triangle[0];
+					const cv2 = triangle[1];
+					const cv3 = triangle[2];
+
+					if (cv1 && cv2 && cv3) {
+						cv1.applyMatrix4(camera.projectionMatrix);
+						cv2.applyMatrix4(camera.projectionMatrix);
+						cv3.applyMatrix4(camera.projectionMatrix);
+
+						rasterizer.drawTriangle(
+							cv1,
+							cv2,
+							cv3,
+							material.color,
+							material.wireframe,
+						);
+					}
+				}
+			}
 		}
 	}
 }
