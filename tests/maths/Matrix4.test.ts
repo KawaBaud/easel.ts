@@ -194,40 +194,40 @@ Deno.test("Matrix4: compose", () => {
 
 Deno.test("Matrix4: decompose", () => {
 	const m = new Matrix4().set(
-		2, // m11
-		0, // m12
-		0, // m13
-		1, // m14
-		0, // m21
-		3, // m22
-		0, // m23
-		2, // m24
-		0, // m31
-		0, // m32
-		4, // m33
-		3, // m34
-		0, // m41
-		0, // m42
-		0, // m43
-		1, // m44
+		2,
+		0,
+		0,
+		1,
+		0,
+		3,
+		0,
+		2,
+		0,
+		0,
+		4,
+		3,
+		0,
+		0,
+		0,
+		1,
 	);
 	const threeM = new ThreeMatrix4().set(
-		2, // m11
-		0, // m12
-		0, // m13
-		1, // m14
-		0, // m21
-		3, // m22
-		0, // m23
-		2, // m24
-		0, // m31
-		0, // m32
-		4, // m33
-		3, // m34
-		0, // m41
-		0, // m42
-		0, // m43
-		1, // m44
+		2,
+		0,
+		0,
+		1,
+		0,
+		3,
+		0,
+		2,
+		0,
+		0,
+		4,
+		3,
+		0,
+		0,
+		0,
+		1,
 	);
 
 	const position = new Vector3();
@@ -282,24 +282,7 @@ Deno.test("Matrix4: decompose", () => {
 Deno.test("Matrix4: determinant", () => {
 	const matrices = [
 		new Matrix4(), // identity
-		new Matrix4().set(
-			1,
-			2,
-			3,
-			4,
-			5,
-			6,
-			7,
-			8,
-			9,
-			10,
-			11,
-			12,
-			13,
-			14,
-			15,
-			16,
-		),
+		new Matrix4().set(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16),
 		new Matrix4().makeRotationX(Math.PI / 3),
 		new Matrix4().makeTranslation(1, 2, 3),
 	];
