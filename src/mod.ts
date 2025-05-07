@@ -15,7 +15,7 @@ import { Scene } from "./scenes/Scene.ts";
 import { CubeShape } from "./shapes/CubeShape.ts";
 import { PlaneShape } from "./shapes/PlaneShape.ts";
 
-export const OUR = {
+export const EASEL = {
 	/* cameras */
 	OrthoCamera,
 	PerspCamera,
