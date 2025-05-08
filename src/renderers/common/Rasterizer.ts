@@ -5,6 +5,12 @@ import { Vector3 } from "../../maths/Vector3.ts";
 import type { Mesh } from "../../objects/Mesh.ts";
 import { CanvasUtils } from "../CanvasUtils.ts";
 
+const _color = new Color(0, 0, 0);
+const _pv1 = new Vector3();
+const _pv2 = new Vector3();
+const _pv3 = new Vector3();
+const _p4 = new Vector3();
+
 export interface RasterizerOptions {
 	width?: number;
 	height?: number;
@@ -18,8 +24,6 @@ export class Rasterizer {
 	ctx: CanvasRenderingContext2D;
 	imageData: ImageData;
 	data: Uint8ClampedArray;
-
-	#tempColor = new Color(0, 0, 0);
 
 	constructor(options: RasterizerOptions = {}) {
 		this.width = options.width ?? globalThis.innerWidth;
@@ -44,10 +48,10 @@ export class Rasterizer {
 	}
 
 	clear(color: ColorValue): this {
-		this.#tempColor.parse(color);
-		const r = MathUtils.fastTrunc(this.#tempColor.r * 255);
-		const g = MathUtils.fastTrunc(this.#tempColor.g * 255);
-		const b = MathUtils.fastTrunc(this.#tempColor.b * 255);
+		_color.parse(color);
+		const r = MathUtils.fastTrunc(_color.r * 255);
+		const g = MathUtils.fastTrunc(_color.g * 255);
+		const b = MathUtils.fastTrunc(_color.b * 255);
 
 		for (let i = 0; i < this.data.length; i += 4) {
 			this.data[i] = r;
@@ -86,7 +90,7 @@ export class Rasterizer {
 		const sy = y1 < y2 ? 1 : -1;
 		let err = dx - dy;
 
-		this.#tempColor.parse(color);
+		_color.parse(color);
 		let x = x1;
 		let y = y1;
 
@@ -160,10 +164,10 @@ export class Rasterizer {
 			? this.#drawFlatBottomTriangle(p1, p2, p3, color)
 			: (() => {
 				const p4x = p1.x + ((p2.y - p1.y) / (p3.y - p1.y)) * (p3.x - p1.x);
-				const p4 = new Vector3(p4x, p2.y, 0);
+				_p4.set(p4x, p2.y, 0);
 
-				this.#drawFlatBottomTriangle(p1, p2, p4, color);
-				this.#drawFlatTopTriangle(p2, p4, p3, color);
+				this.#drawFlatBottomTriangle(p1, p2, _p4, color);
+				this.#drawFlatTopTriangle(p2, _p4, p3, color);
 			})();
 		return this;
 	}
@@ -188,14 +192,14 @@ export class Rasterizer {
 			const cv3 = triangle[2];
 
 			if (cv1 && cv2 && cv3) {
-				const pv1 = cv1.clone().applyMatrix4(camera.projectionMatrix);
-				const pv2 = cv2.clone().applyMatrix4(camera.projectionMatrix);
-				const pv3 = cv3.clone().applyMatrix4(camera.projectionMatrix);
+				_pv1.copy(cv1).applyMatrix4(camera.projectionMatrix);
+				_pv2.copy(cv2).applyMatrix4(camera.projectionMatrix);
+				_pv3.copy(cv3).applyMatrix4(camera.projectionMatrix);
 
 				this.drawTriangle(
-					pv1,
-					pv2,
-					pv3,
+					_pv1,
+					_pv2,
+					_pv3,
 					material.color,
 					material.wireframe,
 				);
@@ -204,10 +208,10 @@ export class Rasterizer {
 	}
 
 	setPixel(x: number, y: number, color: ColorValue): this {
-		this.#tempColor.parse(color);
-		const r = MathUtils.fastTrunc(this.#tempColor.r * 255);
-		const g = MathUtils.fastTrunc(this.#tempColor.g * 255);
-		const b = MathUtils.fastTrunc(this.#tempColor.b * 255);
+		_color.parse(color);
+		const r = MathUtils.fastTrunc(_color.r * 255);
+		const g = MathUtils.fastTrunc(_color.g * 255);
+		const b = MathUtils.fastTrunc(_color.b * 255);
 
 		const idx = (y * this.width + x) << 2;
 		this.data[idx] = r;
