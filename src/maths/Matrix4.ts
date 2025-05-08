@@ -39,23 +39,19 @@ export class Matrix4 {
 
 		const { x: sx, y: sy, z: sz } = scale;
 
-		const m11 = (1 - (yy + zz)) * sx,
-			m12 = (xy + wz) * sx,
-			m13 = (xz - wy) * sx;
-		const m21 = (xy - wz) * sy,
-			m22 = (1 - (xx + zz)) * sy,
-			m23 = (yz + wx) * sy;
-		const m31 = (xz + wy) * sz,
-			m32 = (yz - wx) * sz,
-			m33 = (1 - (xx + yy)) * sz;
-		const m41 = position.x,
-			m42 = position.y,
-			m43 = position.z;
-
-		te[0] = m11, te[1] = m12, te[2] = m13, te[3] = 0;
-		te[4] = m21, te[5] = m22, te[6] = m23, te[7] = 0;
-		te[8] = m31, te[9] = m32, te[10] = m33, te[11] = 0;
-		te[12] = m41, te[13] = m42, te[14] = m43, te[15] = 1;
+		te[0] = (1 - (yy + zz)) * sx,
+			te[1] = (xy + wz) * sx,
+			te[2] = (xz - wy) * sx,
+			te[3] = 0;
+		te[4] = (xy - wz) * sy,
+			te[5] = (1 - (xx + zz)) * sy,
+			te[6] = (yz + wx) * sy,
+			te[7] = 0;
+		te[8] = (xz + wy) * sz,
+			te[9] = (yz - wx) * sz,
+			te[10] = (1 - (xx + yy)) * sz,
+			te[11] = 0;
+		te[12] = position.x, te[13] = position.y, te[14] = position.z, te[15] = 1;
 		return this;
 	}
 
@@ -129,20 +125,19 @@ export class Matrix4 {
 		const invScaleY = 1 / scale.y;
 		const invScaleZ = 1 / scale.z;
 
-		const m11 = me.safeAt(0) * invScaleX,
-			m12 = me.safeAt(1) * invScaleX,
-			m13 = me.safeAt(2) * invScaleX;
-		const m21 = me.safeAt(4) * invScaleY,
-			m22 = me.safeAt(5) * invScaleY,
-			m23 = me.safeAt(6) * invScaleY;
-		const m31 = me.safeAt(8) * invScaleZ,
-			m32 = me.safeAt(9) * invScaleZ,
-			m33 = me.safeAt(10) * invScaleZ;
-
 		const te = this.elements;
-		te[0] = m11, te[1] = m12, te[2] = m13, te[3] = 0;
-		te[4] = m21, te[5] = m22, te[6] = m23, te[7] = 0;
-		te[8] = m31, te[9] = m32, te[10] = m33, te[11] = 0;
+		te[0] = me.safeAt(0) * invScaleX,
+			te[1] = me.safeAt(1) * invScaleX,
+			te[2] = me.safeAt(2) * invScaleX,
+			te[3] = 0;
+		te[4] = me.safeAt(4) * invScaleY,
+			te[5] = me.safeAt(5) * invScaleY,
+			te[6] = me.safeAt(6) * invScaleY,
+			te[7] = 0;
+		te[8] = me.safeAt(8) * invScaleZ,
+			te[9] = me.safeAt(9) * invScaleZ,
+			te[10] = me.safeAt(10) * invScaleZ,
+			te[11] = 0;
 		te[12] = 0, te[13] = 0, te[14] = 0, te[15] = 1;
 		return this;
 	}
@@ -294,18 +289,14 @@ export class Matrix4 {
 		const h = 1.0 / (top - bottom);
 		const p = 1.0 / (far - near);
 
-		const x = 2 * w;
-		const y = 2 * h;
-		const z = -2 * p;
-		const tx = -((right + left) * w);
-		const ty = -((top + bottom) * h);
-		const tz = -((far + near) * p);
-
 		const te = this.elements;
-		te[0] = x, te[1] = 0, te[2] = 0, te[3] = 0;
-		te[4] = 0, te[5] = y, te[6] = 0, te[7] = 0;
-		te[8] = 0, te[9] = 0, te[10] = z, te[11] = 0;
-		te[12] = tx, te[13] = ty, te[14] = tz, te[15] = 1;
+		te[0] = 2 * w, te[1] = 0, te[2] = 0, te[3] = 0;
+		te[4] = 0, te[5] = 2 * h, te[6] = 0, te[7] = 0;
+		te[8] = 0, te[9] = 0, te[10] = -2 * p, te[11] = 0;
+		te[12] = -((right + left) * w),
+			te[13] = -((top + bottom) * h),
+			te[14] = -((far + near) * p),
+			te[15] = 1;
 		return this;
 	}
 
@@ -322,19 +313,17 @@ export class Matrix4 {
 		const top = tHalfFov * near;
 		const bottom = -tHalfFov * near;
 
-		const x = (2 * near) / (right - left);
-		const y = (2 * near) / (top - bottom);
-
-		const a = (right + left) / (right - left);
-		const b = (top + bottom) / (top - bottom);
-		const c = -(far + near) / (far - near);
-		const d = -(2 * far * near) / (far - near);
-
 		const te = this.elements;
-		te[0] = x, te[1] = 0, te[2] = 0, te[3] = 0;
-		te[4] = 0, te[5] = y, te[6] = 0, te[7] = 0;
-		te[8] = a, te[9] = b, te[10] = c, te[11] = -1;
-		te[12] = 0, te[13] = 0, te[14] = d, te[15] = 0;
+		te[0] = (2 * near) / (right - left), te[1] = 0, te[2] = 0, te[3] = 0;
+		te[4] = 0, te[5] = (2 * near) / (top - bottom), te[6] = 0, te[7] = 0;
+		te[8] = (right + left) / (right - left),
+			te[9] = (top + bottom) / (top - bottom),
+			te[10] = -(far + near) / (far - near),
+			te[11] = -1;
+		te[12] = 0,
+			te[13] = 0,
+			te[14] = -(2 * far * near) / (far - near),
+			te[15] = 0;
 		return this;
 	}
 
@@ -444,28 +433,23 @@ export class Matrix4 {
 			b34 = be.safeAt(14),
 			b44 = be.safeAt(15);
 
-		const n11 = (a11 * b11) + (a12 * b21) + (a13 * b31) + (a14 * b41),
-			n21 = (a21 * b11) + (a22 * b21) + (a23 * b31) + (a24 * b41),
-			n31 = (a31 * b11) + (a32 * b21) + (a33 * b31) + (a34 * b41),
-			n41 = (a41 * b11) + (a42 * b21) + (a43 * b31) + (a44 * b41);
-		const n12 = (a11 * b12) + (a12 * b22) + (a13 * b32) + (a14 * b42),
-			n22 = (a21 * b12) + (a22 * b22) + (a23 * b32) + (a24 * b42),
-			n32 = (a31 * b12) + (a32 * b22) + (a33 * b32) + (a34 * b42),
-			n42 = (a41 * b12) + (a42 * b22) + (a43 * b32) + (a44 * b42);
-		const n13 = (a11 * b13) + (a12 * b23) + (a13 * b33) + (a14 * b43),
-			n23 = (a21 * b13) + (a22 * b23) + (a23 * b33) + (a24 * b43),
-			n33 = (a31 * b13) + (a32 * b23) + (a33 * b33) + (a34 * b43),
-			n43 = (a41 * b13) + (a42 * b23) + (a43 * b33) + (a44 * b43);
-		const n14 = (a11 * b14) + (a12 * b24) + (a13 * b34) + (a14 * b44),
-			n24 = (a21 * b14) + (a22 * b24) + (a23 * b34) + (a24 * b44),
-			n34 = (a31 * b14) + (a32 * b24) + (a33 * b34) + (a34 * b44),
-			n44 = (a41 * b14) + (a42 * b24) + (a43 * b34) + (a44 * b44);
-
 		const te = this.elements;
-		te[0] = n11, te[1] = n21, te[2] = n31, te[3] = n41;
-		te[4] = n12, te[5] = n22, te[6] = n32, te[7] = n42;
-		te[8] = n13, te[9] = n23, te[10] = n33, te[11] = n43;
-		te[12] = n14, te[13] = n24, te[14] = n34, te[15] = n44;
+		te[0] = (a11 * b11) + (a12 * b21) + (a13 * b31) + (a14 * b41),
+			te[1] = (a21 * b11) + (a22 * b21) + (a23 * b31) + (a24 * b41),
+			te[2] = (a31 * b11) + (a32 * b21) + (a33 * b31) + (a34 * b41),
+			te[3] = (a41 * b11) + (a42 * b21) + (a43 * b31) + (a44 * b41);
+		te[4] = (a11 * b12) + (a12 * b22) + (a13 * b32) + (a14 * b42),
+			te[5] = (a21 * b12) + (a22 * b22) + (a23 * b32) + (a24 * b42),
+			te[6] = (a31 * b12) + (a32 * b22) + (a33 * b32) + (a34 * b42),
+			te[7] = (a41 * b12) + (a42 * b22) + (a43 * b32) + (a44 * b42);
+		te[8] = (a11 * b13) + (a12 * b23) + (a13 * b33) + (a14 * b43),
+			te[9] = (a21 * b13) + (a22 * b23) + (a23 * b33) + (a24 * b43),
+			te[10] = (a31 * b13) + (a32 * b23) + (a33 * b33) + (a34 * b43),
+			te[11] = (a41 * b13) + (a42 * b23) + (a43 * b33) + (a44 * b43);
+		te[12] = (a11 * b14) + (a12 * b24) + (a13 * b34) + (a14 * b44),
+			te[13] = (a21 * b14) + (a22 * b24) + (a23 * b34) + (a24 * b44),
+			te[14] = (a31 * b14) + (a32 * b24) + (a33 * b34) + (a34 * b44),
+			te[15] = (a41 * b14) + (a42 * b24) + (a43 * b34) + (a44 * b44);
 		return this;
 	}
 

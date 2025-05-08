@@ -21,13 +21,14 @@ export class Matrix3 {
 		this.makeRotation(rotation);
 
 		const te = this.elements;
-		const e0 = te.safeAt(0);
-		const e1 = te.safeAt(1);
-		const e3 = te.safeAt(3);
-		const e4 = te.safeAt(4);
 
-		te[0] = e0 * scale.x, te[3] = e3 * scale.x;
-		te[1] = e1 * scale.y, te[4] = e4 * scale.y;
+		const te0 = te.safeAt(0);
+		const te1 = te.safeAt(1);
+		const te3 = te.safeAt(3);
+		const te4 = te.safeAt(4);
+
+		te[0] = te0 * scale.x, te[3] = te3 * scale.x;
+		te[1] = te1 * scale.y, te[4] = te4 * scale.y;
 		te[6] = position.x, te[7] = position.y;
 		return this;
 	}
@@ -70,6 +71,7 @@ export class Matrix3 {
 
 	extractPosition(position: Vector2): this {
 		const te = this.elements;
+
 		position.x = te.safeAt(6);
 		position.y = te.safeAt(7);
 		return this;
@@ -84,14 +86,11 @@ export class Matrix3 {
 		const invScaleX = 1 / scale.x;
 		const invScaleY = 1 / scale.y;
 
-		const m11 = me.safeAt(0) * invScaleX,
-			m12 = me.safeAt(1) * invScaleX;
-		const m21 = me.safeAt(3) * invScaleY,
-			m22 = me.safeAt(4) * invScaleY;
-
 		const te = this.elements;
-		te[0] = m11, te[1] = m12, te[2] = 0;
-		te[3] = m21, te[4] = m22, te[5] = 0;
+		te[0] = me.safeAt(0) * invScaleX;
+		te[1] = me.safeAt(1) * invScaleX, te[2] = 0;
+		te[3] = me.safeAt(3) * invScaleY;
+		te[4] = me.safeAt(4) * invScaleY, te[5] = 0;
 		te[6] = 0, te[7] = 0, te[8] = 1;
 		return this;
 	}
@@ -134,19 +133,15 @@ export class Matrix3 {
 		}
 		const detInv = 1 / det;
 
-		const t11 = ((n22 * n33) - (n23 * n32)) * detInv,
-			t12 = ((n13 * n32) - (n12 * n33)) * detInv,
-			t13 = ((n12 * n23) - (n13 * n22)) * detInv;
-		const t21 = ((n23 * n31) - (n21 * n33)) * detInv,
-			t22 = ((n11 * n33) - (n13 * n31)) * detInv,
-			t23 = ((n13 * n21) - (n11 * n23)) * detInv;
-		const t31 = ((n21 * n32) - (n22 * n31)) * detInv,
-			t32 = ((n12 * n31) - (n11 * n32)) * detInv,
-			t33 = ((n11 * n22) - (n12 * n21)) * detInv;
-
-		te[0] = t11, te[1] = t12, te[2] = t13;
-		te[3] = t21, te[4] = t22, te[5] = t23;
-		te[6] = t31, te[7] = t32, te[8] = t33;
+		te[0] = ((n22 * n33) - (n23 * n32)) * detInv;
+		te[1] = ((n13 * n32) - (n12 * n33)) * detInv;
+		te[2] = ((n12 * n23) - (n13 * n22)) * detInv;
+		te[3] = ((n23 * n31) - (n21 * n33)) * detInv;
+		te[4] = ((n11 * n33) - (n13 * n31)) * detInv;
+		te[5] = ((n13 * n21) - (n11 * n23)) * detInv;
+		te[6] = ((n21 * n32) - (n22 * n31)) * detInv;
+		te[7] = ((n12 * n31) - (n11 * n32)) * detInv;
+		te[8] = ((n11 * n22) - (n12 * n21)) * detInv;
 		return this;
 	}
 
@@ -228,13 +223,9 @@ export class Matrix3 {
 		const me = m.elements;
 		const te = this.elements;
 
-		const n11 = me.safeAt(0), n12 = me.safeAt(1), n13 = me.safeAt(2);
-		const n21 = me.safeAt(4), n22 = me.safeAt(5), n23 = me.safeAt(6);
-		const n31 = me.safeAt(8), n32 = me.safeAt(9), n33 = me.safeAt(10);
-
-		te[0] = n11, te[1] = n12, te[2] = n13;
-		te[3] = n21, te[4] = n22, te[5] = n23;
-		te[6] = n31, te[7] = n32, te[8] = n33;
+		te[0] = me.safeAt(0), te[1] = me.safeAt(1), te[2] = me.safeAt(2);
+		te[3] = me.safeAt(4), te[4] = me.safeAt(5), te[5] = me.safeAt(6);
+		te[6] = me.safeAt(8), te[7] = me.safeAt(9), te[8] = me.safeAt(10);
 		return this;
 	}
 
