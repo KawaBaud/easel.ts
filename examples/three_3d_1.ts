@@ -17,19 +17,31 @@ globalThis.document.body.appendChild(renderer.domElement);
 const geometry = new THREE.BoxGeometry();
 const material = new THREE.MeshBasicMaterial({
 	color: 0x00ff00,
-	wireframe: false,
+	wireframe: true,
 });
 const cube = new THREE.Mesh(geometry, material);
 scene.add(cube);
 
 const keys: { [key: string]: boolean } = {};
+let wireframeToggle = false;
 globalThis.document.addEventListener(
 	"keydown",
-	(event) => keys[event.key.toLowerCase()] = true,
+	(event) => {
+		keys[event.key.toLowerCase()] = true;
+		if (event.key.toLowerCase() === "z" && !wireframeToggle) {
+			material.wireframe = !material.wireframe;
+			wireframeToggle = true;
+		}
+	},
 );
 globalThis.document.addEventListener(
 	"keyup",
-	(event) => keys[event.key.toLowerCase()] = false,
+	(event) => {
+		keys[event.key.toLowerCase()] = false;
+		if (event.key.toLowerCase() === "z") {
+			wireframeToggle = false;
+		}
+	},
 );
 
 const speed = 0.05;
