@@ -4,7 +4,7 @@ import type { Scene } from "../scenes/Scene.ts";
 import { CanvasRenderTarget } from "./CanvasRenderTarget.ts";
 import { Rasterizer } from "./common/Rasterizer.ts";
 import { RenderPipeline } from "./common/RenderPipeline.ts";
-import { Renderer, type RendererOptions } from "./Renderer.ts";
+import { Renderer, type RendererOptions } from "./common/Renderer.ts";
 
 export class CanvasRenderer extends Renderer {
 	domElement: HTMLCanvasElement;
