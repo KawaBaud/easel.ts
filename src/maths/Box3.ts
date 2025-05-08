@@ -52,14 +52,46 @@ export class Box3 {
 
 	get corners(): Vector3[] {
 		return [
-			new Vector3(this.#min.x, this.#min.y, this.#min.z), // 0: bottom-left-back
-			new Vector3(this.#max.x, this.#min.y, this.#min.z), // 1: bottom-right-back
-			new Vector3(this.#min.x, this.#max.y, this.#min.z), // 2: top-left-back
-			new Vector3(this.#max.x, this.#max.y, this.#min.z), // 3: top-right-back
-			new Vector3(this.#min.x, this.#min.y, this.#max.z), // 4: bottom-left-front
-			new Vector3(this.#max.x, this.#min.y, this.#max.z), // 5: bottom-right-front
-			new Vector3(this.#min.x, this.#max.y, this.#max.z), // 6: top-left-front
-			new Vector3(this.#max.x, this.#max.y, this.#max.z), // 7: top-right-front
+			new Vector3(
+				this.#min.x,
+				this.#min.y,
+				this.#min.z,
+			), /* 0: bottom-left-back */
+			new Vector3(
+				this.#max.x,
+				this.#min.y,
+				this.#min.z,
+			), /* 1: bottom-right-back */
+			new Vector3(
+				this.#min.x,
+				this.#max.y,
+				this.#min.z,
+			), /* 2: top-left-back */
+			new Vector3(
+				this.#max.x,
+				this.#max.y,
+				this.#min.z,
+			), /* 3: top-right-back */
+			new Vector3(
+				this.#min.x,
+				this.#min.y,
+				this.#max.z,
+			), /* 4: bottom-left-front */
+			new Vector3(
+				this.#max.x,
+				this.#min.y,
+				this.#max.z,
+			), /* 5: bottom-right-front */
+			new Vector3(
+				this.#min.x,
+				this.#max.y,
+				this.#max.z,
+			), /* 6: top-left-front */
+			new Vector3(
+				this.#max.x,
+				this.#max.y,
+				this.#max.z,
+			), /* 7: top-right-front */
 		];
 	}
 
@@ -146,8 +178,8 @@ export class Box3 {
 		closestPoint.x = MathUtils.clamp(sphere.centre.x, this.#min.x, this.#max.x);
 		closestPoint.y = MathUtils.clamp(sphere.centre.y, this.#min.y, this.#max.y);
 		closestPoint.z = MathUtils.clamp(sphere.centre.z, this.#min.z, this.#max.z);
-		return closestPoint.clone().sub(sphere.centre).lengthSq <=
-			sphere.radius * sphere.radius;
+		return closestPoint.clone().sub(sphere.centre)
+			.lengthSq <= (sphere.radius * sphere.radius);
 	}
 
 	makeEmpty(): this {

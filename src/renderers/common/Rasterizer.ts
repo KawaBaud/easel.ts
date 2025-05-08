@@ -53,8 +53,9 @@ export class Rasterizer {
 			this.data[i] = r;
 			this.data[i + 1] = g;
 			this.data[i + 2] = b;
-			this.data[i + 3] = 255; // alpha
+			this.data[i + 3] = 255; /* alpha */
 		}
+
 		return this;
 	}
 
@@ -168,7 +169,7 @@ export class Rasterizer {
 	}
 
 	getPixel(x: number, y: number): ColorValue {
-		const idx = (y * this.width + x) * 4;
+		const idx = (y * this.width + x) << 2;
 
 		const r = this.data[idx];
 		const g = this.data[idx + 1];
@@ -187,14 +188,14 @@ export class Rasterizer {
 			const cv3 = triangle[2];
 
 			if (cv1 && cv2 && cv3) {
-				cv1.applyMatrix4(camera.projectionMatrix);
-				cv2.applyMatrix4(camera.projectionMatrix);
-				cv3.applyMatrix4(camera.projectionMatrix);
+				const pv1 = cv1.clone().applyMatrix4(camera.projectionMatrix);
+				const pv2 = cv2.clone().applyMatrix4(camera.projectionMatrix);
+				const pv3 = cv3.clone().applyMatrix4(camera.projectionMatrix);
 
 				this.drawTriangle(
-					cv1,
-					cv2,
-					cv3,
+					pv1,
+					pv2,
+					pv3,
 					material.color,
 					material.wireframe,
 				);
@@ -208,7 +209,7 @@ export class Rasterizer {
 		const g = MathUtils.fastTrunc(this.#tempColor.g * 255);
 		const b = MathUtils.fastTrunc(this.#tempColor.b * 255);
 
-		const idx = (y * this.width + x) * 4;
+		const idx = (y * this.width + x) << 2;
 		this.data[idx] = r;
 		this.data[idx + 1] = g;
 		this.data[idx + 2] = b;
@@ -300,6 +301,7 @@ export class Rasterizer {
 			0,
 			this.width - 1,
 		);
+
 		for (let x = startX; x <= endX; x++) {
 			this.setPixel(x, y, color);
 		}

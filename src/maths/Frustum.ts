@@ -6,7 +6,7 @@ import type { Sphere } from "./Sphere.ts";
 import type { Vector3 } from "./Vector3.ts";
 
 export class Frustum {
-	// 0: left, 1: right, 2: bottom, 3: top, 4: near, 5: far
+	/* 0: left, 1: right, 2: bottom, 3: top, 4: near, 5: far */
 	planes: Plane[] = [];
 
 	constructor() {
@@ -102,37 +102,37 @@ export class Frustum {
 			me7 - me4,
 			me11 - me8,
 			me15 - me12,
-		).unitize(); // left
+		).unitize(); /* left */
 		planes.safeAt(1).setComponents(
 			me3 + me0,
 			me7 + me4,
 			me11 + me8,
 			me15 + me12,
-		).unitize(); // right
+		).unitize(); /* right */
 		planes.safeAt(2).setComponents(
 			me3 + me1,
 			me7 + me5,
 			me11 + me9,
 			me15 + me13,
-		).unitize(); // bottom
+		).unitize(); /* bottom */
 		planes.safeAt(3).setComponents(
 			me3 - me1,
 			me7 - me5,
 			me11 - me9,
 			me15 - me13,
-		).unitize(); // top
+		).unitize(); /* top */
 		planes.safeAt(4).setComponents(
 			me3 - me2,
 			me7 - me6,
 			me11 - me10,
 			me15 - me14,
-		).unitize(); // near
+		).unitize(); /* near */
 		planes.safeAt(5).setComponents(
 			me3 + me2,
 			me7 + me6,
 			me11 + me10,
 			me15 + me14,
-		).unitize(); // far
+		).unitize(); /* far */
 		return this;
 	}
 }
