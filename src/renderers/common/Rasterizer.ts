@@ -297,7 +297,7 @@ export class Rasterizer {
 			this.width - 1,
 		);
 		const endX = MathUtils.clamp(
-			Math.floor(Math.max(x1, x2)),
+			MathUtils.fastTrunc(MathUtils.fastMax(x1, x2)),
 			0,
 			this.width - 1,
 		);
