@@ -43,8 +43,8 @@ globalThis.document.addEventListener(
 	},
 );
 
-const speed = 0.05;
-const rotSpeed = 0.02;
+const speed = 0.05 / 2;
+const rotSpeed = 0.02 / 2;
 
 function animate(): void {
 	globalThis.requestAnimationFrame(animate);
