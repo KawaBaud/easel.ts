@@ -99,24 +99,6 @@ Deno.test("Vector3: get->lengthSq", () => {
 	);
 });
 
-Deno.test("Vector3: crossVectors", () => {
-	const a = new Vector3(1, 0, 0);
-	const b = new Vector3(0, 1, 0);
-	const c = new Vector3().crossVectors(a, b);
-	const threeA = new ThreeVector3(1, 0, 0);
-	const threeB = new ThreeVector3(0, 1, 0);
-	const threeC = new ThreeVector3().crossVectors(threeA, threeB);
-	compareVectors(c, threeC, "crossVectors (x cross y)");
-
-	const d = new Vector3(2, 3, 4);
-	const e = new Vector3(5, 6, 7);
-	const f = new Vector3().crossVectors(d, e);
-	const threeD = new ThreeVector3(2, 3, 4);
-	const threeE = new ThreeVector3(5, 6, 7);
-	const threeF = new ThreeVector3().crossVectors(threeD, threeE);
-	compareVectors(f, threeF, "crossVectors");
-});
-
 Deno.test("Vector3: add", () => {
 	const a = new Vector3(1, 2, 3);
 	const b = new Vector3(4, 5, 6);
@@ -275,6 +257,24 @@ Deno.test("Vector3: cross", () => {
 	const threeC = new ThreeVector3(5, 6, 7);
 	const threeD = new ThreeVector3(2, 3, 4).cross(threeC);
 	compareVectors(d, threeD, "cross");
+});
+
+Deno.test("Vector3: crossVectors", () => {
+	const a = new Vector3(1, 0, 0);
+	const b = new Vector3(0, 1, 0);
+	const c = new Vector3().crossVectors(a, b);
+	const threeA = new ThreeVector3(1, 0, 0);
+	const threeB = new ThreeVector3(0, 1, 0);
+	const threeC = new ThreeVector3().crossVectors(threeA, threeB);
+	compareVectors(c, threeC, "crossVectors (x cross y)");
+
+	const d = new Vector3(2, 3, 4);
+	const e = new Vector3(5, 6, 7);
+	const f = new Vector3().crossVectors(d, e);
+	const threeD = new ThreeVector3(2, 3, 4);
+	const threeE = new ThreeVector3(5, 6, 7);
+	const threeF = new ThreeVector3().crossVectors(threeD, threeE);
+	compareVectors(f, threeF, "crossVectors");
 });
 
 Deno.test("Vector3: divScalar", () => {
