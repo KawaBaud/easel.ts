@@ -150,15 +150,6 @@ export class Rasterizer {
 		return this;
 	}
 
-	getPixel(x: number, y: number): ColorValue {
-		const idx = (y * this.width + x) << 2;
-
-		const r = this.data[idx];
-		const g = this.data[idx + 1];
-		const b = this.data[idx + 2];
-		return `rgb(${r}, ${g}, ${b})`;
-	}
-
 	rasterize(
 		triangle: Vector3[],
 		camera: Camera,
@@ -297,7 +288,10 @@ export class Rasterizer {
 	#projectToScreen(vertex: Vector3, target = new Vector3()): Vector3 {
 		const screenX = MathUtils.fastTrunc(((vertex.x + 1) * this.width) >> 1);
 		const screenY = MathUtils.fastTrunc(((1 - vertex.y) * this.height) >> 1);
-		return target.set(screenX, screenY, vertex.z);
+
+		const clippedX = MathUtils.clamp(screenX, 0, this.width - 1);
+		const clippedY = MathUtils.clamp(screenY, 0, this.height - 1);
+		return target.set(clippedX, clippedY, vertex.z);
 	}
 
 	#sortVerticesByY(
