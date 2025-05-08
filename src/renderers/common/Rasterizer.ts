@@ -10,6 +10,9 @@ const _pv1 = new Vector3();
 const _pv2 = new Vector3();
 const _pv3 = new Vector3();
 const _p4 = new Vector3();
+const _screenP1 = new Vector3();
+const _screenP2 = new Vector3();
+const _screenP3 = new Vector3();
 
 export interface RasterizerOptions {
 	width?: number;
@@ -69,13 +72,13 @@ export class Rasterizer {
 	}
 
 	drawLine(start: Vector3, end: Vector3, color: ColorValue): this {
-		const p1 = this.#projectToScreen(start);
-		const p2 = this.#projectToScreen(end);
+		this.#projectToScreen(start, _screenP1);
+		this.#projectToScreen(end, _screenP2);
 
-		let x1 = MathUtils.fastTrunc(p1.x);
-		let y1 = MathUtils.fastTrunc(p1.y);
-		const x2 = MathUtils.fastTrunc(p2.x);
-		const y2 = MathUtils.fastTrunc(p2.y);
+		let x1 = _screenP1.x;
+		let y1 = _screenP1.y;
+		const x2 = _screenP2.x;
+		const y2 = _screenP2.y;
 
 		const dx = Math.abs(x2 - x1);
 		const dy = Math.abs(y2 - y1);
@@ -127,22 +130,23 @@ export class Rasterizer {
 		v3: Vector3,
 		color: ColorValue,
 	): this {
-		let p1 = this.#projectToScreen(v1);
-		let p2 = this.#projectToScreen(v2);
-		let p3 = this.#projectToScreen(v3);
-		[p1, p2, p3] = this.#sortVerticesByY(p1, p2, p3);
+		this.#projectToScreen(v1, _screenP1);
+		this.#projectToScreen(v2, _screenP2);
+		this.#projectToScreen(v3, _screenP3);
+
+		const [p1, p2, p3] = this.#sortVerticesByY(_screenP1, _screenP2, _screenP3);
 
 		p1.y === p2.y
-			? this.#drawFlatTopTriangle(p1, p2, p3, color)
+			? this.#fillFlatTopTriangle(p1, p2, p3, color)
 			: p2.y === p3.y
-			? this.#drawFlatBottomTriangle(p1, p2, p3, color)
+			? this.#fillFlatBottomTriangle(p1, p2, p3, color)
 			: (() => {
 				const p4x = p1.x + ((p2.y - p1.y) / (p3.y - p1.y)) * (p3.x - p1.x);
 				_p4.set(p4x, p2.y, 0);
-
-				this.#drawFlatBottomTriangle(p1, p2, _p4, color);
-				this.#drawFlatTopTriangle(p2, _p4, p3, color);
+				this.#fillFlatBottomTriangle(p1, p2, _p4, color);
+				this.#fillFlatTopTriangle(p2, _p4, p3, color);
 			})();
+
 		return this;
 	}
 
@@ -155,7 +159,7 @@ export class Rasterizer {
 		return `rgb(${r}, ${g}, ${b})`;
 	}
 
-	rasterizeTriangle(
+	rasterize(
 		triangle: Vector3[],
 		camera: Camera,
 		material: Mesh["material"],
@@ -209,7 +213,7 @@ export class Rasterizer {
 		return this;
 	}
 
-	#drawFlatTopTriangle(
+	#fillFlatTopTriangle(
 		p1: Vector3,
 		p2: Vector3,
 		p3: Vector3,
@@ -219,21 +223,21 @@ export class Rasterizer {
 		const { x: x2, y: y2 } = p2;
 		const { x: x3, y: y3 } = p3;
 
-		const dP1P3 = (x3 - x1) / (y3 - y1);
-		const dP2P3 = (x3 - x2) / (y3 - y2);
+		const edge0 = (x3 - x1) / (y3 - y1);
+		const edge1 = (x3 - x2) / (y3 - y2);
 
 		for (
 			let y = MathUtils.clamp(Math.ceil(y1), 0, this.height - 1);
 			y <= MathUtils.clamp(MathUtils.fastTrunc(y3), 0, this.height - 1);
 			y++
 		) {
-			const sx = x1 + (y - y1) * dP1P3;
-			const ex = x2 + (y - y2) * dP2P3;
-			this.#scanline(y, sx, ex, color);
+			const sx = x1 + (y - y1) * edge0;
+			const ex = x2 + (y - y2) * edge1;
+			this.#fillScanline(y, sx, ex, color);
 		}
 	}
 
-	#drawFlatBottomTriangle(
+	#fillFlatBottomTriangle(
 		p1: Vector3,
 		p2: Vector3,
 		p3: Vector3,
@@ -243,27 +247,21 @@ export class Rasterizer {
 		const { x: x2, y: y2 } = p2;
 		const { x: x3, y: y3 } = p3;
 
-		const dP1P2 = (x2 - x1) / (y2 - y1);
-		const dP1P3 = (x3 - x1) / (y3 - y1);
+		const edge0 = (x2 - x1) / (y2 - y1);
+		const edge1 = (x3 - x1) / (y3 - y1);
 
 		for (
 			let y = MathUtils.clamp(Math.ceil(y1), 0, this.height - 1);
 			y <= MathUtils.clamp(MathUtils.fastTrunc(y2), 0, this.height - 1);
 			y++
 		) {
-			const sx = x1 + (y - y1) * dP1P2;
-			const ex = x1 + (y - y1) * dP1P3;
-			this.#scanline(y, sx, ex, color);
+			const sx = x1 + (y - y1) * edge0;
+			const ex = x1 + (y - y1) * edge1;
+			this.#fillScanline(y, sx, ex, color);
 		}
 	}
 
-	#projectToScreen(vertex: Vector3): Vector3 {
-		const screenX = MathUtils.fastTrunc((vertex.x + 1) * 0.5 * this.width);
-		const screenY = MathUtils.fastTrunc((1 - vertex.y) * 0.5 * this.height);
-		return new Vector3(screenX, screenY, vertex.z);
-	}
-
-	#scanline(
+	#fillScanline(
 		y: number,
 		x1: number,
 		x2: number,
@@ -280,9 +278,26 @@ export class Rasterizer {
 			this.width - 1,
 		);
 
+		_color.parse(color);
+		const r = MathUtils.fastTrunc(_color.r * 255);
+		const g = MathUtils.fastTrunc(_color.g * 255);
+		const b = MathUtils.fastTrunc(_color.b * 255);
+
+		const rowOffset = y * this.width * 4;
+
 		for (let x = startX; x <= endX; x++) {
-			this.setPixel(x, y, color);
+			const idx = rowOffset + x * 4;
+			this.data[idx] = r;
+			this.data[idx + 1] = g;
+			this.data[idx + 2] = b;
+			this.data[idx + 3] = 255;
 		}
+	}
+
+	#projectToScreen(vertex: Vector3, target = new Vector3()): Vector3 {
+		const screenX = MathUtils.fastTrunc(((vertex.x + 1) * this.width) >> 1);
+		const screenY = MathUtils.fastTrunc(((1 - vertex.y) * this.height) >> 1);
+		return target.set(screenX, screenY, vertex.z);
 	}
 
 	#sortVerticesByY(
