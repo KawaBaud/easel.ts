@@ -67,13 +67,9 @@ export class Vector3 {
 		const { x, y, z } = this;
 		const me = m.elements;
 
-		const nx = (me.safeAt(0) * x) + (me.safeAt(3) * y) + (me.safeAt(6) * z);
-		const ny = (me.safeAt(1) * x) + (me.safeAt(4) * y) + (me.safeAt(7) * z);
-		const nz = (me.safeAt(2) * x) + (me.safeAt(5) * y) + (me.safeAt(8) * z);
-
-		this.x = nx;
-		this.y = ny;
-		this.z = nz;
+		this.x = (me.safeAt(0) * x) + (me.safeAt(3) * y) + (me.safeAt(6) * z);
+		this.y = (me.safeAt(1) * x) + (me.safeAt(4) * y) + (me.safeAt(7) * z);
+		this.z = (me.safeAt(2) * x) + (me.safeAt(5) * y) + (me.safeAt(8) * z);
 		return this;
 	}
 
@@ -85,16 +81,12 @@ export class Vector3 {
 			(me.safeAt(11) * z) + me.safeAt(15);
 		const w = denom !== 0 ? 1 / denom : 1;
 
-		const nx = ((me.safeAt(0) * x) + (me.safeAt(4) * y) + (me.safeAt(8) * z) +
-			me.safeAt(12)) * w;
-		const ny = ((me.safeAt(1) * x) + (me.safeAt(5) * y) + (me.safeAt(9) * z) +
-			me.safeAt(13)) * w;
-		const nz = ((me.safeAt(2) * x) + (me.safeAt(6) * y) + (me.safeAt(10) * z) +
-			me.safeAt(14)) * w;
-
-		this.x = nx;
-		this.y = ny;
-		this.z = nz;
+		this.x = ((me.safeAt(0) * x) + (me.safeAt(4) * y) +
+			(me.safeAt(8) * z) + me.safeAt(12)) * w;
+		this.y = ((me.safeAt(1) * x) + (me.safeAt(5) * y) +
+			(me.safeAt(9) * z) + me.safeAt(13)) * w;
+		this.z = ((me.safeAt(2) * x) + (me.safeAt(6) * y) +
+			(me.safeAt(10) * z) + me.safeAt(14)) * w;
 		return this;
 	}
 
@@ -176,9 +168,11 @@ export class Vector3 {
 	}
 
 	lerp(v: Vector3, t: number): this {
-		this.x = this.x + (v.x - this.x) * t;
-		this.y = this.y + (v.y - this.y) * t;
-		this.z = this.z + (v.z - this.z) * t;
+		const { x, y, z } = this;
+
+		this.x = x + (v.x - x) * t;
+		this.y = y + (v.y - y) * t;
+		this.z = z + (v.z - z) * t;
 		return this;
 	}
 
