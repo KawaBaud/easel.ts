@@ -83,7 +83,6 @@ export class RenderPipeline extends Pipeline {
 		const clippedTriangles = this.#clippingContext
 			.clipTriangle(_worldV1, _worldV2, _worldV3);
 		if (clippedTriangles.length === 0) return;
-
 		for (const triangle of clippedTriangles) {
 			rasterizer.rasterize(triangle, camera, material);
 		}
