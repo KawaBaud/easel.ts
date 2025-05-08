@@ -1,5 +1,6 @@
 import type { Camera } from "../../cameras/Camera.ts";
 import { Frustum } from "../../maths/Frustum.ts";
+import { MathUtils } from "../../maths/MathUtils.ts";
 import { Vector3 } from "../../maths/Vector3.ts";
 import "../../types.ts";
 
@@ -13,14 +14,57 @@ export class ClippingContext {
 	frustum = new Frustum();
 
 	clipLine(start: Vector3, end: Vector3): Vector3[] | null {
-		if (
-			this.frustum.containsPoint(start) &&
-			this.frustum.containsPoint(end)
-		) return [start.clone(), end.clone()];
+		const INSIDE = 0b000000;
+		const LEFT = 0b000001;
+		const RIGHT = 0b000010;
+		const BOTTOM = 0b000100;
+		const TOP = 0b001000;
+		const NEAR = 0b010000;
+		const FAR = 0b100000;
 
+		const computeOutCode = (point: Vector3): number => {
+			let code = INSIDE;
+
+			for (let i = 0; i < 6; i++) {
+				const plane = this.frustum.planes.safeAt(i);
+				const dist = plane.distanceToPoint(point);
+
+				if (dist < 0) {
+					switch (i) {
+						case 0:
+							code |= LEFT;
+							break;
+						case 1:
+							code |= RIGHT;
+							break;
+						case 2:
+							code |= BOTTOM;
+							break;
+						case 3:
+							code |= TOP;
+							break;
+						case 4:
+							code |= NEAR;
+							break;
+						case 5:
+							code |= FAR;
+							break;
+					}
+				}
+			}
+
+			return code;
+		};
+
+		const outcode0 = computeOutCode(start);
+		const outcode1 = computeOutCode(end);
+
+		if ((outcode0 | outcode1) === 0) return [start.clone(), end.clone()];
+		if ((outcode0 & outcode1) !== 0) return null;
+
+		const direction = _v3.subVectors(end, start);
 		let t0 = 0;
 		let t1 = 1;
-		const direction = _v3.subVectors(end, start);
 
 		for (let i = 0; i < 6; i++) {
 			const plane = this.frustum.planes.safeAt(i);
@@ -32,14 +76,14 @@ export class ClippingContext {
 				if (dist < 0) return null;
 			} else {
 				const t = -dist / denom;
-				denom < 0 ? (t > t0 ? t0 = t : null) : (t < t1 ? t1 = t : null);
+				denom < 0 ? (t > t0 && (t0 = t)) : (t < t1 && (t1 = t));
+
 				if (t0 > t1) return null;
 			}
 		}
 
-		t0 = Math.max(0, t0);
-		t1 = Math.min(1, t1);
-		if (t0 > t1) return null;
+		t0 = MathUtils.fastMax(0, t0);
+		t1 = MathUtils.fastMin(1, t1);
 
 		const clippedStart = _v1.copy(start).add(
 			_v4.copy(direction).mulScalar(t0),
