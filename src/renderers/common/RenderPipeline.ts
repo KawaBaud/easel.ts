@@ -85,7 +85,7 @@ export class RenderPipeline extends Pipeline {
 		if (clippedTriangles.length === 0) return;
 
 		for (const triangle of clippedTriangles) {
-			rasterizer.rasterizeTriangle(triangle, camera, material);
+			rasterizer.rasterize(triangle, camera, material);
 		}
 	}
 
