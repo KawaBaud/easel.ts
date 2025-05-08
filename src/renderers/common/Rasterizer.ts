@@ -259,7 +259,7 @@ export class Rasterizer {
 		color: ColorValue,
 	): void {
 		const startX = MathUtils.clamp(
-			Math.ceil(Math.min(x1, x2)),
+			Math.ceil(MathUtils.fastMin(x1, x2)),
 			0,
 			this.width - 1,
 		);
