@@ -72,17 +72,10 @@ export class Rasterizer {
 		const p1 = this.#projectToScreen(start);
 		const p2 = this.#projectToScreen(end);
 
-		const x1 = MathUtils.fastTrunc(p1.x);
-		const y1 = MathUtils.fastTrunc(p1.y);
+		let x1 = MathUtils.fastTrunc(p1.x);
+		let y1 = MathUtils.fastTrunc(p1.y);
 		const x2 = MathUtils.fastTrunc(p2.x);
 		const y2 = MathUtils.fastTrunc(p2.y);
-
-		if (
-			(x1 < 0 && x2 < 0) ||
-			(y1 < 0 && y2 < 0) ||
-			(x1 >= this.width && x2 >= this.width) ||
-			(y1 >= this.height && y2 >= this.height)
-		) return this;
 
 		const dx = Math.abs(x2 - x1);
 		const dy = Math.abs(y2 - y1);
@@ -90,43 +83,24 @@ export class Rasterizer {
 		const sy = y1 < y2 ? 1 : -1;
 		let err = dx - dy;
 
-		_color.parse(color);
-		let x = x1;
-		let y = y1;
-
 		while (true) {
-			if (
-				(x >= 0 && x < this.width) &&
-				(y >= 0 && y < this.height)
-			) this.setPixel(x, y, color);
+			if ((x1 >= 0 && x1 < this.width) && (y1 >= 0 && y1 < this.height)) {
+				this.setPixel(x1, y1, color);
+			}
 
-			if (x === x2 && y === y2) break;
+			if (x1 === x2 && y1 === y2) break;
 
 			const e2 = err << 1;
 			if (e2 > -dy) {
 				err -= dy;
-				x += sx;
+				x1 += sx;
 			}
 			if (e2 < dx) {
 				err += dx;
-				y += sy;
+				y1 += sy;
 			}
 		}
 
-		return this;
-	}
-
-	drawPoint(point: Vector3, color: ColorValue): this {
-		const screenPoint = this.#projectToScreen(point);
-
-		const screenX = MathUtils.fastTrunc(screenPoint.x);
-		const screenY = MathUtils.fastTrunc(screenPoint.y);
-		if (
-			(screenX < 0 || (screenX >= this.width)) ||
-			(screenY < 0 || (screenY >= this.height))
-		) return this;
-
-		this.setPixel(screenX, screenY, color);
 		return this;
 	}
 
@@ -250,7 +224,7 @@ export class Rasterizer {
 
 		for (
 			let y = MathUtils.clamp(Math.ceil(y1), 0, this.height - 1);
-			y <= MathUtils.clamp(Math.floor(y3), 0, this.height - 1);
+			y <= MathUtils.clamp(MathUtils.fastTrunc(y3), 0, this.height - 1);
 			y++
 		) {
 			const sx = x1 + (y - y1) * dP1P3;
@@ -274,7 +248,7 @@ export class Rasterizer {
 
 		for (
 			let y = MathUtils.clamp(Math.ceil(y1), 0, this.height - 1);
-			y <= MathUtils.clamp(Math.floor(y2), 0, this.height - 1);
+			y <= MathUtils.clamp(MathUtils.fastTrunc(y2), 0, this.height - 1);
 			y++
 		) {
 			const sx = x1 + (y - y1) * dP1P2;
@@ -284,8 +258,8 @@ export class Rasterizer {
 	}
 
 	#projectToScreen(vertex: Vector3): Vector3 {
-		const screenX = MathUtils.fastRound((vertex.x + 1) * 0.5 * this.width);
-		const screenY = MathUtils.fastRound((1 - vertex.y) * 0.5 * this.height);
+		const screenX = MathUtils.fastTrunc((vertex.x + 1) * 0.5 * this.width);
+		const screenY = MathUtils.fastTrunc((1 - vertex.y) * 0.5 * this.height);
 		return new Vector3(screenX, screenY, vertex.z);
 	}
 
