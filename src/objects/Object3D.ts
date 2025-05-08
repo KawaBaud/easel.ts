@@ -24,6 +24,7 @@ export class Object3D {
 	children: Object3D[] = [];
 
 	visible = true;
+	frustumCulled = true;
 	userData: Record<string, unknown> = {};
 
 	constructor() {
