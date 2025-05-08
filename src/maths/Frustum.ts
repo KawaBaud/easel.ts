@@ -55,9 +55,9 @@ export class Frustum {
 			const py = normal.y > 0 ? box.max.y : box.min.y;
 			const pz = normal.z > 0 ? box.max.z : box.min.z;
 
-			const corner = { x: px, y: py, z: pz };
-
-			if (plane.distanceToPoint(corner as Vector3) < 0) return false;
+			if (plane.distanceToPoint({ x: px, y: py, z: pz } as Vector3) < 0) {
+				return false;
+			}
 		}
 
 		return true;
