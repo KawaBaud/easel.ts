@@ -5,6 +5,8 @@ import type { Matrix3 } from "./Matrix3.ts";
 import type { Matrix4 } from "./Matrix4.ts";
 import { Quaternion } from "./Quaternion.ts";
 
+const _q = new Quaternion();
+
 export class Vector3 {
 	static UP = new Vector3(0, 1, 0);
 
@@ -59,8 +61,8 @@ export class Vector3 {
 	}
 
 	applyEuler(euler: Euler): this {
-		const q = new Quaternion().setFromEuler(euler);
-		return this.applyQuaternion(q);
+		_q.setFromEuler(euler);
+		return this.applyQuaternion(_q);
 	}
 
 	applyMatrix3(m: Matrix3): this {

@@ -4,6 +4,11 @@ import { MathUtils } from "./MathUtils.ts";
 import { Quaternion } from "./Quaternion.ts";
 import { Vector3 } from "./Vector3.ts";
 
+const _v1 = new Vector3();
+const _v2 = new Vector3();
+const _v3 = new Vector3();
+const _q = new Quaternion();
+
 export class Matrix4 {
 	#elements = new Float32Array(16);
 
@@ -253,27 +258,27 @@ export class Matrix4 {
 	}
 
 	lookAt(eye: Vector3, target: Vector3, up: Vector3): this {
-		const z = eye.clone().sub(target);
-		if (z.lengthSq === 0) z.z = 1;
-		z.unitize();
+		_v1.copy(eye).sub(target);
+		if (_v1.lengthSq === 0) _v1.z = 1;
+		_v1.unitize();
 
-		const x = up.clone().cross(z);
-		if (x.lengthSq === 0) {
+		_v2.copy(up).cross(_v1);
+		if (_v2.lengthSq === 0) {
 			Math.abs(up.z) === 1
-				? z.x += MathUtils.EPSILON
-				: z.z += MathUtils.EPSILON;
-			z.unitize();
+				? _v1.x += MathUtils.EPSILON
+				: _v1.z += MathUtils.EPSILON;
+			_v1.unitize();
 
-			x.copy(up).cross(z);
+			_v2.copy(up).cross(_v1);
 		}
-		x.unitize();
+		_v2.unitize();
 
-		const y = z.clone().cross(x);
+		_v3.copy(_v1).cross(_v2);
 
 		const te = this.elements;
-		te[0] = x.x, te[4] = y.x, te[8] = z.x;
-		te[1] = x.y, te[5] = y.y, te[9] = z.y;
-		te[2] = x.z, te[6] = y.z, te[10] = z.z;
+		te[0] = _v2.x, te[4] = _v3.x, te[8] = _v1.x;
+		te[1] = _v2.y, te[5] = _v3.y, te[9] = _v1.y;
+		te[2] = _v2.z, te[6] = _v3.z, te[10] = _v1.z;
 		return this;
 	}
 
@@ -328,13 +333,14 @@ export class Matrix4 {
 	}
 
 	makeRotationFromEuler(euler: Euler): this {
-		return this.makeRotationFromQuaternion(
-			new Quaternion().setFromEuler(euler),
-		);
+		_q.setFromEuler(euler);
+		return this.makeRotationFromQuaternion(_q);
 	}
 
 	makeRotationFromQuaternion(q: Quaternion): this {
-		return this.compose(new Vector3(0, 0, 0), q, new Vector3(1, 1, 1));
+		_v1.set(0, 0, 0);
+		_v2.set(1, 1, 1);
+		return this.compose(_v1, q, _v2);
 	}
 
 	makeRotationX(radians: number): this {

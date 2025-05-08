@@ -3,6 +3,8 @@ import { MathUtils } from "./MathUtils.ts";
 import { Matrix4 } from "./Matrix4.ts";
 import { Quaternion } from "./Quaternion.ts";
 
+const _m = new Matrix4();
+
 export type EulerOrder = "XYZ" | "YXZ" | "ZXY" | "ZYX" | "YZX" | "XZY";
 
 export class Euler {
@@ -103,8 +105,8 @@ export class Euler {
 	}
 
 	setFromQuaternion(q: Quaternion, order?: EulerOrder): this {
-		const m = new Matrix4().makeRotationFromQuaternion(q);
-		return this.setFromRotationMatrix(m, order);
+		_m.makeRotationFromQuaternion(q);
+		return this.setFromRotationMatrix(_m, order);
 	}
 
 	setFromRotationMatrix(m: Matrix4, order?: EulerOrder): this {

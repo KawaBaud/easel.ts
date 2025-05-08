@@ -12,6 +12,9 @@ import { RenderTarget } from "./RenderTarget.ts";
 const _v1 = new Vector3();
 const _v2 = new Vector3();
 const _v3 = new Vector3();
+const _worldV1 = new Vector3();
+const _worldV2 = new Vector3();
+const _worldV3 = new Vector3();
 
 export class RenderPipeline extends Pipeline {
 	renderTarget: RenderTarget;
@@ -73,12 +76,12 @@ export class RenderPipeline extends Pipeline {
 		_v2.copy(v2).applyMatrix4(mesh.worldMatrix);
 		_v3.copy(v3).applyMatrix4(mesh.worldMatrix);
 
-		const worldV1 = _v1.clone().applyMatrix4(camera.matrixWorldInverse);
-		const worldV2 = _v2.clone().applyMatrix4(camera.matrixWorldInverse);
-		const worldV3 = _v3.clone().applyMatrix4(camera.matrixWorldInverse);
+		_worldV1.copy(_v1).applyMatrix4(camera.matrixWorldInverse);
+		_worldV2.copy(_v2).applyMatrix4(camera.matrixWorldInverse);
+		_worldV3.copy(_v3).applyMatrix4(camera.matrixWorldInverse);
 
 		const clippedTriangles = this.#clippingContext
-			.clipTriangle(worldV1, worldV2, worldV3);
+			.clipTriangle(_worldV1, _worldV2, _worldV3);
 		if (clippedTriangles.length === 0) return;
 
 		for (const triangle of clippedTriangles) {
