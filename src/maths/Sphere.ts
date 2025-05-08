@@ -55,8 +55,8 @@ export class Sphere {
 
 	intersectsSphere(sphere: Sphere): boolean {
 		const radiusSum = this.radius + sphere.radius;
-		return this.centre.clone().sub(sphere.centre).lengthSq <=
-			radiusSum * radiusSum;
+		return this.centre.clone().sub(sphere.centre)
+			.lengthSq <= (radiusSum * radiusSum);
 	}
 
 	translate(offset: Vector3): this {
