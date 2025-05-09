@@ -1,3 +1,5 @@
+import type { Mesh } from "../objects/Mesh.ts";
+import type { Object3D } from "../objects/Object3D.ts";
 import "../types.ts";
 import { MathUtils } from "./MathUtils.ts";
 import type { Sphere } from "./Sphere.ts";
@@ -162,6 +164,10 @@ export class Box3 {
 		return this;
 	}
 
+	getCentre(out: Vector3): Vector3 {
+		return out.copy(this.#min).add(this.#max).mulScalar(0.5);
+	}
+
 	intersectsBox(box: Box3): boolean {
 		return (
 			(this.#max.x >= box.min.x) &&
@@ -192,6 +198,32 @@ export class Box3 {
 		const halfSize = size.clone().mulScalar(0.5);
 		this.#min.copy(centre).sub(halfSize);
 		this.#max.copy(centre).add(halfSize);
+		return this;
+	}
+
+	setFromObject(object: Object3D): this {
+		this.makeEmpty();
+
+		const processObject = (object: Object3D) => {
+			if (object.isMesh && (object as Mesh).shape?.vertices?.length > 0) {
+				const mesh = object as unknown as Mesh;
+				const vertices = mesh.shape.vertices;
+
+				object.updateWorldMatrix(false, false);
+
+				for (const vertex of vertices) {
+					const worldVertex = vertex.clone().applyMatrix4(object.worldMatrix);
+					this.expandByPoint(worldVertex);
+				}
+			}
+
+			for (const child of object.children) {
+				if (child.visible) processObject(child);
+			}
+		};
+
+		object.updateWorldMatrix(true, false);
+		processObject(object);
 		return this;
 	}
 
