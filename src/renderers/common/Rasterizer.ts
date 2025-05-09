@@ -75,13 +75,15 @@ export class Rasterizer {
 		this.#projectToScreen(start, _screenP1);
 		this.#projectToScreen(end, _screenP2);
 
+		const dx = Math.abs(_screenP2.x - _screenP1.x);
+		const dy = Math.abs(_screenP2.y - _screenP1.y);
+		if (dx < 1 && dy < 1) return this;
+
 		let x1 = _screenP1.x;
 		let y1 = _screenP1.y;
 		const x2 = _screenP2.x;
 		const y2 = _screenP2.y;
 
-		const dx = Math.abs(x2 - x1);
-		const dy = Math.abs(y2 - y1);
 		const sx = x1 < x2 ? 1 : -1;
 		const sy = y1 < y2 ? 1 : -1;
 		let err = dx - dy;
@@ -159,19 +161,12 @@ export class Rasterizer {
 			const cv1 = triangle[0];
 			const cv2 = triangle[1];
 			const cv3 = triangle[2];
-
 			if (cv1 && cv2 && cv3) {
 				_pv1.copy(cv1).applyMatrix4(camera.projectionMatrix);
 				_pv2.copy(cv2).applyMatrix4(camera.projectionMatrix);
 				_pv3.copy(cv3).applyMatrix4(camera.projectionMatrix);
 
-				this.drawTriangle(
-					_pv1,
-					_pv2,
-					_pv3,
-					material.color,
-					material.wireframe,
-				);
+				this.drawTriangle(_pv1, _pv2, _pv3, material.color, material.wireframe);
 			}
 		}
 	}
