@@ -368,12 +368,17 @@
   },
   "redirects": {
     "https://esm.sh/@types/three@~0.175.0/index.d.ts": "https://esm.sh/@types/three@0.175.0/index.d.ts",
-    "https://esm.sh/three": "https://esm.sh/three@0.176.0"
+    "https://esm.sh/@types/three@~0.176.0/examples/jsm/loaders/OBJLoader.d.ts": "https://esm.sh/@types/three@0.176.0/examples/jsm/loaders/OBJLoader.d.ts",
+    "https://esm.sh/@types/three@~0.176.0/index.d.ts": "https://esm.sh/@types/three@0.176.0/index.d.ts",
+    "https://esm.sh/three": "https://esm.sh/three@0.176.0",
+    "https://esm.sh/three/examples/jsm/loaders/OBJLoader.js": "https://esm.sh/three@0.176.0/examples/jsm/loaders/OBJLoader.js"
   },
   "remote": {
     "https://esm.sh/three@0.176.0": "508cbac751eb5eedaa7189b8e40972dcfa2586e7870e128ec13cfd4af5eb7b2d",
     "https://esm.sh/three@0.176.0/denonext/build/three.core.mjs": "bded52f83de7af40de5f63beb5aa8c26d1b7bf8c4a4a8a7919796c121f80f3b9",
-    "https://esm.sh/three@0.176.0/denonext/three.mjs": "45ea4482442d4fd280256a0837c594a4e43f1712d8c8b1d3aa144dba5006440c"
+    "https://esm.sh/three@0.176.0/denonext/examples/jsm/loaders/OBJLoader.mjs": "6fd2b576be2c84bf24bcf629bf7f12c527f4f3c562e80f2e1a8fb688ced91c68",
+    "https://esm.sh/three@0.176.0/denonext/three.mjs": "45ea4482442d4fd280256a0837c594a4e43f1712d8c8b1d3aa144dba5006440c",
+    "https://esm.sh/three@0.176.0/examples/jsm/loaders/OBJLoader.js": "39f124d0c7a81981d95e23009d6bf1fb97f61bb28ccc4ecfb244d7a836ca9b40"
   },
   "workspace": {
     "dependencies": [
