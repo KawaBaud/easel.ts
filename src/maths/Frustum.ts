@@ -76,6 +76,13 @@ export class Frustum {
 		return true;
 	}
 
+	makeEmpty(): this {
+		for (let i = 0; i < 6; i++) {
+			this.planes[i] = new Plane();
+		}
+		return this;
+	}
+
 	setFromProjectionMatrix(m: Matrix4): this {
 		const me = m.elements;
 		const planes = this.planes;
