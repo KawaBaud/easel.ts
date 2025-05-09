@@ -1,9 +1,9 @@
-// deno-lint-ignore no-external-import
-import * as THREE from "https://esm.sh/three";
-import { OBJLoader } from "https://esm.sh/three/examples/jsm/loaders/OBJLoader.js";
+import { OBJLoader } from "../src/loaders/OBJLoader.ts";
+import { EASEL } from "../src/mod.ts";
+import type { Object3D } from "../src/objects/Object3D.ts";
 
-const scene = new THREE.Scene();
-const camera = new THREE.PerspectiveCamera(
+const scene = new EASEL.Scene();
+const camera = new EASEL.PerspCamera(
 	70,
 	globalThis.innerWidth / 2 / globalThis.innerHeight,
 	0.1,
@@ -11,30 +11,30 @@ const camera = new THREE.PerspectiveCamera(
 );
 camera.position.z = 5;
 
-const renderer = new THREE.WebGLRenderer();
+const renderer = new EASEL.CanvasRenderer();
 renderer.setSize(globalThis.innerWidth / 2, globalThis.innerHeight);
 globalThis.document.body.appendChild(renderer.domElement);
 
-const material = new THREE.MeshBasicMaterial({
+const material = new EASEL.Material({
 	color: 0x00ff00,
 	wireframe: true,
 });
 
-let teapot: THREE.Object3D | null = null;
+let dotObj: Object3D | null = null;
 const loader = new OBJLoader();
 loader.load(
-	"https://raw.githubusercontent.com/McNopper/OpenGL/refs/heads/master/Binaries/teapot.obj",
+	"https://raw.githubusercontent.com/McNopper/OpenGL/refs/heads/master/Binaries/monkey.obj",
 	(object) => {
 		object.scale.setScalar(0.4);
 		object.traverse((child) => {
-			if (child instanceof THREE.Mesh) child.material = material;
+			if (child instanceof EASEL.Mesh) child.material = material;
 		});
 		object.position.sub(
-			new THREE.Box3().setFromObject(object as unknown as THREE.Object3D)
-				.getCenter(new THREE.Vector3()),
+			new EASEL.Box3().setFromObject(object)
+				.getCentre(new EASEL.Vector3()),
 		);
-		teapot = object as unknown as THREE.Group;
-		scene.add(object as unknown as THREE.Group);
+		scene.add(object);
+		dotObj = object;
 	},
 	(xhr) => console.log(`${(xhr.loaded / xhr.total * 100)}% loaded`),
 	(error) => console.error("an error occurred:", error),
@@ -42,7 +42,7 @@ loader.load(
 
 const keys: { [key: string]: boolean } = {};
 let wireframeToggle = false;
-let rotateTeapot = false;
+let rotateObject = false;
 globalThis.document.addEventListener(
 	"keydown",
 	(event) => {
@@ -52,7 +52,7 @@ globalThis.document.addEventListener(
 			wireframeToggle = true;
 		}
 		if (event.key.toLowerCase() === "r") {
-			rotateTeapot = !rotateTeapot;
+			rotateObject = !rotateObject;
 		}
 	},
 );
@@ -73,25 +73,25 @@ function animate(): void {
 	globalThis.requestAnimationFrame(animate);
 
 	// movement
-	const direction = new THREE.Vector3();
+	const direction = new EASEL.Vector3();
 	if (keys["w"]) direction.z -= 1;
 	if (keys["s"]) direction.z += 1;
 	if (keys["a"]) direction.x -= 1;
 	if (keys["d"]) direction.x += 1;
 	if (keys[" "]) direction.y += 1;
 	if (keys["shift"]) direction.y -= 1;
-	direction.normalize().applyEuler(camera.rotation).multiplyScalar(speed);
+	direction.unitize().applyEuler(camera.rotation).mulScalar(speed);
 	camera.position.add(direction);
 
 	// rotation
 	if (keys["q"]) camera.rotation.y += rotSpeed;
 	if (keys["e"]) camera.rotation.y -= rotSpeed;
 
-	// teapot rotation
-	if (rotateTeapot && teapot) {
-		teapot.rotation.y += rotSpeed;
-		teapot.rotation.x += rotSpeed * 0.7;
-		teapot.rotation.z += rotSpeed * 0.3;
+	// object rotation
+	if (rotateObject && dotObj) {
+		dotObj.rotation.y += rotSpeed;
+		dotObj.rotation.x += rotSpeed * 0.7;
+		dotObj.rotation.z += rotSpeed * 0.3;
 	}
 
 	renderer.render(scene, camera);
