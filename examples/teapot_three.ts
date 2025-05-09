@@ -20,6 +20,7 @@ const material = new THREE.MeshBasicMaterial({
 	wireframe: true,
 });
 
+let teapot: THREE.Object3D | null = null;
 const loader = new OBJLoader();
 loader.load(
 	"https://raw.githubusercontent.com/McNopper/OpenGL/refs/heads/master/Binaries/teapot.obj",
@@ -32,6 +33,7 @@ loader.load(
 			new THREE.Box3().setFromObject(object as unknown as THREE.Object3D)
 				.getCenter(new THREE.Vector3()),
 		);
+		teapot = object as unknown as THREE.Group;
 		scene.add(object as unknown as THREE.Group);
 	},
 	(xhr) => console.log(`${(xhr.loaded / xhr.total * 100)}% loaded`),
@@ -40,6 +42,7 @@ loader.load(
 
 const keys: { [key: string]: boolean } = {};
 let wireframeToggle = false;
+let rotateTeapot = false;
 globalThis.document.addEventListener(
 	"keydown",
 	(event) => {
@@ -47,6 +50,9 @@ globalThis.document.addEventListener(
 		if (event.key.toLowerCase() === "z" && !wireframeToggle) {
 			material.wireframe = !material.wireframe;
 			wireframeToggle = true;
+		}
+		if (event.key.toLowerCase() === "r") {
+			rotateTeapot = !rotateTeapot;
 		}
 	},
 );
@@ -80,6 +86,13 @@ function animate(): void {
 	// rotation
 	if (keys["q"]) camera.rotation.y += rotSpeed;
 	if (keys["e"]) camera.rotation.y -= rotSpeed;
+
+	// teapot rotation
+	if (rotateTeapot && teapot) {
+		teapot.rotation.y += rotSpeed;
+		teapot.rotation.x += rotSpeed * 0.7;
+		teapot.rotation.z += rotSpeed * 0.3;
+	}
 
 	renderer.render(scene, camera);
 }

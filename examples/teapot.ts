@@ -1,5 +1,6 @@
 import { OBJLoader } from "../src/loaders/OBJLoader.ts";
 import { EASEL } from "../src/mod.ts";
+import type { Object3D } from "../src/objects/Object3D.ts";
 
 const scene = new EASEL.Scene();
 const camera = new EASEL.PerspCamera(
@@ -19,6 +20,7 @@ const material = new EASEL.Material({
 	wireframe: true,
 });
 
+let teapot: Object3D | null = null;
 const loader = new OBJLoader();
 loader.load(
 	"https://raw.githubusercontent.com/McNopper/OpenGL/refs/heads/master/Binaries/teapot.obj",
@@ -32,6 +34,7 @@ loader.load(
 				.getCentre(new EASEL.Vector3()),
 		);
 		scene.add(object);
+		teapot = object;
 	},
 	(xhr) => console.log(`${(xhr.loaded / xhr.total * 100)}% loaded`),
 	(error) => console.error("an error occurred:", error),
@@ -39,6 +42,7 @@ loader.load(
 
 const keys: { [key: string]: boolean } = {};
 let wireframeToggle = false;
+let rotateTeapot = false;
 globalThis.document.addEventListener(
 	"keydown",
 	(event) => {
@@ -46,6 +50,9 @@ globalThis.document.addEventListener(
 		if (event.key.toLowerCase() === "z" && !wireframeToggle) {
 			material.wireframe = !material.wireframe;
 			wireframeToggle = true;
+		}
+		if (event.key.toLowerCase() === "r") {
+			rotateTeapot = !rotateTeapot;
 		}
 	},
 );
@@ -79,6 +86,13 @@ function animate(): void {
 	// rotation
 	if (keys["q"]) camera.rotation.y += rotSpeed;
 	if (keys["e"]) camera.rotation.y -= rotSpeed;
+
+	// teapot rotation
+	if (rotateTeapot && teapot) {
+		teapot.rotation.y += rotSpeed;
+		teapot.rotation.x += rotSpeed * 0.7;
+		teapot.rotation.z += rotSpeed * 0.3;
+	}
 
 	renderer.render(scene, camera);
 }
