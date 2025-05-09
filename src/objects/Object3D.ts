@@ -1,4 +1,3 @@
-import { Camera } from "../cameras/Camera.ts";
 import { Euler } from "../maths/Euler.ts";
 import { Matrix4 } from "../maths/Matrix4.ts";
 import { Quaternion } from "../maths/Quaternion.ts";
@@ -54,7 +53,7 @@ export class Object3D {
 	}
 
 	get isCamera(): boolean {
-		return this instanceof Camera;
+		return ("projectionMatrix" in this) && ("matrixWorldInverse" in this);
 	}
 
 	get isMesh(): boolean {
