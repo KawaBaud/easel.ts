@@ -68,6 +68,7 @@ globalThis.document.addEventListener(
 
 const speed = 0.05 / 2;
 const rotSpeed = 0.02 / 2;
+const spinSpeed = 0.005 / 2;
 
 function animate(): void {
 	globalThis.requestAnimationFrame(animate);
@@ -89,9 +90,9 @@ function animate(): void {
 
 	// object rotation
 	if (rotateObject && dotObj) {
-		dotObj.rotation.y += rotSpeed;
-		dotObj.rotation.x += rotSpeed * 0.7;
-		dotObj.rotation.z += rotSpeed * 0.3;
+		dotObj.rotation.y += spinSpeed;
+		dotObj.rotation.x += spinSpeed * 0.7;
+		dotObj.rotation.z += spinSpeed * 0.3;
 	}
 
 	renderer.render(scene, camera);
