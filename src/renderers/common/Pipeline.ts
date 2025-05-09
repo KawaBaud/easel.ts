@@ -3,7 +3,7 @@ import type { Object3D } from "../../objects/Object3D.ts";
 import type { Scene } from "../../scenes/Scene.ts";
 import { RenderList } from "../common/RenderList.ts";
 
-export class Pipeline {
+export abstract class Pipeline {
 	renderList = new RenderList();
 
 	cull(scene: Scene, _camera: Camera): this {

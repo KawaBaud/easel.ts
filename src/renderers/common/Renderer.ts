@@ -8,7 +8,7 @@ export interface RendererOptions {
 	alpha?: boolean;
 }
 
-export class Renderer {
+export abstract class Renderer {
 	width: number;
 	height: number;
 	alpha: boolean;
