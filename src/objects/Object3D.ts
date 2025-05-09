@@ -1,7 +1,9 @@
+import { Camera } from "../cameras/Camera.ts";
 import { Euler } from "../maths/Euler.ts";
 import { Matrix4 } from "../maths/Matrix4.ts";
 import { Quaternion } from "../maths/Quaternion.ts";
 import { Vector3 } from "../maths/Vector3.ts";
+import { Mesh } from "./Mesh.ts";
 
 const _position = new Vector3();
 const _m1 = new Matrix4();
@@ -52,7 +54,11 @@ export class Object3D {
 	}
 
 	get isCamera(): boolean {
-		return ("projectionMatrix" in this) && ("matrixWorldInverse" in this);
+		return this instanceof Camera;
+	}
+
+	get isMesh(): boolean {
+		return this instanceof Mesh;
 	}
 
 	add(object: Object3D): this {
@@ -120,6 +126,11 @@ export class Object3D {
 			? (object.parent = null, this.children.splice(index, 1))
 			: null;
 		return this;
+	}
+
+	traverse(callback: (node: Object3D) => void): void {
+		callback(this);
+		for (const child of this.children) child.traverse(callback);
 	}
 
 	updateMatrix(): void {
