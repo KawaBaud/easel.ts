@@ -4,7 +4,7 @@ import { Mesh } from "../../objects/Mesh.ts";
 import type { Scene } from "../../scenes/Scene.ts";
 import { ShapeUtils } from "../../shapes/ShapeUtils.ts";
 import "../../types.ts";
-import { ClippingContext } from "./ClippingContext.ts";
+import { FrustumProcessor } from "./FrustumProcessor.ts";
 import { Pipeline } from "./Pipeline.ts";
 import type { Rasterizer } from "./Rasterizer.ts";
 import { RenderTarget } from "./RenderTarget.ts";
@@ -19,7 +19,7 @@ const _worldV3 = new Vector3();
 export class RenderPipeline extends Pipeline {
 	renderTarget: RenderTarget;
 
-	#clippingContext = new ClippingContext();
+	#frustumProcessor = new FrustumProcessor();
 
 	constructor(width?: number, height?: number) {
 		super();
@@ -29,7 +29,7 @@ export class RenderPipeline extends Pipeline {
 	render(scene: Scene, camera: Camera, rasterizer: Rasterizer): this {
 		camera.updateMatrixWorld();
 
-		this.#clippingContext.setFromCamera(camera);
+		this.#frustumProcessor.setFromCamera(camera);
 
 		this.cull(scene, camera);
 
@@ -80,7 +80,7 @@ export class RenderPipeline extends Pipeline {
 		_worldV2.copy(_v2).applyMatrix4(camera.matrixWorldInverse);
 		_worldV3.copy(_v3).applyMatrix4(camera.matrixWorldInverse);
 
-		const clippedTriangles = this.#clippingContext
+		const clippedTriangles = this.#frustumProcessor
 			.clipTriangle(_worldV1, _worldV2, _worldV3);
 		if (clippedTriangles.length === 0) return;
 		for (const triangle of clippedTriangles) {

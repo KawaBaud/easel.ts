@@ -10,7 +10,7 @@ const _v3 = new Vector3();
 const _v4 = new Vector3();
 const _v5 = new Vector3();
 
-export class ClippingContext {
+export class FrustumProcessor {
 	frustum = new Frustum();
 
 	clipLine(start: Vector3, end: Vector3): Vector3[] | null {
@@ -214,11 +214,7 @@ export class ClippingContext {
 
 		const a = !p1Behind ? p2 : !p2Behind ? p3 : p1,
 			b = !p1Behind ? p3 : !p2Behind ? p1 : p2,
-			c = !p1Behind
-				? p1
-				: !p2Behind
-				? p2
-				: p3; /* a, b are behind, c is in front */
+			c = !p1Behind ? p1 : !p2Behind ? p2 : p3;
 		const da = !p1Behind ? d2 : !p2Behind ? d3 : d1,
 			db = !p1Behind ? d3 : !p2Behind ? d1 : d2,
 			dc = !p1Behind ? d1 : !p2Behind ? d2 : d3;
