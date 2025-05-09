@@ -372,6 +372,21 @@ Deno.test("Vector3: set", () => {
 	compareVectors(a, threeA, "set(x, y, z)");
 });
 
+Deno.test("Vector3: setFromMatrixPosition", () => {
+	const m = new Matrix4().makeTranslation(1, 2, 3);
+	const threeM = new ThreeMatrix4().makeTranslation(1, 2, 3);
+
+	const a = new Vector3().setFromMatrixPosition(m);
+	const threeA = new ThreeVector3().setFromMatrixPosition(threeM);
+	compareVectors(a, threeA, "setFromMatrixPosition");
+});
+
+Deno.test("Vector3: setScalar", () => {
+	const a = new Vector3().setScalar(4);
+	const threeA = new ThreeVector3().setScalar(4);
+	compareVectors(a, threeA, "setScalar");
+});
+
 Deno.test("Vector3: sub", () => {
 	const b = new Vector3(1, 2, 3);
 	const a = new Vector3(10, 8, 6).sub(b);
