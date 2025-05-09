@@ -17,10 +17,12 @@ import { Vector2 } from "./maths/Vector2.ts";
 import { Vector3 } from "./maths/Vector3.ts";
 import { Vector4 } from "./maths/Vector4.ts";
 import { Mesh } from "./objects/Mesh.ts";
+import { Object3D } from "./objects/Object3D.ts";
 import { CanvasRenderer } from "./renderers/CanvasRenderer.ts";
 import { Scene } from "./scenes/Scene.ts";
 import { CubeShape } from "./shapes/CubeShape.ts";
 import { PlaneShape } from "./shapes/PlaneShape.ts";
+import { Shape } from "./shapes/Shape.ts";
 
 export const EASEL = {
 	/* cameras */
@@ -53,6 +55,7 @@ export const EASEL = {
 
 	/* objects */
 	Mesh,
+	Object3D,
 
 	/* renderers */
 	CanvasRenderer,
@@ -63,4 +66,5 @@ export const EASEL = {
 	/* shapes */
 	CubeShape,
 	PlaneShape,
+	Shape,
 };
