@@ -216,6 +216,13 @@ export class Vector3 {
 		return this;
 	}
 
+	setScalar(scalar: number): this {
+		this.x = scalar;
+		this.y = scalar;
+		this.z = scalar;
+		return this;
+	}
+
 	sub(v: Vector3): this {
 		this.x -= v.x;
 		this.y -= v.y;
