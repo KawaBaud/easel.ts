@@ -3,6 +3,7 @@ import { Frustum } from "../../maths/Frustum.ts";
 import { MathUtils } from "../../maths/MathUtils.ts";
 import { Vector3 } from "../../maths/Vector3.ts";
 import "../../types.ts";
+import { Processor } from "./Processor.ts";
 
 const _v1 = new Vector3();
 const _v2 = new Vector3();
@@ -10,8 +11,13 @@ const _v3 = new Vector3();
 const _v4 = new Vector3();
 const _v5 = new Vector3();
 
-export class FrustumProcessor {
+export class FrustumProcessor extends Processor {
 	frustum = new Frustum();
+
+	override reset(): this {
+		this.frustum.makeEmpty();
+		return this;
+	}
 
 	clipLine(start: Vector3, end: Vector3): Vector3[] | null {
 		const INSIDE = 0b000000;
