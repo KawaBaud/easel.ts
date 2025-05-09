@@ -50,8 +50,8 @@
 		async function loadModules() {
 			try {
 				const [ourModule, threeModule] = await Promise.all([
-					import("./examples/3d_1.ts"),
-					import("./examples/three_3d_1.ts"),
+					import("./examples/teapot.ts"),
+					import("./examples/teapot_three.ts"),
 				]);
 
 				globalThis.setTimeout(() => {
