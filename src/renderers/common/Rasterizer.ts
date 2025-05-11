@@ -220,6 +220,7 @@ export class Rasterizer {
 		for (let y = startY; y <= endY; y++) {
 			const sx = x1 + (y - y1) * edge0;
 			const ex = isTopTriangle ? x2 + (y - y2) * edge1 : x1 + (y - y1) * edge1;
+
 			this.#fillScanline(y, sx, ex, color);
 		}
 	}
