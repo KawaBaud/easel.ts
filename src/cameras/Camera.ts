@@ -16,6 +16,7 @@ export class Camera extends Object3D {
 
 	override copy(source: Camera): this {
 		super.copy(source);
+
 		this.projectionMatrix.copy(source.projectionMatrix);
 		this.matrixWorldInverse.copy(source.matrixWorldInverse);
 		return this;
@@ -23,6 +24,7 @@ export class Camera extends Object3D {
 
 	updateMatrixWorld(force = false): void {
 		super.updateWorldMatrix(force, false);
+
 		this.matrixWorldInverse.copy(this.worldMatrix).invert();
 	}
 

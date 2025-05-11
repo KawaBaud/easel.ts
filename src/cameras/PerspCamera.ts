@@ -68,6 +68,7 @@ export class PerspCamera extends Camera {
 
 	override copy(source: PerspCamera): this {
 		super.copy(source);
+
 		this.fov = source.fov;
 		this.aspect = source.aspect;
 		this.near = source.near;

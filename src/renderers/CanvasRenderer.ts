@@ -7,11 +7,13 @@ import { RenderPipeline } from "./common/RenderPipeline.ts";
 import { Renderer, type RendererOptions } from "./common/Renderer.ts";
 
 export class CanvasRenderer extends Renderer {
+	renderTarget: CanvasRenderTarget;
 	domElement: HTMLCanvasElement;
 	context: CanvasRenderingContext2D;
+
 	rasterizer: Rasterizer;
 	pipeline: RenderPipeline;
-	renderTarget: CanvasRenderTarget;
+
 	#clearColor = new Color(0, 0, 0);
 
 	constructor(options?: RendererOptions) {
@@ -26,7 +28,6 @@ export class CanvasRenderer extends Renderer {
 			height: this.height,
 			canvas: this.domElement,
 		});
-
 		this.pipeline = new RenderPipeline(this.width, this.height);
 	}
 
@@ -39,6 +40,7 @@ export class CanvasRenderer extends Renderer {
 		this.pipeline.render(scene, camera, this.rasterizer);
 
 		this.rasterizer.endFrame();
+
 		return this;
 	}
 
@@ -46,6 +48,7 @@ export class CanvasRenderer extends Renderer {
 		super.setSize(width, height);
 
 		this.renderTarget.setSize(width, height);
+
 		this.rasterizer.setSize(width, height);
 		this.pipeline.setSize(width, height);
 

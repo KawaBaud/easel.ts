@@ -4,6 +4,7 @@ import { RenderTarget } from "./common/RenderTarget.ts";
 export class CanvasRenderTarget extends RenderTarget {
 	canvas: HTMLCanvasElement;
 	ctx: CanvasRenderingContext2D;
+
 	imageData: ImageData;
 	data: Uint8ClampedArray;
 

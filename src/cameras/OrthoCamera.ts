@@ -94,6 +94,7 @@ export class OrthoCamera extends Camera {
 
 	override copy(source: OrthoCamera): this {
 		super.copy(source);
+
 		this.left = source.left;
 		this.right = source.right;
 		this.top = source.top;

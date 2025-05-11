@@ -39,6 +39,7 @@ export class Mesh extends Object3D {
 
 	override copy(source: Mesh): this {
 		super.copy(source);
+
 		this.shape = source.shape.clone();
 		this.material = source.material.clone();
 		return this;
