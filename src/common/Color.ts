@@ -6,6 +6,15 @@ export type HSL = [h: number, s: number, l: number];
 export type RGB = [r: number, g: number, b: number];
 
 export class Color {
+	static toRGB(color: ColorValue): { r: number; g: number; b: number } {
+		const tempColor = new Color(color);
+		return {
+			r: MathUtils.fastTrunc(tempColor.r * 255),
+			g: MathUtils.fastTrunc(tempColor.g * 255),
+			b: MathUtils.fastTrunc(tempColor.b * 255),
+		};
+	}
+
 	r = 1;
 	g = 1;
 	b = 1;
