@@ -258,14 +258,8 @@ export class Rasterizer {
 			this.width - 1,
 		);
 
-		const rgb = Color.toRGB(color);
-
 		for (let x = startX; x <= endX; x++) {
-			const idx = Rasterizer.#getPixelIndex(x, y, this.width);
-			this.data[idx] = rgb.r;
-			this.data[idx + 1] = rgb.g;
-			this.data[idx + 2] = rgb.b;
-			this.data[idx + 3] = 255;
+			this.setPixel(x, y, color);
 		}
 	}
 
