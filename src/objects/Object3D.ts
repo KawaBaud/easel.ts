@@ -2,7 +2,6 @@ import { Euler } from "../maths/Euler.ts";
 import { Matrix4 } from "../maths/Matrix4.ts";
 import { Quaternion } from "../maths/Quaternion.ts";
 import { Vector3 } from "../maths/Vector3.ts";
-import { Mesh } from "./Mesh.ts";
 
 const _position = new Vector3();
 const _m1 = new Matrix4();
@@ -57,7 +56,7 @@ export class Object3D {
 	}
 
 	get isMesh(): boolean {
-		return this instanceof Mesh;
+		return Object.getPrototypeOf(this).constructor.name === "Mesh";
 	}
 
 	add(object: Object3D): this {
