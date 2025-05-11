@@ -1,4 +1,4 @@
-import { Material } from "../materials/Material.ts";
+import { SimpleMaterial } from "../materials/SimpleMaterial.ts";
 import { Vector3 } from "../maths/Vector3.ts";
 import { Mesh } from "../objects/Mesh.ts";
 import { Object3D } from "../objects/Object3D.ts";
@@ -70,7 +70,7 @@ export class OBJLoader {
 		shape.vertices = this.#vertices;
 		shape.indices = this.#indices;
 
-		const mesh = new Mesh(shape, new Material());
+		const mesh = new Mesh(shape, new SimpleMaterial());
 		return new Object3D().add(mesh);
 	}
 
