@@ -39,7 +39,6 @@ export abstract class Renderer {
 	setSize(width: number, height: number): this {
 		this.width = width;
 		this.height = height;
-
 		return this;
 	}
 }
