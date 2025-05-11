@@ -57,7 +57,7 @@ globalThis.document.addEventListener(
 	(event) => {
 		keys[event.key.toLowerCase()] = true;
 		if (event.key.toLowerCase() === "z" && !wireframeToggle) {
-			simpleMaterial.wireframe = !simpleMaterial.wireframe;
+			currentMaterial.wireframe = !currentMaterial.wireframe;
 			wireframeToggle = true;
 		}
 		if (event.key.toLowerCase() === "f" && !flatShadingToggle) {
@@ -91,7 +91,7 @@ function updateMaterialShading() {
 	const newMaterial = flatShading
 		? new EASEL.SimpleMaterial({
 			color: 0x00ff00,
-			flatShaded: true,
+			flatShading: true,
 		})
 		: new EASEL.SimpleMaterial({
 			color: 0x00ff00,
