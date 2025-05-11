@@ -13,7 +13,7 @@ const renderer = new EASEL.CanvasRenderer();
 renderer.setSize(globalThis.innerWidth / 2, globalThis.innerHeight);
 globalThis.document.body.appendChild(renderer.domElement);
 
-const shape = new EASEL.CubeShape(1, 1, 1);
+const shape = new EASEL.CubeShape();
 const material = new EASEL.Material({
 	color: 0x00ff00,
 	wireframe: true,
