@@ -1,13 +1,13 @@
-import type { ColorValue } from "../common/Color.ts";
+import type { ColorType } from "../common/Color.ts";
 
 export interface MaterialOptions {
-	color?: ColorValue;
+	color?: ColorType;
 	wireframe?: boolean;
 	backfaceCulled?: boolean;
 }
 
 export class Material {
-	color: ColorValue;
+	color: ColorType;
 	wireframe: boolean;
 	backfaceCulled = true;
 
