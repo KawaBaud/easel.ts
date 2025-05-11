@@ -12,8 +12,7 @@ export class Scene extends Object3D {
 	override copy(source: Scene): this {
 		super.copy(source);
 
-		if (source.background !== null) this.background = source.background;
-
+		source.background !== null ? this.background = source.background : null;
 		return this;
 	}
 
