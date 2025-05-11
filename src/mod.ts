@@ -1,7 +1,11 @@
+import { Camera } from "./cameras/Camera.ts";
 import { OrthoCamera } from "./cameras/OrthoCamera.ts";
 import { PerspCamera } from "./cameras/PerspCamera.ts";
 import { Color } from "./common/Color.ts";
+import { DirectionalLight } from "./lights/DirectionalLight.ts";
+import { Light } from "./lights/Light.ts";
 import { OBJLoader } from "./loaders/OBJLoader.ts";
+import { BasicMaterial } from "./materials/BasicMaterial.ts";
 import { Material } from "./materials/Material.ts";
 import { Box3 } from "./maths/Box3.ts";
 import { Euler } from "./maths/Euler.ts";
@@ -19,23 +23,38 @@ import { Vector4 } from "./maths/Vector4.ts";
 import { Mesh } from "./objects/Mesh.ts";
 import { Object3D } from "./objects/Object3D.ts";
 import { CanvasRenderer } from "./renderers/CanvasRenderer.ts";
+import { CanvasRenderTarget } from "./renderers/CanvasRenderTarget.ts";
+import { CanvasUtils } from "./renderers/CanvasUtils.ts";
+import { ClippingContext } from "./renderers/common/ClippingContext.ts";
+import { CullingContext } from "./renderers/common/CullingContext.ts";
+import { Pipeline } from "./renderers/common/Pipeline.ts";
+import { RenderList } from "./renderers/common/RenderList.ts";
+import { RenderPipeline } from "./renderers/common/RenderPipeline.ts";
+import { RenderTarget } from "./renderers/common/RenderTarget.ts";
 import { Scene } from "./scenes/Scene.ts";
 import { CubeShape } from "./shapes/CubeShape.ts";
 import { PlaneShape } from "./shapes/PlaneShape.ts";
 import { Shape } from "./shapes/Shape.ts";
+import { ShapeUtils } from "./shapes/ShapeUtils.ts";
 
 export const EASEL = {
 	/* cameras */
+	Camera,
 	OrthoCamera,
 	PerspCamera,
 
 	/* common */
 	Color,
 
+	/* lights */
+	DirectionalLight,
+	Light,
+
 	/* loaders */
 	OBJLoader,
 
 	/* materials */
+	BasicMaterial,
 	Material,
 
 	/* maths */
@@ -58,7 +77,15 @@ export const EASEL = {
 	Object3D,
 
 	/* renderers */
+	ClippingContext,
+	CullingContext,
+	Pipeline,
+	RenderList,
+	RenderPipeline,
+	RenderTarget,
 	CanvasRenderer,
+	CanvasRenderTarget,
+	CanvasUtils,
 
 	/* scenes */
 	Scene,
@@ -67,4 +94,5 @@ export const EASEL = {
 	CubeShape,
 	PlaneShape,
 	Shape,
+	ShapeUtils,
 };
