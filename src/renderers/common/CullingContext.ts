@@ -27,8 +27,17 @@ export class CullingContext {
 	}
 
 	isBackFace(v1: Vector3, v2: Vector3, v3: Vector3): boolean {
+		if (!this.#camera) return false;
+
 		this.calculateNormal(v1, v2, v3);
-		return _normal.z < 0;
+
+		const centreX = (v1.x + v2.x + v3.x) / 3;
+		const centreY = (v1.y + v2.y + v3.y) / 3;
+		const centreZ = (v1.z + v2.z + v3.z) / 3;
+
+		const dotProduct = (_normal.x * -centreX) + (_normal.y * -centreY) +
+			(_normal.z * -centreZ);
+		return dotProduct < 0;
 	}
 
 	isFrontFace(v1: Vector3, v2: Vector3, v3: Vector3): boolean {
