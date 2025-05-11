@@ -2,7 +2,7 @@ import { Material, type MaterialOptions } from "./Material.ts";
 
 export interface SimpleMaterialOptions extends MaterialOptions {
 	wireframe?: boolean;
-	flatShaded?: boolean;
+	flatShading?: boolean;
 }
 
 export class SimpleMaterial extends Material {
@@ -12,7 +12,7 @@ export class SimpleMaterial extends Material {
 	constructor(options: SimpleMaterialOptions = {}) {
 		super(options);
 		this.wireframe = options.wireframe ?? false;
-		this.flatShaded = options.flatShaded ?? false;
+		this.flatShaded = options.flatShading ?? false;
 	}
 
 	override clone(): SimpleMaterial {
