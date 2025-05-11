@@ -5,8 +5,8 @@ import { Color } from "./common/Color.ts";
 import { DirectionalLight } from "./lights/DirectionalLight.ts";
 import { Light } from "./lights/Light.ts";
 import { OBJLoader } from "./loaders/OBJLoader.ts";
-import { BasicMaterial } from "./materials/BasicMaterial.ts";
 import { Material } from "./materials/Material.ts";
+import { SimpleMaterial } from "./materials/SimpleMaterial.ts";
 import { Box3 } from "./maths/Box3.ts";
 import { Euler } from "./maths/Euler.ts";
 import { Frustum } from "./maths/Frustum.ts";
@@ -54,8 +54,8 @@ export const EASEL = {
 	OBJLoader,
 
 	/* materials */
-	BasicMaterial,
 	Material,
+	SimpleMaterial,
 
 	/* maths */
 	Box3,
