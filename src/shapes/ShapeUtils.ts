@@ -1,7 +1,20 @@
-import type { Vector3 } from "../maths/Vector3.ts";
+import { Vector3 } from "../maths/Vector3.ts";
 import "../types.ts";
 
 export class ShapeUtils {
+	static calculateNormal(
+		v1: Vector3,
+		v2: Vector3,
+		v3: Vector3,
+		target = new Vector3(),
+	): Vector3 {
+		const edge1 = new Vector3().subVectors(v2, v1);
+		const edge2 = new Vector3().subVectors(v3, v1);
+
+		target.crossVectors(edge1, edge2);
+		return target.lengthSq ? target.unitize() : target.set(0, 0, 1);
+	}
+
 	static isConvex(
 		a: Vector3,
 		b: Vector3,
