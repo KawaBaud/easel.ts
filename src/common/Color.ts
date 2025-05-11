@@ -17,18 +17,18 @@ export type RGBA = RGB & { a: number };
 export type RGBArray = [r: number, g: number, b: number];
 
 export class Color {
-	static readonly #HUE_SCALE = 360;
-	static readonly #SATURATION_SCALE = 100;
-	static readonly #LIGHTNESS_SCALE = 100;
+	static readonly HUE_SCALE = 360;
+	static readonly SATURATION_SCALE = 100;
+	static readonly LIGHTNESS_SCALE = 100;
 
-	static readonly #RGB_SCALE = 255;
+	static readonly RGB_SCALE = 255;
 
 	static toRGB(color: ColorType): RGB {
 		const tempColor = new Color(color);
 		return {
-			r: MathUtils.fastTrunc(tempColor.r * Color.#RGB_SCALE),
-			g: MathUtils.fastTrunc(tempColor.g * Color.#RGB_SCALE),
-			b: MathUtils.fastTrunc(tempColor.b * Color.#RGB_SCALE),
+			r: MathUtils.fastTrunc(tempColor.r * Color.RGB_SCALE),
+			g: MathUtils.fastTrunc(tempColor.g * Color.RGB_SCALE),
+			b: MathUtils.fastTrunc(tempColor.b * Color.RGB_SCALE),
 		};
 	}
 
@@ -41,9 +41,9 @@ export class Color {
 	}
 
 	get hex(): number {
-		return ((this.r * Color.#RGB_SCALE) << 16) ^
-			((this.g * Color.#RGB_SCALE) << 8) ^
-			((this.b * Color.#RGB_SCALE) << 0);
+		return ((this.r * Color.RGB_SCALE) << 16) ^
+			((this.g * Color.RGB_SCALE) << 8) ^
+			((this.b * Color.RGB_SCALE) << 0);
 	}
 
 	get hexString(): string {
@@ -79,9 +79,9 @@ export class Color {
 	get hslString(): string {
 		const hsl = this.hsl;
 
-		const h = MathUtils.fastTrunc(hsl.h * Color.#HUE_SCALE);
-		const s = MathUtils.fastTrunc(hsl.s * Color.#SATURATION_SCALE);
-		const l = MathUtils.fastTrunc(hsl.l * Color.#LIGHTNESS_SCALE);
+		const h = MathUtils.fastTrunc(hsl.h * Color.HUE_SCALE);
+		const s = MathUtils.fastTrunc(hsl.s * Color.SATURATION_SCALE);
+		const l = MathUtils.fastTrunc(hsl.l * Color.LIGHTNESS_SCALE);
 		return `hsl(${h},${s}%,${l}%)`;
 	}
 
@@ -133,9 +133,9 @@ export class Color {
 		}
 		hex = MathUtils.fastTrunc(hex);
 
-		this.r = (hex >> 16) / Color.#RGB_SCALE;
-		this.g = (hex >> 8 & Color.#RGB_SCALE) / Color.#RGB_SCALE;
-		this.b = (hex & Color.#RGB_SCALE) / Color.#RGB_SCALE;
+		this.r = (hex >> 16) / Color.RGB_SCALE;
+		this.g = (hex >> 8 & Color.RGB_SCALE) / Color.RGB_SCALE;
+		this.b = (hex & Color.RGB_SCALE) / Color.RGB_SCALE;
 		return this;
 	}
 
@@ -164,7 +164,7 @@ export class Color {
 	}
 
 	setRGB(r: number, g: number, b: number): this {
-		if (r > Color.#RGB_SCALE || g > Color.#RGB_SCALE || b > Color.#RGB_SCALE) {
+		if (r > Color.RGB_SCALE || g > Color.RGB_SCALE || b > Color.RGB_SCALE) {
 			throw new Error("EASEL.Color.setRGB(): rgb out of range");
 		}
 
@@ -201,9 +201,9 @@ export class Color {
 			);
 		}
 
-		const h = Number(values[0]) / Color.#HUE_SCALE;
-		const s = Number(values[1]) / Color.#SATURATION_SCALE;
-		const l = Number(values[2]) / Color.#LIGHTNESS_SCALE;
+		const h = Number(values[0]) / Color.HUE_SCALE;
+		const s = Number(values[1]) / Color.SATURATION_SCALE;
+		const l = Number(values[2]) / Color.LIGHTNESS_SCALE;
 
 		const q = l < 0.5 ? l * (1 + s) : l + s - l * s;
 		const p = 2 * l - q;
@@ -232,9 +232,9 @@ export class Color {
 		}
 
 		return this.setRGB(
-			Number(values[0]) / Color.#RGB_SCALE,
-			Number(values[1]) / Color.#RGB_SCALE,
-			Number(values[2]) / Color.#RGB_SCALE,
+			Number(values[0]) / Color.RGB_SCALE,
+			Number(values[1]) / Color.RGB_SCALE,
+			Number(values[2]) / Color.RGB_SCALE,
 		);
 	}
 }
