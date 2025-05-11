@@ -3,38 +3,17 @@ import { Vector3 } from "../maths/Vector3.ts";
 import { Mesh } from "../objects/Mesh.ts";
 import { Object3D } from "../objects/Object3D.ts";
 import { Shape } from "../shapes/Shape.ts";
+import { Loader } from "./Loader.ts";
 
-export class OBJLoader {
+export class OBJLoader extends Loader {
 	#positions: Vector3[] = [];
 	#normals: Vector3[] = [];
 	#uvs: number[][] = [];
 	#vertices: Vector3[] = [];
 	#indices: number[] = [];
+
 	#vertexMap: Map<string, number> = new Map();
 	#currentIndex = 0;
-
-	load(
-		url: string,
-		onLoad: (data: Object3D) => void,
-		onProgress?: (event: ProgressEvent) => void,
-		onError?: (err: unknown) => void,
-	): void {
-		fetch(url)
-			.then((response) => {
-				if (!response.ok) {
-					throw new Error(`unable to load OBJ file: ${response.statusText}`);
-				}
-				return response.text();
-			})
-			.then((text) => {
-				const object3D = this.parse(text);
-				onLoad(object3D);
-			})
-			.catch(onError)
-			.finally(() => {
-				onProgress?.(new ProgressEvent("load"));
-			});
-	}
 
 	parse(text: string): Object3D {
 		this.#reset();
@@ -146,7 +125,7 @@ export class OBJLoader {
 		if (!position) {
 			throw new Error(`invalid vertex position index: ${positionIndex + 1}`);
 		}
-		1;
+
 		const vertex = position.clone();
 
 		this.#vertices.push(vertex);
@@ -162,6 +141,7 @@ export class OBJLoader {
 		this.#uvs = [];
 		this.#vertices = [];
 		this.#indices = [];
+
 		this.#vertexMap = new Map();
 		this.#currentIndex = 0;
 	}
