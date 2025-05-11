@@ -1,5 +1,5 @@
 import type { Camera } from "../../cameras/Camera.ts";
-import type { Material } from "../../materials/Material.ts";
+import type { SimpleMaterial } from "../../materials/SimpleMaterial.ts";
 import { Vector3 } from "../../maths/Vector3.ts";
 import { ShapeUtils } from "../../shapes/ShapeUtils.ts";
 import "../../types.ts";
@@ -33,10 +33,8 @@ export class CullingContext {
 		v1: Vector3,
 		v2: Vector3,
 		v3: Vector3,
-		material: Material,
+		material: SimpleMaterial,
 	): boolean {
-		return (!material.backfaceCulled || material.wireframe)
-			? false
-			: this.isBackFace(v1, v2, v3);
+		return (!material.wireframe) ? this.isBackFace(v1, v2, v3) : false;
 	}
 }

@@ -1,8 +1,8 @@
 import type { Camera } from "../../cameras/Camera.ts";
 import { Color, type ColorType } from "../../common/Color.ts";
+import type { SimpleMaterial } from "../../materials/SimpleMaterial.ts";
 import { MathUtils } from "../../maths/MathUtils.ts";
 import { Vector3 } from "../../maths/Vector3.ts";
-import type { Mesh } from "../../objects/Mesh.ts";
 import { CanvasUtils } from "../CanvasUtils.ts";
 
 const _pv1 = new Vector3();
@@ -150,7 +150,7 @@ export class Rasterizer {
 	rasterize(
 		triangle: Vector3[],
 		camera: Camera,
-		material: Mesh["material"],
+		material: SimpleMaterial,
 	): void {
 		if (triangle.length === 3) {
 			const cv1 = triangle[0];
