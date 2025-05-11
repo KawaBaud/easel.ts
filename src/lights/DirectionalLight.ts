@@ -3,7 +3,7 @@ import { Vector3 } from "../maths/Vector3.ts";
 import { Light } from "./Light.ts";
 
 export class DirectionalLight extends Light {
-	#direction = Vector3.DOWN;
+	#direction = new Vector3(0, -1, 0);
 	#target = new Vector3();
 
 	constructor(color?: ColorType, intensity = 1) {
