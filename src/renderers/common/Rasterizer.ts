@@ -167,13 +167,8 @@ export class Rasterizer {
 	}
 
 	setPixel(x: number, y: number, color: ColorType): this {
-		const rgb = Color.toRGB(color);
 		const idx = Rasterizer.#getPixelIndex(x, y, this.width);
-
-		this.data[idx] = rgb.r;
-		this.data[idx + 1] = rgb.g;
-		this.data[idx + 2] = rgb.b;
-		this.data[idx + 3] = Color.RGB_SCALE;
+		this.#setPixelData(idx, color);
 		return this;
 	}
 
@@ -266,6 +261,14 @@ export class Rasterizer {
 		const clippedX = MathUtils.clamp(screenX, 0, this.width - 1);
 		const clippedY = MathUtils.clamp(screenY, 0, this.height - 1);
 		return target.set(clippedX, clippedY, vertex.z);
+	}
+
+	#setPixelData(idx: number, color: ColorType): void {
+		const rgb = Color.toRGB(color);
+		this.data[idx] = rgb.r;
+		this.data[idx + 1] = rgb.g;
+		this.data[idx + 2] = rgb.b;
+		this.data[idx + 3] = Color.RGB_SCALE;
 	}
 
 	#sortVerticesByY(
