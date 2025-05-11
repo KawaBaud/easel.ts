@@ -54,15 +54,11 @@ export class Rasterizer {
 	}
 
 	clear(color: ColorType): this {
-		const rgb = Color.toRGB(color);
-
-		for (let i = 0; i < this.data.length; i += 4) {
-			this.data[i] = rgb.r;
-			this.data[i + 1] = rgb.g;
-			this.data[i + 2] = rgb.b;
-			this.data[i + 3] = 255; /* alpha */
+		for (let y = 0; y < this.height; y++) {
+			for (let x = 0; x < this.width; x++) {
+				this.setPixel(x, y, color);
+			}
 		}
-
 		return this;
 	}
 
@@ -177,7 +173,7 @@ export class Rasterizer {
 		this.data[idx] = rgb.r;
 		this.data[idx + 1] = rgb.g;
 		this.data[idx + 2] = rgb.b;
-		this.data[idx + 3] = 255;
+		this.data[idx + 3] = Color.RGB_SCALE;
 		return this;
 	}
 
