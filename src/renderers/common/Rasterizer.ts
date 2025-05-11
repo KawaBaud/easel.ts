@@ -5,7 +5,6 @@ import { Vector3 } from "../../maths/Vector3.ts";
 import type { Mesh } from "../../objects/Mesh.ts";
 import { CanvasUtils } from "../CanvasUtils.ts";
 
-const _color = new Color(0, 0, 0);
 const _pv1 = new Vector3();
 const _pv2 = new Vector3();
 const _pv3 = new Vector3();
@@ -21,6 +20,10 @@ export interface RasterizerOptions {
 }
 
 export class Rasterizer {
+	static #getPixelIndex(x: number, y: number, width: number): number {
+		return (y * width + x) << 2;
+	}
+
 	width: number;
 	height: number;
 	canvas: HTMLCanvasElement;
@@ -51,15 +54,12 @@ export class Rasterizer {
 	}
 
 	clear(color: ColorValue): this {
-		_color.parse(color);
-		const r = MathUtils.fastTrunc(_color.r * 255);
-		const g = MathUtils.fastTrunc(_color.g * 255);
-		const b = MathUtils.fastTrunc(_color.b * 255);
+		const rgb = Color.toRGB(color);
 
 		for (let i = 0; i < this.data.length; i += 4) {
-			this.data[i] = r;
-			this.data[i + 1] = g;
-			this.data[i + 2] = b;
+			this.data[i] = rgb.r;
+			this.data[i + 1] = rgb.g;
+			this.data[i + 2] = rgb.b;
 			this.data[i + 3] = 255; /* alpha */
 		}
 
@@ -172,17 +172,13 @@ export class Rasterizer {
 	}
 
 	setPixel(x: number, y: number, color: ColorValue): this {
-		_color.parse(color);
-		const r = MathUtils.fastTrunc(_color.r * 255);
-		const g = MathUtils.fastTrunc(_color.g * 255);
-		const b = MathUtils.fastTrunc(_color.b * 255);
+		const rgb = Color.toRGB(color);
+		const idx = Rasterizer.#getPixelIndex(x, y, this.width);
 
-		const idx = (y * this.width + x) << 2;
-		this.data[idx] = r;
-		this.data[idx + 1] = g;
-		this.data[idx + 2] = b;
+		this.data[idx] = rgb.r;
+		this.data[idx + 1] = rgb.g;
+		this.data[idx + 2] = rgb.b;
 		this.data[idx + 3] = 255;
-
 		return this;
 	}
 
@@ -195,7 +191,6 @@ export class Rasterizer {
 
 		this.imageData = this.ctx.createImageData(width, height);
 		this.data = this.imageData.data;
-
 		return this;
 	}
 
@@ -264,18 +259,13 @@ export class Rasterizer {
 			this.width - 1,
 		);
 
-		_color.parse(color);
-		const r = MathUtils.fastTrunc(_color.r * 255);
-		const g = MathUtils.fastTrunc(_color.g * 255);
-		const b = MathUtils.fastTrunc(_color.b * 255);
-
-		const rowOffset = y * this.width * 4;
+		const rgb = Color.toRGB(color);
 
 		for (let x = startX; x <= endX; x++) {
-			const idx = rowOffset + x * 4;
-			this.data[idx] = r;
-			this.data[idx + 1] = g;
-			this.data[idx + 2] = b;
+			const idx = Rasterizer.#getPixelIndex(x, y, this.width);
+			this.data[idx] = rgb.r;
+			this.data[idx + 1] = rgb.g;
+			this.data[idx + 2] = rgb.b;
 			this.data[idx + 3] = 255;
 		}
 	}
