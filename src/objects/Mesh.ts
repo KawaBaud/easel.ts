@@ -11,6 +11,7 @@ export class Mesh extends Object3D {
 		material: Material,
 	) {
 		super();
+
 		this.#shape = shape;
 		this.#material = material;
 		this.updateMatrix();

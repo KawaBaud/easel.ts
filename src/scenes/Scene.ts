@@ -6,6 +6,7 @@ export class Scene extends Object3D {
 
 	constructor() {
 		super();
+
 		this.name = "Scene";
 	}
 

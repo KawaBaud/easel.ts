@@ -14,6 +14,7 @@ export class PerspCamera extends Camera {
 		far = 2000,
 	) {
 		super();
+
 		this.name = "PerspCamera";
 		this.fov = fov;
 		this.aspect = aspect;

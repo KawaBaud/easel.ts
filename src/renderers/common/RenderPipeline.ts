@@ -25,6 +25,7 @@ export class RenderPipeline extends Pipeline {
 
 	constructor(width?: number, height?: number) {
 		super();
+
 		this.renderTarget = new RenderTarget(width, height);
 	}
 

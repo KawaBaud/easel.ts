@@ -7,6 +7,7 @@ export class Camera extends Object3D {
 
 	constructor() {
 		super();
+
 		this.name = "Camera";
 	}
 

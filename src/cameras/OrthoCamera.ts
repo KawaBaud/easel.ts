@@ -17,6 +17,7 @@ export class OrthoCamera extends Camera {
 		far = 2000,
 	) {
 		super();
+
 		this.name = "OrthoCamera";
 		this.left = left;
 		this.right = right;
