@@ -1,17 +1,34 @@
 import { MathUtils } from "../maths/MathUtils.ts";
 
-export type ColorValue = string | number | Color;
+export type ColorType = string | number | Color;
 
-export type HSL = [h: number, s: number, l: number];
-export type RGB = [r: number, g: number, b: number];
+export type HSL = {
+	h: number;
+	s: number;
+	l: number;
+};
+export type HSLArray = [h: number, s: number, l: number];
+export type RGB = {
+	r: number;
+	g: number;
+	b: number;
+};
+export type RGBA = RGB & { a: number };
+export type RGBArray = [r: number, g: number, b: number];
 
 export class Color {
-	static toRGB(color: ColorValue): { r: number; g: number; b: number } {
+	static readonly #HUE_SCALE = 360;
+	static readonly #SATURATION_SCALE = 100;
+	static readonly #LIGHTNESS_SCALE = 100;
+
+	static readonly #RGB_SCALE = 255;
+
+	static toRGB(color: ColorType): RGB {
 		const tempColor = new Color(color);
 		return {
-			r: MathUtils.fastTrunc(tempColor.r * 255),
-			g: MathUtils.fastTrunc(tempColor.g * 255),
-			b: MathUtils.fastTrunc(tempColor.b * 255),
+			r: MathUtils.fastTrunc(tempColor.r * Color.#RGB_SCALE),
+			g: MathUtils.fastTrunc(tempColor.g * Color.#RGB_SCALE),
+			b: MathUtils.fastTrunc(tempColor.b * Color.#RGB_SCALE),
 		};
 	}
 
@@ -19,18 +36,53 @@ export class Color {
 	g = 1;
 	b = 1;
 
-	constructor(...args: [color: ColorValue] | RGB) {
-		if (args.length > 0) this.set(...args);
+	constructor(...args: [color: ColorType] | RGBArray) {
+		args.length > 0 ? this.set(...args) : (this.r = this.g = this.b = 0);
 	}
 
 	get hex(): number {
-		return ((this.r * 255) << 16) ^
-			(this.g * 255) << 8 ^
-			(this.b * 255) << 0;
+		return ((this.r * Color.#RGB_SCALE) << 16) ^
+			((this.g * Color.#RGB_SCALE) << 8) ^
+			((this.b * Color.#RGB_SCALE) << 0);
 	}
 
 	get hexString(): string {
 		return `#${this.hex.toString(16).padStart(6, "0")}`;
+	}
+
+	get hsl(): HSL {
+		const r = this.r;
+		const g = this.g;
+		const b = this.b;
+
+		const max = MathUtils.fastMax(MathUtils.fastMax(r, g), b);
+		const min = MathUtils.fastMin(MathUtils.fastMin(r, g), b);
+
+		let h = 0, s = 0;
+		const l = (min + max) / 2;
+
+		if (min !== max) {
+			const d = max - min;
+			s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+
+			h = (max === r)
+				? ((g - b) / d + (g < b ? 6 : 0))
+				: (max === g)
+				? ((b - r) / d + 2)
+				: ((r - g) / d + 4);
+			h /= 6;
+		}
+
+		return { h, s, l };
+	}
+
+	get hslString(): string {
+		const hsl = this.hsl;
+
+		const h = MathUtils.fastTrunc(hsl.h * Color.#HUE_SCALE);
+		const s = MathUtils.fastTrunc(hsl.s * Color.#SATURATION_SCALE);
+		const l = MathUtils.fastTrunc(hsl.l * Color.#LIGHTNESS_SCALE);
+		return `hsl(${h},${s}%,${l}%)`;
 	}
 
 	clone(): Color {
@@ -44,7 +96,7 @@ export class Color {
 		return this;
 	}
 
-	parse(value: ColorValue): this {
+	parse(value: ColorType): this {
 		if (value instanceof Color) {
 			this.copy(value);
 			return this;
@@ -57,7 +109,7 @@ export class Color {
 		throw new Error(`EASEL.Color.parse(): invalid value: ${value}`);
 	}
 
-	set(...args: [color: ColorValue] | RGB): this {
+	set(...args: [color: ColorType] | RGBArray): this {
 		if (args.length === 1) {
 			const value = args[0];
 
@@ -81,9 +133,9 @@ export class Color {
 		}
 		hex = MathUtils.fastTrunc(hex);
 
-		this.r = (hex >> 16) / 255;
-		this.g = (hex >> 8 & 255) / 255;
-		this.b = (hex & 255) / 255;
+		this.r = (hex >> 16) / Color.#RGB_SCALE;
+		this.g = (hex >> 8 & Color.#RGB_SCALE) / Color.#RGB_SCALE;
+		this.b = (hex & Color.#RGB_SCALE) / Color.#RGB_SCALE;
 		return this;
 	}
 
@@ -112,7 +164,7 @@ export class Color {
 	}
 
 	setRGB(r: number, g: number, b: number): this {
-		if (r > 255 || g > 255 || b > 255) {
+		if (r > Color.#RGB_SCALE || g > Color.#RGB_SCALE || b > Color.#RGB_SCALE) {
 			throw new Error("EASEL.Color.setRGB(): rgb out of range");
 		}
 
@@ -149,9 +201,9 @@ export class Color {
 			);
 		}
 
-		const h = Number(values[0]) / 360;
-		const s = Number(values[1]) / 100;
-		const l = Number(values[2]) / 100;
+		const h = Number(values[0]) / Color.#HUE_SCALE;
+		const s = Number(values[1]) / Color.#SATURATION_SCALE;
+		const l = Number(values[2]) / Color.#LIGHTNESS_SCALE;
 
 		const q = l < 0.5 ? l * (1 + s) : l + s - l * s;
 		const p = 2 * l - q;
@@ -180,9 +232,9 @@ export class Color {
 		}
 
 		return this.setRGB(
-			Number(values[0]) / 255,
-			Number(values[1]) / 255,
-			Number(values[2]) / 255,
+			Number(values[0]) / Color.#RGB_SCALE,
+			Number(values[1]) / Color.#RGB_SCALE,
+			Number(values[2]) / Color.#RGB_SCALE,
 		);
 	}
 }
