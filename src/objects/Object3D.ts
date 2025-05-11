@@ -103,7 +103,7 @@ export class Object3D {
 		_m1.lookAt(
 			this.isCamera ? _position : target,
 			this.isCamera ? target : _position,
-			Vector3.UP,
+			new Vector3(0, 1, 0),
 		);
 
 		this.quaternion.setFromRotationMatrix(_m1);
