@@ -14,7 +14,7 @@ renderer.setSize(globalThis.innerWidth / 2, globalThis.innerHeight);
 globalThis.document.body.appendChild(renderer.domElement);
 
 const shape = new EASEL.CubeShape();
-const material = new EASEL.Material({
+const material = new EASEL.BasicMaterial({
 	color: 0x00ff00,
 	wireframe: true,
 });
