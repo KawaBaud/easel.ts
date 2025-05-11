@@ -32,8 +32,9 @@ export class RenderPipeline extends Pipeline {
 		camera.updateMatrixWorld();
 
 		this.#clipping.setFromCamera(camera);
+		this.#culling.setFromCamera(camera);
 
-		this.cull(scene, camera);
+		this.populate(scene, camera);
 
 		for (const object of this.renderList.objects) {
 			if (object instanceof Mesh) {
@@ -82,9 +83,9 @@ export class RenderPipeline extends Pipeline {
 		_worldV2.copy(_v2).applyMatrix4(camera.matrixWorldInverse);
 		_worldV3.copy(_v3).applyMatrix4(camera.matrixWorldInverse);
 
-		if (
-			this.#culling.shouldCullTriangle(_worldV1, _worldV2, _worldV3, material)
-		) return;
+		if (this.#culling.shouldCull(_worldV1, _worldV2, _worldV3, material)) {
+			return;
+		}
 
 		const clippedTriangles = this.#clipping
 			.clipTriangle(_worldV1, _worldV2, _worldV3);
@@ -107,7 +108,8 @@ export class RenderPipeline extends Pipeline {
 			shape.indices = indices;
 		}
 
-		for (let i = 0; i < indices.length; i += 3) {
+		const length = indices.length;
+		for (let i = 0; i < length; i += 3) {
 			this.#processTriangle(
 				indices,
 				i,
