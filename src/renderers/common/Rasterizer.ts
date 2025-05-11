@@ -134,17 +134,17 @@ export class Rasterizer {
 		this.#projectToScreen(v2, _screenP2);
 		this.#projectToScreen(v3, _screenP3);
 
-		const [p1, p2, p3] = this.#sortVerticesByY(_screenP1, _screenP2, _screenP3);
+		const [p1, p2, p3] = this.#sortVerticesY(_screenP1, _screenP2, _screenP3);
 
 		p1.y === p2.y
-			? this.#fillFlatTopTriangle(p1, p2, p3, color)
+			? this.#fillFlatTriangleTop(p1, p2, p3, color)
 			: p2.y === p3.y
-			? this.#fillFlatBottomTriangle(p1, p2, p3, color)
+			? this.#fillFlatTriangleBottom(p1, p2, p3, color)
 			: (() => {
 				const p4x = p1.x + ((p2.y - p1.y) / (p3.y - p1.y)) * (p3.x - p1.x);
 				_p4.set(p4x, p2.y, 0);
-				this.#fillFlatBottomTriangle(p1, p2, _p4, color);
-				this.#fillFlatTopTriangle(p2, _p4, p3, color);
+				this.#fillFlatTriangleBottom(p1, p2, _p4, color);
+				this.#fillFlatTriangleTop(p2, _p4, p3, color);
 			})();
 
 		return this;
@@ -196,52 +196,50 @@ export class Rasterizer {
 		return this;
 	}
 
-	#fillFlatTopTriangle(
+	#fillFlatTriangle(
 		p1: Vector3,
 		p2: Vector3,
 		p3: Vector3,
 		color: ColorType,
+		isTopTriangle: boolean,
 	): void {
 		const { x: x1, y: y1 } = p1;
 		const { x: x2, y: y2 } = p2;
 		const { x: x3, y: y3 } = p3;
 
-		const edge0 = (x3 - x1) / (y3 - y1);
-		const edge1 = (x3 - x2) / (y3 - y2);
+		const edge0 = isTopTriangle ? (x3 - x1) / (y3 - y1) : (x2 - x1) / (y2 - y1);
+		const edge1 = isTopTriangle ? (x3 - x2) / (y3 - y2) : (x3 - x1) / (y3 - y1);
 
-		for (
-			let y = MathUtils.clamp(Math.ceil(y1), 0, this.height - 1);
-			y <= MathUtils.clamp(MathUtils.fastTrunc(y3), 0, this.height - 1);
-			y++
-		) {
+		const startY = MathUtils.clamp(Math.ceil(y1), 0, this.height - 1);
+		const endY = MathUtils.clamp(
+			MathUtils.fastTrunc(isTopTriangle ? y3 : y2),
+			0,
+			this.height - 1,
+		);
+
+		for (let y = startY; y <= endY; y++) {
 			const sx = x1 + (y - y1) * edge0;
-			const ex = x2 + (y - y2) * edge1;
+			const ex = isTopTriangle ? x2 + (y - y2) * edge1 : x1 + (y - y1) * edge1;
 			this.#fillScanline(y, sx, ex, color);
 		}
 	}
 
-	#fillFlatBottomTriangle(
+	#fillFlatTriangleBottom(
 		p1: Vector3,
 		p2: Vector3,
 		p3: Vector3,
 		color: ColorType,
 	): void {
-		const { x: x1, y: y1 } = p1;
-		const { x: x2, y: y2 } = p2;
-		const { x: x3, y: y3 } = p3;
+		this.#fillFlatTriangle(p1, p2, p3, color, false);
+	}
 
-		const edge0 = (x2 - x1) / (y2 - y1);
-		const edge1 = (x3 - x1) / (y3 - y1);
-
-		for (
-			let y = MathUtils.clamp(Math.ceil(y1), 0, this.height - 1);
-			y <= MathUtils.clamp(MathUtils.fastTrunc(y2), 0, this.height - 1);
-			y++
-		) {
-			const sx = x1 + (y - y1) * edge0;
-			const ex = x1 + (y - y1) * edge1;
-			this.#fillScanline(y, sx, ex, color);
-		}
+	#fillFlatTriangleTop(
+		p1: Vector3,
+		p2: Vector3,
+		p3: Vector3,
+		color: ColorType,
+	): void {
+		this.#fillFlatTriangle(p1, p2, p3, color, true);
 	}
 
 	#fillScanline(
@@ -283,7 +281,7 @@ export class Rasterizer {
 		this.data[idx + 3] = Color.RGB_SCALE;
 	}
 
-	#sortVerticesByY(
+	#sortVerticesY(
 		p1: Vector3,
 		p2: Vector3,
 		p3: Vector3,
