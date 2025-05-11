@@ -28,8 +28,7 @@ Deno.test("SimpleMaterial: constructor", () => {
 	compareSimpleMaterials(a, threeA, "constructor");
 
 	const b = new SimpleMaterial({ color: 0xFF0000, wireframe: true });
-	const threeB = new ThreeSimpleMaterial();
-	threeB.wireframe = true;
+	const threeB = new ThreeSimpleMaterial({ color: 0xFF0000, wireframe: true });
 
 	assertEquals(b.color, 0xFF0000);
 	assertEquals(b.wireframe, true);
