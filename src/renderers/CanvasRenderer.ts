@@ -1,5 +1,5 @@
 import type { Camera } from "../cameras/Camera.ts";
-import { Color, type ColorValue } from "../common/Color.ts";
+import { Color, type ColorType } from "../common/Color.ts";
 import type { Scene } from "../scenes/Scene.ts";
 import { CanvasRenderTarget } from "./CanvasRenderTarget.ts";
 import { Rasterizer } from "./common/Rasterizer.ts";
@@ -52,7 +52,7 @@ export class CanvasRenderer extends Renderer {
 		return this;
 	}
 
-	setClearColor(color: ColorValue): this {
+	setClearColor(color: ColorType): this {
 		color instanceof Color
 			? this.#clearColor.copy(color)
 			: this.#clearColor.parse(color);
