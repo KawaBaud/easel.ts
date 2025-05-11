@@ -131,7 +131,6 @@ export class OBJLoader extends Loader {
 		this.#vertices.push(vertex);
 		const index = this.#currentIndex++;
 		this.#vertexMap.set(vertexData, index);
-
 		return index;
 	}
 
