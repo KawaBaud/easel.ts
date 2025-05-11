@@ -1,5 +1,5 @@
 import type { Camera } from "../../cameras/Camera.ts";
-import { Color, type ColorValue } from "../../common/Color.ts";
+import { Color, type ColorType } from "../../common/Color.ts";
 import { MathUtils } from "../../maths/MathUtils.ts";
 import { Vector3 } from "../../maths/Vector3.ts";
 import type { Mesh } from "../../objects/Mesh.ts";
@@ -53,7 +53,7 @@ export class Rasterizer {
 		return this;
 	}
 
-	clear(color: ColorValue): this {
+	clear(color: ColorType): this {
 		const rgb = Color.toRGB(color);
 
 		for (let i = 0; i < this.data.length; i += 4) {
@@ -71,7 +71,7 @@ export class Rasterizer {
 		return this;
 	}
 
-	drawLine(start: Vector3, end: Vector3, color: ColorValue): this {
+	drawLine(start: Vector3, end: Vector3, color: ColorType): this {
 		this.#projectToScreen(start, _screenP1);
 		this.#projectToScreen(end, _screenP2);
 
@@ -92,7 +92,6 @@ export class Rasterizer {
 			if ((x1 >= 0 && x1 < this.width) && (y1 >= 0 && y1 < this.height)) {
 				this.setPixel(x1, y1, color);
 			}
-
 			if (x1 === x2 && y1 === y2) break;
 
 			const e2 = err << 1;
@@ -113,7 +112,7 @@ export class Rasterizer {
 		v1: Vector3,
 		v2: Vector3,
 		v3: Vector3,
-		color: ColorValue,
+		color: ColorType,
 		wireframe = false,
 	): this {
 		wireframe
@@ -130,7 +129,7 @@ export class Rasterizer {
 		v1: Vector3,
 		v2: Vector3,
 		v3: Vector3,
-		color: ColorValue,
+		color: ColorType,
 	): this {
 		this.#projectToScreen(v1, _screenP1);
 		this.#projectToScreen(v2, _screenP2);
@@ -171,7 +170,7 @@ export class Rasterizer {
 		}
 	}
 
-	setPixel(x: number, y: number, color: ColorValue): this {
+	setPixel(x: number, y: number, color: ColorType): this {
 		const rgb = Color.toRGB(color);
 		const idx = Rasterizer.#getPixelIndex(x, y, this.width);
 
@@ -198,7 +197,7 @@ export class Rasterizer {
 		p1: Vector3,
 		p2: Vector3,
 		p3: Vector3,
-		color: ColorValue,
+		color: ColorType,
 	): void {
 		const { x: x1, y: y1 } = p1;
 		const { x: x2, y: y2 } = p2;
@@ -222,7 +221,7 @@ export class Rasterizer {
 		p1: Vector3,
 		p2: Vector3,
 		p3: Vector3,
-		color: ColorValue,
+		color: ColorType,
 	): void {
 		const { x: x1, y: y1 } = p1;
 		const { x: x2, y: y2 } = p2;
@@ -246,7 +245,7 @@ export class Rasterizer {
 		y: number,
 		x1: number,
 		x2: number,
-		color: ColorValue,
+		color: ColorType,
 	): void {
 		const startX = MathUtils.clamp(
 			Math.ceil(MathUtils.fastMin(x1, x2)),
