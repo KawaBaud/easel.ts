@@ -73,7 +73,6 @@ globalThis.document.addEventListener(
 		}
 	},
 );
-
 globalThis.document.addEventListener(
 	"keyup",
 	(event) => {
