@@ -21,6 +21,7 @@ export class SimpleMaterial extends Material {
 
 	override copy(source: SimpleMaterial): this {
 		super.copy(source);
+
 		this.wireframe = source.wireframe;
 		this.flatShaded = source.flatShaded;
 		return this;
