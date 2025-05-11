@@ -16,6 +16,7 @@ const _screenP3 = new Vector3();
 export interface RasterizerOptions {
 	width?: number;
 	height?: number;
+
 	canvas?: HTMLCanvasElement;
 }
 
@@ -26,8 +27,10 @@ export class Rasterizer {
 
 	width: number;
 	height: number;
+
 	canvas: HTMLCanvasElement;
 	ctx: CanvasRenderingContext2D;
+
 	imageData: ImageData;
 	data: Uint8ClampedArray;
 
@@ -156,12 +159,19 @@ export class Rasterizer {
 			const cv1 = triangle[0];
 			const cv2 = triangle[1];
 			const cv3 = triangle[2];
+
 			if (cv1 && cv2 && cv3) {
 				_pv1.copy(cv1).applyMatrix4(camera.projectionMatrix);
 				_pv2.copy(cv2).applyMatrix4(camera.projectionMatrix);
 				_pv3.copy(cv3).applyMatrix4(camera.projectionMatrix);
 
-				this.drawTriangle(_pv1, _pv2, _pv3, material.color, material.wireframe);
+				this.drawTriangle(
+					_pv1,
+					_pv2,
+					_pv3,
+					material.color,
+					material.wireframe,
+				);
 			}
 		}
 	}
@@ -175,12 +185,14 @@ export class Rasterizer {
 	setSize(width: number, height: number): this {
 		this.width = width;
 		this.height = height;
+
 		this.canvas.width = width;
 		this.canvas.height = height;
 		this.ctx.imageSmoothingEnabled = false;
 
 		this.imageData = this.ctx.createImageData(width, height);
 		this.data = this.imageData.data;
+
 		return this;
 	}
 
