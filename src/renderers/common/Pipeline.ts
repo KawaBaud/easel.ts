@@ -6,7 +6,7 @@ import { RenderList } from "../common/RenderList.ts";
 export abstract class Pipeline {
 	renderList = new RenderList();
 
-	cull(scene: Scene, _camera: Camera): this {
+	populate(scene: Scene, _camera: Camera): this {
 		this.renderList.clear();
 		this.#traverseScene(scene);
 		return this;
