@@ -20,7 +20,7 @@ export interface RasterizerOptions {
 	canvas?: HTMLCanvasElement;
 }
 
-export abstract class Rasterizer {
+export class Rasterizer {
 	width: number;
 	height: number;
 	canvas: HTMLCanvasElement;
