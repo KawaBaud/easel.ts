@@ -27,11 +27,13 @@ export class CanvasRenderTarget extends RenderTarget {
 	override setSize(width: number, height: number): this {
 		super.setSize(width, height);
 
+		this.canvas.style.width = `${width}px`;
+		this.canvas.style.height = `${height}px`;
 		this.canvas.width = width;
 		this.canvas.height = height;
 		this.ctx.imageSmoothingEnabled = false;
 
-		this.imageData = this.ctx.createImageData(width, height);
+		this.imageData = this.ctx.createImageData(this.width, this.height);
 		this.data = this.imageData.data;
 
 		return this;
