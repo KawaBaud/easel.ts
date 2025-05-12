@@ -22,6 +22,7 @@ const material = new THREE.MeshBasicMaterial({
 
 let currentMaterial = material;
 let flatShading = false;
+let lowResolution = false;
 
 const light = new THREE.DirectionalLight(0xffffff, 1);
 light.position.set(1, 1, 1);
@@ -69,6 +70,13 @@ globalThis.document.addEventListener(
 			flatShadingToggle = true;
 		}
 		if (event.key.toLowerCase() === "r") rotateObject = !rotateObject;
+		if (event.key.toLowerCase() === "m") {
+			lowResolution = !lowResolution;
+			renderer.setSize(
+				lowResolution ? 320 : globalThis.innerWidth / 2,
+				lowResolution ? 240 : globalThis.innerHeight,
+			);
+		}
 	},
 );
 globalThis.document.addEventListener(
