@@ -67,21 +67,15 @@ globalThis.document.addEventListener(
 			}
 			flatShadingToggle = true;
 		}
-		if (event.key.toLowerCase() === "r") {
-			rotateObject = !rotateObject;
-		}
+		if (event.key.toLowerCase() === "r") rotateObject = !rotateObject;
 	},
 );
 globalThis.document.addEventListener(
 	"keyup",
 	(event) => {
 		keys[event.key.toLowerCase()] = false;
-		if (event.key.toLowerCase() === "z") {
-			wireframeToggle = false;
-		}
-		if (event.key.toLowerCase() === "f") {
-			flatShadingToggle = false;
-		}
+		if (event.key.toLowerCase() === "z") wireframeToggle = false;
+		if (event.key.toLowerCase() === "f") flatShadingToggle = false;
 	},
 );
 
@@ -89,13 +83,8 @@ function updateMaterialShading() {
 	if (currentMaterial.wireframe) return;
 
 	const newMaterial = flatShading
-		? new EASEL.SimpleMaterial({
-			color: 0x00ff00,
-			flatShading: true,
-		})
-		: new EASEL.SimpleMaterial({
-			color: 0x00ff00,
-		});
+		? new EASEL.SimpleMaterial({ color: 0x00ff00, flatShading: true })
+		: new EASEL.SimpleMaterial({ color: 0x00ff00 });
 
 	if (myObject) {
 		myObject.traverse((child) => {
@@ -110,8 +99,14 @@ const speed = 0.05 / 2;
 const rotSpeed = 0.02 / 2;
 const spinSpeed = 0.005 / 2;
 
-function animate(): void {
+let fpsLimited = false;
+let lastFrameTime = 0;
+
+function animate(currentTime: number): void {
 	globalThis.requestAnimationFrame(animate);
+
+	if (fpsLimited && currentTime - lastFrameTime < 1000 / 25) return;
+	lastFrameTime = currentTime;
 
 	// movement
 	const direction = new EASEL.Vector3();
@@ -137,4 +132,8 @@ function animate(): void {
 
 	renderer.render(scene, camera);
 }
-animate();
+animate(0);
+
+globalThis.document.addEventListener("keydown", (event) => {
+	if (event.key.toLowerCase() === "p") fpsLimited = !fpsLimited;
+});
