@@ -37,23 +37,21 @@ export class MathUtils {
 	}
 
 	static fastAtan2(y: number, x: number): number {
-		if (x === 0) return y > 0 ? MathUtils.HALF_PI : -MathUtils.HALF_PI;
+		if (x === 0) {
+			return y === 0 ? 0 : y > 0 ? MathUtils.HALF_PI : -MathUtils.HALF_PI;
+		}
 		if (y === 0) return x >= 0 ? 0 : Math.PI;
 
 		const absY = Math.abs(y);
 		const absX = Math.abs(x);
-
 		const inOctant = absY <= absX;
 
 		const a = inOctant ? absY / absX : absX / absY;
 		const s = a * a;
-		let r = ((-0.046496 * s + 0.15931) * s - 0.32763) * s * a + a;
-
-		if (!inOctant) r = MathUtils.HALF_PI - r;
-		if (x < 0) r = Math.PI - r;
-		if (y < 0) r = -r;
-
-		return r;
+		let r = (((-0.046496 * s + 0.15931) * s - 0.32763) * s + 1) * a;
+		r = inOctant ? r : MathUtils.HALF_PI - r;
+		r = x < 0 ? Math.PI - r : r;
+		return y < 0 ? -r : r;
 	}
 
 	static fastMax(a: number, b: number): number {
