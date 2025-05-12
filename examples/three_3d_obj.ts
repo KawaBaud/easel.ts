@@ -15,12 +15,12 @@ const renderer = new THREE.WebGLRenderer();
 renderer.setSize(globalThis.innerWidth / 2, globalThis.innerHeight);
 globalThis.document.body.appendChild(renderer.domElement);
 
-const basicMaterial = new THREE.MeshBasicMaterial({
+const material = new THREE.MeshBasicMaterial({
 	color: 0x00ff00,
 	wireframe: true,
 });
 
-let currentMaterial = basicMaterial;
+let currentMaterial = material;
 let flatShading = false;
 
 const light = new THREE.DirectionalLight(0xffffff, 1);

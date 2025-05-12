@@ -14,11 +14,11 @@ renderer.setSize(globalThis.innerWidth / 2, globalThis.innerHeight);
 globalThis.document.body.appendChild(renderer.domElement);
 
 const shape = new EASEL.CubeShape();
-const simpleMaterial = new EASEL.SimpleMaterial({
+const material = new EASEL.SimpleMaterial({
 	color: 0x00ff00,
 	wireframe: true,
 });
-const cube = new EASEL.Mesh(shape, simpleMaterial);
+const cube = new EASEL.Mesh(shape, material);
 scene.add(cube);
 
 const keys: { [key: string]: boolean } = {};
@@ -28,7 +28,7 @@ globalThis.document.addEventListener(
 	(event) => {
 		keys[event.key.toLowerCase()] = true;
 		if (event.key.toLowerCase() === "z" && !wireframeToggle) {
-			simpleMaterial.wireframe = !simpleMaterial.wireframe;
+			material.wireframe = !material.wireframe;
 			wireframeToggle = true;
 		}
 	},

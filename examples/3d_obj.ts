@@ -15,12 +15,12 @@ const renderer = new EASEL.CanvasRenderer();
 renderer.setSize(globalThis.innerWidth / 2, globalThis.innerHeight);
 globalThis.document.body.appendChild(renderer.domElement);
 
-const simpleMaterial = new EASEL.SimpleMaterial({
+const material = new EASEL.SimpleMaterial({
 	color: 0x00ff00,
 	wireframe: true,
 });
 
-let currentMaterial = simpleMaterial;
+let currentMaterial = material;
 let flatShading = false;
 
 const light = new EASEL.DirectionalLight(0xffffff, 1);
@@ -34,7 +34,7 @@ loader.load(
 	(object) => {
 		object.scale.setScalar(0.4);
 		object.traverse((child) => {
-			if (child instanceof EASEL.Mesh) child.material = simpleMaterial;
+			if (child instanceof EASEL.Mesh) child.material = material;
 		});
 		object.position.sub(
 			new EASEL.Box3().setFromObject(object).getCentre(new EASEL.Vector3()),
