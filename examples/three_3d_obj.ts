@@ -68,7 +68,7 @@ globalThis.document.addEventListener("keyup", (event) => {
 const clock = new THREE.Clock();
 const fps = 1 / 25;
 const speed = 0.7;
-const rotSpeed = 0.15;
+const rotSpeed = 0.35;
 
 function animate(): void {
 	globalThis.requestAnimationFrame(animate);
