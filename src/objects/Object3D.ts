@@ -95,14 +95,18 @@ export class Object3D {
 		return this;
 	}
 
-	lookAt(target: Vector3): this {
+	lookAt(target: Vector3 | number, y?: number, z?: number): this {
 		this.updateWorldMatrix(true, false);
+
+		const targetVector = target instanceof Vector3
+			? target
+			: new Vector3(target, y, z);
 
 		_position.setFromMatrixPosition(this.worldMatrix);
 
 		_m1.lookAt(
-			this.isCamera ? _position : target,
-			this.isCamera ? target : _position,
+			this.isCamera ? _position : targetVector,
+			this.isCamera ? targetVector : _position,
 			new Vector3(0, 1, 0),
 		);
 
