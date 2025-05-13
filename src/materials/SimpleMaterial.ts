@@ -1,18 +1,18 @@
 import { Material, type MaterialOptions } from "./Material.ts";
 
 export interface SimpleMaterialOptions extends MaterialOptions {
+	fog?: boolean;
 	wireframe?: boolean;
-	flatShading?: boolean;
 }
 
 export class SimpleMaterial extends Material {
+	fog: boolean;
 	wireframe: boolean;
-	flatShaded: boolean;
 
 	constructor(options: SimpleMaterialOptions = {}) {
 		super(options);
+		this.fog = options.fog ?? true;
 		this.wireframe = options.wireframe ?? false;
-		this.flatShaded = options.flatShading ?? false;
 	}
 
 	override clone(): SimpleMaterial {
@@ -22,8 +22,8 @@ export class SimpleMaterial extends Material {
 	override copy(source: SimpleMaterial): this {
 		super.copy(source);
 
+		this.fog = source.fog;
 		this.wireframe = source.wireframe;
-		this.flatShaded = source.flatShaded;
 		return this;
 	}
 }
