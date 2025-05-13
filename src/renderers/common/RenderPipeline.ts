@@ -53,7 +53,7 @@ export class RenderPipeline extends Pipeline {
 	}
 
 	#processTriangle(
-		indices: number[],
+		indices: Uint16Array,
 		startIndex: number,
 		vertices: Vector3[],
 		mesh: Mesh,
@@ -109,8 +109,7 @@ export class RenderPipeline extends Pipeline {
 			shape.indices = indices;
 		}
 
-		const length = indices.length;
-		for (let i = 0; i < length; i += 3) {
+		for (let i = 0; i < indices.length; i += 3) {
 			this.#processTriangle(
 				indices,
 				i,

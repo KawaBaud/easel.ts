@@ -23,17 +23,18 @@ export class ShapeUtils {
 		return crossProduct > 0;
 	}
 
-	static triangulate(vertices: Vector3[]): number[] {
-		if (vertices.length < 3) return [];
-		if (vertices.length === 3) return [0, 1, 2];
-		if (vertices.length === 4) return [0, 1, 3, 1, 2, 3];
+	static triangulate(vertices: Vector3[]): Uint16Array<ArrayBuffer> {
+		if (vertices.length < 3) return new Uint16Array();
+		if (vertices.length === 3) return new Uint16Array([0, 1, 2]);
+		if (vertices.length === 4) return new Uint16Array([0, 1, 3, 1, 2, 3]);
 
-		const indices: number[] = [];
+		const indices = new Uint16Array(vertices.length);
 		for (let i = 0; i < vertices.length; i++) {
-			indices.push(i);
+			indices[i] = i;
 		}
 
-		const triangles: number[] = [];
+		const triangles = new Uint16Array(vertices.length * 3);
+		let triangleCount = 0;
 		let remainingVertices = vertices.length;
 
 		while (remainingVertices > 3) {
@@ -54,11 +55,9 @@ export class ShapeUtils {
 						remainingVertices,
 					)
 				) {
-					triangles.push(
-						indices.safeAt(prev),
-						indices.safeAt(curr),
-						indices.safeAt(next),
-					);
+					triangles[triangleCount++] = indices.safeAt(prev);
+					triangles[triangleCount++] = indices.safeAt(curr);
+					triangles[triangleCount++] = indices.safeAt(next);
 
 					for (let j = curr; j < remainingVertices - 1; j++) {
 						indices[j] = indices.safeAt(j + 1);
@@ -73,18 +72,16 @@ export class ShapeUtils {
 		}
 
 		if (remainingVertices === 3) {
-			triangles.push(
-				indices.safeAt(0),
-				indices.safeAt(1),
-				indices.safeAt(2),
-			);
+			triangles[triangleCount++] = indices.safeAt(0);
+			triangles[triangleCount++] = indices.safeAt(1);
+			triangles[triangleCount++] = indices.safeAt(2);
 		}
 
-		return triangles;
+		return triangles.slice(0, triangleCount);
 	}
 
 	static #isEar(
-		indices: number[],
+		indices: Uint16Array,
 		vertices: Vector3[],
 		prev: number,
 		curr: number,
@@ -94,9 +91,7 @@ export class ShapeUtils {
 		const a = vertices[indices.safeAt(prev)];
 		const b = vertices[indices.safeAt(curr)];
 		const c = vertices[indices.safeAt(next)];
-		if (!a || !b || !c) return false;
-
-		if (!ShapeUtils.isConvex(a, b, c)) return false;
+		if ((!a || !b || !c) || ShapeUtils.isConvex(a, b, c)) return false;
 
 		for (let i = 0; i < count; i++) {
 			if (i === prev || i === curr || i === next) continue;
@@ -128,9 +123,9 @@ export class ShapeUtils {
 		const dot12 = (v1x * v2x) + (v1z * v2z);
 
 		const invDenom = 1 / ((dot00 * dot11) - (dot01 * dot01));
+
 		const u = ((dot11 * dot02) - (dot01 * dot12)) * invDenom;
 		const v = ((dot00 * dot12) - (dot01 * dot02)) * invDenom;
-
 		return (u >= 0) && (v >= 0) && (u + v <= 1);
 	}
 }

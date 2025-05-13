@@ -39,7 +39,7 @@ Deno.test("ShapeUtils.triangulate", () => {
 		const vertices: Vector3[] = [];
 
 		const indices = ShapeUtils.triangulate(vertices);
-		assertEquals(indices, [], "empty vertices");
+		assertEquals(indices, new Uint16Array(0), "empty vertices");
 	}
 
 	{
@@ -49,6 +49,6 @@ Deno.test("ShapeUtils.triangulate", () => {
 		];
 
 		const indices = ShapeUtils.triangulate(vertices);
-		assertEquals(indices, [], "insufficient vertices");
+		assertEquals(indices, new Uint16Array(0), "insufficient vertices");
 	}
 });

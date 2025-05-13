@@ -51,14 +51,14 @@ export class CubeShape extends Shape {
 				halfDepth,
 			), /* 7: back-top-left */
 		];
-		this.indices = [
+		this.indices = new Uint16Array([
 			...[0, 1, 2, 2, 3, 0], /* front */
 			...[5, 4, 7, 7, 6, 5], /* back */
 			...[1, 5, 6, 6, 2, 1], /* right */
 			...[4, 0, 3, 3, 7, 4], /* left */
 			...[3, 2, 6, 6, 7, 3], /* top */
 			...[1, 0, 4, 4, 5, 1], /* bottom */
-		];
+		]);
 	}
 
 	override clone(): CubeShape {

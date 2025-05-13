@@ -11,7 +11,7 @@ function compareShapes(
 ): void {
 	console.log(`${message}:`);
 	console.log(
-		`  Our: ${ourShape.vertices.length} vertices, ${ourShape.indices.length} indices`,
+		`  Our: ${ourShape.vertices.length} vertices`,
 	);
 	console.log(
 		`  Three: ${threeGeometry.attributes["position"]?.count ?? 0} vertices`,
@@ -23,9 +23,9 @@ function compareShapes(
 		`${message} (vertices is array)`,
 	);
 	assertEquals(
-		Array.isArray(ourShape.indices),
+		ourShape.indices instanceof Uint16Array,
 		true,
-		`${message} (indices is array)`,
+		`${message} (indices is Uint16Array)`,
 	);
 }
 
@@ -45,7 +45,7 @@ Deno.test("Shape: clone", () => {
 		new Vector3(1, 0, 0),
 		new Vector3(0, 1, 0),
 	];
-	a.indices = [0, 1, 2];
+	a.indices = new Uint16Array([0, 1, 2]);
 
 	const b = a.clone();
 
@@ -98,7 +98,7 @@ Deno.test("Shape: copy", () => {
 		new Vector3(1, 0, 0),
 		new Vector3(0, 1, 0),
 	];
-	a.indices = [0, 1, 2];
+	a.indices = new Uint16Array([0, 1, 2]);
 
 	const b = new Shape().copy(a);
 

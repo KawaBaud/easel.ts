@@ -12,25 +12,31 @@ export class PlaneShape extends Shape {
 
 		const segmentWidth = width / gridX;
 		const segmentHeight = height / gridY;
+		const widthHalf = width / 2;
+		const heightHalf = height / 2;
 
-		for (let iy = 0; iy < gridY1; iy++) {
-			const y = iy * segmentHeight - height / 2;
-			for (let ix = 0; ix < gridX1; ix++) {
-				const x = ix * segmentWidth - width / 2;
-				this.vertices.push(new Vector3(x, y, 0));
-			}
-		}
+		this.vertices = Array.from({ length: gridX1 * gridY1 }, (_, i) => {
+			const ix = i % gridX1;
+			const iy = Math.floor(i / gridX1);
+			return new Vector3(
+				(ix * segmentWidth) - widthHalf,
+				(iy * segmentHeight) - heightHalf,
+				0,
+			);
+		});
 
-		for (let iy = 0; iy < gridY; iy++) {
-			for (let ix = 0; ix < gridX; ix++) {
-				const a = ix + gridX1 * iy;
-				const b = ix + gridX1 * (iy + 1);
-				const c = (ix + 1) + gridX1 * (iy + 1);
-				const d = (ix + 1) + gridX1 * iy;
+		this.indices = new Uint16Array((gridX * gridY) * 6);
+		for (let i = 0; i < this.indices.length; i++) {
+			const cellIndex = Math.floor(i / 6);
 
-				this.indices.push(a, b, d);
-				this.indices.push(b, c, d);
-			}
+			const ix = cellIndex % gridX;
+			const iy = Math.floor(cellIndex / gridX);
+
+			const a = ix + gridX1 * iy;
+			const b = ix + gridX1 * (iy + 1);
+			const c = (ix + 1) + gridX1 * (iy + 1);
+			const d = (ix + 1) + gridX1 * iy;
+			this.indices[i] = Number([a, b, d, b, c, d][i % 6]);
 		}
 	}
 

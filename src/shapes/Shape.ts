@@ -3,7 +3,7 @@ import { ShapeUtils } from "./ShapeUtils.ts";
 
 export class Shape {
 	vertices: Vector3[] = [];
-	indices: number[] = [];
+	indices = new Uint16Array([]);
 	faceNormals: Vector3[] = [];
 
 	clone(): Shape {
@@ -31,7 +31,7 @@ export class Shape {
 
 	copy(source: Shape): this {
 		this.vertices = source.vertices.map((v) => v.clone());
-		this.indices = [...source.indices];
+		this.indices = source.indices;
 		return this;
 	}
 }
