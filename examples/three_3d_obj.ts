@@ -42,8 +42,8 @@ loader.load(
 		myObject.add(object as unknown as THREE.Object3D);
 		scene.add(myObject);
 	},
-	(xhr) => console.log(`${(xhr.loaded / xhr.total * 100)}% loaded`),
-	(error) => console.error("an error occurred:", error),
+	(xhr) => console.log(`${(xhr.loaded / xhr.total * 100).toFixed(2)}% loaded`),
+	(error) => console.error(error),
 );
 
 const keys: { [key: string]: boolean } = {};
