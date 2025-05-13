@@ -1,6 +1,7 @@
 import { Camera } from "./cameras/Camera.ts";
 import { OrthoCamera } from "./cameras/OrthoCamera.ts";
 import { PerspCamera } from "./cameras/PerspCamera.ts";
+import { Clock } from "./common/Clock.ts";
 import { Color } from "./common/Color.ts";
 import { DirectionalLight } from "./lights/DirectionalLight.ts";
 import { Light } from "./lights/Light.ts";
@@ -11,7 +12,7 @@ import { Box3 } from "./maths/Box3.ts";
 import { Euler } from "./maths/Euler.ts";
 import { Frustum } from "./maths/Frustum.ts";
 import { Line3 } from "./maths/Line3.ts";
-import { MathUtils } from "./maths/MathUtils.ts";
+import { Maths } from "./maths/Maths.ts";
 import { Matrix3 } from "./maths/Matrix3.ts";
 import { Matrix4 } from "./maths/Matrix4.ts";
 import { Plane } from "./maths/Plane.ts";
@@ -44,6 +45,7 @@ export const EASEL = {
 	PerspCamera,
 
 	/* common */
+	Clock,
 	Color,
 
 	/* lights */
@@ -62,7 +64,7 @@ export const EASEL = {
 	Euler,
 	Frustum,
 	Line3,
-	MathUtils,
+	Maths,
 	Matrix3,
 	Matrix4,
 	Plane,
