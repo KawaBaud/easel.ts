@@ -4,7 +4,6 @@ import {
 	assertNotStrictEquals,
 } from "@std/assert";
 import { Sphere as ThreeSphere, Vector3 as ThreeVector3 } from "three";
-import { Maths } from "../../src/maths/Maths.ts";
 import { Sphere } from "../../src/maths/Sphere.ts";
 import { Vector3 } from "../../src/maths/Vector3.ts";
 import "../../src/types.ts";
@@ -25,25 +24,25 @@ function compareSpheres(
 	assertAlmostEquals(
 		ourSphere.centre.x,
 		threeSphere.center.x,
-		Maths.EPSILON,
+		Math.EPSILON,
 		`${message} (centre.x)`,
 	);
 	assertAlmostEquals(
 		ourSphere.centre.y,
 		threeSphere.center.y,
-		Maths.EPSILON,
+		Math.EPSILON,
 		`${message} (centre.y)`,
 	);
 	assertAlmostEquals(
 		ourSphere.centre.z,
 		threeSphere.center.z,
-		Maths.EPSILON,
+		Math.EPSILON,
 		`${message} (centre.z)`,
 	);
 	assertAlmostEquals(
 		ourSphere.radius,
 		threeSphere.radius,
-		Maths.EPSILON,
+		Math.EPSILON,
 		`${message} (radius)`,
 	);
 }
@@ -65,25 +64,25 @@ Deno.test("Sphere: constructor", () => {
 	assertAlmostEquals(
 		b.centre.x,
 		threeB.center.x,
-		Maths.EPSILON,
+		Math.EPSILON,
 		"constructor w/ values (centre.x)",
 	);
 	assertAlmostEquals(
 		b.centre.y,
 		threeB.center.y,
-		Maths.EPSILON,
+		Math.EPSILON,
 		"constructor w/ values (centre.y)",
 	);
 	assertAlmostEquals(
 		b.centre.z,
 		threeB.center.z,
-		Maths.EPSILON,
+		Math.EPSILON,
 		"constructor w/ values (centre.z)",
 	);
 	assertAlmostEquals(
 		b.radius,
 		threeB.radius,
-		Maths.EPSILON,
+		Math.EPSILON,
 		"constructor w/ values (radius)",
 	);
 });
@@ -174,7 +173,7 @@ Deno.test("Sphere: distanceToPoint", () => {
 	assertAlmostEquals(
 		a.distanceToPoint(point1),
 		threeA.distanceToPoint(threePoint1),
-		Maths.EPSILON,
+		Math.EPSILON,
 		"distanceToPoint (inside)",
 	);
 
@@ -183,7 +182,7 @@ Deno.test("Sphere: distanceToPoint", () => {
 	assertAlmostEquals(
 		a.distanceToPoint(point2),
 		threeA.distanceToPoint(threePoint2),
-		Maths.EPSILON,
+		Math.EPSILON,
 		"distanceToPoint (on surface)",
 	);
 
@@ -192,7 +191,7 @@ Deno.test("Sphere: distanceToPoint", () => {
 	assertAlmostEquals(
 		a.distanceToPoint(point3),
 		threeA.distanceToPoint(threePoint3),
-		Maths.EPSILON,
+		Math.EPSILON,
 		"distanceToPoint (outside)",
 	);
 });

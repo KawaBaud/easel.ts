@@ -10,7 +10,6 @@ import {
 	Vector3 as ThreeVector3,
 } from "three";
 import { Euler } from "../../src/maths/Euler.ts";
-import { Maths } from "../../src/maths/Maths.ts";
 import { Matrix4 } from "../../src/maths/Matrix4.ts";
 import { Quaternion } from "../../src/maths/Quaternion.ts";
 import { Vector3 } from "../../src/maths/Vector3.ts";
@@ -29,7 +28,7 @@ function compareMatrices(
 		assertAlmostEquals(
 			ourMatrix.elements.safeAt(i),
 			threeMatrix.elements.safeAt(i),
-			Maths.EPSILON,
+			Math.EPSILON,
 			`${message} (element ${i})`,
 		);
 	}
@@ -243,38 +242,38 @@ Deno.test("Matrix4: decompose", () => {
 	assertAlmostEquals(
 		position.x,
 		threePosition.x,
-		Maths.EPSILON,
+		Math.EPSILON,
 		"decompose position.x",
 	);
 	assertAlmostEquals(
 		position.y,
 		threePosition.y,
-		Maths.EPSILON,
+		Math.EPSILON,
 		"decompose position.y",
 	);
 	assertAlmostEquals(
 		position.z,
 		threePosition.z,
-		Maths.EPSILON,
+		Math.EPSILON,
 		"decompose position.z",
 	);
 
 	assertAlmostEquals(
 		scale.x,
 		threeScale.x,
-		Maths.EPSILON,
+		Math.EPSILON,
 		"decompose scale.x",
 	);
 	assertAlmostEquals(
 		scale.y,
 		threeScale.y,
-		Maths.EPSILON,
+		Math.EPSILON,
 		"decompose scale.y",
 	);
 	assertAlmostEquals(
 		scale.z,
 		threeScale.z,
-		Maths.EPSILON,
+		Math.EPSILON,
 		"decompose scale.z",
 	);
 });
@@ -283,7 +282,7 @@ Deno.test("Matrix4: determinant", () => {
 	const matrices = [
 		new Matrix4(),
 		new Matrix4().set(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16),
-		new Matrix4().makeRotationX(Math.PI / 3),
+		new Matrix4().makeRotationX(Math.THIRD_PI),
 		new Matrix4().makeTranslation(1, 2, 3),
 	];
 
@@ -307,7 +306,7 @@ Deno.test("Matrix4: determinant", () => {
 			15,
 			16,
 		),
-		new ThreeMatrix4().makeRotationX(Math.PI / 3),
+		new ThreeMatrix4().makeRotationX(Math.THIRD_PI),
 		new ThreeMatrix4().makeTranslation(1, 2, 3),
 	];
 
@@ -317,7 +316,7 @@ Deno.test("Matrix4: determinant", () => {
 		assertAlmostEquals(
 			det,
 			threeDet,
-			Maths.EPSILON,
+			Math.EPSILON,
 			`determinant case ${i}`,
 		);
 	}
@@ -333,29 +332,29 @@ Deno.test("Matrix4: extractPosition", () => {
 	assertAlmostEquals(
 		position.x,
 		threePosition.x,
-		Maths.EPSILON,
+		Math.EPSILON,
 		"extractPosition",
 	);
 	assertAlmostEquals(
 		position.y,
 		threePosition.y,
-		Maths.EPSILON,
+		Math.EPSILON,
 		"extractPosition",
 	);
 	assertAlmostEquals(
 		position.z,
 		threePosition.z,
-		Maths.EPSILON,
+		Math.EPSILON,
 		"extractPosition",
 	);
 });
 
 Deno.test("Matrix4: extractRotation", () => {
-	const m = new Matrix4().makeRotationX(Math.PI / 3);
+	const m = new Matrix4().makeRotationX(Math.THIRD_PI);
 	const rotation = new Matrix4();
 	rotation.extractRotation(m);
 
-	const threeM = new ThreeMatrix4().makeRotationX(Math.PI / 3);
+	const threeM = new ThreeMatrix4().makeRotationX(Math.THIRD_PI);
 	const threeRotation = new ThreeMatrix4();
 	threeRotation.extractRotation(threeM);
 
@@ -414,14 +413,14 @@ Deno.test("Matrix4: identity", () => {
 Deno.test("Matrix4: invert", () => {
 	const matrices = [
 		new Matrix4(),
-		new Matrix4().makeRotationX(Math.PI / 3),
+		new Matrix4().makeRotationX(Math.THIRD_PI),
 		new Matrix4().makeTranslation(1, 2, 3),
 		new Matrix4().makeScale(2, 3, 4),
 	];
 
 	const threeMatrices = [
 		new ThreeMatrix4(),
-		new ThreeMatrix4().makeRotationX(Math.PI / 3),
+		new ThreeMatrix4().makeRotationX(Math.THIRD_PI),
 		new ThreeMatrix4().makeTranslation(1, 2, 3),
 		new ThreeMatrix4().makeScale(2, 3, 4),
 	];
@@ -468,7 +467,7 @@ Deno.test("Matrix4: makeOrthographic", () => {
 });
 
 Deno.test("Matrix4: makePerspective", () => {
-	const fov = Maths.QUARTER_PI;
+	const fov = Math.QUARTER_PI;
 	const aspect = 16 / 9;
 	const near = 0.1;
 	const far = 100;
@@ -494,15 +493,15 @@ Deno.test("Matrix4: makePerspective", () => {
 
 Deno.test("Matrix4: makeRotationFromEuler", () => {
 	const euler = new Euler(
-		Maths.QUARTER_PI,
-		Math.PI / 3,
-		Math.PI / 6,
+		Math.QUARTER_PI,
+		Math.THIRD_PI,
+		Math.SIXTH_PI,
 		"XYZ",
 	);
 	const threeEuler = new ThreeEuler(
-		Maths.QUARTER_PI,
-		Math.PI / 3,
-		Math.PI / 6,
+		Math.QUARTER_PI,
+		Math.THIRD_PI,
+		Math.SIXTH_PI,
 		"XYZ",
 	);
 
@@ -521,21 +520,21 @@ Deno.test("Matrix4: makeRotationFromQuaternion", () => {
 });
 
 Deno.test("Matrix4: makeRotationX", () => {
-	const angle = Maths.QUARTER_PI;
+	const angle = Math.QUARTER_PI;
 	const a = new Matrix4().makeRotationX(angle);
 	const threeA = new ThreeMatrix4().makeRotationX(angle);
 	compareMatrices(a, threeA, "makeRotationX");
 });
 
 Deno.test("Matrix4: makeRotationY", () => {
-	const angle = Maths.QUARTER_PI;
+	const angle = Math.QUARTER_PI;
 	const a = new Matrix4().makeRotationY(angle);
 	const threeA = new ThreeMatrix4().makeRotationY(angle);
 	compareMatrices(a, threeA, "makeRotationY");
 });
 
 Deno.test("Matrix4: makeRotationZ", () => {
-	const angle = Maths.QUARTER_PI;
+	const angle = Math.QUARTER_PI;
 	const a = new Matrix4().makeRotationZ(angle);
 	const threeA = new ThreeMatrix4().makeRotationZ(angle);
 	compareMatrices(a, threeA, "makeRotationZ");
@@ -554,11 +553,11 @@ Deno.test("Matrix4: makeTranslation", () => {
 });
 
 Deno.test("Matrix4: mulMatrices", () => {
-	const a = new Matrix4().makeRotationX(Maths.QUARTER_PI);
+	const a = new Matrix4().makeRotationX(Math.QUARTER_PI);
 	const b = new Matrix4().makeTranslation(1, 2, 3);
 	const c = new Matrix4().mulMatrices(a, b);
 
-	const threeA = new ThreeMatrix4().makeRotationX(Maths.QUARTER_PI);
+	const threeA = new ThreeMatrix4().makeRotationX(Math.QUARTER_PI);
 	const threeB = new ThreeMatrix4().makeTranslation(1, 2, 3);
 	const threeC = new ThreeMatrix4().multiplyMatrices(threeA, threeB);
 

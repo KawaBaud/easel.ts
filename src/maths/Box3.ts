@@ -1,7 +1,5 @@
 import type { Mesh } from "../objects/Mesh.ts";
 import type { Object3D } from "../objects/Object3D.ts";
-import "../types.ts";
-import { Maths } from "./Maths.ts";
 import type { Sphere } from "./Sphere.ts";
 import { Vector3 } from "./Vector3.ts";
 
@@ -53,53 +51,27 @@ export class Box3 {
 	}
 
 	get corners(): Vector3[] {
+		const { x: x, y: y, z: z } = this.#min;
+		const { x: x2, y: y2, z: z2 } = this.#max;
+
 		return [
-			new Vector3(
-				this.#min.x,
-				this.#min.y,
-				this.#min.z,
-			), /* 0: bottom-left-back */
-			new Vector3(
-				this.#max.x,
-				this.#min.y,
-				this.#min.z,
-			), /* 1: bottom-right-back */
-			new Vector3(
-				this.#min.x,
-				this.#max.y,
-				this.#min.z,
-			), /* 2: top-left-back */
-			new Vector3(
-				this.#max.x,
-				this.#max.y,
-				this.#min.z,
-			), /* 3: top-right-back */
-			new Vector3(
-				this.#min.x,
-				this.#min.y,
-				this.#max.z,
-			), /* 4: bottom-left-front */
-			new Vector3(
-				this.#max.x,
-				this.#min.y,
-				this.#max.z,
-			), /* 5: bottom-right-front */
-			new Vector3(
-				this.#min.x,
-				this.#max.y,
-				this.#max.z,
-			), /* 6: top-left-front */
-			new Vector3(
-				this.#max.x,
-				this.#max.y,
-				this.#max.z,
-			), /* 7: top-right-front */
+			new Vector3(x, y, z), /* 0: bottom-left-back */
+			new Vector3(x2, y, z), /* 1: bottom-right-back */
+			new Vector3(x, y2, z), /* 2: top-left-back */
+			new Vector3(x2, y2, z), /* 3: top-right-back */
+			new Vector3(x, y, z2), /* 4: bottom-left-front */
+			new Vector3(x2, y, z2), /* 5: bottom-right-front */
+			new Vector3(x, y2, z2), /* 6: top-left-front */
+			new Vector3(x2, y2, z2), /* 7: top-right-front */
 		];
 	}
 
 	get isEmpty(): boolean {
-		return (this.#max.x < this.#min.x) || (this.#max.y < this.#min.y) ||
-			this.#max.z < this.#min.z;
+		return (
+			(this.#max.x < this.#min.x) ||
+			(this.#max.y < this.#min.y) ||
+			(this.#max.z < this.#min.z)
+		);
 	}
 
 	clone(): Box3 {
@@ -139,12 +111,16 @@ export class Box3 {
 	}
 
 	expandByPoint(point: Vector3): this {
-		this.#min.x = Maths.fastMin(this.#min.x, point.x);
-		this.#min.y = Maths.fastMin(this.#min.y, point.y);
-		this.#min.z = Maths.fastMin(this.#min.z, point.z);
-		this.#max.x = Maths.fastMax(this.#max.x, point.x);
-		this.#max.y = Maths.fastMax(this.#max.y, point.y);
-		this.#max.z = Maths.fastMax(this.#max.z, point.z);
+		const { x: x, y: y, z: z } = this.#min;
+		const { x: x2, y: y2, z: z2 } = this.#max;
+		const { x: px, y: py, z: pz } = point;
+
+		this.#min.x = Math.min(x, px);
+		this.#min.y = Math.min(y, py);
+		this.#min.z = Math.min(z, pz);
+		this.#max.x = Math.max(x2, px);
+		this.#max.y = Math.max(y2, py);
+		this.#max.z = Math.max(z2, pz);
 		return this;
 	}
 
@@ -181,9 +157,18 @@ export class Box3 {
 
 	intersectsSphere(sphere: Sphere): boolean {
 		const closestPoint = new Vector3();
-		closestPoint.x = Maths.clamp(sphere.centre.x, this.#min.x, this.#max.x);
-		closestPoint.y = Maths.clamp(sphere.centre.y, this.#min.y, this.#max.y);
-		closestPoint.z = Maths.clamp(sphere.centre.z, this.#min.z, this.#max.z);
+		closestPoint.x = Math.min(
+			Math.max(sphere.centre.x, this.#min.x),
+			this.#max.x,
+		);
+		closestPoint.y = Math.min(
+			Math.max(sphere.centre.y, this.#min.y),
+			this.#max.y,
+		);
+		closestPoint.z = Math.min(
+			Math.max(sphere.centre.z, this.#min.z),
+			this.#max.z,
+		);
 		return closestPoint.clone().sub(sphere.centre)
 			.lengthSq <= (sphere.radius * sphere.radius);
 	}
@@ -240,12 +225,17 @@ export class Box3 {
 	}
 
 	union(box: Box3): this {
-		this.#min.x = Maths.fastMin(this.#min.x, box.min.x);
-		this.#min.y = Maths.fastMin(this.#min.y, box.min.y);
-		this.#min.z = Maths.fastMin(this.#min.z, box.min.z);
-		this.#max.x = Maths.fastMax(this.#max.x, box.max.x);
-		this.#max.y = Maths.fastMax(this.#max.y, box.max.y);
-		this.#max.z = Maths.fastMax(this.#max.z, box.max.z);
+		const { x: x, y: y, z: z } = this.#min;
+		const { x: x2, y: y2, z: z2 } = this.#max;
+		const { x: px, y: py, z: pz } = box.min;
+		const { x: px2, y: py2, z: pz2 } = box.max;
+
+		this.#min.x = Math.min(x, px);
+		this.#min.y = Math.min(y, py);
+		this.#min.z = Math.min(z, pz);
+		this.#max.x = Math.max(x2, px2);
+		this.#max.y = Math.max(y2, py2);
+		this.#max.z = Math.max(z2, pz2);
 		return this;
 	}
 }

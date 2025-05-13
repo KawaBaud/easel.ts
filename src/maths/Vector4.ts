@@ -1,5 +1,3 @@
-import "../types.ts";
-
 export class Vector4 {
 	#x = 0;
 	#y = 0;

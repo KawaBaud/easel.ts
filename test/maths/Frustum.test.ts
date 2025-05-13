@@ -12,7 +12,6 @@ import {
 } from "three";
 import { Box3 } from "../../src/maths/Box3.ts";
 import { Frustum } from "../../src/maths/Frustum.ts";
-import { Maths } from "../../src/maths/Maths.ts";
 import { Matrix4 } from "../../src/maths/Matrix4.ts";
 import { Sphere } from "../../src/maths/Sphere.ts";
 import { Vector3 } from "../../src/maths/Vector3.ts";
@@ -40,25 +39,25 @@ function compareFrustums(
 		assertAlmostEquals(
 			ourPlane.normal.x,
 			threePlane.normal.x,
-			Maths.EPSILON,
+			Math.EPSILON,
 			`${message} (plane ${i} normal.x)`,
 		);
 		assertAlmostEquals(
 			ourPlane.normal.y,
 			threePlane.normal.y,
-			Maths.EPSILON,
+			Math.EPSILON,
 			`${message} (plane ${i} normal.y)`,
 		);
 		assertAlmostEquals(
 			ourPlane.normal.z,
 			threePlane.normal.z,
-			Maths.EPSILON,
+			Math.EPSILON,
 			`${message} (plane ${i} normal.z)`,
 		);
 		assertAlmostEquals(
 			ourPlane.constant,
 			threePlane.constant,
-			Maths.EPSILON,
+			Math.EPSILON,
 			`${message} (plane ${i} constant)`,
 		);
 	}
@@ -73,7 +72,7 @@ Deno.test("Frustum: clone", () => {
 	const a = new Frustum();
 
 	const perspMatrix = new Matrix4().makePerspective(
-		Maths.toRadians(45),
+		Math.toRadians(45),
 		1.0,
 		0.1,
 		100,
@@ -119,13 +118,13 @@ Deno.test("Frustum: containsPoint", () => {
 	const threeA = new ThreeFrustum();
 
 	const perspMatrix = new Matrix4().makePerspective(
-		Maths.toRadians(45),
+		Math.toRadians(45),
 		1.0,
 		0.1,
 		100,
 	);
 
-	const halfHeight = 0.1 * Math.tan(Maths.toRadians(45) / 2);
+	const halfHeight = 0.1 * Math.tan(Math.toRadians(45) / 2);
 	const halfWidth = halfHeight * 1.0;
 	const threeMatrix = new ThreeMatrix4().makePerspective(
 		-halfWidth,
@@ -166,7 +165,7 @@ Deno.test("Frustum: containsPoint", () => {
 
 Deno.test("Frustum: copy", () => {
 	const perspMatrix = new Matrix4().makePerspective(
-		Maths.toRadians(45),
+		Math.toRadians(45),
 		1.0,
 		0.1,
 		100,
@@ -211,13 +210,13 @@ Deno.test("Frustum: intersectsBox", () => {
 	const threeA = new ThreeFrustum();
 
 	const perspMatrix = new Matrix4().makePerspective(
-		Maths.toRadians(45),
+		Math.toRadians(45),
 		1.0,
 		0.1,
 		100,
 	);
 
-	const halfHeight = 0.1 * Math.tan(Maths.toRadians(45) / 2);
+	const halfHeight = 0.1 * Math.tan(Math.toRadians(45) / 2);
 	const halfWidth = halfHeight * 1.0;
 	const threeMatrix = new ThreeMatrix4().makePerspective(
 		-halfWidth,
@@ -268,13 +267,13 @@ Deno.test("Frustum: intersectsSphere", () => {
 	const threeA = new ThreeFrustum();
 
 	const perspMatrix = new Matrix4().makePerspective(
-		Maths.toRadians(45),
+		Math.toRadians(45),
 		1.0,
 		0.1,
 		100,
 	);
 
-	const halfHeight = 0.1 * Math.tan(Maths.toRadians(45) / 2);
+	const halfHeight = 0.1 * Math.tan(Math.toRadians(45) / 2);
 	const halfWidth = halfHeight * 1.0;
 	const threeMatrix = new ThreeMatrix4().makePerspective(
 		-halfWidth,
@@ -330,13 +329,13 @@ Deno.test("Frustum: setFromProjectionMatrix", () => {
 	compareFrustums(a, threeA, "setFromProjectionMatrix (identity)");
 
 	const perspMatrix = new Matrix4().makePerspective(
-		Maths.toRadians(45),
+		Math.toRadians(45),
 		1,
 		0.1,
 		100,
 	);
 
-	const halfHeight = 0.1 * Math.tan(Maths.toRadians(45) / 2);
+	const halfHeight = 0.1 * Math.tan(Math.toRadians(45) / 2);
 	const halfWidth = halfHeight * 1.0;
 	const threeMatrix = new ThreeMatrix4().makePerspective(
 		-halfWidth,

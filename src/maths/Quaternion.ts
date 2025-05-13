@@ -1,4 +1,3 @@
-import "../types.ts";
 import type { Euler } from "./Euler.ts";
 import type { Matrix4 } from "./Matrix4.ts";
 import type { Vector3 } from "./Vector3.ts";

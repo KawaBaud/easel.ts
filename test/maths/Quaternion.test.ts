@@ -10,10 +10,10 @@ import {
 	Vector3 as ThreeVector3,
 } from "three";
 import { Euler } from "../../src/maths/Euler.ts";
-import { Maths } from "../../src/maths/Maths.ts";
 import { Matrix4 } from "../../src/maths/Matrix4.ts";
 import { Quaternion } from "../../src/maths/Quaternion.ts";
 import { Vector3 } from "../../src/maths/Vector3.ts";
+import "../../src/types.ts";
 
 function compareQuaternions(
 	ourQuat: Quaternion,
@@ -31,25 +31,25 @@ function compareQuaternions(
 	assertAlmostEquals(
 		ourQuat.x,
 		threeQuat.x,
-		Maths.EPSILON,
+		Math.EPSILON,
 		`${message} (x)`,
 	);
 	assertAlmostEquals(
 		ourQuat.y,
 		threeQuat.y,
-		Maths.EPSILON,
+		Math.EPSILON,
 		`${message} (y)`,
 	);
 	assertAlmostEquals(
 		ourQuat.z,
 		threeQuat.z,
-		Maths.EPSILON,
+		Math.EPSILON,
 		`${message} (z)`,
 	);
 	assertAlmostEquals(
 		ourQuat.w,
 		threeQuat.w,
-		Maths.EPSILON,
+		Math.EPSILON,
 		`${message} (w)`,
 	);
 }
@@ -76,7 +76,7 @@ Deno.test("Quaternion: get->length", () => {
 	const a = new Quaternion(1, 2, 3, 4);
 	const threeA = new ThreeQuaternion(1, 2, 3, 4);
 	assertEquals(a.length, Math.sqrt(30));
-	assertAlmostEquals(a.length, threeA.length(), Maths.EPSILON, "length");
+	assertAlmostEquals(a.length, threeA.length(), Math.EPSILON, "length");
 });
 
 Deno.test("Quaternion: get->lengthSq", () => {
@@ -86,7 +86,7 @@ Deno.test("Quaternion: get->lengthSq", () => {
 	assertAlmostEquals(
 		a.lengthSq,
 		threeA.lengthSq(),
-		Maths.EPSILON,
+		Math.EPSILON,
 		"lengthSq",
 	);
 });
@@ -137,15 +137,15 @@ Deno.test("Quaternion: set", () => {
 
 Deno.test("Quaternion: setFromEuler", () => {
 	const eulerXYZ = new Euler(
-		Maths.QUARTER_PI,
-		Math.PI / 3,
-		Math.PI / 6,
+		Math.QUARTER_PI,
+		Math.THIRD_PI,
+		Math.SIXTH_PI,
 		"XYZ",
 	);
 	const threeEulerXYZ = new ThreeEuler(
-		Maths.QUARTER_PI,
-		Math.PI / 3,
-		Math.PI / 6,
+		Math.QUARTER_PI,
+		Math.THIRD_PI,
+		Math.SIXTH_PI,
 		"XYZ",
 	);
 	const a = new Quaternion().setFromEuler(eulerXYZ);
@@ -153,15 +153,15 @@ Deno.test("Quaternion: setFromEuler", () => {
 	compareQuaternions(a, threeA, "setFromEuler (XYZ)");
 
 	const eulerYXZ = new Euler(
-		Maths.QUARTER_PI,
-		Math.PI / 3,
-		Math.PI / 6,
+		Math.QUARTER_PI,
+		Math.THIRD_PI,
+		Math.SIXTH_PI,
 		"YXZ",
 	);
 	const threeEulerYXZ = new ThreeEuler(
-		Maths.QUARTER_PI,
-		Math.PI / 3,
-		Math.PI / 6,
+		Math.QUARTER_PI,
+		Math.THIRD_PI,
+		Math.SIXTH_PI,
 		"YXZ",
 	);
 	const b = new Quaternion().setFromEuler(eulerYXZ);
@@ -170,15 +170,15 @@ Deno.test("Quaternion: setFromEuler", () => {
 	compareQuaternions(b, threeB, "setFromEuler (YXZ)");
 
 	const eulerZXY = new Euler(
-		Maths.QUARTER_PI,
-		Math.PI / 3,
-		Math.PI / 6,
+		Math.QUARTER_PI,
+		Math.THIRD_PI,
+		Math.SIXTH_PI,
 		"ZXY",
 	);
 	const threeEulerZXY = new ThreeEuler(
-		Maths.QUARTER_PI,
-		Math.PI / 3,
-		Math.PI / 6,
+		Math.QUARTER_PI,
+		Math.THIRD_PI,
+		Math.SIXTH_PI,
 		"ZXY",
 	);
 	const c = new Quaternion().setFromEuler(eulerZXY);
@@ -210,7 +210,7 @@ Deno.test("Quaternion: unitize", () => {
 	assertAlmostEquals(
 		a.length,
 		1.0,
-		Maths.EPSILON,
+		Math.EPSILON,
 		"unitize results in length 1",
 	);
 });

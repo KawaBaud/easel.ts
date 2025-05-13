@@ -1,6 +1,5 @@
 import type { Camera } from "../../cameras/Camera.ts";
 import { Frustum } from "../../maths/Frustum.ts";
-import { Maths } from "../../maths/Maths.ts";
 import { Vector3 } from "../../maths/Vector3.ts";
 import "../../types.ts";
 
@@ -82,8 +81,8 @@ export class ClippingContext {
 			}
 		}
 
-		t0 = Maths.fastMax(0, t0);
-		t1 = Maths.fastMin(1, t1);
+		t0 = Math.max(0, t0);
+		t1 = Math.min(1, t1);
 
 		const clippedStart = _v1.copy(start).add(
 			_v4.copy(direction).mulScalar(t0),

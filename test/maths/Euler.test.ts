@@ -9,9 +9,9 @@ import {
 	Quaternion as ThreeQuaternion,
 } from "three";
 import { Euler } from "../../src/maths/Euler.ts";
-import { Maths } from "../../src/maths/Maths.ts";
 import { Matrix4 } from "../../src/maths/Matrix4.ts";
 import { Quaternion } from "../../src/maths/Quaternion.ts";
+import "../../src/types.ts";
 
 function compareEulers(
 	ourEuler: Euler,
@@ -50,25 +50,25 @@ function compareEulers(
 	assertAlmostEquals(
 		Math.abs(ourQuat.x),
 		Math.abs(threeQuat.x),
-		Maths.EPSILON,
+		Math.EPSILON,
 		`${message} (quaternion x)`,
 	);
 	assertAlmostEquals(
 		Math.abs(ourQuat.y),
 		Math.abs(threeQuat.y),
-		Maths.EPSILON,
+		Math.EPSILON,
 		`${message} (quaternion y)`,
 	);
 	assertAlmostEquals(
 		Math.abs(ourQuat.z),
 		Math.abs(threeQuat.z),
-		Maths.EPSILON,
+		Math.EPSILON,
 		`${message} (quaternion z)`,
 	);
 	assertAlmostEquals(
 		Math.abs(ourQuat.w),
 		Math.abs(threeQuat.w),
-		Maths.EPSILON,
+		Math.EPSILON,
 		`${message} (quaternion w)`,
 	);
 
@@ -129,15 +129,15 @@ Deno.test("Euler: set", () => {
 
 Deno.test("Euler: reorder", () => {
 	const euler = new Euler(
-		Maths.QUARTER_PI,
-		Math.PI / 3,
-		Math.PI / 6,
+		Math.QUARTER_PI,
+		Math.THIRD_PI,
+		Math.SIXTH_PI,
 		"XYZ",
 	);
 	const threeEuler = new ThreeEuler(
-		Maths.QUARTER_PI,
-		Math.PI / 3,
-		Math.PI / 6,
+		Math.QUARTER_PI,
+		Math.THIRD_PI,
+		Math.SIXTH_PI,
 		"XYZ",
 	);
 
@@ -151,10 +151,10 @@ Deno.test("Euler: reorder", () => {
 
 Deno.test("Euler: setFromQuaternion", () => {
 	const q = new Quaternion().setFromEuler(
-		new Euler(Maths.QUARTER_PI, Math.PI / 3, Math.PI / 6, "XYZ"),
+		new Euler(Math.QUARTER_PI, Math.THIRD_PI, Math.SIXTH_PI, "XYZ"),
 	);
 	const threeQ = new ThreeQuaternion().setFromEuler(
-		new ThreeEuler(Maths.QUARTER_PI, Math.PI / 3, Math.PI / 6, "XYZ"),
+		new ThreeEuler(Math.QUARTER_PI, Math.THIRD_PI, Math.SIXTH_PI, "XYZ"),
 	);
 
 	const orders: Array<Euler["order"]> = [
@@ -174,10 +174,10 @@ Deno.test("Euler: setFromQuaternion", () => {
 
 Deno.test("Euler: setFromRotationMatrix", () => {
 	const m = new Matrix4().makeRotationFromEuler(
-		new Euler(Maths.QUARTER_PI, Math.PI / 3, Math.PI / 6, "XYZ"),
+		new Euler(Math.QUARTER_PI, Math.THIRD_PI, Math.SIXTH_PI, "XYZ"),
 	);
 	const threeM = new ThreeMatrix4().makeRotationFromEuler(
-		new ThreeEuler(Maths.QUARTER_PI, Math.PI / 3, Math.PI / 6, "XYZ"),
+		new ThreeEuler(Math.QUARTER_PI, Math.THIRD_PI, Math.SIXTH_PI, "XYZ"),
 	);
 
 	const orders: Array<Euler["order"]> = [

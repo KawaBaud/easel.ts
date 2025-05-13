@@ -1,4 +1,3 @@
-import "../types.ts";
 import type { Box3 } from "./Box3.ts";
 import type { Matrix4 } from "./Matrix4.ts";
 import { Plane } from "./Plane.ts";

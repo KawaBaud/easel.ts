@@ -4,8 +4,8 @@ import {
 	assertNotStrictEquals,
 } from "@std/assert";
 import { Vector4 as ThreeVector4 } from "three";
-import { Maths } from "../../src/maths/Maths.ts";
 import { Vector4 } from "../../src/maths/Vector4.ts";
+import "../../src/types.ts";
 
 function compareVectors(
 	ourVec: Vector4,
@@ -19,13 +19,13 @@ function compareVectors(
 	assertAlmostEquals(
 		ourVec.x,
 		threeVec.x,
-		Maths.EPSILON,
+		Math.EPSILON,
 		`${message} (x)`,
 	);
 	assertAlmostEquals(
 		ourVec.y,
 		threeVec.y,
-		Maths.EPSILON,
+		Math.EPSILON,
 		`${message} (y)`,
 	);
 }
@@ -47,7 +47,7 @@ Deno.test("Vector4: constructor", () => {
 Deno.test("Vector4: get->length", () => {
 	const a = new Vector4(1, 2, 3, 4);
 	const threeA = new ThreeVector4(1, 2, 3, 4);
-	assertAlmostEquals(a.length, threeA.length(), Maths.EPSILON, "length");
+	assertAlmostEquals(a.length, threeA.length(), Math.EPSILON, "length");
 });
 
 Deno.test("Vector4: get->lengthSq", () => {
@@ -56,7 +56,7 @@ Deno.test("Vector4: get->lengthSq", () => {
 	assertAlmostEquals(
 		a.lengthSq,
 		threeA.lengthSq(),
-		Maths.EPSILON,
+		Math.EPSILON,
 		"lengthSq",
 	);
 });

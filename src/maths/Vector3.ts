@@ -1,5 +1,5 @@
 import type { Camera } from "../cameras/Camera.ts";
-import "../types.ts";
+
 import type { Euler } from "./Euler.ts";
 import type { Matrix3 } from "./Matrix3.ts";
 import type { Matrix4 } from "./Matrix4.ts";

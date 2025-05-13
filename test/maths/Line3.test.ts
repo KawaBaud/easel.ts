@@ -9,7 +9,6 @@ import {
 	Vector3 as ThreeVector3,
 } from "three";
 import { Line3 } from "../../src/maths/Line3.ts";
-import { Maths } from "../../src/maths/Maths.ts";
 import { Matrix4 } from "../../src/maths/Matrix4.ts";
 import { Vector3 } from "../../src/maths/Vector3.ts";
 import "../../src/types.ts";
@@ -30,37 +29,37 @@ function compareLines(
 	assertAlmostEquals(
 		ourLine.start.x,
 		threeLine.start.x,
-		Maths.EPSILON,
+		Math.EPSILON,
 		`${message} (start.x)`,
 	);
 	assertAlmostEquals(
 		ourLine.start.y,
 		threeLine.start.y,
-		Maths.EPSILON,
+		Math.EPSILON,
 		`${message} (start.y)`,
 	);
 	assertAlmostEquals(
 		ourLine.start.z,
 		threeLine.start.z,
-		Maths.EPSILON,
+		Math.EPSILON,
 		`${message} (start.z)`,
 	);
 	assertAlmostEquals(
 		ourLine.end.x,
 		threeLine.end.x,
-		Maths.EPSILON,
+		Math.EPSILON,
 		`${message} (end.x)`,
 	);
 	assertAlmostEquals(
 		ourLine.end.y,
 		threeLine.end.y,
-		Maths.EPSILON,
+		Math.EPSILON,
 		`${message} (end.y)`,
 	);
 	assertAlmostEquals(
 		ourLine.end.z,
 		threeLine.end.z,
-		Maths.EPSILON,
+		Math.EPSILON,
 		`${message} (end.z)`,
 	);
 }
@@ -99,9 +98,9 @@ Deno.test("Line3: get->delta", () => {
 	const threeDelta = new ThreeVector3();
 	threeA.delta(threeDelta);
 
-	assertAlmostEquals(delta.x, threeDelta.x, Maths.EPSILON, "delta.x");
-	assertAlmostEquals(delta.y, threeDelta.y, Maths.EPSILON, "delta.y");
-	assertAlmostEquals(delta.z, threeDelta.z, Maths.EPSILON, "delta.z");
+	assertAlmostEquals(delta.x, threeDelta.x, Math.EPSILON, "delta.x");
+	assertAlmostEquals(delta.y, threeDelta.y, Math.EPSILON, "delta.y");
+	assertAlmostEquals(delta.z, threeDelta.z, Math.EPSILON, "delta.z");
 });
 
 Deno.test("Line3: get->length", () => {
@@ -113,7 +112,7 @@ Deno.test("Line3: get->length", () => {
 		new ThreeVector3(1, 2, 3),
 		new ThreeVector3(4, 5, 6),
 	);
-	assertAlmostEquals(a.length, threeA.distance(), Maths.EPSILON, "length");
+	assertAlmostEquals(a.length, threeA.distance(), Math.EPSILON, "length");
 });
 
 Deno.test("Line3: get->lengthSq", () => {
@@ -128,7 +127,7 @@ Deno.test("Line3: get->lengthSq", () => {
 	assertAlmostEquals(
 		a.lengthSq,
 		threeA.distanceSq(),
-		Maths.EPSILON,
+		Math.EPSILON,
 		"lengthSq",
 	);
 });
@@ -159,8 +158,8 @@ Deno.test("Line3: applyMatrix4", () => {
 		new ThreeVector3(0, 1, 0),
 	);
 
-	const rotM = new Matrix4().makeRotationZ(Maths.HALF_PI);
-	const threeRotM = new ThreeMatrix4().makeRotationZ(Maths.HALF_PI);
+	const rotM = new Matrix4().makeRotationZ(Math.HALF_PI);
+	const threeRotM = new ThreeMatrix4().makeRotationZ(Math.HALF_PI);
 
 	b.applyMatrix4(rotM);
 	threeB.applyMatrix4(threeRotM);
@@ -182,21 +181,21 @@ Deno.test("Line3: at", () => {
 
 	a.at(0, target);
 	threeA.at(0, threeTarget);
-	assertAlmostEquals(target.x, threeTarget.x, Maths.EPSILON, "at(0).x");
-	assertAlmostEquals(target.y, threeTarget.y, Maths.EPSILON, "at(0).y");
-	assertAlmostEquals(target.z, threeTarget.z, Maths.EPSILON, "at(0).z");
+	assertAlmostEquals(target.x, threeTarget.x, Math.EPSILON, "at(0).x");
+	assertAlmostEquals(target.y, threeTarget.y, Math.EPSILON, "at(0).y");
+	assertAlmostEquals(target.z, threeTarget.z, Math.EPSILON, "at(0).z");
 
 	a.at(0.5, target);
 	threeA.at(0.5, threeTarget);
-	assertAlmostEquals(target.x, threeTarget.x, Maths.EPSILON, "at(0.5).x");
-	assertAlmostEquals(target.y, threeTarget.y, Maths.EPSILON, "at(0.5).y");
-	assertAlmostEquals(target.z, threeTarget.z, Maths.EPSILON, "at(0.5).z");
+	assertAlmostEquals(target.x, threeTarget.x, Math.EPSILON, "at(0.5).x");
+	assertAlmostEquals(target.y, threeTarget.y, Math.EPSILON, "at(0.5).y");
+	assertAlmostEquals(target.z, threeTarget.z, Math.EPSILON, "at(0.5).z");
 
 	a.at(1, target);
 	threeA.at(1, threeTarget);
-	assertAlmostEquals(target.x, threeTarget.x, Maths.EPSILON, "at(1).x");
-	assertAlmostEquals(target.y, threeTarget.y, Maths.EPSILON, "at(1).y");
-	assertAlmostEquals(target.z, threeTarget.z, Maths.EPSILON, "at(1).z");
+	assertAlmostEquals(target.x, threeTarget.x, Math.EPSILON, "at(1).x");
+	assertAlmostEquals(target.y, threeTarget.y, Math.EPSILON, "at(1).y");
+	assertAlmostEquals(target.z, threeTarget.z, Math.EPSILON, "at(1).z");
 });
 
 Deno.test("Line3: clone", () => {
@@ -231,7 +230,7 @@ Deno.test("Line3: closestPointToPointParameter", () => {
 	assertAlmostEquals(
 		t1,
 		threeT1,
-		Maths.EPSILON,
+		Math.EPSILON,
 		"closestPointToPointParameter (on line)",
 	);
 
@@ -242,7 +241,7 @@ Deno.test("Line3: closestPointToPointParameter", () => {
 	assertAlmostEquals(
 		t2,
 		threeT2,
-		Maths.EPSILON,
+		Math.EPSILON,
 		"closestPointToPointParameter (off line)",
 	);
 
@@ -253,7 +252,7 @@ Deno.test("Line3: closestPointToPointParameter", () => {
 	assertAlmostEquals(
 		t3,
 		threeT3,
-		Maths.EPSILON,
+		Math.EPSILON,
 		"closestPointToPointParameter (beyond line, clamped)",
 	);
 
@@ -262,7 +261,7 @@ Deno.test("Line3: closestPointToPointParameter", () => {
 	assertAlmostEquals(
 		t4,
 		threeT4,
-		Maths.EPSILON,
+		Math.EPSILON,
 		"closestPointToPointParameter (beyond line, unclamped)",
 	);
 });
@@ -287,19 +286,19 @@ Deno.test("Line3: closestPointToPoint", () => {
 	assertAlmostEquals(
 		target.x,
 		threeTarget.x,
-		Maths.EPSILON,
+		Math.EPSILON,
 		"closestPointToPoint (on line).x",
 	);
 	assertAlmostEquals(
 		target.y,
 		threeTarget.y,
-		Maths.EPSILON,
+		Math.EPSILON,
 		"closestPointToPoint (on line).y",
 	);
 	assertAlmostEquals(
 		target.z,
 		threeTarget.z,
-		Maths.EPSILON,
+		Math.EPSILON,
 		"closestPointToPoint (on line).z",
 	);
 
@@ -310,19 +309,19 @@ Deno.test("Line3: closestPointToPoint", () => {
 	assertAlmostEquals(
 		target.x,
 		threeTarget.x,
-		Maths.EPSILON,
+		Math.EPSILON,
 		"closestPointToPoint (off line).x",
 	);
 	assertAlmostEquals(
 		target.y,
 		threeTarget.y,
-		Maths.EPSILON,
+		Math.EPSILON,
 		"closestPointToPoint (off line).y",
 	);
 	assertAlmostEquals(
 		target.z,
 		threeTarget.z,
-		Maths.EPSILON,
+		Math.EPSILON,
 		"closestPointToPoint (off line).z",
 	);
 });
@@ -389,9 +388,9 @@ Deno.test("Line3: getCenter", () => {
 	a.getCenter(target);
 	threeA.getCenter(threeTarget);
 
-	assertAlmostEquals(target.x, threeTarget.x, Maths.EPSILON, "getCenter.x");
-	assertAlmostEquals(target.y, threeTarget.y, Maths.EPSILON, "getCenter.y");
-	assertAlmostEquals(target.z, threeTarget.z, Maths.EPSILON, "getCenter.z");
+	assertAlmostEquals(target.x, threeTarget.x, Math.EPSILON, "getCenter.x");
+	assertAlmostEquals(target.y, threeTarget.y, Math.EPSILON, "getCenter.y");
+	assertAlmostEquals(target.z, threeTarget.z, Math.EPSILON, "getCenter.z");
 });
 
 Deno.test("Line3: set", () => {

@@ -10,7 +10,7 @@ export abstract class Loader<T extends Object3D = Object3D> {
 		fetch(url)
 			.then((response) => {
 				if (!response.ok) {
-					throw new Error(`unable to load file: ${response.statusText}`);
+					throw new Error(`failed to load file: ${response.statusText}`);
 				}
 				return response.text();
 			})

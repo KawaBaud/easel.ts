@@ -1,4 +1,3 @@
-import "../types.ts";
 import { Vector3 } from "./Vector3.ts";
 
 export class Sphere {

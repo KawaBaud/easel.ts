@@ -1,5 +1,3 @@
-import { Maths } from "../maths/Maths.ts";
-
 export type ColorType = string | number | Color;
 
 export type HSL = {
@@ -26,9 +24,9 @@ export class Color {
 	static toRGB(color: ColorType): RGB {
 		const tempColor = new Color(color);
 		return {
-			r: Maths.fastTrunc(tempColor.r * Color.RGB_SCALE),
-			g: Maths.fastTrunc(tempColor.g * Color.RGB_SCALE),
-			b: Maths.fastTrunc(tempColor.b * Color.RGB_SCALE),
+			r: Math.trunc(tempColor.r * Color.RGB_SCALE),
+			g: Math.trunc(tempColor.g * Color.RGB_SCALE),
+			b: Math.trunc(tempColor.b * Color.RGB_SCALE),
 		};
 	}
 
@@ -55,8 +53,8 @@ export class Color {
 		const g = this.g;
 		const b = this.b;
 
-		const max = Maths.fastMax(Maths.fastMax(r, g), b);
-		const min = Maths.fastMin(Maths.fastMin(r, g), b);
+		const max = Math.max(r, g, b);
+		const min = Math.min(r, g, b);
 
 		let h = 0, s = 0;
 		const l = (min + max) / 2;
@@ -79,9 +77,9 @@ export class Color {
 	get hslString(): string {
 		const hsl = this.hsl;
 
-		const h = Maths.fastTrunc(hsl.h * Color.HUE_SCALE);
-		const s = Maths.fastTrunc(hsl.s * Color.SATURATION_SCALE);
-		const l = Maths.fastTrunc(hsl.l * Color.LIGHTNESS_SCALE);
+		const h = Math.trunc(hsl.h * Color.HUE_SCALE);
+		const s = Math.trunc(hsl.s * Color.SATURATION_SCALE);
+		const l = Math.trunc(hsl.l * Color.LIGHTNESS_SCALE);
 		return `hsl(${h},${s}%,${l}%)`;
 	}
 
@@ -131,7 +129,7 @@ export class Color {
 		if (hex > 0xFFFFFF || hex < 0) {
 			throw new Error("EASEL.Color.setHex(): hex out of range");
 		}
-		hex = Maths.fastTrunc(hex);
+		hex = Math.trunc(hex);
 
 		this.r = (hex >> 16) / Color.RGB_SCALE;
 		this.g = (hex >> 8 & Color.RGB_SCALE) / Color.RGB_SCALE;
