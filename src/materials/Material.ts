@@ -1,23 +1,30 @@
 import type { ColorType } from "../common/Color.ts";
+import { Side } from "../consts.ts";
 
 export interface MaterialOptions {
 	color?: ColorType;
+	opacity?: number;
+	dithering?: boolean;
+	side?: Side;
 	vertexColors?: boolean;
 	visible?: boolean;
-	opacity?: number;
 }
 
 export class Material {
 	color: ColorType;
+	opacity: number;
+	dithering: boolean;
+	side: Side;
 	vertexColors: boolean;
 	visible: boolean;
-	opacity: number;
 
 	constructor(options: MaterialOptions = {}) {
 		this.color = options.color ?? 0xFFFFFF;
+		this.opacity = options.opacity ?? 1.0;
+		this.dithering = options.dithering ?? false;
+		this.side = options.side ?? Side.FRONT;
 		this.vertexColors = options.vertexColors ?? false;
 		this.visible = options.visible ?? true;
-		this.opacity = options.opacity ?? 1.0;
 	}
 
 	clone(): Material {
@@ -26,9 +33,11 @@ export class Material {
 
 	copy(source: Material): this {
 		this.color = source.color;
+		this.opacity = source.opacity;
+		this.dithering = source.dithering;
+		this.side = source.side;
 		this.vertexColors = source.vertexColors;
 		this.visible = source.visible;
-		this.opacity = source.opacity;
 		return this;
 	}
 }
