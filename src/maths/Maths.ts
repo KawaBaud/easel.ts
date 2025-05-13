@@ -1,4 +1,4 @@
-export class MathUtils {
+export class Maths {
 	static readonly EPSILON: number = 1e-4;
 
 	/** 2 * Math.PI */
@@ -38,7 +38,7 @@ export class MathUtils {
 
 	static fastAtan2(y: number, x: number): number {
 		if (x === 0) {
-			return y === 0 ? 0 : y > 0 ? MathUtils.HALF_PI : -MathUtils.HALF_PI;
+			return y === 0 ? 0 : y > 0 ? Maths.HALF_PI : -Maths.HALF_PI;
 		}
 		if (y === 0) return x >= 0 ? 0 : Math.PI;
 
@@ -49,7 +49,7 @@ export class MathUtils {
 		const a = inOctant ? absY / absX : absX / absY;
 		const s = a * a;
 		let r = (((-0.046496 * s + 0.15931) * s - 0.32763) * s + 1) * a;
-		r = inOctant ? r : MathUtils.HALF_PI - r;
+		r = inOctant ? r : Maths.HALF_PI - r;
 		r = x < 0 ? Math.PI - r : r;
 		return y < 0 ? -r : r;
 	}
@@ -93,10 +93,10 @@ export class MathUtils {
 	}
 
 	static toDegrees(radians: number): number {
-		return radians * MathUtils.RAD2DEG;
+		return radians * Maths.RAD2DEG;
 	}
 
 	static toRadians(degrees: number): number {
-		return degrees * MathUtils.DEG2RAD;
+		return degrees * Maths.DEG2RAD;
 	}
 }

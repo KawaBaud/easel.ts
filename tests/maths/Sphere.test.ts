@@ -4,7 +4,7 @@ import {
 	assertNotStrictEquals,
 } from "@std/assert";
 import { Sphere as ThreeSphere, Vector3 as ThreeVector3 } from "three";
-import { MathUtils } from "../../src/maths/MathUtils.ts";
+import { Maths } from "../../src/maths/Maths.ts";
 import { Sphere } from "../../src/maths/Sphere.ts";
 import { Vector3 } from "../../src/maths/Vector3.ts";
 import "../../src/types.ts";
@@ -25,25 +25,25 @@ function compareSpheres(
 	assertAlmostEquals(
 		ourSphere.centre.x,
 		threeSphere.center.x,
-		MathUtils.EPSILON,
+		Maths.EPSILON,
 		`${message} (centre.x)`,
 	);
 	assertAlmostEquals(
 		ourSphere.centre.y,
 		threeSphere.center.y,
-		MathUtils.EPSILON,
+		Maths.EPSILON,
 		`${message} (centre.y)`,
 	);
 	assertAlmostEquals(
 		ourSphere.centre.z,
 		threeSphere.center.z,
-		MathUtils.EPSILON,
+		Maths.EPSILON,
 		`${message} (centre.z)`,
 	);
 	assertAlmostEquals(
 		ourSphere.radius,
 		threeSphere.radius,
-		MathUtils.EPSILON,
+		Maths.EPSILON,
 		`${message} (radius)`,
 	);
 }
@@ -65,25 +65,25 @@ Deno.test("Sphere: constructor", () => {
 	assertAlmostEquals(
 		b.centre.x,
 		threeB.center.x,
-		MathUtils.EPSILON,
+		Maths.EPSILON,
 		"constructor w/ values (centre.x)",
 	);
 	assertAlmostEquals(
 		b.centre.y,
 		threeB.center.y,
-		MathUtils.EPSILON,
+		Maths.EPSILON,
 		"constructor w/ values (centre.y)",
 	);
 	assertAlmostEquals(
 		b.centre.z,
 		threeB.center.z,
-		MathUtils.EPSILON,
+		Maths.EPSILON,
 		"constructor w/ values (centre.z)",
 	);
 	assertAlmostEquals(
 		b.radius,
 		threeB.radius,
-		MathUtils.EPSILON,
+		Maths.EPSILON,
 		"constructor w/ values (radius)",
 	);
 });
@@ -174,7 +174,7 @@ Deno.test("Sphere: distanceToPoint", () => {
 	assertAlmostEquals(
 		a.distanceToPoint(point1),
 		threeA.distanceToPoint(threePoint1),
-		MathUtils.EPSILON,
+		Maths.EPSILON,
 		"distanceToPoint (inside)",
 	);
 
@@ -183,7 +183,7 @@ Deno.test("Sphere: distanceToPoint", () => {
 	assertAlmostEquals(
 		a.distanceToPoint(point2),
 		threeA.distanceToPoint(threePoint2),
-		MathUtils.EPSILON,
+		Maths.EPSILON,
 		"distanceToPoint (on surface)",
 	);
 
@@ -192,7 +192,7 @@ Deno.test("Sphere: distanceToPoint", () => {
 	assertAlmostEquals(
 		a.distanceToPoint(point3),
 		threeA.distanceToPoint(threePoint3),
-		MathUtils.EPSILON,
+		Maths.EPSILON,
 		"distanceToPoint (outside)",
 	);
 });

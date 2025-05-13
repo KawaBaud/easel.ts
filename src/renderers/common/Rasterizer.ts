@@ -1,7 +1,7 @@
 import type { Camera } from "../../cameras/Camera.ts";
 import { Color, type ColorType } from "../../common/Color.ts";
 import type { SimpleMaterial } from "../../materials/SimpleMaterial.ts";
-import { MathUtils } from "../../maths/MathUtils.ts";
+import { Maths } from "../../maths/Maths.ts";
 import { Vector3 } from "../../maths/Vector3.ts";
 import { CanvasUtils } from "../CanvasUtils.ts";
 
@@ -210,9 +210,9 @@ export class Rasterizer {
 		const edge0 = isTopTriangle ? (x3 - x1) / (y3 - y1) : (x2 - x1) / (y2 - y1);
 		const edge1 = isTopTriangle ? (x3 - x2) / (y3 - y2) : (x3 - x1) / (y3 - y1);
 
-		const startY = MathUtils.clamp(Math.ceil(y1), 0, this.height - 1);
-		const endY = MathUtils.clamp(
-			MathUtils.fastTrunc(isTopTriangle ? y3 : y2),
+		const startY = Maths.clamp(Math.ceil(y1), 0, this.height - 1);
+		const endY = Maths.clamp(
+			Maths.fastTrunc(isTopTriangle ? y3 : y2),
 			0,
 			this.height - 1,
 		);
@@ -249,13 +249,13 @@ export class Rasterizer {
 		x2: number,
 		color: ColorType,
 	): void {
-		const startX = MathUtils.clamp(
-			Math.ceil(MathUtils.fastMin(x1, x2)),
+		const startX = Maths.clamp(
+			Math.ceil(Maths.fastMin(x1, x2)),
 			0,
 			this.width - 1,
 		);
-		const endX = MathUtils.clamp(
-			MathUtils.fastTrunc(MathUtils.fastMax(x1, x2)),
+		const endX = Maths.clamp(
+			Maths.fastTrunc(Maths.fastMax(x1, x2)),
 			0,
 			this.width - 1,
 		);
@@ -266,11 +266,11 @@ export class Rasterizer {
 	}
 
 	#projectToScreen(vertex: Vector3, target = new Vector3()): Vector3 {
-		const screenX = MathUtils.fastTrunc(((vertex.x + 1) * this.width) >> 1);
-		const screenY = MathUtils.fastTrunc(((1 - vertex.y) * this.height) >> 1);
+		const screenX = Maths.fastTrunc(((vertex.x + 1) * this.width) >> 1);
+		const screenY = Maths.fastTrunc(((1 - vertex.y) * this.height) >> 1);
 
-		const clippedX = MathUtils.clamp(screenX, 0, this.width - 1);
-		const clippedY = MathUtils.clamp(screenY, 0, this.height - 1);
+		const clippedX = Maths.clamp(screenX, 0, this.width - 1);
+		const clippedY = Maths.clamp(screenY, 0, this.height - 1);
 		return target.set(clippedX, clippedY, vertex.z);
 	}
 

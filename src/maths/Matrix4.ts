@@ -1,6 +1,6 @@
 import "../types.ts";
 import type { Euler } from "./Euler.ts";
-import { MathUtils } from "./MathUtils.ts";
+import { Maths } from "./Maths.ts";
 import { Quaternion } from "./Quaternion.ts";
 import { Vector3 } from "./Vector3.ts";
 
@@ -264,9 +264,7 @@ export class Matrix4 {
 
 		_v2.copy(up).cross(_v1);
 		if (_v2.lengthSq === 0) {
-			Math.abs(up.z) === 1
-				? _v1.x += MathUtils.EPSILON
-				: _v1.z += MathUtils.EPSILON;
+			Math.abs(up.z) === 1 ? _v1.x += Maths.EPSILON : _v1.z += Maths.EPSILON;
 			_v1.unitize();
 
 			_v2.copy(up).cross(_v1);

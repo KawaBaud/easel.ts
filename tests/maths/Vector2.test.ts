@@ -4,7 +4,7 @@ import {
 	assertNotStrictEquals,
 } from "@std/assert";
 import { Vector2 as ThreeVector2 } from "three";
-import { MathUtils } from "../../src/maths/MathUtils.ts";
+import { Maths } from "../../src/maths/Maths.ts";
 import { Vector2 } from "../../src/maths/Vector2.ts";
 
 function compareVectors(
@@ -19,13 +19,13 @@ function compareVectors(
 	assertAlmostEquals(
 		ourVec.x,
 		threeVec.x,
-		MathUtils.EPSILON,
+		Maths.EPSILON,
 		`${message} (x)`,
 	);
 	assertAlmostEquals(
 		ourVec.y,
 		threeVec.y,
-		MathUtils.EPSILON,
+		Maths.EPSILON,
 		`${message} (y)`,
 	);
 }

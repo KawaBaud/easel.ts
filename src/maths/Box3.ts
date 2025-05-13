@@ -1,7 +1,7 @@
 import type { Mesh } from "../objects/Mesh.ts";
 import type { Object3D } from "../objects/Object3D.ts";
 import "../types.ts";
-import { MathUtils } from "./MathUtils.ts";
+import { Maths } from "./Maths.ts";
 import type { Sphere } from "./Sphere.ts";
 import { Vector3 } from "./Vector3.ts";
 
@@ -139,12 +139,12 @@ export class Box3 {
 	}
 
 	expandByPoint(point: Vector3): this {
-		this.#min.x = MathUtils.fastMin(this.#min.x, point.x);
-		this.#min.y = MathUtils.fastMin(this.#min.y, point.y);
-		this.#min.z = MathUtils.fastMin(this.#min.z, point.z);
-		this.#max.x = MathUtils.fastMax(this.#max.x, point.x);
-		this.#max.y = MathUtils.fastMax(this.#max.y, point.y);
-		this.#max.z = MathUtils.fastMax(this.#max.z, point.z);
+		this.#min.x = Maths.fastMin(this.#min.x, point.x);
+		this.#min.y = Maths.fastMin(this.#min.y, point.y);
+		this.#min.z = Maths.fastMin(this.#min.z, point.z);
+		this.#max.x = Maths.fastMax(this.#max.x, point.x);
+		this.#max.y = Maths.fastMax(this.#max.y, point.y);
+		this.#max.z = Maths.fastMax(this.#max.z, point.z);
 		return this;
 	}
 
@@ -181,9 +181,9 @@ export class Box3 {
 
 	intersectsSphere(sphere: Sphere): boolean {
 		const closestPoint = new Vector3();
-		closestPoint.x = MathUtils.clamp(sphere.centre.x, this.#min.x, this.#max.x);
-		closestPoint.y = MathUtils.clamp(sphere.centre.y, this.#min.y, this.#max.y);
-		closestPoint.z = MathUtils.clamp(sphere.centre.z, this.#min.z, this.#max.z);
+		closestPoint.x = Maths.clamp(sphere.centre.x, this.#min.x, this.#max.x);
+		closestPoint.y = Maths.clamp(sphere.centre.y, this.#min.y, this.#max.y);
+		closestPoint.z = Maths.clamp(sphere.centre.z, this.#min.z, this.#max.z);
 		return closestPoint.clone().sub(sphere.centre)
 			.lengthSq <= (sphere.radius * sphere.radius);
 	}
@@ -240,12 +240,12 @@ export class Box3 {
 	}
 
 	union(box: Box3): this {
-		this.#min.x = MathUtils.fastMin(this.#min.x, box.min.x);
-		this.#min.y = MathUtils.fastMin(this.#min.y, box.min.y);
-		this.#min.z = MathUtils.fastMin(this.#min.z, box.min.z);
-		this.#max.x = MathUtils.fastMax(this.#max.x, box.max.x);
-		this.#max.y = MathUtils.fastMax(this.#max.y, box.max.y);
-		this.#max.z = MathUtils.fastMax(this.#max.z, box.max.z);
+		this.#min.x = Maths.fastMin(this.#min.x, box.min.x);
+		this.#min.y = Maths.fastMin(this.#min.y, box.min.y);
+		this.#min.z = Maths.fastMin(this.#min.z, box.min.z);
+		this.#max.x = Maths.fastMax(this.#max.x, box.max.x);
+		this.#max.y = Maths.fastMax(this.#max.y, box.max.y);
+		this.#max.z = Maths.fastMax(this.#max.z, box.max.z);
 		return this;
 	}
 }

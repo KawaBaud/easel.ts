@@ -1,5 +1,5 @@
 import "../types.ts";
-import { MathUtils } from "./MathUtils.ts";
+import { Maths } from "./Maths.ts";
 import { Matrix4 } from "./Matrix4.ts";
 import { Quaternion } from "./Quaternion.ts";
 
@@ -123,63 +123,63 @@ export class Euler {
 
 		switch (currentOrder) {
 			case "XYZ":
-				this.y = MathUtils.safeAsin(m13);
+				this.y = Maths.safeAsin(m13);
 				if (isGimbalLock(m13)) {
-					this.x = MathUtils.fastAtan2(m32, m22);
-					this.z = this.z === 0 ? MathUtils.fastAtan2(-m12, m11) : this.z;
+					this.x = Maths.fastAtan2(m32, m22);
+					this.z = this.z === 0 ? Maths.fastAtan2(-m12, m11) : this.z;
 				} else {
-					this.x = MathUtils.fastAtan2(-m23, m33);
-					this.z = MathUtils.fastAtan2(-m12, m11);
+					this.x = Maths.fastAtan2(-m23, m33);
+					this.z = Maths.fastAtan2(-m12, m11);
 				}
 				break;
 			case "YXZ":
-				this.x = MathUtils.safeAsin(-m23);
+				this.x = Maths.safeAsin(-m23);
 				if (isGimbalLock(m23)) {
-					this.y = MathUtils.fastAtan2(-m31, m11);
-					this.z = this.z === 0 ? MathUtils.fastAtan2(m21, m22) : this.z;
+					this.y = Maths.fastAtan2(-m31, m11);
+					this.z = this.z === 0 ? Maths.fastAtan2(m21, m22) : this.z;
 				} else {
-					this.y = MathUtils.fastAtan2(m13, m33);
-					this.z = MathUtils.fastAtan2(m21, m22);
+					this.y = Maths.fastAtan2(m13, m33);
+					this.z = Maths.fastAtan2(m21, m22);
 				}
 				break;
 			case "ZXY":
-				this.x = MathUtils.safeAsin(m32);
+				this.x = Maths.safeAsin(m32);
 				if (isGimbalLock(m32)) {
-					this.z = MathUtils.fastAtan2(m21, m11);
-					this.y = this.y === 0 ? MathUtils.fastAtan2(-m31, m33) : this.y;
+					this.z = Maths.fastAtan2(m21, m11);
+					this.y = this.y === 0 ? Maths.fastAtan2(-m31, m33) : this.y;
 				} else {
-					this.y = MathUtils.fastAtan2(-m31, m33);
-					this.z = MathUtils.fastAtan2(-m12, m22);
+					this.y = Maths.fastAtan2(-m31, m33);
+					this.z = Maths.fastAtan2(-m12, m22);
 				}
 				break;
 			case "ZYX":
-				this.y = MathUtils.safeAsin(-m31);
+				this.y = Maths.safeAsin(-m31);
 				if (isGimbalLock(m31)) {
-					this.z = MathUtils.fastAtan2(-m12, m22);
-					this.x = this.x === 0 ? MathUtils.fastAtan2(m32, m33) : this.x;
+					this.z = Maths.fastAtan2(-m12, m22);
+					this.x = this.x === 0 ? Maths.fastAtan2(m32, m33) : this.x;
 				} else {
-					this.x = MathUtils.fastAtan2(m32, m33);
-					this.z = MathUtils.fastAtan2(m21, m11);
+					this.x = Maths.fastAtan2(m32, m33);
+					this.z = Maths.fastAtan2(m21, m11);
 				}
 				break;
 			case "YZX":
-				this.z = MathUtils.safeAsin(m21);
+				this.z = Maths.safeAsin(m21);
 				if (isGimbalLock(m21)) {
-					this.y = MathUtils.fastAtan2(m13, m33);
-					this.x = this.x === 0 ? MathUtils.fastAtan2(-m23, m22) : this.x;
+					this.y = Maths.fastAtan2(m13, m33);
+					this.x = this.x === 0 ? Maths.fastAtan2(-m23, m22) : this.x;
 				} else {
-					this.x = MathUtils.fastAtan2(-m23, m22);
-					this.y = MathUtils.fastAtan2(-m31, m11);
+					this.x = Maths.fastAtan2(-m23, m22);
+					this.y = Maths.fastAtan2(-m31, m11);
 				}
 				break;
 			case "XZY":
-				this.z = MathUtils.safeAsin(-m12);
+				this.z = Maths.safeAsin(-m12);
 				if (isGimbalLock(m12)) {
-					this.x = MathUtils.fastAtan2(m32, m22);
-					this.y = this.y === 0 ? MathUtils.fastAtan2(m13, m11) : this.y;
+					this.x = Maths.fastAtan2(m32, m22);
+					this.y = this.y === 0 ? Maths.fastAtan2(m13, m11) : this.y;
 				} else {
-					this.x = MathUtils.fastAtan2(m32, m22);
-					this.y = MathUtils.fastAtan2(m13, m11);
+					this.x = Maths.fastAtan2(m32, m22);
+					this.y = Maths.fastAtan2(m13, m11);
 				}
 				break;
 		}

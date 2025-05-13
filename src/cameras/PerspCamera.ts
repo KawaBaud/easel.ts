@@ -1,4 +1,4 @@
-import { MathUtils } from "../maths/MathUtils.ts";
+import { Maths } from "../maths/Maths.ts";
 import { Camera } from "./Camera.ts";
 
 export class PerspCamera extends Camera {
@@ -79,7 +79,7 @@ export class PerspCamera extends Camera {
 
 	override updateProjectionMatrix(): void {
 		this.projectionMatrix.makePerspective(
-			MathUtils.toRadians(this.fov),
+			Maths.toRadians(this.fov),
 			this.aspect,
 			this.near,
 			this.far,

@@ -10,7 +10,7 @@ import {
 	Vector3 as ThreeVector3,
 } from "three";
 import { Line3 } from "../../src/maths/Line3.ts";
-import { MathUtils } from "../../src/maths/MathUtils.ts";
+import { Maths } from "../../src/maths/Maths.ts";
 import { Matrix4 } from "../../src/maths/Matrix4.ts";
 import { Plane } from "../../src/maths/Plane.ts";
 import { Vector3 } from "../../src/maths/Vector3.ts";
@@ -32,25 +32,25 @@ function comparePlanes(
 	assertAlmostEquals(
 		ourPlane.normal.x,
 		threePlane.normal.x,
-		MathUtils.EPSILON,
+		Maths.EPSILON,
 		`${message} (normal.x)`,
 	);
 	assertAlmostEquals(
 		ourPlane.normal.y,
 		threePlane.normal.y,
-		MathUtils.EPSILON,
+		Maths.EPSILON,
 		`${message} (normal.y)`,
 	);
 	assertAlmostEquals(
 		ourPlane.normal.z,
 		threePlane.normal.z,
-		MathUtils.EPSILON,
+		Maths.EPSILON,
 		`${message} (normal.z)`,
 	);
 	assertAlmostEquals(
 		ourPlane.constant,
 		threePlane.constant,
-		MathUtils.EPSILON,
+		Maths.EPSILON,
 		`${message} (constant)`,
 	);
 }
@@ -99,9 +99,9 @@ Deno.test("Plane: applyMatrix4", () => {
 	const c = new Plane(new Vector3(0, 1, 0), 5);
 	const threeC = new ThreePlane(new ThreeVector3(0, 1, 0), 5);
 
-	const rotationMatrix = new Matrix4().makeRotationX(MathUtils.HALF_PI);
+	const rotationMatrix = new Matrix4().makeRotationX(Maths.HALF_PI);
 	const threeRotationMatrix = new ThreeMatrix4().makeRotationX(
-		MathUtils.HALF_PI,
+		Maths.HALF_PI,
 	);
 
 	c.applyMatrix4(rotationMatrix);
@@ -151,7 +151,7 @@ Deno.test("Plane: distanceToPoint", () => {
 		assertAlmostEquals(
 			distance,
 			threeDistance,
-			MathUtils.EPSILON,
+			Maths.EPSILON,
 			`distanceToPoint case ${i}`,
 		);
 	}
@@ -219,19 +219,19 @@ Deno.test("Plane: intersectLine", () => {
 		assertAlmostEquals(
 			result1.x,
 			threeResult1.x,
-			MathUtils.EPSILON,
+			Maths.EPSILON,
 			"intersectLine (x)",
 		);
 		assertAlmostEquals(
 			result1.y,
 			threeResult1.y,
-			MathUtils.EPSILON,
+			Maths.EPSILON,
 			"intersectLine (y)",
 		);
 		assertAlmostEquals(
 			result1.z,
 			threeResult1.z,
-			MathUtils.EPSILON,
+			Maths.EPSILON,
 			"intersectLine (z)",
 		);
 	} else {
@@ -257,19 +257,19 @@ Deno.test("Plane: intersectLine", () => {
 		assertAlmostEquals(
 			result3.x,
 			threeResult3.x,
-			MathUtils.EPSILON,
+			Maths.EPSILON,
 			"intersectLine coplanar (x)",
 		);
 		assertAlmostEquals(
 			result3.y,
 			threeResult3.y,
-			MathUtils.EPSILON,
+			Maths.EPSILON,
 			"intersectLine coplanar (y)",
 		);
 		assertAlmostEquals(
 			result3.z,
 			threeResult3.z,
-			MathUtils.EPSILON,
+			Maths.EPSILON,
 			"intersectLine coplanar (z)",
 		);
 	} else {
@@ -297,19 +297,19 @@ Deno.test("Plane: projectPoint", () => {
 	assertAlmostEquals(
 		result.x,
 		threeResult.x,
-		MathUtils.EPSILON,
+		Maths.EPSILON,
 		"projectPoint (x)",
 	);
 	assertAlmostEquals(
 		result.y,
 		threeResult.y,
-		MathUtils.EPSILON,
+		Maths.EPSILON,
 		"projectPoint (y)",
 	);
 	assertAlmostEquals(
 		result.z,
 		threeResult.z,
-		MathUtils.EPSILON,
+		Maths.EPSILON,
 		"projectPoint (z)",
 	);
 });

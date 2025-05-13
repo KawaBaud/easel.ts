@@ -5,7 +5,7 @@ import {
 } from "@std/assert";
 import { PerspectiveCamera as ThreePerspCamera } from "three";
 import { PerspCamera } from "../../src/cameras/PerspCamera.ts";
-import { MathUtils } from "../../src/maths/MathUtils.ts";
+import { Maths } from "../../src/maths/Maths.ts";
 import "../../src/types.ts";
 
 function compareMatrices(
@@ -21,7 +21,7 @@ function compareMatrices(
 		assertAlmostEquals(
 			ourMatrix.elements.safeAt(i),
 			threeMatrix.elements.safeAt(i),
-			MathUtils.EPSILON,
+			Maths.EPSILON,
 			`${message} (element ${i})`,
 		);
 	}
