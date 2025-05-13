@@ -38,8 +38,8 @@ loader.load(
 		myObject.add(object);
 		scene.add(myObject);
 	},
-	(xhr) => console.log(`${(xhr.loaded / xhr.total * 100)}% loaded`),
-	(error) => console.error("an error occurred:", error),
+	(xhr) => console.log(`${(xhr.loaded / xhr.total * 100).toFixed(2)}% loaded`),
+	(error) => console.error(error),
 );
 
 const keys: { [key: string]: boolean } = {};
@@ -68,7 +68,7 @@ const rotSpeed = 0.15;
 function animate(): void {
 	globalThis.requestAnimationFrame(animate);
 
-	const deltaTime = EASEL.Maths.fastMin(clock.delta, 0.1);
+	const deltaTime = EASEL.Math.min(clock.delta, 0.1);
 	let accumulatedTime = 0;
 
 	while (accumulatedTime < deltaTime) {

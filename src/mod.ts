@@ -12,7 +12,6 @@ import { Box3 } from "./maths/Box3.ts";
 import { Euler } from "./maths/Euler.ts";
 import { Frustum } from "./maths/Frustum.ts";
 import { Line3 } from "./maths/Line3.ts";
-import { Maths } from "./maths/Maths.ts";
 import { Matrix3 } from "./maths/Matrix3.ts";
 import { Matrix4 } from "./maths/Matrix4.ts";
 import { Plane } from "./maths/Plane.ts";
@@ -64,7 +63,7 @@ export const EASEL = {
 	Euler,
 	Frustum,
 	Line3,
-	Maths,
+	Math,
 	Matrix3,
 	Matrix4,
 	Plane,
