@@ -22,6 +22,8 @@ const material = new EASEL.SimpleMaterial({
 	wireframe: true,
 });
 
+const myObject = new EASEL.Object3D();
+
 const loader = new OBJLoader();
 loader.load(
 	"https://raw.githubusercontent.com/McNopper/OpenGL/refs/heads/master/Binaries/monkey.obj",
@@ -33,7 +35,8 @@ loader.load(
 		object.position.sub(
 			new EASEL.Box3().setFromObject(object).getCentre(new EASEL.Vector3()),
 		);
-		scene.add(object);
+		myObject.add(object);
+		scene.add(myObject);
 	},
 	(xhr) => console.log(`${(xhr.loaded / xhr.total * 100)}% loaded`),
 	(error) => console.error("an error occurred:", error),
@@ -41,6 +44,7 @@ loader.load(
 
 const keys: { [key: string]: boolean } = {};
 let wireframeToggle = false;
+let rotateObject = false;
 
 globalThis.document.addEventListener("keydown", (event) => {
 	keys[event.key.toLowerCase()] = true;
@@ -49,6 +53,7 @@ globalThis.document.addEventListener("keydown", (event) => {
 		material.wireframe = !material.wireframe;
 		wireframeToggle = true;
 	}
+	if (event.key.toLowerCase() === "r") rotateObject = !rotateObject;
 });
 globalThis.document.addEventListener("keyup", (event) => {
 	keys[event.key.toLowerCase()] = false;
@@ -56,9 +61,9 @@ globalThis.document.addEventListener("keyup", (event) => {
 });
 
 const clock = new EASEL.Clock();
-const fps = 1 / 30;
-const speed = 1;
-const rotSpeed = 0.35;
+const fps = 1 / 25;
+const speed = 0.7;
+const rotSpeed = 0.15;
 
 function animate(): void {
 	globalThis.requestAnimationFrame(animate);
@@ -79,6 +84,12 @@ function animate(): void {
 
 		if (keys["q"]) camera.rotation.y += rotSpeed * fps;
 		if (keys["e"]) camera.rotation.y -= rotSpeed * fps;
+
+		if (rotateObject && myObject) {
+			myObject.rotation.x += (rotSpeed * 0.25) * fps;
+			myObject.rotation.y += (rotSpeed * 0.5) * fps;
+			myObject.rotation.z += (rotSpeed * 0.125) * fps;
+		}
 
 		accumulatedTime += fps;
 	}
