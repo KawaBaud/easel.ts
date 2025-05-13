@@ -3,6 +3,7 @@ import { OrthoCamera } from "./cameras/OrthoCamera.ts";
 import { PerspCamera } from "./cameras/PerspCamera.ts";
 import { Clock } from "./common/Clock.ts";
 import { Color } from "./common/Color.ts";
+import { Side } from "./consts.ts";
 import { DirectionalLight } from "./lights/DirectionalLight.ts";
 import { Light } from "./lights/Light.ts";
 import { OBJLoader } from "./loaders/OBJLoader.ts";
@@ -96,4 +97,7 @@ export const EASEL = {
 	PlaneShape,
 	Shape,
 	ShapeUtils,
+
+	/* constants */
+	Side,
 };
