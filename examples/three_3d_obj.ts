@@ -21,12 +21,11 @@ renderer.setSize(width, height);
 globalThis.document.body.appendChild(renderer.domElement);
 
 const material = new THREE.MeshBasicMaterial({
-	color: 0x00ff00,
+	color: 0x00FF00,
 	wireframe: true,
 });
 
 const myObject = new THREE.Object3D();
-
 const loader = new OBJLoader();
 loader.load(
 	"https://raw.githubusercontent.com/McNopper/OpenGL/refs/heads/master/Binaries/monkey.obj",

@@ -18,12 +18,11 @@ renderer.setSize(width, height);
 globalThis.document.body.appendChild(renderer.domElement);
 
 const material = new EASEL.SimpleMaterial({
-	color: 0x00ff00,
+	color: 0x00FF00,
 	wireframe: true,
 });
 
 const myObject = new EASEL.Object3D();
-
 const loader = new OBJLoader();
 loader.load(
 	"https://raw.githubusercontent.com/McNopper/OpenGL/refs/heads/master/Binaries/monkey.obj",
