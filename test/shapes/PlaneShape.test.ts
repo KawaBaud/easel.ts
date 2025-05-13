@@ -35,33 +35,30 @@ Deno.test("PlaneShape: constructor", () => {
 		"constructor (dimensions)",
 	);
 
-	const halfWidth = 2 / 2;
-	const halfHeight = 3 / 2;
+	const threeGeometry = new PlaneGeometry(2, 3);
+	const threeVertices = threeGeometry.attributes["position"]?.array;
+	if (!threeVertices) throw new Error("attribute is undefined");
 
-	const bottomLeft = b.vertices[0];
-	const bottomRight = b.vertices[1];
-	const topRight = b.vertices[2];
-	const topLeft = b.vertices[3];
-
-	if (bottomLeft) {
-		assertEquals(bottomLeft.x, -halfWidth);
-		assertEquals(bottomLeft.y, 0);
-		assertEquals(bottomLeft.z, -halfHeight);
-	}
-	if (bottomRight) {
-		assertEquals(bottomRight.x, halfWidth);
-		assertEquals(bottomRight.y, 0);
-		assertEquals(bottomRight.z, -halfHeight);
-	}
-	if (topRight) {
-		assertEquals(topRight.x, halfWidth);
-		assertEquals(topRight.y, 0);
-		assertEquals(topRight.z, halfHeight);
-	}
-	if (topLeft) {
-		assertEquals(topLeft.x, -halfWidth);
-		assertEquals(topLeft.y, 0);
-		assertEquals(topLeft.z, halfHeight);
+	for (let i = 0; i < b.vertices.length; i++) {
+		const vertex = b.vertices[i];
+		const threeIndex = i * 3;
+		if (vertex) {
+			assertEquals(
+				vertex.x,
+				threeVertices[threeIndex],
+				`Vertex ${i} x coordinate`,
+			);
+			assertEquals(
+				vertex.y,
+				-threeVertices.safeAt(threeIndex + 1),
+				`Vertex ${i} y coordinate`,
+			);
+			assertEquals(
+				vertex.z,
+				threeVertices[threeIndex + 2],
+				`Vertex ${i} z coordinate`,
+			);
+		}
 	}
 });
 
