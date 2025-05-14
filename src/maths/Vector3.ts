@@ -8,11 +8,26 @@ import { Quaternion } from "./Quaternion.ts";
 const _q = new Quaternion();
 
 export class Vector3 {
+	static cross(
+		x1: number,
+		y1: number,
+		z1: number,
+		x2: number,
+		y2: number,
+		z2: number,
+	): Vector3 {
+		return new Vector3(
+			(y1 * z2) - (y2 * z1),
+			(z1 * x2) - (z2 * x1),
+			(x1 * y2) - (x2 * y1),
+		);
+	}
+
 	static dot(
 		x: number,
 		y: number,
 		z: number,
-		target: Vector3,
+		target = new Vector3(),
 	): number {
 		return (x * target.x) + (y * target.y) + (z * target.z);
 	}
