@@ -8,7 +8,7 @@ const _m1 = new Matrix4();
 const _q1 = new Quaternion();
 
 export class Object3D {
-	id: string = crypto.randomUUID();
+	id = crypto.randomUUID();
 	name = "";
 
 	position = new Vector3();
