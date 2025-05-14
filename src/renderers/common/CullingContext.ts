@@ -17,7 +17,7 @@ export class CullingContext {
 		if (!this.#camera) return false;
 
 		ShapeUtils.calculateNormal(v1, v2, v3, _normal);
-		return Vector3.dotComponents(-_normal.x, -_normal.y, -_normal.z, v1) < 0;
+		return Vector3.dot(-_normal.x, -_normal.y, -_normal.z, v1) < 0;
 	}
 
 	isFrontFace(v1: Vector3, v2: Vector3, v3: Vector3): boolean {
