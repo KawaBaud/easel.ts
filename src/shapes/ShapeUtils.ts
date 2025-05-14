@@ -19,8 +19,15 @@ export class ShapeUtils {
 		b: Vector3,
 		c: Vector3,
 	): boolean {
-		const crossProduct = (b.x - a.x) * (c.z - a.z) - (b.z - a.z) * (c.x - a.x);
-		return crossProduct > 0;
+		const normal = Vector3.cross(
+			b.x - a.x,
+			b.y - a.y,
+			b.z - a.z,
+			c.x - a.x,
+			c.y - a.y,
+			c.z - a.z,
+		);
+		return normal.y > 0;
 	}
 
 	static triangulate(vertices: Vector3[]): Uint16Array<ArrayBuffer> {
