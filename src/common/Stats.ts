@@ -11,7 +11,7 @@ export class Stats {
 	#memPanel: Panel | undefined;
 	#lastTime = 0;
 
-	constructor() {
+	constructor(clock = new Clock(true)) {
 		this.#container = globalThis.document.createElement("div");
 		this.#container.style.cssText =
 			"position:fixed;top:0;left:0;cursor:pointer;opacity:0.9;z-index:10000";
@@ -22,7 +22,7 @@ export class Stats {
 				: "none";
 		}, false);
 
-		this.#clock = new Clock(true);
+		this.#clock = clock;
 		this.#prevTime = 0;
 		this.#frames = 0;
 
@@ -68,13 +68,6 @@ export class Stats {
 		}
 
 		return time;
-	}
-
-	showPanel(id: number): void {
-		const children = this.#container.children;
-		for (let i = 0; i < children.length; i++) {
-			(children[i] as HTMLElement).style.display = i === id ? "block" : "none";
-		}
 	}
 
 	update(): void {
@@ -135,13 +128,7 @@ class Panel {
 		this.#ctx.fillRect(0, 0, 80, 15);
 
 		this.#ctx.fillStyle = this.#fg;
-		this.#ctx.fillText(
-			`${Math.round(value)} ${this.#name} (${Math.round(this.#min)}-${
-				Math.round(this.#max)
-			})`,
-			3,
-			3,
-		);
+		this.#ctx.fillText(`${Math.round(value)} ${this.#name}`, 3, 3);
 
 		this.#ctx.drawImage(this.#dom, 3, 15, 74, 30, 3, 15, 74, 30);
 
@@ -150,11 +137,6 @@ class Panel {
 		this.#ctx.fillRect(3, 15, 74, 30);
 
 		this.#ctx.fillStyle = this.#fg;
-		this.#ctx.fillRect(
-			3,
-			15,
-			Math.max(1, Math.min(74, (value / maxValue) * 74)),
-			30,
-		);
+		this.#ctx.fillRect(3, 15, Math.clamp((value / maxValue) * 74, 1, 74), 30);
 	}
 }
