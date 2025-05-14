@@ -88,7 +88,7 @@
 			const speed = 0.7;
 			const rotSpeed = 0.35;
 
-			const stats = new Stats();
+			const stats = new Stats(clock);
 			globalThis.document.body.appendChild(stats.dom);
 
 			function animate() {
