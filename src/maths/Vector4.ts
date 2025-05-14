@@ -4,7 +4,7 @@ export class Vector4 {
 		y: number,
 		z: number,
 		w: number,
-		target: Vector4,
+		target = new Vector4(),
 	): number {
 		return (x * target.x) + (y * target.y) + (z * target.z) + (w * target.w);
 	}

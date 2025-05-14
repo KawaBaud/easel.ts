@@ -1,8 +1,17 @@
 export class Vector2 {
+	static cross(
+		x1: number,
+		y1: number,
+		x2: number,
+		y2: number,
+	): number {
+		return (x1 * y2) - (y1 * x2);
+	}
+
 	static dot(
 		x: number,
 		y: number,
-		target: Vector2,
+		target = new Vector2(),
 	): number {
 		return (x * target.x) + (y * target.y);
 	}
