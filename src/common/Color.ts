@@ -182,13 +182,16 @@ export class Color {
 	}
 
 	#parseHex(style: string): this {
-		if (style.length !== 7) {
+		if (style.length !== 4 && style.length !== 7) {
 			throw new Error(
-				"EASEL.Color.#parseHex(): hex style must be in '#rrggbb' format",
+				"EASEL.Color.#parseHex(): hex style must be in '#rgb' or '#rrggbb' format",
 			);
 		}
 
-		return this.setHex(parseInt(style.slice(1), 16));
+		const hex = style.length === 4
+			? style.slice(1).split("").map((c) => c + c).join("")
+			: style.slice(1);
+		return this.setHex(parseInt(hex, 16));
 	}
 
 	#parseHSL(style: string): this {
