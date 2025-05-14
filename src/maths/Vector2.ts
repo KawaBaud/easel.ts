@@ -1,4 +1,12 @@
 export class Vector2 {
+	static dot(
+		x: number,
+		y: number,
+		target: Vector2,
+	): number {
+		return (x * target.x) + (y * target.y);
+	}
+
 	#x = 0;
 	#y = 0;
 

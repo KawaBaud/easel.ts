@@ -1,4 +1,14 @@
 export class Vector4 {
+	static dot(
+		x: number,
+		y: number,
+		z: number,
+		w: number,
+		target: Vector4,
+	): number {
+		return (x * target.x) + (y * target.y) + (z * target.z) + (w * target.w);
+	}
+
 	#x = 0;
 	#y = 0;
 	#z = 0;

@@ -8,8 +8,13 @@ import { Quaternion } from "./Quaternion.ts";
 const _q = new Quaternion();
 
 export class Vector3 {
-	static dotComponents(x: number, y: number, z: number, v: Vector3): number {
-		return (x * v.x) + (y * v.y) + (z * v.z);
+	static dot(
+		x: number,
+		y: number,
+		z: number,
+		target: Vector3,
+	): number {
+		return (x * target.x) + (y * target.y) + (z * target.z);
 	}
 
 	#x = 0;
