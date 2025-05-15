@@ -4,11 +4,9 @@ import { Mesh } from "../../objects/Mesh.ts";
 import type { Scene } from "../../scenes/Scene.ts";
 import { ShapeUtils } from "../../shapes/ShapeUtils.ts";
 import "../../types.ts";
-import { ClippingContext } from "./ClippingContext.ts";
-import { CullingContext } from "./CullingContext.ts";
-import { Pipeline } from "./Pipeline.ts";
-import type { Rasterizer } from "./Rasterizer.ts";
-import { RenderTarget } from "./RenderTarget.ts";
+import { Pipeline } from "../pipelines/Pipeline.ts";
+import { FrustumProcessor } from "../processors/FrustumProcessor.ts";
+import type { Rasterizer } from "../Rasterizer.ts";
 
 const _v1 = new Vector3();
 const _v2 = new Vector3();
@@ -18,22 +16,21 @@ const _worldV2 = new Vector3();
 const _worldV3 = new Vector3();
 
 export class RenderPipeline extends Pipeline {
-	renderTarget: RenderTarget;
-
-	#clipping = new ClippingContext();
-	#culling = new CullingContext();
+	#frustumProcessor = new FrustumProcessor();
+	width: number;
+	height: number;
 
 	constructor(width?: number, height?: number) {
 		super();
 
-		this.renderTarget = new RenderTarget(width, height);
+		this.width = width ?? globalThis.innerWidth;
+		this.height = height ?? globalThis.innerHeight;
 	}
 
 	render(scene: Scene, camera: Camera, rasterizer: Rasterizer): this {
 		camera.updateMatrixWorld();
 
-		this.#clipping.setFromCamera(camera);
-		this.#culling.setFromCamera(camera);
+		this.#frustumProcessor.setFromCamera(camera);
 
 		this.populate(scene, camera);
 
@@ -48,7 +45,8 @@ export class RenderPipeline extends Pipeline {
 	}
 
 	setSize(width: number, height: number): this {
-		this.renderTarget.setSize(width, height);
+		this.width = width;
+		this.height = height;
 		return this;
 	}
 
@@ -84,11 +82,13 @@ export class RenderPipeline extends Pipeline {
 		_worldV2.copy(_v2).applyMatrix4(camera.matrixWorldInverse);
 		_worldV3.copy(_v3).applyMatrix4(camera.matrixWorldInverse);
 
-		if (this.#culling.shouldCull(_worldV1, _worldV2, _worldV3, material)) {
+		if (
+			this.#frustumProcessor.shouldCull(_worldV1, _worldV2, _worldV3, material)
+		) {
 			return;
 		}
 
-		const clippedTriangles = this.#clipping
+		const clippedTriangles = this.#frustumProcessor
 			.clipTriangle(_worldV1, _worldV2, _worldV3);
 		if (clippedTriangles.length === 0) return;
 		for (const triangle of clippedTriangles) {

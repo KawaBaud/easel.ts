@@ -1,10 +1,10 @@
-import type { Camera } from "../../cameras/Camera.ts";
-import { Color } from "../../common/Color.ts";
-import type { Material } from "../../materials/Material.ts";
-import { MathUtils } from "../../maths/MathUtils.ts";
-import { Vector3 } from "../../maths/Vector3.ts";
-import type { ColorValue } from "../../types/color.types.ts";
-import { CanvasUtils } from "../CanvasUtils.ts";
+import type { Camera } from "../cameras/Camera.ts";
+import { Color } from "../common/Color.ts";
+import type { Material } from "../materials/Material.ts";
+import { MathUtils } from "../maths/MathUtils.ts";
+import { Vector3 } from "../maths/Vector3.ts";
+import type { ColorValue } from "../types/color.types.ts";
+import { CanvasUtils } from "./canvas/CanvasUtils.ts";
 
 const _pv1 = new Vector3();
 const _pv2 = new Vector3();
