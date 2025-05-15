@@ -1,5 +1,3 @@
-export class Processor {
-	reset(): this {
-		return this;
-	}
+export abstract class Processor {
+	abstract reset(): this;
 }
