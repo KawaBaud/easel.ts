@@ -1,6 +1,6 @@
 import { Color } from "../common/Color.ts";
 import { Object3D } from "../objects/Object3D.ts";
-import type { ColorValue } from "../types/color.types.ts";
+import type { ColorValue } from "../types.ts";
 
 export class Light extends Object3D {
 	#color = new Color(1, 1, 1);

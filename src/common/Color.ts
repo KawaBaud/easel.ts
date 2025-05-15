@@ -1,5 +1,5 @@
 import { MathUtils } from "../maths/MathUtils.ts";
-import type { ColorValue, HSL, RGB, RGBArray } from "../types/color.types.ts";
+import type { ColorValue, HSL, RGB, RGBArray } from "../types.ts";
 
 export class Color {
 	static readonly HUE_SCALE = 360;
