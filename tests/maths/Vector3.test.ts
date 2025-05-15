@@ -9,7 +9,7 @@ import {
 	Quaternion as ThreeQuaternion,
 	Vector3 as ThreeVector3,
 } from "three";
-import "../../src/extensions/array.extension.ts";
+import "../../extensions/array.extension.ts";
 import { MathUtils } from "../../src/maths/MathUtils.ts";
 import { Matrix3 } from "../../src/maths/Matrix3.ts";
 import { Matrix4 } from "../../src/maths/Matrix4.ts";

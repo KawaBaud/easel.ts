@@ -4,8 +4,8 @@ import {
 	assertNotStrictEquals,
 } from "@std/assert";
 import { PerspectiveCamera as ThreePerspCamera } from "three";
+import "../../extensions/array.extension.ts";
 import { PerspCamera } from "../../src/cameras/PerspCamera.ts";
-import "../../src/extensions/array.extension.ts";
 import { MathUtils } from "../../src/maths/MathUtils.ts";
 
 function compareMatrices(

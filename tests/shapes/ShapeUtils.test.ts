@@ -1,5 +1,5 @@
 import { assertEquals } from "@std/assert";
-import "../../src/extensions/array.extension.ts";
+import "../../extensions/array.extension.ts";
 import { Vector3 } from "../../src/maths/Vector3.ts";
 import { ShapeUtils } from "../../src/shapes/ShapeUtils.ts";
 

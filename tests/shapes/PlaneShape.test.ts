@@ -1,6 +1,6 @@
 import { assertEquals, assertNotStrictEquals } from "@std/assert";
 import { PlaneGeometry } from "three";
-import "../../src/extensions/array.extension.ts";
+import "../../extensions/array.extension.ts";
 import { PlaneShape } from "../../src/shapes/PlaneShape.ts";
 
 function comparePlaneShapes(

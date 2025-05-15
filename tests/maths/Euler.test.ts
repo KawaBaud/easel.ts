@@ -8,7 +8,7 @@ import {
 	Matrix4 as ThreeMatrix4,
 	Quaternion as ThreeQuaternion,
 } from "three";
-import "../../src/extensions/array.extension.ts";
+import "../../extensions/array.extension.ts";
 import { Euler } from "../../src/maths/Euler.ts";
 import { MathUtils } from "../../src/maths/MathUtils.ts";
 import { Matrix4 } from "../../src/maths/Matrix4.ts";

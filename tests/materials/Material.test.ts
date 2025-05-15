@@ -1,6 +1,6 @@
 import { assertEquals, assertNotStrictEquals } from "@std/assert";
 import { MeshBasicMaterial as ThreeMaterial } from "three";
-import "../../src/extensions/array.extension.ts";
+import "../../extensions/array.extension.ts";
 import { Material } from "../../src/materials/Material.ts";
 
 function compareMaterials(

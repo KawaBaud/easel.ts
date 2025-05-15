@@ -1,6 +1,6 @@
 import { assertEquals, assertNotStrictEquals } from "@std/assert";
 import { BoxGeometry } from "three";
-import "../../src/extensions/array.extension.ts";
+import "../../extensions/array.extension.ts";
 import { CubeShape } from "../../src/shapes/CubeShape.ts";
 
 function compareCubeShapes(

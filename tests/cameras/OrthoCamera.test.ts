@@ -4,8 +4,8 @@ import {
 	assertNotStrictEquals,
 } from "@std/assert";
 import { OrthographicCamera as ThreeOrthoCamera } from "three";
+import "../../extensions/array.extension.ts";
 import { OrthoCamera } from "../../src/cameras/OrthoCamera.ts";
-import "../../src/extensions/array.extension.ts";
 import { MathUtils } from "../../src/maths/MathUtils.ts";
 
 function compareMatrices(

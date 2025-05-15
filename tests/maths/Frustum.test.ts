@@ -10,7 +10,7 @@ import {
 	Sphere as ThreeSphere,
 	Vector3 as ThreeVector3,
 } from "three";
-import "../../src/extensions/array.extension.ts";
+import "../../extensions/array.extension.ts";
 import { Box3 } from "../../src/maths/Box3.ts";
 import { Frustum } from "../../src/maths/Frustum.ts";
 import { MathUtils } from "../../src/maths/MathUtils.ts";

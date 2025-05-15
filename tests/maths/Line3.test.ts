@@ -8,7 +8,7 @@ import {
 	Matrix4 as ThreeMatrix4,
 	Vector3 as ThreeVector3,
 } from "three";
-import "../../src/extensions/array.extension.ts";
+import "../../extensions/array.extension.ts";
 import { Line3 } from "../../src/maths/Line3.ts";
 import { MathUtils } from "../../src/maths/MathUtils.ts";
 import { Matrix4 } from "../../src/maths/Matrix4.ts";

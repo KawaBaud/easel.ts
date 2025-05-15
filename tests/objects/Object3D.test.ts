@@ -4,7 +4,7 @@ import {
 	assertNotStrictEquals,
 } from "@std/assert";
 import { Object3D as ThreeObject3D, Vector3 as ThreeVector3 } from "three";
-import "../../src/extensions/array.extension.ts";
+import "../../extensions/array.extension.ts";
 import { MathUtils } from "../../src/maths/MathUtils.ts";
 import { Vector3 } from "../../src/maths/Vector3.ts";
 import { Object3D } from "../../src/objects/Object3D.ts";

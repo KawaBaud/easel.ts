@@ -1,4 +1,4 @@
-import "../extensions/array.extension.ts";
+import "../../extensions/array.extension.ts";
 import { MathUtils } from "./MathUtils.ts";
 import { Matrix4 } from "./Matrix4.ts";
 import { Quaternion } from "./Quaternion.ts";
