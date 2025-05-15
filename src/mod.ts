@@ -63,7 +63,7 @@ export const EASEL = {
 	Euler,
 	Frustum,
 	Line3,
-	Math: MathUtils,
+	MathUtils,
 	Matrix3,
 	Matrix4,
 	Plane,
