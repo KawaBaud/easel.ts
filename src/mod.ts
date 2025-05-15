@@ -22,15 +22,13 @@ import { Vector3 } from "./maths/Vector3.ts";
 import { Vector4 } from "./maths/Vector4.ts";
 import { Mesh } from "./objects/Mesh.ts";
 import { Object3D } from "./objects/Object3D.ts";
-import { CanvasRenderer } from "./renderers/CanvasRenderer.ts";
-import { CanvasRenderTarget } from "./renderers/CanvasRenderTarget.ts";
-import { CanvasUtils } from "./renderers/CanvasUtils.ts";
-import { ClippingContext } from "./renderers/common/ClippingContext.ts";
-import { CullingContext } from "./renderers/common/CullingContext.ts";
-import { Pipeline } from "./renderers/common/Pipeline.ts";
+import { CanvasUtils } from "./renderers/canvas/CanvasUtils.ts";
+import { FrustumProcessor } from "./renderers/processors/FrustumProcessor.ts";
+import { Pipeline } from "./renderers/pipelines/Pipeline.ts";
+import { Processor } from "./renderers/processors/Processor.ts";
 import { RenderList } from "./renderers/common/RenderList.ts";
-import { RenderPipeline } from "./renderers/common/RenderPipeline.ts";
-import { RenderTarget } from "./renderers/common/RenderTarget.ts";
+import { RenderPipeline } from "./renderers/pipelines/RenderPipeline.ts";
+import { Renderer } from "./renderers/Renderer.ts";
 import { Scene } from "./scenes/Scene.ts";
 import { CubeShape } from "./shapes/CubeShape.ts";
 import { PlaneShape } from "./shapes/PlaneShape.ts";
@@ -79,14 +77,12 @@ export const EASEL = {
 	Object3D,
 
 	/* renderers */
-	ClippingContext,
-	CullingContext,
+	Processor,
+	FrustumProcessor,
 	Pipeline,
 	RenderList,
 	RenderPipeline,
-	RenderTarget,
-	CanvasRenderer,
-	CanvasRenderTarget,
+	Renderer,
 	CanvasUtils,
 
 	/* scenes */
