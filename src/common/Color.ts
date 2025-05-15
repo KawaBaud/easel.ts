@@ -1,18 +1,5 @@
-export type ColorType = string | number | Color;
-
-export type HSL = {
-	h: number;
-	s: number;
-	l: number;
-};
-export type HSLArray = [h: number, s: number, l: number];
-export type RGB = {
-	r: number;
-	g: number;
-	b: number;
-};
-export type RGBA = RGB & { a: number };
-export type RGBArray = [r: number, g: number, b: number];
+import { MathUtils } from "../maths/MathUtils.ts";
+import type { ColorValue, HSL, RGB, RGBArray } from "../types/color.types.ts";
 
 export class Color {
 	static readonly HUE_SCALE = 360;
@@ -21,12 +8,12 @@ export class Color {
 
 	static readonly RGB_SCALE = 255;
 
-	static toRGB(color: ColorType): RGB {
+	static toRGB(color: ColorValue): RGB {
 		const tempColor = new Color(color);
 		return {
-			r: Math.trunc(tempColor.r * Color.RGB_SCALE),
-			g: Math.trunc(tempColor.g * Color.RGB_SCALE),
-			b: Math.trunc(tempColor.b * Color.RGB_SCALE),
+			r: MathUtils.fastTrunc(tempColor.r * Color.RGB_SCALE),
+			g: MathUtils.fastTrunc(tempColor.g * Color.RGB_SCALE),
+			b: MathUtils.fastTrunc(tempColor.b * Color.RGB_SCALE),
 		};
 	}
 
@@ -34,7 +21,7 @@ export class Color {
 	g = 1;
 	b = 1;
 
-	constructor(...args: [color: ColorType] | RGBArray) {
+	constructor(...args: [color: ColorValue] | RGBArray) {
 		args.length > 0 ? this.set(...args) : (this.r = this.g = this.b = 0);
 	}
 
@@ -77,9 +64,9 @@ export class Color {
 	get hslString(): string {
 		const hsl = this.hsl;
 
-		const h = Math.trunc(hsl.h * Color.HUE_SCALE);
-		const s = Math.trunc(hsl.s * Color.SATURATION_SCALE);
-		const l = Math.trunc(hsl.l * Color.LIGHTNESS_SCALE);
+		const h = MathUtils.fastTrunc(hsl.h * Color.HUE_SCALE);
+		const s = MathUtils.fastTrunc(hsl.s * Color.SATURATION_SCALE);
+		const l = MathUtils.fastTrunc(hsl.l * Color.LIGHTNESS_SCALE);
 		return `hsl(${h},${s}%,${l}%)`;
 	}
 
@@ -94,7 +81,7 @@ export class Color {
 		return this;
 	}
 
-	parse(value: ColorType): this {
+	parse(value: ColorValue): this {
 		if (value instanceof Color) {
 			this.copy(value);
 			return this;
@@ -107,7 +94,7 @@ export class Color {
 		throw new Error(`EASEL.Color.parse(): invalid value: ${value}`);
 	}
 
-	set(...args: [color: ColorType] | RGBArray): this {
+	set(...args: [color: ColorValue] | RGBArray): this {
 		if (args.length === 1) {
 			const value = args[0];
 
@@ -129,7 +116,7 @@ export class Color {
 		if (hex > 0xFFFFFF || hex < 0) {
 			throw new Error("EASEL.Color.setHex(): hex out of range");
 		}
-		hex = Math.trunc(hex);
+		hex = MathUtils.fastTrunc(hex);
 
 		this.r = (hex >> 16) / Color.RGB_SCALE;
 		this.g = (hex >> 8 & Color.RGB_SCALE) / Color.RGB_SCALE;
