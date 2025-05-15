@@ -90,7 +90,7 @@
 			function animate() {
 				globalThis.requestAnimationFrame(animate);
 
-				const deltaTime = EASEL.Math.fastMin(clock.delta, 0.1);
+				const deltaTime = EASEL.MathUtils.fastMin(clock.delta, 0.1);
 				let accumulatedTime = 0;
 
 				while (accumulatedTime < deltaTime) {
