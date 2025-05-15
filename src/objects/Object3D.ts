@@ -20,7 +20,7 @@ export class Object3D {
 	worldMatrix = new Matrix4();
 	autoUpdateMatrix = true;
 
-	parent: Object3D | null = null;
+	parent: Object3D | undefined = undefined;
 	children: Object3D[] = [];
 
 	visible = true;
@@ -125,8 +125,8 @@ export class Object3D {
 	remove(object: Object3D): this {
 		const index = this.children.indexOf(object);
 		index !== -1
-			? (object.parent = null, this.children.splice(index, 1))
-			: null;
+			? (object.parent = undefined, this.children.splice(index, 1))
+			: undefined;
 		return this;
 	}
 

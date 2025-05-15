@@ -153,7 +153,7 @@ Deno.test("Object3D: add/remove", () => {
 	compareObject3D(parent, threeParent, "parent after remove");
 	compareObject3D(child, threeChild, "child after remove");
 
-	assertEquals(child.parent, null, "child.parent reference after remove");
+	assertEquals(child.parent, undefined, "child.parent reference after remove");
 	assertEquals(
 		parent.children.includes(child),
 		false,

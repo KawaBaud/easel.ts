@@ -64,17 +64,17 @@ export class Plane {
 	intersectLine(
 		line: Line3,
 		target = new Vector3(),
-	): Vector3 | null {
+	): Vector3 | undefined {
 		const dir = line.end.sub(line.start);
 		const denom = this.normal.dot(dir);
 		if (denom === 0) {
 			return this.distanceToPoint(line.start) === 0
 				? target.copy(line.start)
-				: null;
+				: undefined;
 		}
 
 		const t = -(line.start.dot(this.normal) + this.constant) / denom;
-		if (t < 0 || t > 1) return null;
+		if (t < 0 || t > 1) return undefined;
 
 		return target.copy(dir).mulScalar(t).add(line.start);
 	}

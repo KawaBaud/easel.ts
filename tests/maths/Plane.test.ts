@@ -238,7 +238,7 @@ Deno.test("Plane: intersectLine", () => {
 		assertEquals(
 			!!result1,
 			!!threeResult1,
-			"intersectLine (both null or both not null)",
+			"intersectLine (both undefined or both not undefined)",
 		);
 	}
 
@@ -276,7 +276,7 @@ Deno.test("Plane: intersectLine", () => {
 		assertEquals(
 			!!result3,
 			!!threeResult3,
-			"intersectLine coplanar (both null or both not null)",
+			"intersectLine coplanar (both undefined or both not undefined)",
 		);
 	}
 });

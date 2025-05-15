@@ -14,7 +14,7 @@ export class Euler {
 	#y = 0;
 	#z = 0;
 	#order: EulerOrder = "XYZ";
-	#onChangeCallback: (() => void) | null = null;
+	#onChangeCallback: (() => void) | undefined = undefined;
 
 	constructor(
 		x = 0,

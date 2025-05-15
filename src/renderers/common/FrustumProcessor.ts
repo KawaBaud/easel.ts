@@ -17,13 +17,13 @@ const _v5 = new Vector3();
 export class FrustumProcessor extends Processor {
 	frustum = new Frustum();
 
-	#camera: Camera | null = null;
+	#camera: Camera | undefined = undefined;
 
-	get camera(): Camera | null {
+	get camera(): Camera | undefined {
 		return this.#camera;
 	}
 
-	clipLine(start: Vector3, end: Vector3): Vector3[] | null {
+	clipLine(start: Vector3, end: Vector3): Vector3[] | undefined {
 		const INSIDE = 0b000000;
 		const LEFT = 0b000001;
 		const RIGHT = 0b000010;
@@ -70,7 +70,7 @@ export class FrustumProcessor extends Processor {
 		const outcode1 = computeOutCode(end);
 
 		if ((outcode0 | outcode1) === 0) return [start.clone(), end.clone()];
-		if ((outcode0 & outcode1) !== 0) return null;
+		if ((outcode0 & outcode1) !== 0) return undefined;
 
 		const direction = _v3.subVectors(end, start);
 		let t0 = 0;
@@ -83,12 +83,12 @@ export class FrustumProcessor extends Processor {
 			const dist = plane.distanceToPoint(start);
 
 			if (denom === 0) {
-				if (dist < 0) return null;
+				if (dist < 0) return undefined;
 			} else {
 				const t = -dist / denom;
 				denom < 0 ? (t > t0 && (t0 = t)) : (t < t1 && (t1 = t));
 
-				if (t0 > t1) return null;
+				if (t0 > t1) return undefined;
 			}
 		}
 
@@ -184,7 +184,7 @@ export class FrustumProcessor extends Processor {
 	}
 
 	reset(): this {
-		this.#camera = null;
+		this.#camera = undefined;
 		return this;
 	}
 
