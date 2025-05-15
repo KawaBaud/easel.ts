@@ -14,20 +14,17 @@ export class ShapeUtils {
 		return target.lengthSq ? target.unitize() : target.set(0, 0, 1);
 	}
 
-	static isConvex(
+	static isCounterClockwise(
 		a: Vector3,
 		b: Vector3,
 		c: Vector3,
 	): boolean {
-		const normal = Vector3.cross(
-			b.x - a.x,
-			b.y - a.y,
-			b.z - a.z,
-			c.x - a.x,
-			c.y - a.y,
-			c.z - a.z,
-		);
-		return normal.y > 0;
+		const ax = a.x, az = a.z;
+		const bx = b.x, bz = b.z;
+		const cx = c.x, cz = c.z;
+
+		const signedArea = ((bx - ax) * (cz - az)) - ((bz - az) * (cx - ax));
+		return signedArea > 0;
 	}
 
 	static triangulate(vertices: Vector3[]): Uint16Array<ArrayBuffer> {
@@ -83,7 +80,6 @@ export class ShapeUtils {
 			triangles[triangleCount++] = indices.safeAt(1);
 			triangles[triangleCount++] = indices.safeAt(2);
 		}
-
 		return triangles.slice(0, triangleCount);
 	}
 
@@ -98,7 +94,9 @@ export class ShapeUtils {
 		const a = vertices[indices.safeAt(prev)];
 		const b = vertices[indices.safeAt(curr)];
 		const c = vertices[indices.safeAt(next)];
-		if ((!a || !b || !c) || ShapeUtils.isConvex(a, b, c)) return false;
+		if ((!a || !b || !c) || !ShapeUtils.isCounterClockwise(a, b, c)) {
+			return false;
+		}
 
 		for (let i = 0; i < count; i++) {
 			if (i === prev || i === curr || i === next) continue;
