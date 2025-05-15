@@ -23,54 +23,6 @@ export class FrustumProcessor extends Processor {
 		return this.#camera;
 	}
 
-	override reset(): this {
-		this.#camera = null;
-		return this;
-	}
-
-	setFromCamera(camera: Camera): this {
-		this.#camera = camera;
-		this.frustum.setFromProjectionMatrix(camera.projectionMatrix);
-		return this;
-	}
-
-	isBackFace(v1: Vector3, v2: Vector3, v3: Vector3): boolean {
-		if (!this.#camera) return false;
-
-		ShapeUtils.calculateNormal(v1, v2, v3, _normal);
-		return Vector3.dot(-_normal.x, -_normal.y, -_normal.z, v1) < 0;
-	}
-
-	isFrontFace(v1: Vector3, v2: Vector3, v3: Vector3): boolean {
-		return !this.isBackFace(v1, v2, v3);
-	}
-
-	shouldCull(
-		v1: Vector3,
-		v2: Vector3,
-		v3: Vector3,
-		material: Material,
-	): boolean {
-		if (material.wireframe) return false;
-
-		const isBackFace = this.isBackFace(v1, v2, v3);
-
-		switch (material.side) {
-			case 0: // Side.FRONT
-				return isBackFace;
-			case 1: // Side.BACK
-				return !isBackFace;
-			case 2: // Side.DOUBLE
-				return false;
-			default:
-				return isBackFace;
-		}
-	}
-
-	isPointVisible(point: Vector3): boolean {
-		return this.frustum.containsPoint(point);
-	}
-
 	clipLine(start: Vector3, end: Vector3): Vector3[] | null {
 		const INSIDE = 0b000000;
 		const LEFT = 0b000001;
@@ -214,6 +166,54 @@ export class FrustumProcessor extends Processor {
 		}
 
 		return triangles;
+	}
+
+	isBackFace(v1: Vector3, v2: Vector3, v3: Vector3): boolean {
+		if (!this.#camera) return false;
+
+		ShapeUtils.calculateNormal(v1, v2, v3, _normal);
+		return Vector3.dot(-_normal.x, -_normal.y, -_normal.z, v1) < 0;
+	}
+
+	isFrontFace(v1: Vector3, v2: Vector3, v3: Vector3): boolean {
+		return !this.isBackFace(v1, v2, v3);
+	}
+
+	isPointVisible(point: Vector3): boolean {
+		return this.frustum.containsPoint(point);
+	}
+
+	reset(): this {
+		this.#camera = null;
+		return this;
+	}
+
+	setFromCamera(camera: Camera): this {
+		this.#camera = camera;
+		this.frustum.setFromProjectionMatrix(camera.projectionMatrix);
+		return this;
+	}
+
+	shouldCull(
+		v1: Vector3,
+		v2: Vector3,
+		v3: Vector3,
+		material: Material,
+	): boolean {
+		if (material.wireframe) return false;
+
+		const isBackFace = this.isBackFace(v1, v2, v3);
+
+		switch (material.side) {
+			case 0: // Side.FRONT
+				return isBackFace;
+			case 1: // Side.BACK
+				return !isBackFace;
+			case 2: // Side.DOUBLE
+				return false;
+			default:
+				return isBackFace;
+		}
 	}
 
 	#clipOnePointBehind(

@@ -177,14 +177,20 @@ export class CanvasRenderer extends Renderer {
 		}
 	}
 
-	override setClearColor(color: ColorValue): this {
+	setClearColor(color: ColorValue): this {
 		color instanceof Color
 			? this.#clearColor.copy(color)
 			: this.#clearColor.parse(color);
 		return this;
 	}
 
-	override setSize(width: number, height: number): this {
+	setPixel(x: number, y: number, color: ColorValue): this {
+		const idx = CanvasRenderer.#getPixelIndex(x, y, this.width);
+		this.#setPixelData(idx, color);
+		return this;
+	}
+
+	setSize(width: number, height: number): this {
 		this.width = width;
 		this.height = height;
 
@@ -199,25 +205,6 @@ export class CanvasRenderer extends Renderer {
 
 		this.pipeline.setSize(width, height);
 
-		return this;
-	}
-
-	override render(scene: Scene, camera: Camera): this {
-		super.render(scene, camera);
-
-		this.beginFrame();
-		this.clear(this.#clearColor);
-
-		this.pipeline.render(scene, camera, this);
-
-		this.endFrame();
-
-		return this;
-	}
-
-	setPixel(x: number, y: number, color: ColorValue): this {
-		const idx = CanvasRenderer.#getPixelIndex(x, y, this.width);
-		this.#setPixelData(idx, color);
 		return this;
 	}
 
@@ -316,5 +303,18 @@ export class CanvasRenderer extends Renderer {
 		if (p1.y > p3.y) [p1, p3] = [p3, p1];
 		if (p2.y > p3.y) [p2, p3] = [p3, p2];
 		return [p1, p2, p3];
+	}
+
+	override render(scene: Scene, camera: Camera): this {
+		super.render(scene, camera);
+
+		this.beginFrame();
+		this.clear(this.#clearColor);
+
+		this.pipeline.render(scene, camera, this);
+
+		this.endFrame();
+
+		return this;
 	}
 }

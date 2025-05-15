@@ -58,9 +58,18 @@ export class PerspCamera extends Camera {
 		this.updateProjectionMatrix();
 	}
 
-	override clone(): PerspCamera {
+	clone(): PerspCamera {
 		return new PerspCamera(
 			this.fov,
+			this.aspect,
+			this.near,
+			this.far,
+		);
+	}
+
+	updateProjectionMatrix(): void {
+		this.projectionMatrix.makePerspective(
+			MathUtils.toRadians(this.fov),
 			this.aspect,
 			this.near,
 			this.far,
@@ -75,14 +84,5 @@ export class PerspCamera extends Camera {
 		this.near = source.near;
 		this.far = source.far;
 		return this;
-	}
-
-	override updateProjectionMatrix(): void {
-		this.projectionMatrix.makePerspective(
-			MathUtils.toRadians(this.fov),
-			this.aspect,
-			this.near,
-			this.far,
-		);
 	}
 }
