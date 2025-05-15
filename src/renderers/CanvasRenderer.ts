@@ -3,8 +3,11 @@ import { Color } from "../common/Color.ts";
 import type { Material } from "../materials/Material.ts";
 import { MathUtils } from "../maths/MathUtils.ts";
 import { Vector3 } from "../maths/Vector3.ts";
-import type { ColorValue } from "../types/color.types.ts";
+import type { Scene } from "../scenes/Scene.ts";
+import type { ColorValue } from "../types.ts";
 import { CanvasUtils } from "./canvas/CanvasUtils.ts";
+import { RenderPipeline } from "./common/RenderPipeline.ts";
+import { Renderer, type RendererOptions } from "./Renderer.ts";
 
 const _pv1 = new Vector3();
 const _pv2 = new Vector3();
@@ -14,42 +17,39 @@ const _screenP1 = new Vector3();
 const _screenP2 = new Vector3();
 const _screenP3 = new Vector3();
 
-export interface RasterizerOptions {
-	width?: number;
-	height?: number;
+export class CanvasRenderer extends Renderer {
+	context: CanvasRenderingContext2D;
+	imageData: ImageData;
+	data: Uint8ClampedArray;
+	pipeline: RenderPipeline;
 
-	canvas?: HTMLCanvasElement;
-}
+	#canvas: HTMLCanvasElement;
+	#clearColor = new Color(0, 0, 0);
 
-export class Rasterizer {
 	static #getPixelIndex(x: number, y: number, width: number): number {
 		return (y * width + x) << 2;
 	}
 
-	width: number;
-	height: number;
+	get domElement(): HTMLCanvasElement {
+		return this.#canvas;
+	}
 
-	canvas: HTMLCanvasElement;
-	ctx: CanvasRenderingContext2D;
+	constructor(options: RendererOptions = {}) {
+		super(options);
 
-	imageData: ImageData;
-	data: Uint8ClampedArray;
+		this.#canvas = CanvasUtils.createCanvasElement();
+		this.#canvas.width = this.width;
+		this.#canvas.height = this.height;
 
-	constructor(options: RasterizerOptions = {}) {
-		this.width = options.width ?? globalThis.innerWidth;
-		this.height = options.height ?? globalThis.innerHeight;
-
-		this.canvas = options.canvas ?? CanvasUtils.createCanvasElement();
-		this.canvas.width = this.width;
-		this.canvas.height = this.height;
-
-		this.ctx = CanvasUtils.createCanvasRenderingContext2D(this.canvas, {
+		this.context = CanvasUtils.createCanvasRenderingContext2D(this.#canvas, {
 			willReadFrequently: true,
 		});
-		this.ctx.imageSmoothingEnabled = false;
+		this.context.imageSmoothingEnabled = false;
 
-		this.imageData = this.ctx.createImageData(this.width, this.height);
+		this.imageData = this.context.createImageData(this.width, this.height);
 		this.data = this.imageData.data;
+
+		this.pipeline = new RenderPipeline(this.width, this.height);
 	}
 
 	beginFrame(): this {
@@ -63,11 +63,6 @@ export class Rasterizer {
 				this.setPixel(x, y, color);
 			}
 		}
-		return this;
-	}
-
-	endFrame(): this {
-		this.ctx.putImageData(this.imageData, 0, 0);
 		return this;
 	}
 
@@ -151,6 +146,11 @@ export class Rasterizer {
 		return this;
 	}
 
+	endFrame(): this {
+		this.context.putImageData(this.imageData, 0, 0);
+		return this;
+	}
+
 	rasterize(
 		triangle: Vector3[],
 		camera: Camera,
@@ -177,23 +177,47 @@ export class Rasterizer {
 		}
 	}
 
-	setPixel(x: number, y: number, color: ColorValue): this {
-		const idx = Rasterizer.#getPixelIndex(x, y, this.width);
-		this.#setPixelData(idx, color);
+	override setClearColor(color: ColorValue): this {
+		color instanceof Color
+			? this.#clearColor.copy(color)
+			: this.#clearColor.parse(color);
 		return this;
 	}
 
-	setSize(width: number, height: number): this {
+	override setSize(width: number, height: number): this {
 		this.width = width;
 		this.height = height;
 
-		this.canvas.width = width;
-		this.canvas.height = height;
-		this.ctx.imageSmoothingEnabled = false;
+		this.#canvas.style.width = `${width}px`;
+		this.#canvas.style.height = `${height}px`;
+		this.#canvas.width = width;
+		this.#canvas.height = height;
+		this.context.imageSmoothingEnabled = false;
 
-		this.imageData = this.ctx.createImageData(width, height);
+		this.imageData = this.context.createImageData(width, height);
 		this.data = this.imageData.data;
 
+		this.pipeline.setSize(width, height);
+
+		return this;
+	}
+
+	override render(scene: Scene, camera: Camera): this {
+		super.render(scene, camera);
+
+		this.beginFrame();
+		this.clear(this.#clearColor);
+
+		this.pipeline.render(scene, camera, this);
+
+		this.endFrame();
+
+		return this;
+	}
+
+	setPixel(x: number, y: number, color: ColorValue): this {
+		const idx = CanvasRenderer.#getPixelIndex(x, y, this.width);
+		this.#setPixelData(idx, color);
 		return this;
 	}
 
