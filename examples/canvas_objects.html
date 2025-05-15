@@ -15,7 +15,6 @@
 	<body>
 		<script type="module">
 			import { OBJLoader } from "../src/loaders/OBJLoader.ts";
-			import { Stats } from "../src/common/Stats.ts";
 			import { EASEL } from "../src/mod.ts";
 
 			const width = globalThis.innerWidth;
@@ -34,7 +33,7 @@
 			renderer.setSize(width, height);
 			globalThis.document.body.appendChild(renderer.domElement);
 
-			const material = new EASEL.SimpleMaterial({
+			const material = new EASEL.Material({
 				color: 0x00ff00,
 				wireframe: true,
 			});
@@ -88,13 +87,10 @@
 			const speed = 0.7;
 			const rotSpeed = 0.35;
 
-			const stats = new Stats(clock);
-			globalThis.document.body.appendChild(stats.dom);
-
 			function animate() {
 				globalThis.requestAnimationFrame(animate);
 
-				const deltaTime = EASEL.Math.min(clock.delta, 0.1);
+				const deltaTime = EASEL.Math.fastMin(clock.delta, 0.1);
 				let accumulatedTime = 0;
 
 				while (accumulatedTime < deltaTime) {
@@ -124,8 +120,6 @@
 				}
 
 				renderer.render(scene, camera);
-
-				stats.update();
 			}
 			animate();
 		</script>
