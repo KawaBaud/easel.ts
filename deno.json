@@ -16,6 +16,9 @@
 			"dom",
 			"dom.iterable",
 			"dom.asynciterable"
+		],
+		"types": [
+			"./types/array.extension.d.ts"
 		]
 	},
 	"imports": {
