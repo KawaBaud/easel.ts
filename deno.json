@@ -29,8 +29,9 @@
 	"exclude": [],
 	"lint": {
 		"include": [
-			"src/",
-			"tests/"
+			"./extensions/*",
+			"./src/*",
+			"./tests/*"
 		],
 		"exclude": [],
 		"rules": {
