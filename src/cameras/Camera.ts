@@ -1,7 +1,7 @@
 import { Matrix4 } from "../maths/Matrix4.ts";
 import { Object3D } from "../objects/Object3D.ts";
 
-export class Camera extends Object3D {
+export abstract class Camera extends Object3D {
 	projectionMatrix = new Matrix4();
 	matrixWorldInverse = new Matrix4();
 
@@ -11,9 +11,15 @@ export class Camera extends Object3D {
 		this.name = "Camera";
 	}
 
-	override clone(): Camera {
-		return new Camera().copy(this);
+	updateMatrixWorld(force = false): void {
+		super.updateWorldMatrix(force, false);
+
+		this.matrixWorldInverse.copy(this.worldMatrix).invert();
 	}
+
+	abstract updateProjectionMatrix(): void;
+
+	abstract override clone(): Camera;
 
 	override copy(source: Camera): this {
 		super.copy(source);
@@ -22,12 +28,4 @@ export class Camera extends Object3D {
 		this.matrixWorldInverse.copy(source.matrixWorldInverse);
 		return this;
 	}
-
-	updateMatrixWorld(force = false): void {
-		super.updateWorldMatrix(force, false);
-
-		this.matrixWorldInverse.copy(this.worldMatrix).invert();
-	}
-
-	updateProjectionMatrix(): void {}
 }
