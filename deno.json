@@ -18,7 +18,7 @@
 			"dom.asynciterable"
 		],
 		"types": [
-			"./src/@types/array.extension.d.ts"
+			"./types/array.extension.d.ts"
 		]
 	},
 	"imports": {
@@ -31,7 +31,8 @@
 		"include": [
 			"./extensions/*",
 			"./src/*",
-			"./tests/*"
+			"./tests/*",
+			"./types/*"
 		],
 		"exclude": [],
 		"rules": {
@@ -82,8 +83,8 @@
 	"name": "@kawabaud/easel",
 	"version": "0.0.1",
 	"exports": {
-		"./@types/*": "./src/@types/*",
 		"./extensions/*": "./src/extensions/*",
-		".": "./src/mod.ts"
+		".": "./src/mod.ts",
+		"./types/*": "./types/*"
 	}
 }
