@@ -1,5 +1,5 @@
 import { Vector3 } from "../maths/Vector3.ts";
-import type { ColorValue } from "../types/types.ts";
+import type { ColorValue } from "../types.ts";
 import { Light } from "./Light.ts";
 
 export class DirectionalLight extends Light {
@@ -29,6 +29,15 @@ export class DirectionalLight extends Light {
 		this.#updateDirection();
 	}
 
+	setFromDirection(direction: Vector3): this {
+		this.direction.copy(direction).unitize();
+		return this;
+	}
+
+	#updateDirection(): void {
+		this.#direction.copy(this.position).sub(this.target).unitize().negate();
+	}
+
 	override clone(): DirectionalLight {
 		return new DirectionalLight(this.color, this.intensity).copy(this);
 	}
@@ -45,14 +54,5 @@ export class DirectionalLight extends Light {
 		super.updateWorldMatrix(force, updateChildren);
 
 		this.#updateDirection();
-	}
-
-	setFromDirection(direction: Vector3): this {
-		this.direction.copy(direction).unitize();
-		return this;
-	}
-
-	#updateDirection(): void {
-		this.#direction.copy(this.position).sub(this.target).unitize().negate();
 	}
 }
