@@ -4,9 +4,9 @@ import { Mesh } from "../../objects/Mesh.ts";
 import type { Scene } from "../../scenes/Scene.ts";
 import { ShapeUtils } from "../../shapes/ShapeUtils.ts";
 import "../../types.ts";
-import { Pipeline } from "../pipelines/Pipeline.ts";
-import { FrustumProcessor } from "../processors/FrustumProcessor.ts";
-import type { Rasterizer } from "../Rasterizer.ts";
+import type { CanvasRenderer } from "../CanvasRenderer.ts";
+import { FrustumProcessor } from "../common/FrustumProcessor.ts";
+import { Pipeline } from "./Pipeline.ts";
 
 const _v1 = new Vector3();
 const _v2 = new Vector3();
@@ -27,7 +27,7 @@ export class RenderPipeline extends Pipeline {
 		this.height = height ?? globalThis.innerHeight;
 	}
 
-	render(scene: Scene, camera: Camera, rasterizer: Rasterizer): this {
+	render(scene: Scene, camera: Camera, renderer: CanvasRenderer): this {
 		camera.updateMatrixWorld();
 
 		this.#frustumProcessor.setFromCamera(camera);
@@ -37,7 +37,7 @@ export class RenderPipeline extends Pipeline {
 		for (const object of this.renderList.objects) {
 			if (object instanceof Mesh) {
 				object.updateWorldMatrix(true, false);
-				this.#renderMesh(object, camera, rasterizer);
+				this.#renderMesh(object, camera, renderer);
 			}
 		}
 
@@ -56,7 +56,7 @@ export class RenderPipeline extends Pipeline {
 		vertices: Vector3[],
 		mesh: Mesh,
 		camera: Camera,
-		rasterizer: Rasterizer,
+		renderer: CanvasRenderer,
 		material: Mesh["material"],
 	): void {
 		const idx1 = indices.safeAt(startIndex);
@@ -92,11 +92,11 @@ export class RenderPipeline extends Pipeline {
 			.clipTriangle(_worldV1, _worldV2, _worldV3);
 		if (clippedTriangles.length === 0) return;
 		for (const triangle of clippedTriangles) {
-			rasterizer.rasterize(triangle, camera, material);
+			renderer.rasterize(triangle, camera, material);
 		}
 	}
 
-	#renderMesh(mesh: Mesh, camera: Camera, rasterizer: Rasterizer): void {
+	#renderMesh(mesh: Mesh, camera: Camera, renderer: CanvasRenderer): void {
 		const shape = mesh.shape;
 		const material = mesh.material;
 
@@ -116,7 +116,7 @@ export class RenderPipeline extends Pipeline {
 				vertices,
 				mesh,
 				camera,
-				rasterizer,
+				renderer,
 				material,
 			);
 		}

@@ -23,11 +23,12 @@ import { Vector4 } from "./maths/Vector4.ts";
 import { Mesh } from "./objects/Mesh.ts";
 import { Object3D } from "./objects/Object3D.ts";
 import { CanvasUtils } from "./renderers/canvas/CanvasUtils.ts";
-import { FrustumProcessor } from "./renderers/processors/FrustumProcessor.ts";
-import { Pipeline } from "./renderers/pipelines/Pipeline.ts";
-import { Processor } from "./renderers/processors/Processor.ts";
+import { CanvasRenderer } from "./renderers/CanvasRenderer.ts";
+import { FrustumProcessor } from "./renderers/common/FrustumProcessor.ts";
+import { Pipeline } from "./renderers/common/Pipeline.ts";
+import { Processor } from "./renderers/common/Processor.ts";
 import { RenderList } from "./renderers/common/RenderList.ts";
-import { RenderPipeline } from "./renderers/pipelines/RenderPipeline.ts";
+import { RenderPipeline } from "./renderers/common/RenderPipeline.ts";
 import { Renderer } from "./renderers/Renderer.ts";
 import { Scene } from "./scenes/Scene.ts";
 import { CubeShape } from "./shapes/CubeShape.ts";
@@ -77,13 +78,14 @@ export const EASEL = {
 	Object3D,
 
 	/* renderers */
-	Processor,
+	CanvasUtils,
 	FrustumProcessor,
 	Pipeline,
+	Processor,
 	RenderList,
 	RenderPipeline,
+	CanvasRenderer,
 	Renderer,
-	CanvasUtils,
 
 	/* scenes */
 	Scene,

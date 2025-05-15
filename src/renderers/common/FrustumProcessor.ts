@@ -5,7 +5,7 @@ import { MathUtils } from "../../maths/MathUtils.ts";
 import { Vector3 } from "../../maths/Vector3.ts";
 import { ShapeUtils } from "../../shapes/ShapeUtils.ts";
 import "../../types.ts";
-import { Processor } from "../processors/Processor.ts";
+import { Processor } from "../common/Processor.ts";
 
 const _normal = new Vector3();
 const _v1 = new Vector3();
