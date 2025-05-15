@@ -82,19 +82,8 @@ export class OrthoCamera extends Camera {
 		this.updateProjectionMatrix();
 	}
 
-	clone(): OrthoCamera {
+	override clone(): OrthoCamera {
 		return new OrthoCamera(
-			this.left,
-			this.right,
-			this.top,
-			this.bottom,
-			this.near,
-			this.far,
-		);
-	}
-
-	updateProjectionMatrix(): void {
-		this.projectionMatrix.makeOrthographic(
 			this.left,
 			this.right,
 			this.top,
@@ -114,5 +103,16 @@ export class OrthoCamera extends Camera {
 		this.near = source.near;
 		this.far = source.far;
 		return this;
+	}
+
+	override updateProjectionMatrix(): void {
+		this.projectionMatrix.makeOrthographic(
+			this.left,
+			this.right,
+			this.top,
+			this.bottom,
+			this.near,
+			this.far,
+		);
 	}
 }

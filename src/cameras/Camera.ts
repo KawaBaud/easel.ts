@@ -1,7 +1,7 @@
 import { Matrix4 } from "../maths/Matrix4.ts";
 import { Object3D } from "../objects/Object3D.ts";
 
-export abstract class Camera extends Object3D {
+export class Camera extends Object3D {
 	projectionMatrix = new Matrix4();
 	matrixWorldInverse = new Matrix4();
 
@@ -17,9 +17,15 @@ export abstract class Camera extends Object3D {
 		this.matrixWorldInverse.copy(this.worldMatrix).invert();
 	}
 
-	abstract updateProjectionMatrix(): void;
+	updateProjectionMatrix(): void {
+		throw new Error(
+			"EASEL.Camera.updateProjectionMatrix(): must be implemented in subclass",
+		);
+	}
 
-	abstract override clone(): Camera;
+	override clone(): Camera {
+		return new Camera().copy(this);
+	}
 
 	override copy(source: Camera): this {
 		super.copy(source);
