@@ -1,7 +1,9 @@
 import type { Camera } from "../../cameras/Camera.ts";
-import { Color, type ColorType } from "../../common/Color.ts";
-import type { SimpleMaterial } from "../../materials/SimpleMaterial.ts";
+import { Color } from "../../common/Color.ts";
+import type { Material } from "../../materials/Material.ts";
+import { MathUtils } from "../../maths/MathUtils.ts";
 import { Vector3 } from "../../maths/Vector3.ts";
+import type { ColorValue } from "../../types/color.types.ts";
 import { CanvasUtils } from "../CanvasUtils.ts";
 
 const _pv1 = new Vector3();
@@ -55,7 +57,7 @@ export class Rasterizer {
 		return this;
 	}
 
-	clear(color: ColorType): this {
+	clear(color: ColorValue): this {
 		for (let y = 0; y < this.height; y++) {
 			for (let x = 0; x < this.width; x++) {
 				this.setPixel(x, y, color);
@@ -69,7 +71,7 @@ export class Rasterizer {
 		return this;
 	}
 
-	drawLine(start: Vector3, end: Vector3, color: ColorType): this {
+	drawLine(start: Vector3, end: Vector3, color: ColorValue): this {
 		this.#projectToScreen(start, _screenP1);
 		this.#projectToScreen(end, _screenP2);
 
@@ -110,7 +112,7 @@ export class Rasterizer {
 		v1: Vector3,
 		v2: Vector3,
 		v3: Vector3,
-		color: ColorType,
+		color: ColorValue,
 		wireframe = false,
 	): this {
 		wireframe
@@ -127,7 +129,7 @@ export class Rasterizer {
 		v1: Vector3,
 		v2: Vector3,
 		v3: Vector3,
-		color: ColorType,
+		color: ColorValue,
 	): this {
 		this.#projectToScreen(v1, _screenP1);
 		this.#projectToScreen(v2, _screenP2);
@@ -152,7 +154,7 @@ export class Rasterizer {
 	rasterize(
 		triangle: Vector3[],
 		camera: Camera,
-		material: SimpleMaterial,
+		material: Material,
 	): void {
 		if (triangle.length === 3) {
 			const cv1 = triangle[0];
@@ -175,7 +177,7 @@ export class Rasterizer {
 		}
 	}
 
-	setPixel(x: number, y: number, color: ColorType): this {
+	setPixel(x: number, y: number, color: ColorValue): this {
 		const idx = Rasterizer.#getPixelIndex(x, y, this.width);
 		this.#setPixelData(idx, color);
 		return this;
@@ -199,7 +201,7 @@ export class Rasterizer {
 		p1: Vector3,
 		p2: Vector3,
 		p3: Vector3,
-		color: ColorType,
+		color: ColorValue,
 		isTopTriangle: boolean,
 	): void {
 		const { x: x1, y: y1 } = p1;
@@ -209,9 +211,9 @@ export class Rasterizer {
 		const edge0 = isTopTriangle ? (x3 - x1) / (y3 - y1) : (x2 - x1) / (y2 - y1);
 		const edge1 = isTopTriangle ? (x3 - x2) / (y3 - y2) : (x3 - x1) / (y3 - y1);
 
-		const startY = Math.clamp(Math.ceil(y1), 0, this.height - 1);
-		const endY = Math.clamp(
-			Math.trunc(isTopTriangle ? y3 : y2),
+		const startY = MathUtils.clamp(Math.ceil(y1), 0, this.height - 1);
+		const endY = MathUtils.clamp(
+			MathUtils.fastTrunc(isTopTriangle ? y3 : y2),
 			0,
 			this.height - 1,
 		);
@@ -228,7 +230,7 @@ export class Rasterizer {
 		p1: Vector3,
 		p2: Vector3,
 		p3: Vector3,
-		color: ColorType,
+		color: ColorValue,
 	): void {
 		this.#fillFlatTriangle(p1, p2, p3, color, false);
 	}
@@ -237,7 +239,7 @@ export class Rasterizer {
 		p1: Vector3,
 		p2: Vector3,
 		p3: Vector3,
-		color: ColorType,
+		color: ColorValue,
 	): void {
 		this.#fillFlatTriangle(p1, p2, p3, color, true);
 	}
@@ -246,15 +248,15 @@ export class Rasterizer {
 		y: number,
 		x1: number,
 		x2: number,
-		color: ColorType,
+		color: ColorValue,
 	): void {
-		const startX = Math.clamp(
-			Math.ceil(Math.min(x1, x2)),
+		const startX = MathUtils.clamp(
+			Math.ceil(MathUtils.fastMin(x1, x2)),
 			0,
 			this.width - 1,
 		);
-		const endX = Math.clamp(
-			Math.trunc(Math.max(x1, x2)),
+		const endX = MathUtils.clamp(
+			MathUtils.fastTrunc(MathUtils.fastMax(x1, x2)),
 			0,
 			this.width - 1,
 		);
@@ -265,15 +267,15 @@ export class Rasterizer {
 	}
 
 	#projectToScreen(vertex: Vector3, target = new Vector3()): Vector3 {
-		const screenX = Math.trunc(((vertex.x + 1) * this.width) >> 1);
-		const screenY = Math.trunc(((1 - vertex.y) * this.height) >> 1);
+		const screenX = MathUtils.fastTrunc(((vertex.x + 1) * this.width) >> 1);
+		const screenY = MathUtils.fastTrunc(((1 - vertex.y) * this.height) >> 1);
 
-		const clippedX = Math.clamp(screenX, 0, this.width - 1);
-		const clippedY = Math.clamp(screenY, 0, this.height - 1);
+		const clippedX = MathUtils.clamp(screenX, 0, this.width - 1);
+		const clippedY = MathUtils.clamp(screenY, 0, this.height - 1);
 		return target.set(clippedX, clippedY, vertex.z);
 	}
 
-	#setPixelData(idx: number, color: ColorType): void {
+	#setPixelData(idx: number, color: ColorValue): void {
 		const rgb = Color.toRGB(color);
 		this.data[idx] = rgb.r;
 		this.data[idx + 1] = rgb.g;

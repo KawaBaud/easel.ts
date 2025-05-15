@@ -1,3 +1,4 @@
+import { MathUtils } from "./MathUtils.ts";
 import type { Matrix4 } from "./Matrix4.ts";
 import { Vector3 } from "./Vector3.ts";
 
@@ -69,7 +70,7 @@ export class Line3 {
 		if (dirLengthSq === 0) return 0;
 
 		const t = startPoint.dot(dir) / dirLengthSq;
-		return clampToLine ? Math.clamp(t, 0, 1) : t;
+		return clampToLine ? MathUtils.clamp(t, 0, 1) : t;
 	}
 
 	copy(line: Line3): this {

@@ -1,4 +1,4 @@
-import { SimpleMaterial } from "../materials/SimpleMaterial.ts";
+import { Material } from "../materials/Material.ts";
 import { Vector3 } from "../maths/Vector3.ts";
 import { Mesh } from "../objects/Mesh.ts";
 import { Object3D } from "../objects/Object3D.ts";
@@ -47,7 +47,7 @@ export class OBJLoader extends Loader {
 		shape.vertices = this.#vertices;
 		shape.indices = this.#indices;
 
-		const mesh = new Mesh(shape, new SimpleMaterial());
+		const mesh = new Mesh(shape, new Material());
 		return new Object3D().add(mesh);
 	}
 

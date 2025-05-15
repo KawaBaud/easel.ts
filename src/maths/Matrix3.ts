@@ -1,3 +1,4 @@
+import { MathUtils } from "./MathUtils.ts";
 import type { Matrix4 } from "./Matrix4.ts";
 import { Vector2 } from "./Vector2.ts";
 
@@ -48,7 +49,7 @@ export class Matrix3 {
 		this.extractScale(scale);
 
 		const rotationMatrix = new Matrix3().extractRotation(this);
-		rotation.angle = Math.atan2(
+		rotation.angle = MathUtils.fastAtan2(
 			rotationMatrix.elements.safeAt(1),
 			rotationMatrix.elements.safeAt(0),
 		);

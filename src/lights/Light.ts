@@ -1,11 +1,12 @@
-import { Color, type ColorType } from "../common/Color.ts";
+import { Color } from "../common/Color.ts";
 import { Object3D } from "../objects/Object3D.ts";
+import type { ColorValue } from "../types/color.types.ts";
 
 export class Light extends Object3D {
 	#color = new Color(1, 1, 1);
 	#intensity = 1;
 
-	constructor(color?: ColorType, intensity = 1) {
+	constructor(color?: ColorValue, intensity = 1) {
 		super();
 
 		this.name = "Light";
@@ -17,7 +18,7 @@ export class Light extends Object3D {
 		return this.#color;
 	}
 
-	set color(value: ColorType) {
+	set color(value: ColorValue) {
 		value instanceof Color ? this.#color.copy(value) : this.#color.parse(value);
 	}
 

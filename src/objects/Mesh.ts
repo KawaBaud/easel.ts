@@ -1,14 +1,14 @@
-import type { SimpleMaterial } from "../materials/SimpleMaterial.ts";
+import type { Material } from "../materials/Material.ts";
 import type { Shape } from "../shapes/Shape.ts";
 import { Object3D } from "./Object3D.ts";
 
 export class Mesh extends Object3D {
 	#shape: Shape;
-	#material: SimpleMaterial;
+	#material: Material;
 
 	constructor(
 		shape: Shape,
-		material: SimpleMaterial,
+		material: Material,
 	) {
 		super();
 
@@ -26,11 +26,11 @@ export class Mesh extends Object3D {
 		this.updateMatrix();
 	}
 
-	get material(): SimpleMaterial {
+	get material(): Material {
 		return this.#material;
 	}
 
-	set material(value: SimpleMaterial) {
+	set material(value: Material) {
 		this.#material = value;
 	}
 
