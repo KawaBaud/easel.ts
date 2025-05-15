@@ -1,8 +1,8 @@
 import { assertEquals, assertNotStrictEquals } from "@std/assert";
 import { BufferGeometry } from "three";
+import "../../src/extensions/array.extension.ts";
 import { Vector3 } from "../../src/maths/Vector3.ts";
 import { Shape } from "../../src/shapes/Shape.ts";
-import "../../src/types.ts";
 
 function compareShapes(
 	ourShape: Shape,
