@@ -3,16 +3,15 @@ import { OrthoCamera } from "./cameras/OrthoCamera.ts";
 import { PerspCamera } from "./cameras/PerspCamera.ts";
 import { Clock } from "./common/Clock.ts";
 import { Color } from "./common/Color.ts";
-import { Side } from "./consts.ts";
 import { DirectionalLight } from "./lights/DirectionalLight.ts";
 import { Light } from "./lights/Light.ts";
 import { OBJLoader } from "./loaders/OBJLoader.ts";
 import { Material } from "./materials/Material.ts";
-import { SimpleMaterial } from "./materials/SimpleMaterial.ts";
 import { Box3 } from "./maths/Box3.ts";
 import { Euler } from "./maths/Euler.ts";
 import { Frustum } from "./maths/Frustum.ts";
 import { Line3 } from "./maths/Line3.ts";
+import { MathUtils } from "./maths/MathUtils.ts";
 import { Matrix3 } from "./maths/Matrix3.ts";
 import { Matrix4 } from "./maths/Matrix4.ts";
 import { Plane } from "./maths/Plane.ts";
@@ -38,6 +37,8 @@ import { PlaneShape } from "./shapes/PlaneShape.ts";
 import { Shape } from "./shapes/Shape.ts";
 import { ShapeUtils } from "./shapes/ShapeUtils.ts";
 
+export * from "./types.ts";
+
 export const EASEL = {
 	/* cameras */
 	Camera,
@@ -57,14 +58,13 @@ export const EASEL = {
 
 	/* materials */
 	Material,
-	SimpleMaterial,
 
 	/* maths */
 	Box3,
 	Euler,
 	Frustum,
 	Line3,
-	Math,
+	Math: MathUtils,
 	Matrix3,
 	Matrix4,
 	Plane,
@@ -97,7 +97,4 @@ export const EASEL = {
 	PlaneShape,
 	Shape,
 	ShapeUtils,
-
-	/* constants */
-	Side,
 };
