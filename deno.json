@@ -82,6 +82,6 @@
 	"version": "0.0.1",
 	"exports": {
 		".": "./src/mod.ts",
-		"./src/*": "./src/*"
+		"./types/*": "./types/*"
 	}
 }
