@@ -1,10 +1,9 @@
 import { assertEquals, assertNotStrictEquals } from "@std/assert";
 import { Mesh as ThreeMesh } from "three";
+import "../../src/extensions/array.extension.ts";
 import { Material } from "../../src/materials/Material.ts";
-import { SimpleMaterial } from "../../src/materials/SimpleMaterial.ts";
 import { Mesh } from "../../src/objects/Mesh.ts";
 import { Shape } from "../../src/shapes/Shape.ts";
-import "../../src/types.ts";
 
 function compareMeshes(
 	ourMesh: Mesh,
@@ -27,7 +26,7 @@ function compareMeshes(
 
 Deno.test("Mesh: constructor", () => {
 	const shape = new Shape();
-	const material = new SimpleMaterial();
+	const material = new Material();
 
 	const a = new Mesh(shape, material);
 
@@ -37,7 +36,7 @@ Deno.test("Mesh: constructor", () => {
 
 Deno.test("Mesh: clone", () => {
 	const shape = new Shape();
-	const material = new SimpleMaterial();
+	const material = new Material();
 
 	const a = new Mesh(shape, material);
 	const b = a.clone();
@@ -54,11 +53,11 @@ Deno.test("Mesh: clone", () => {
 
 Deno.test("Mesh: copy", () => {
 	const shapeA = new Shape();
-	const materialA = new SimpleMaterial();
+	const materialA = new Material();
 	const a = new Mesh(shapeA, materialA);
 
 	const shapeB = new Shape();
-	const materialB = new SimpleMaterial();
+	const materialB = new Material();
 	const b = new Mesh(shapeB, materialB);
 
 	b.copy(a);

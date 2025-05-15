@@ -4,9 +4,10 @@ import {
 	assertNotStrictEquals,
 } from "@std/assert";
 import { Object3D as ThreeObject3D, Vector3 as ThreeVector3 } from "three";
+import "../../src/extensions/array.extension.ts";
+import { MathUtils } from "../../src/maths/MathUtils.ts";
 import { Vector3 } from "../../src/maths/Vector3.ts";
 import { Object3D } from "../../src/objects/Object3D.ts";
-import "../../src/types.ts";
 
 function compareObject3D(
 	ourObj: Object3D,
@@ -38,63 +39,63 @@ function compareObject3D(
 	assertAlmostEquals(
 		ourObj.position.x,
 		threeObj.position.x,
-		Math.EPSILON,
+		MathUtils.EPSILON,
 		`${message} (position.x)`,
 	);
 	assertAlmostEquals(
 		ourObj.position.y,
 		threeObj.position.y,
-		Math.EPSILON,
+		MathUtils.EPSILON,
 		`${message} (position.y)`,
 	);
 	assertAlmostEquals(
 		ourObj.position.z,
 		threeObj.position.z,
-		Math.EPSILON,
+		MathUtils.EPSILON,
 		`${message} (position.z)`,
 	);
 
 	assertAlmostEquals(
 		ourObj.quaternion.x,
 		threeObj.quaternion.x,
-		Math.EPSILON,
+		MathUtils.EPSILON,
 		`${message} (quaternion.x)`,
 	);
 	assertAlmostEquals(
 		ourObj.quaternion.y,
 		threeObj.quaternion.y,
-		Math.EPSILON,
+		MathUtils.EPSILON,
 		`${message} (quaternion.y)`,
 	);
 	assertAlmostEquals(
 		ourObj.quaternion.z,
 		threeObj.quaternion.z,
-		Math.EPSILON,
+		MathUtils.EPSILON,
 		`${message} (quaternion.z)`,
 	);
 	assertAlmostEquals(
 		ourObj.quaternion.w,
 		threeObj.quaternion.w,
-		Math.EPSILON,
+		MathUtils.EPSILON,
 		`${message} (quaternion.w)`,
 	);
 
 	assertAlmostEquals(
 		ourObj.scale.x,
 		threeObj.scale.x,
-		Math.EPSILON,
+		MathUtils.EPSILON,
 		`${message} (scale.x)`,
 	);
 	assertAlmostEquals(
 		ourObj.scale.y,
 		threeObj.scale.y,
-		Math.EPSILON,
+		MathUtils.EPSILON,
 		`${message} (scale.y)`,
 	);
 	assertAlmostEquals(
 		ourObj.scale.z,
 		threeObj.scale.z,
-		Math.EPSILON,
+		MathUtils.EPSILON,
 		`${message} (scale.z)`,
 	);
 
@@ -306,7 +307,7 @@ Deno.test("Object3D: updateMatrix", () => {
 		assertAlmostEquals(
 			me.safeAt(i),
 			threeMe.safeAt(i),
-			Math.EPSILON,
+			MathUtils.EPSILON,
 			`updateMatrix (matrix.elements[${i}])`,
 		);
 	}
@@ -339,7 +340,7 @@ Deno.test("Object3D: updateWorldMatrix", () => {
 		assertAlmostEquals(
 			parentWe.safeAt(i),
 			threeParentWe.safeAt(i),
-			Math.EPSILON,
+			MathUtils.EPSILON,
 			`updateWorldMatrix parent (worldMatrix.elements[${i}])`,
 		);
 	}
@@ -351,7 +352,7 @@ Deno.test("Object3D: updateWorldMatrix", () => {
 		assertAlmostEquals(
 			childWe.safeAt(i),
 			threeChildWe.safeAt(i),
-			Math.EPSILON,
+			MathUtils.EPSILON,
 			`updateWorldMatrix child (worldMatrix.elements[${i}])`,
 		);
 	}
@@ -365,19 +366,19 @@ Deno.test("Object3D: updateWorldMatrix", () => {
 	assertAlmostEquals(
 		worldPos.x,
 		threeWorldPos.x,
-		Math.EPSILON,
+		MathUtils.EPSILON,
 		"child world position x",
 	);
 	assertAlmostEquals(
 		worldPos.y,
 		threeWorldPos.y,
-		Math.EPSILON,
+		MathUtils.EPSILON,
 		"child world position y",
 	);
 	assertAlmostEquals(
 		worldPos.z,
 		threeWorldPos.z,
-		Math.EPSILON,
+		MathUtils.EPSILON,
 		"child world position z",
 	);
 });

@@ -1,7 +1,7 @@
 import { assertEquals, assertNotStrictEquals } from "@std/assert";
 import { BoxGeometry } from "three";
+import "../../src/extensions/array.extension.ts";
 import { CubeShape } from "../../src/shapes/CubeShape.ts";
-import "../../src/types.ts";
 
 function compareCubeShapes(
 	ourShape: CubeShape,

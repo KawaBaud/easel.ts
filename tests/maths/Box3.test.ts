@@ -8,10 +8,11 @@ import {
 	Sphere as ThreeSphere,
 	Vector3 as ThreeVector3,
 } from "three";
+import "../../src/extensions/array.extension.ts";
 import { Box3 } from "../../src/maths/Box3.ts";
+import { MathUtils } from "../../src/maths/MathUtils.ts";
 import { Sphere } from "../../src/maths/Sphere.ts";
 import { Vector3 } from "../../src/maths/Vector3.ts";
-import "../../src/types.ts";
 
 function compareBoxes(
 	ourBox: Box3,
@@ -29,37 +30,37 @@ function compareBoxes(
 	assertAlmostEquals(
 		ourBox.min.x,
 		threeBox.min.x,
-		Math.EPSILON,
+		MathUtils.EPSILON,
 		`${message} (min.x)`,
 	);
 	assertAlmostEquals(
 		ourBox.min.y,
 		threeBox.min.y,
-		Math.EPSILON,
+		MathUtils.EPSILON,
 		`${message} (min.y)`,
 	);
 	assertAlmostEquals(
 		ourBox.min.z,
 		threeBox.min.z,
-		Math.EPSILON,
+		MathUtils.EPSILON,
 		`${message} (min.z)`,
 	);
 	assertAlmostEquals(
 		ourBox.max.x,
 		threeBox.max.x,
-		Math.EPSILON,
+		MathUtils.EPSILON,
 		`${message} (max.x)`,
 	);
 	assertAlmostEquals(
 		ourBox.max.y,
 		threeBox.max.y,
-		Math.EPSILON,
+		MathUtils.EPSILON,
 		`${message} (max.y)`,
 	);
 	assertAlmostEquals(
 		ourBox.max.z,
 		threeBox.max.z,
-		Math.EPSILON,
+		MathUtils.EPSILON,
 		`${message} (max.z)`,
 	);
 }
@@ -97,9 +98,9 @@ Deno.test("Box3: get->centre", () => {
 	const threeCentre = new ThreeVector3();
 	threeA.getCenter(threeCentre);
 
-	assertAlmostEquals(centre.x, threeCentre.x, Math.EPSILON, "centre.x");
-	assertAlmostEquals(centre.y, threeCentre.y, Math.EPSILON, "centre.y");
-	assertAlmostEquals(centre.z, threeCentre.z, Math.EPSILON, "centre.z");
+	assertAlmostEquals(centre.x, threeCentre.x, MathUtils.EPSILON, "centre.x");
+	assertAlmostEquals(centre.y, threeCentre.y, MathUtils.EPSILON, "centre.y");
+	assertAlmostEquals(centre.z, threeCentre.z, MathUtils.EPSILON, "centre.z");
 });
 
 Deno.test("Box3: get->size", () => {
@@ -116,9 +117,9 @@ Deno.test("Box3: get->size", () => {
 	const threeSize = new ThreeVector3();
 	threeA.getSize(threeSize);
 
-	assertAlmostEquals(size.x, threeSize.x, Math.EPSILON, "size.x");
-	assertAlmostEquals(size.y, threeSize.y, Math.EPSILON, "size.y");
-	assertAlmostEquals(size.z, threeSize.z, Math.EPSILON, "size.z");
+	assertAlmostEquals(size.x, threeSize.x, MathUtils.EPSILON, "size.x");
+	assertAlmostEquals(size.y, threeSize.y, MathUtils.EPSILON, "size.y");
+	assertAlmostEquals(size.z, threeSize.z, MathUtils.EPSILON, "size.z");
 });
 
 Deno.test("Box3: get->width", () => {
@@ -134,7 +135,7 @@ Deno.test("Box3: get->width", () => {
 	const width = a.width;
 	const threeWidth = threeA.max.x - threeA.min.x;
 
-	assertAlmostEquals(width, threeWidth, Math.EPSILON, "width");
+	assertAlmostEquals(width, threeWidth, MathUtils.EPSILON, "width");
 });
 
 Deno.test("Box3: get->height", () => {
@@ -150,7 +151,7 @@ Deno.test("Box3: get->height", () => {
 	const height = a.height;
 	const threeHeight = threeA.max.y - threeA.min.y;
 
-	assertAlmostEquals(height, threeHeight, Math.EPSILON, "height");
+	assertAlmostEquals(height, threeHeight, MathUtils.EPSILON, "height");
 });
 
 Deno.test("Box3: get->depth", () => {
@@ -166,7 +167,7 @@ Deno.test("Box3: get->depth", () => {
 	const depth = a.depth;
 	const threeDepth = threeA.max.z - threeA.min.z;
 
-	assertAlmostEquals(depth, threeDepth, Math.EPSILON, "depth");
+	assertAlmostEquals(depth, threeDepth, MathUtils.EPSILON, "depth");
 });
 
 Deno.test("Box3: get->isEmpty", () => {

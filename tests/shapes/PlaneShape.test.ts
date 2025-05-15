@@ -1,7 +1,9 @@
 import { assertEquals, assertNotStrictEquals } from "@std/assert";
 import { PlaneGeometry } from "three";
+
+// @deno-types="../../types/array.extension.d.ts"
+import "../../src/extensions/array.extension.ts";
 import { PlaneShape } from "../../src/shapes/PlaneShape.ts";
-import "../../src/types.ts";
 
 function comparePlaneShapes(
 	ourShape: PlaneShape,

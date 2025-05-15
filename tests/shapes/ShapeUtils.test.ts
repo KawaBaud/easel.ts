@@ -1,7 +1,7 @@
 import { assertEquals } from "@std/assert";
+import "../../src/extensions/array.extension.ts";
 import { Vector3 } from "../../src/maths/Vector3.ts";
 import { ShapeUtils } from "../../src/shapes/ShapeUtils.ts";
-import "../../src/types.ts";
 
 Deno.test("ShapeUtils.triangulate", () => {
 	{
@@ -9,8 +9,12 @@ Deno.test("ShapeUtils.triangulate", () => {
 		const v1 = new Vector3(1, 0, 0);
 		const v2 = new Vector3(0.5, 0, 1);
 
-		const isCC = ShapeUtils.isConvex(v0, v1, v2);
-		assertEquals(isCC, true, "triangle should be counter-clockwise");
+		const counterClockwise = ShapeUtils.isCounterClockwise(v0, v1, v2);
+		assertEquals(
+			counterClockwise,
+			true,
+			"triangle should be counter-clockwise",
+		);
 
 		const vertices = [v0, v1, v2];
 		const indices = ShapeUtils.triangulate(vertices);

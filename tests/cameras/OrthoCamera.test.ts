@@ -5,7 +5,8 @@ import {
 } from "@std/assert";
 import { OrthographicCamera as ThreeOrthoCamera } from "three";
 import { OrthoCamera } from "../../src/cameras/OrthoCamera.ts";
-import "../../src/types.ts";
+import "../../src/extensions/array.extension.ts";
+import { MathUtils } from "../../src/maths/MathUtils.ts";
 
 function compareMatrices(
 	ourMatrix: { elements: Float32Array },
@@ -20,7 +21,7 @@ function compareMatrices(
 		assertAlmostEquals(
 			ourMatrix.elements.safeAt(i),
 			threeMatrix.elements.safeAt(i),
-			Math.EPSILON,
+			MathUtils.EPSILON,
 			`${message} (element ${i})`,
 		);
 	}

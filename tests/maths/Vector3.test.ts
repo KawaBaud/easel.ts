@@ -9,11 +9,12 @@ import {
 	Quaternion as ThreeQuaternion,
 	Vector3 as ThreeVector3,
 } from "three";
+import "../../src/extensions/array.extension.ts";
+import { MathUtils } from "../../src/maths/MathUtils.ts";
 import { Matrix3 } from "../../src/maths/Matrix3.ts";
 import { Matrix4 } from "../../src/maths/Matrix4.ts";
 import { Quaternion } from "../../src/maths/Quaternion.ts";
 import { Vector3 } from "../../src/maths/Vector3.ts";
-import "../../src/types.ts";
 
 function compareVectors(
 	ourVec: Vector3,
@@ -27,19 +28,19 @@ function compareVectors(
 	assertAlmostEquals(
 		ourVec.x,
 		threeVec.x,
-		Math.EPSILON,
+		MathUtils.EPSILON,
 		`${message} (x)`,
 	);
 	assertAlmostEquals(
 		ourVec.y,
 		threeVec.y,
-		Math.EPSILON,
+		MathUtils.EPSILON,
 		`${message} (y)`,
 	);
 	assertAlmostEquals(
 		ourVec.z,
 		threeVec.z,
-		Math.EPSILON,
+		MathUtils.EPSILON,
 		`${message} (z)`,
 	);
 }
@@ -64,7 +65,7 @@ Deno.test("Vector3: get->length", () => {
 	const a = new Vector3(3, 4, 0);
 	const threeA = new ThreeVector3(3, 4, 0);
 	assertEquals(a.length, 5);
-	assertAlmostEquals(a.length, threeA.length(), Math.EPSILON, "length");
+	assertAlmostEquals(a.length, threeA.length(), MathUtils.EPSILON, "length");
 
 	const b = new Vector3(0, 0, 0);
 	const threeB = new ThreeVector3(0, 0, 0);
@@ -72,7 +73,7 @@ Deno.test("Vector3: get->length", () => {
 	assertAlmostEquals(
 		b.length,
 		threeB.length(),
-		Math.EPSILON,
+		MathUtils.EPSILON,
 		"length zero vector",
 	);
 });
@@ -84,7 +85,7 @@ Deno.test("Vector3: get->lengthSq", () => {
 	assertAlmostEquals(
 		a.lengthSq,
 		threeA.lengthSq(),
-		Math.EPSILON,
+		MathUtils.EPSILON,
 		"lengthSq",
 	);
 
@@ -94,7 +95,7 @@ Deno.test("Vector3: get->lengthSq", () => {
 	assertAlmostEquals(
 		b.lengthSq,
 		threeB.lengthSq(),
-		Math.EPSILON,
+		MathUtils.EPSILON,
 		"lengthSq non-zero z",
 	);
 });
@@ -126,7 +127,7 @@ Deno.test("Vector3: applyMatrix3", () => {
 	const threeV2 = new ThreeVector3(0, 1, 0);
 	const threeV3 = new ThreeVector3(0, 0, 1);
 
-	const angle = Math.HALF_PI;
+	const angle = MathUtils.HALF_PI;
 
 	const mX = new Matrix3().makeRotation(angle);
 	const mY = new Matrix3().makeRotation(angle);
@@ -178,7 +179,7 @@ Deno.test("Vector3: applyMatrix4", () => {
 	const threeV2 = new ThreeVector3(0, 1, 0);
 	const threeV3 = new ThreeVector3(0, 0, 1);
 
-	const angle = Math.HALF_PI;
+	const angle = MathUtils.HALF_PI;
 
 	const mX = new Matrix4().makeRotationX(angle);
 	const mY = new Matrix4().makeRotationY(angle);
@@ -210,7 +211,7 @@ Deno.test("Vector3: applyQuaternion", () => {
 	const threeV = new ThreeVector3(1, 0, 0);
 
 	const axis = new Vector3(0, 0, 1);
-	const angle = Math.HALF_PI;
+	const angle = MathUtils.HALF_PI;
 
 	const q = new Quaternion().setFromAxisAngle(axis, angle);
 	const threeQ = new ThreeQuaternion().setFromAxisAngle(
@@ -412,7 +413,7 @@ Deno.test("Vector3: unitize", () => {
 	assertAlmostEquals(
 		a.length,
 		1.0,
-		Math.EPSILON,
+		MathUtils.EPSILON,
 		"unitize results in length 1",
 	);
 

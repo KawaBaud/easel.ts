@@ -5,9 +5,9 @@ import {
 } from "@std/assert";
 import { Color as ThreeColor, Scene as ThreeScene } from "three";
 import { Color } from "../../src/common/Color.ts";
+import "../../src/extensions/array.extension.ts";
 import { Object3D } from "../../src/objects/Object3D.ts";
 import { Scene } from "../../src/scenes/Scene.ts";
-import "../../src/types.ts";
 
 function compareScenes(
 	ourScene: Scene,
