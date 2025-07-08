@@ -1,4 +1,4 @@
-import { type ColorValue, Side } from "../types.ts";
+import { type ColorValue, Side } from "../types";
 
 export interface MaterialOptions {
 	color?: ColorValue;
@@ -22,10 +22,10 @@ export class Material {
 	wireframe: boolean;
 
 	constructor(options: MaterialOptions = {}) {
-		this.color = options.color ?? 0xFFFFFF;
+		this.color = options.color ?? 0xffffff;
 		this.opacity = options.opacity ?? 1.0;
 		this.dithering = options.dithering ?? false;
-		this.side = options.side ?? Side.FRONT;
+		this.side = options.side ?? Side.front;
 		this.vertexColors = options.vertexColors ?? false;
 		this.visible = options.visible ?? true;
 		this.fog = options.fog ?? true;

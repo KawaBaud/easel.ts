@@ -1,4 +1,4 @@
-import { Camera } from "./Camera.ts";
+import { Camera } from "./Camera";
 
 export class OrthoCamera extends Camera {
 	#left = -1;
@@ -17,7 +17,6 @@ export class OrthoCamera extends Camera {
 		far = 2000,
 	) {
 		super();
-
 		this.name = "OrthoCamera";
 		this.left = left;
 		this.right = right;
@@ -93,7 +92,7 @@ export class OrthoCamera extends Camera {
 		);
 	}
 
-	override copy(source: OrthoCamera): this {
+	override copy(source: this): this {
 		super.copy(source);
 
 		this.left = source.left;

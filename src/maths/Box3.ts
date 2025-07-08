@@ -1,18 +1,28 @@
-import type { Mesh } from "../objects/Mesh.ts";
-import type { Object3D } from "../objects/Object3D.ts";
-import { MathUtils } from "./MathUtils.ts";
-import type { Sphere } from "./Sphere.ts";
-import { Vector3 } from "./Vector3.ts";
+import type { Mesh } from "../objects/Mesh";
+import type { Object3D } from "../objects/Object3D";
+import { MathUtils } from "./MathUtils";
+import type { Sphere } from "./Sphere";
+import { Vector3 } from "./Vector3";
 
 export class Box3 {
 	#min: Vector3;
 	#max: Vector3;
 
 	constructor(min?: Vector3, max?: Vector3) {
-		this.#min = min ? min.clone() : new Vector3(Infinity, Infinity, Infinity);
+		this.#min = min
+			? min.clone()
+			: new Vector3(
+					Number.NEGATIVE_INFINITY,
+					Number.NEGATIVE_INFINITY,
+					Number.NEGATIVE_INFINITY,
+				);
 		this.#max = max
 			? max.clone()
-			: new Vector3(-Infinity, -Infinity, -Infinity);
+			: new Vector3(
+					-Number.NEGATIVE_INFINITY,
+					-Number.NEGATIVE_INFINITY,
+					-Number.NEGATIVE_INFINITY,
+				);
 	}
 
 	get min(): Vector3 {
@@ -31,7 +41,7 @@ export class Box3 {
 		this.#max.copy(value);
 	}
 
-	get centre(): Vector3 {
+	get center(): Vector3 {
 		return this.#min.clone().add(this.#max).mulScalar(0.5);
 	}
 
@@ -52,26 +62,26 @@ export class Box3 {
 	}
 
 	get corners(): Vector3[] {
-		const { x: x, y: y, z: z } = this.#min;
+		const { x, y, z } = this.#min;
 		const { x: x2, y: y2, z: z2 } = this.#max;
 
 		return [
-			new Vector3(x, y, z), /* 0: bottom-left-back */
-			new Vector3(x2, y, z), /* 1: bottom-right-back */
-			new Vector3(x, y2, z), /* 2: top-left-back */
-			new Vector3(x2, y2, z), /* 3: top-right-back */
-			new Vector3(x, y, z2), /* 4: bottom-left-front */
-			new Vector3(x2, y, z2), /* 5: bottom-right-front */
-			new Vector3(x, y2, z2), /* 6: top-left-front */
-			new Vector3(x2, y2, z2), /* 7: top-right-front */
+			new Vector3(x, y, z) /* 0: bottom-left-back */,
+			new Vector3(x2, y, z) /* 1: bottom-right-back */,
+			new Vector3(x, y2, z) /* 2: top-left-back */,
+			new Vector3(x2, y2, z) /* 3: top-right-back */,
+			new Vector3(x, y, z2) /* 4: bottom-left-front */,
+			new Vector3(x2, y, z2) /* 5: bottom-right-front */,
+			new Vector3(x, y2, z2) /* 6: top-left-front */,
+			new Vector3(x2, y2, z2) /* 7: top-right-front */,
 		];
 	}
 
 	get isEmpty(): boolean {
 		return (
-			(this.#max.x < this.#min.x) ||
-			(this.#max.y < this.#min.y) ||
-			(this.#max.z < this.#min.z)
+			this.#max.x < this.#min.x ||
+			this.#max.y < this.#min.y ||
+			this.#max.z < this.#min.z
 		);
 	}
 
@@ -79,40 +89,40 @@ export class Box3 {
 		return new Box3(this.#min.clone(), this.#max.clone());
 	}
 
-	containsBox(box: Box3): boolean {
+	containsBox(box: this): boolean {
 		return (
-			(this.#min.x <= box.min.x) &&
-			(this.#max.x >= box.max.x) &&
-			(this.#min.y <= box.min.y) &&
-			(this.#max.y >= box.max.y) &&
-			(this.#min.z <= box.min.z) &&
-			(this.#max.z >= box.max.z)
+			this.#min.x <= box.min.x &&
+			this.#max.x >= box.max.x &&
+			this.#min.y <= box.min.y &&
+			this.#max.y >= box.max.y &&
+			this.#min.z <= box.min.z &&
+			this.#max.z >= box.max.z
 		);
 	}
 
 	containsPoint(point: Vector3): boolean {
 		return (
-			(point.x >= this.#min.x) &&
-			(point.x <= this.#max.x) &&
-			(point.y >= this.#min.y) &&
-			(point.y <= this.#max.y) &&
-			(point.z >= this.#min.z) &&
-			(point.z <= this.#max.z)
+			point.x >= this.#min.x &&
+			point.x <= this.#max.x &&
+			point.y >= this.#min.y &&
+			point.y <= this.#max.y &&
+			point.z >= this.#min.z &&
+			point.z <= this.#max.z
 		);
 	}
 
-	copy(box: Box3): this {
+	copy(box: this): this {
 		this.#min.copy(box.min);
 		this.#max.copy(box.max);
 		return this;
 	}
 
-	equals(box: Box3): boolean {
+	equals(box: this): boolean {
 		return box.min.equals(this.#min) && box.max.equals(this.#max);
 	}
 
 	expandByPoint(point: Vector3): this {
-		const { x: x, y: y, z: z } = this.#min;
+		const { x, y, z } = this.#min;
 		const { x: x2, y: y2, z: z2 } = this.#max;
 		const { x: px, y: py, z: pz } = point;
 
@@ -141,49 +151,59 @@ export class Box3 {
 		return this;
 	}
 
-	getCentre(out: Vector3): Vector3 {
+	getCenter(out: Vector3): Vector3 {
 		return out.copy(this.#min).add(this.#max).mulScalar(0.5);
 	}
 
-	intersectsBox(box: Box3): boolean {
+	intersectsBox(box: this): boolean {
 		return (
-			(this.#max.x >= box.min.x) &&
-			(this.#min.x <= box.max.x) &&
-			(this.#max.y >= box.min.y) &&
-			(this.#min.y <= box.max.y) &&
-			(this.#max.z >= box.min.z) &&
-			(this.#min.z <= box.max.z)
+			this.#max.x >= box.min.x &&
+			this.#min.x <= box.max.x &&
+			this.#max.y >= box.min.y &&
+			this.#min.y <= box.max.y &&
+			this.#max.z >= box.min.z &&
+			this.#min.z <= box.max.z
 		);
 	}
 
 	intersectsSphere(sphere: Sphere): boolean {
 		const closestPoint = new Vector3();
 		closestPoint.x = MathUtils.fastMin(
-			MathUtils.fastMax(sphere.centre.x, this.#min.x),
+			MathUtils.fastMax(sphere.center.x, this.#min.x),
 			this.#max.x,
 		);
 		closestPoint.y = MathUtils.fastMin(
-			MathUtils.fastMax(sphere.centre.y, this.#min.y),
+			MathUtils.fastMax(sphere.center.y, this.#min.y),
 			this.#max.y,
 		);
 		closestPoint.z = MathUtils.fastMin(
-			MathUtils.fastMax(sphere.centre.z, this.#min.z),
+			MathUtils.fastMax(sphere.center.z, this.#min.z),
 			this.#max.z,
 		);
-		return closestPoint.clone().sub(sphere.centre)
-			.lengthSq <= (sphere.radius * sphere.radius);
+		return (
+			closestPoint.clone().sub(sphere.center).lengthSq <=
+			sphere.radius * sphere.radius
+		);
 	}
 
 	makeEmpty(): this {
-		this.#min.set(Infinity, Infinity, Infinity);
-		this.#max.set(-Infinity, -Infinity, -Infinity);
+		this.#min.set(
+			Number.NEGATIVE_INFINITY,
+			Number.NEGATIVE_INFINITY,
+			Number.NEGATIVE_INFINITY,
+		);
+		this.#max.set(
+			-Number.NEGATIVE_INFINITY,
+			-Number.NEGATIVE_INFINITY,
+			-Number.NEGATIVE_INFINITY,
+		);
 		return this;
 	}
 
-	setFromCentreAndSize(centre: Vector3, size: Vector3): this {
+	setFromCenterAndSize(center: Vector3, size: Vector3): this {
 		const halfSize = size.clone().mulScalar(0.5);
-		this.#min.copy(centre).sub(halfSize);
-		this.#max.copy(centre).add(halfSize);
+		this.#min.copy(center).sub(halfSize);
+		this.#max.copy(center).add(halfSize);
 		return this;
 	}
 
@@ -204,7 +224,9 @@ export class Box3 {
 			}
 
 			for (const child of object.children) {
-				if (child.visible) processObject(child);
+				if (child.visible) {
+					processObject(child);
+				}
 			}
 		};
 
@@ -215,7 +237,9 @@ export class Box3 {
 
 	setFromPoints(points: Vector3[]): this {
 		this.makeEmpty();
-		for (const point of points) this.expandByPoint(point);
+		for (const point of points) {
+			this.expandByPoint(point);
+		}
 		return this;
 	}
 
@@ -225,8 +249,8 @@ export class Box3 {
 		return this;
 	}
 
-	union(box: Box3): this {
-		const { x: x, y: y, z: z } = this.#min;
+	union(box: this): this {
+		const { x, y, z } = this.#min;
 		const { x: x2, y: y2, z: z2 } = this.#max;
 		const { x: px, y: py, z: pz } = box.min;
 		const { x: px2, y: py2, z: pz2 } = box.max;

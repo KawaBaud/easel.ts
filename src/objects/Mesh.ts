@@ -1,17 +1,13 @@
-import type { Material } from "../materials/Material.ts";
-import type { Shape } from "../shapes/Shape.ts";
-import { Object3D } from "./Object3D.ts";
+import type { Material } from "../materials/Material";
+import type { Shape } from "../shapes/Shape";
+import { Object3D } from "./Object3D";
 
 export class Mesh extends Object3D {
 	#shape: Shape;
 	#material: Material;
 
-	constructor(
-		shape: Shape,
-		material: Material,
-	) {
+	constructor(shape: Shape, material: Material) {
 		super();
-
 		this.#shape = shape;
 		this.#material = material;
 		this.updateMatrix();
@@ -38,9 +34,8 @@ export class Mesh extends Object3D {
 		return new Mesh(this.shape.clone(), this.material.clone()).copy(this);
 	}
 
-	override copy(source: Mesh): this {
+	override copy(source: this): this {
 		super.copy(source);
-
 		this.shape = source.shape.clone();
 		this.material = source.material.clone();
 		return this;

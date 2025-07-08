@@ -1,5 +1,5 @@
-import { Matrix4 } from "../maths/Matrix4.ts";
-import { Object3D } from "../objects/Object3D.ts";
+import { Matrix4 } from "../maths/Matrix4";
+import { Object3D } from "../objects/Object3D";
 
 export class Camera extends Object3D {
 	projectionMatrix = new Matrix4();
@@ -7,7 +7,6 @@ export class Camera extends Object3D {
 
 	constructor() {
 		super();
-
 		this.name = "Camera";
 	}
 
@@ -18,16 +17,14 @@ export class Camera extends Object3D {
 	}
 
 	updateProjectionMatrix(): void {
-		throw new Error(
-			"EASEL.Camera.updateProjectionMatrix(): must be implemented in subclass",
-		);
+		throw new Error("EASEL.Camera: must be implemented in subclass");
 	}
 
 	override clone(): Camera {
 		return new Camera().copy(this);
 	}
 
-	override copy(source: Camera): this {
+	override copy(source: this): this {
 		super.copy(source);
 
 		this.projectionMatrix.copy(source.projectionMatrix);

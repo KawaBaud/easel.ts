@@ -1,5 +1,5 @@
-import { Vector3 } from "../maths/Vector3.ts";
-import { Shape } from "./Shape.ts";
+import { Vector3 } from "../maths/Vector3";
+import { Shape } from "./Shape";
 
 export class PlaneShape extends Shape {
 	constructor(width = 1, height = 1, widthSegments = 1, heightSegments = 1) {
@@ -19,13 +19,13 @@ export class PlaneShape extends Shape {
 			const ix = i % gridX1;
 			const iy = Math.floor(i / gridX1);
 			return new Vector3(
-				(ix * segmentWidth) - widthHalf,
-				(iy * segmentHeight) - heightHalf,
+				ix * segmentWidth - widthHalf,
+				iy * segmentHeight - heightHalf,
 				0,
 			);
 		});
 
-		this.indices = new Uint16Array((gridX * gridY) * 6);
+		this.indices = new Uint16Array(gridX * gridY * 6);
 		for (let i = 0; i < this.indices.length; i++) {
 			const cellIndex = Math.floor(i / 6);
 
@@ -34,8 +34,8 @@ export class PlaneShape extends Shape {
 
 			const a = ix + gridX1 * iy;
 			const b = ix + gridX1 * (iy + 1);
-			const c = (ix + 1) + gridX1 * (iy + 1);
-			const d = (ix + 1) + gridX1 * iy;
+			const c = ix + 1 + gridX1 * (iy + 1);
+			const d = ix + 1 + gridX1 * iy;
 			this.indices[i] = Number([a, b, d, b, c, d][i % 6]);
 		}
 	}

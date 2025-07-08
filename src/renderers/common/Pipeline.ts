@@ -1,7 +1,7 @@
-import type { Camera } from "../../cameras/Camera.ts";
-import type { Object3D } from "../../objects/Object3D.ts";
-import type { Scene } from "../../scenes/Scene.ts";
-import { RenderList } from "../common/RenderList.ts";
+import type { Camera } from "../../cameras/Camera";
+import type { Object3D } from "../../objects/Object3D";
+import type { Scene } from "../../scenes/Scene";
+import { RenderList } from "../common/RenderList";
 
 export abstract class Pipeline {
 	renderList = new RenderList();
@@ -16,7 +16,9 @@ export abstract class Pipeline {
 		this.renderList.add(object);
 
 		for (const child of object.children) {
-			if (child.visible) this.#traverseScene(child);
+			if (child.visible) {
+				this.#traverseScene(child);
+			}
 		}
 	}
 }

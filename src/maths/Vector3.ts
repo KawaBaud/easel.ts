@@ -1,37 +1,13 @@
-import type { Camera } from "../cameras/Camera.ts";
+import type { Camera } from "../cameras/Camera";
 
-import type { Euler } from "./Euler.ts";
-import type { Matrix3 } from "./Matrix3.ts";
-import type { Matrix4 } from "./Matrix4.ts";
-import { Quaternion } from "./Quaternion.ts";
+import type { Euler } from "./Euler";
+import type { Matrix3 } from "./Matrix3";
+import type { Matrix4 } from "./Matrix4";
+import { Quaternion } from "./Quaternion";
 
 const _q = new Quaternion();
 
 export class Vector3 {
-	static cross(
-		x1: number,
-		y1: number,
-		z1: number,
-		x2: number,
-		y2: number,
-		z2: number,
-	): Vector3 {
-		return new Vector3(
-			(y1 * z2) - (y2 * z1),
-			(z1 * x2) - (z2 * x1),
-			(x1 * y2) - (x2 * y1),
-		);
-	}
-
-	static dot(
-		x: number,
-		y: number,
-		z: number,
-		target = new Vector3(),
-	): number {
-		return (x * target.x) + (y * target.y) + (z * target.z);
-	}
-
 	#x = 0;
 	#y = 0;
 	#z = 0;
@@ -72,10 +48,10 @@ export class Vector3 {
 
 	get lengthSq(): number {
 		const { x, y, z } = this;
-		return (x * x) + (y * y) + (z * z);
+		return x * x + y * y + z * z;
 	}
 
-	add(v: Vector3): this {
+	add(v: this): this {
 		this.x += v.x;
 		this.y += v.y;
 		this.z += v.z;
@@ -91,9 +67,12 @@ export class Vector3 {
 		const { x, y, z } = this;
 		const me = m.elements;
 
-		this.x = (me.safeAt(0) * x) + (me.safeAt(3) * y) + (me.safeAt(6) * z);
-		this.y = (me.safeAt(1) * x) + (me.safeAt(4) * y) + (me.safeAt(7) * z);
-		this.z = (me.safeAt(2) * x) + (me.safeAt(5) * y) + (me.safeAt(8) * z);
+		this.x =
+			(me[0] as number) * x + (me[3] as number) * y + (me[6] as number) * z;
+		this.y =
+			(me[1] as number) * x + (me[4] as number) * y + (me[7] as number) * z;
+		this.z =
+			(me[2] as number) * x + (me[5] as number) * y + (me[8] as number) * z;
 		return this;
 	}
 
@@ -101,16 +80,28 @@ export class Vector3 {
 		const { x, y, z } = this;
 		const me = m.elements;
 
-		const denom = (me.safeAt(3) * x) + (me.safeAt(7) * y) +
-			(me.safeAt(11) * z) + me.safeAt(15);
+		const denom =
+			(me[3] as number) * x +
+			(me[7] as number) * y +
+			(me[11] as number) * z +
+			(me[15] as number);
 		const w = denom !== 0 ? 1 / denom : 1;
 
-		this.x = ((me.safeAt(0) * x) + (me.safeAt(4) * y) +
-			(me.safeAt(8) * z) + me.safeAt(12)) * w;
-		this.y = ((me.safeAt(1) * x) + (me.safeAt(5) * y) +
-			(me.safeAt(9) * z) + me.safeAt(13)) * w;
-		this.z = ((me.safeAt(2) * x) + (me.safeAt(6) * y) +
-			(me.safeAt(10) * z) + me.safeAt(14)) * w;
+		this.x =
+			(me[0] as number) * x +
+			(me[4] as number) * y +
+			(me[8] as number) * z +
+			(me[12] as number) * w;
+		this.y =
+			(me[1] as number) * x +
+			(me[5] as number) * y +
+			(me[9] as number) * z +
+			(me[13] as number) * w;
+		this.z =
+			(me[2] as number) * x +
+			(me[6] as number) * y +
+			(me[10] as number) * z +
+			(me[14] as number) * w;
 		return this;
 	}
 
@@ -118,14 +109,14 @@ export class Vector3 {
 		const { x, y, z } = this;
 		const { x: qx, y: qy, z: qz, w: qw } = q;
 
-		const ix = (q.w * x) + (q.y * z) - (q.z * y);
-		const iy = (qw * y) + (qz * x) - (qx * z);
-		const iz = (qw * z) + (qx * y) - (qy * x);
-		const iw = (-qx * x) - (qy * y) - (qz * z);
+		const ix = q.w * x + q.y * z - q.z * y;
+		const iy = qw * y + qz * x - qx * z;
+		const iz = qw * z + qx * y - qy * x;
+		const iw = -qx * x - qy * y - qz * z;
 
-		this.x = (ix * qw) + (iw * -qx) + (iy * -qz) - (iz * -qy);
-		this.y = (iy * qw) + (iw * -qy) + (iz * -qx) - (ix * -qz);
-		this.z = (iz * qw) + (iw * -qz) + (ix * -qy) - (iy * -qx);
+		this.x = ix * qw + iw * -qx + iy * -qz - iz * -qy;
+		this.y = iy * qw + iw * -qy + iz * -qx - ix * -qz;
+		this.z = iz * qw + iw * -qz + ix * -qy - iy * -qx;
 		return this;
 	}
 
@@ -133,36 +124,36 @@ export class Vector3 {
 		return new Vector3(this.x, this.y, this.z);
 	}
 
-	copy(v: Vector3): this {
+	copy(v: this): this {
 		this.x = v.x;
 		this.y = v.y;
 		this.z = v.z;
 		return this;
 	}
 
-	cross(v: Vector3): this {
+	cross(v: this): this {
 		return this.crossVectors(this, v);
 	}
 
-	crossVectors(a: Vector3, b: Vector3): this {
+	crossVectors(a: this, b: this): this {
 		const { x: ax, y: ay, z: az } = a;
 		const { x: bx, y: by, z: bz } = b;
 
-		this.x = (ay * bz) - (az * by);
-		this.y = (az * bx) - (ax * bz);
-		this.z = (ax * by) - (ay * bx);
+		this.x = ay * bz - az * by;
+		this.y = az * bx - ax * bz;
+		this.z = ax * by - ay * bx;
 		return this;
 	}
 
-	distanceTo(v: Vector3): number {
+	distanceTo(v: this): number {
 		return Math.sqrt(this.distanceSqTo(v));
 	}
 
-	distanceSqTo(v: Vector3): number {
+	distanceSqTo(v: this): number {
 		const dx = this.x - v.x;
 		const dy = this.y - v.y;
 		const dz = this.z - v.z;
-		return (dx * dx) + (dy * dy) + (dz * dz);
+		return dx * dx + dy * dy + dz * dz;
 	}
 
 	divScalar(scalar: number): this {
@@ -172,26 +163,22 @@ export class Vector3 {
 		return this;
 	}
 
-	dot(v: Vector3): number {
-		return (this.x * v.x) + (this.y * v.y) + (this.z * v.z);
+	dot(v: this): number {
+		return this.x * v.x + this.y * v.y + this.z * v.z;
 	}
 
-	equals(v: Vector3): boolean {
-		return (
-			(this.x === v.x) &&
-			(this.y === v.y) &&
-			(this.z === v.z)
-		);
+	equals(v: this): boolean {
+		return this.x === v.x && this.y === v.y && this.z === v.z;
 	}
 
 	fromArray(array: number[]): this {
-		this.x = array.safeAt(0);
-		this.y = array.safeAt(1);
-		this.z = array.safeAt(2);
+		this.x = array[0] as number;
+		this.y = array[1] as number;
+		this.z = array[2] as number;
 		return this;
 	}
 
-	lerp(v: Vector3, t: number): this {
+	lerp(v: this, t: number): this {
 		const { x, y, z } = this;
 
 		this.x = x + (v.x - x) * t;
@@ -214,9 +201,7 @@ export class Vector3 {
 		return this;
 	}
 
-	project(
-		camera: Camera,
-	): this {
+	project(camera: Camera): this {
 		return this.applyMatrix4(camera.matrixWorldInverse).applyMatrix4(
 			camera.projectionMatrix,
 		);
@@ -232,9 +217,9 @@ export class Vector3 {
 	setFromMatrixPosition(m: Matrix4): this {
 		const me = m.elements;
 
-		this.x = me.safeAt(12);
-		this.y = me.safeAt(13);
-		this.z = me.safeAt(14);
+		this.x = me[12] as number;
+		this.y = me[13] as number;
+		this.z = me[14] as number;
 		return this;
 	}
 
@@ -245,14 +230,14 @@ export class Vector3 {
 		return this;
 	}
 
-	sub(v: Vector3): this {
+	sub(v: this): this {
 		this.x -= v.x;
 		this.y -= v.y;
 		this.z -= v.z;
 		return this;
 	}
 
-	subVectors(a: Vector3, b: Vector3): this {
+	subVectors(a: this, b: this): this {
 		this.x = a.x - b.x;
 		this.y = a.y - b.y;
 		this.z = a.z - b.z;

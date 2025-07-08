@@ -1,4 +1,4 @@
-import type { Object3D } from "../objects/Object3D.ts";
+import type { Object3D } from "../objects/Object3D";
 
 export abstract class Loader<T extends Object3D = Object3D> {
 	load(
@@ -10,7 +10,9 @@ export abstract class Loader<T extends Object3D = Object3D> {
 		fetch(url)
 			.then((response) => {
 				if (!response.ok) {
-					throw new Error(`failed to load file: ${response.statusText}`);
+					throw new Error(
+						`EASEL.Loader: failed to load file: ${response.statusText}`,
+					);
 				}
 				return response.text();
 			})

@@ -1,7 +1,7 @@
-import { Euler } from "../maths/Euler.ts";
-import { Matrix4 } from "../maths/Matrix4.ts";
-import { Quaternion } from "../maths/Quaternion.ts";
-import { Vector3 } from "../maths/Vector3.ts";
+import { Euler } from "../maths/Euler";
+import { Matrix4 } from "../maths/Matrix4";
+import { Quaternion } from "../maths/Quaternion";
+import { Vector3 } from "../maths/Vector3";
 
 const _position = new Vector3();
 const _m1 = new Matrix4();
@@ -52,7 +52,7 @@ export class Object3D {
 	}
 
 	get isCamera(): boolean {
-		return ("projectionMatrix" in this) && ("matrixWorldInverse" in this);
+		return "projectionMatrix" in this && "matrixWorldInverse" in this;
 	}
 
 	get isMesh(): boolean {
@@ -60,7 +60,9 @@ export class Object3D {
 	}
 
 	add(object: Object3D): this {
-		if (object === this) return this;
+		if (object === this) {
+			return this;
+		}
 
 		object.parent?.remove(object);
 		object.parent = this;
@@ -98,9 +100,8 @@ export class Object3D {
 	lookAt(target: Vector3 | number, y?: number, z?: number): this {
 		this.updateWorldMatrix(true, false);
 
-		const targetVector = target instanceof Vector3
-			? target
-			: new Vector3(target, y, z);
+		const targetVector =
+			target instanceof Vector3 ? target : new Vector3(target, y, z);
 
 		_position.setFromMatrixPosition(this.worldMatrix);
 
@@ -112,42 +113,42 @@ export class Object3D {
 
 		this.quaternion.setFromRotationMatrix(_m1);
 
-		this.parent &&
-			(_m1.extractRotation(this.parent.worldMatrix),
-				_q1.setFromRotationMatrix(_m1),
-				this.quaternion.premul(_q1.invert()));
-
+		if (this.parent) {
+			_m1.extractRotation(this.parent.worldMatrix);
+			_q1.setFromRotationMatrix(_m1);
+			this.quaternion.premul(_q1.invert());
+		}
 		this.rotation.setFromQuaternion(this.quaternion);
-
 		return this;
 	}
 
 	remove(object: Object3D): this {
 		const index = this.children.indexOf(object);
-		index !== -1
-			? (object.parent = undefined, this.children.splice(index, 1))
-			: undefined;
+		if (index !== -1) {
+			object.parent = undefined;
+			this.children.splice(index, 1);
+		}
 		return this;
 	}
 
 	traverse(callback: (node: Object3D) => void): void {
 		callback(this);
-		for (const child of this.children) child.traverse(callback);
+		for (const child of this.children) {
+			child.traverse(callback);
+		}
 	}
 
 	updateMatrix(): void {
-		this.matrix.compose(
-			this.position,
-			this.quaternion,
-			this.scale,
-		);
+		this.matrix.compose(this.position, this.quaternion, this.scale);
 	}
 
 	updateWorldMatrix(updateParents = false, updateChildren = true): void {
 		if (updateParents && this.parent) {
 			this.parent.updateWorldMatrix(true, false);
 		}
-		if (this.autoUpdateMatrix) this.updateMatrix();
+		if (this.autoUpdateMatrix) {
+			this.updateMatrix();
+		}
 
 		this.worldMatrix = this.parent
 			? this.worldMatrix.mulMatrices(this.parent.worldMatrix, this.matrix)

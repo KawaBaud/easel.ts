@@ -1,6 +1,6 @@
-import type { Euler } from "./Euler.ts";
-import type { Matrix4 } from "./Matrix4.ts";
-import type { Vector3 } from "./Vector3.ts";
+import type { Euler } from "./Euler";
+import type { Matrix4 } from "./Matrix4";
+import type { Vector3 } from "./Vector3";
 
 export class Quaternion {
 	#x = 0;
@@ -8,12 +8,7 @@ export class Quaternion {
 	#z = 0;
 	#w = 1;
 
-	constructor(
-		x = 0,
-		y = 0,
-		z = 0,
-		w = 1,
-	) {
+	constructor(x = 0, y = 0, z = 0, w = 1) {
 		this.#x = x;
 		this.#y = y;
 		this.#z = z;
@@ -58,14 +53,14 @@ export class Quaternion {
 
 	get lengthSq(): number {
 		const { x, y, z, w } = this;
-		return (x * x) + (y * y) + (z * z) + (w * w);
+		return x * x + y * y + z * z + w * w;
 	}
 
 	clone(): Quaternion {
 		return new Quaternion().copy(this);
 	}
 
-	copy(q: Quaternion): this {
+	copy(q: this): this {
 		this.x = q.x;
 		this.y = q.y;
 		this.z = q.z;
@@ -82,10 +77,10 @@ export class Quaternion {
 	}
 
 	fromArray(array: number[]): this {
-		this.x = array.safeAt(0);
-		this.y = array.safeAt(1);
-		this.z = array.safeAt(2);
-		this.w = array.safeAt(3);
+		this.x = array[0] as number;
+		this.y = array[1] as number;
+		this.z = array[2] as number;
+		this.w = array[3] as number;
 		return this;
 	}
 
@@ -96,14 +91,14 @@ export class Quaternion {
 		return this;
 	}
 
-	premul(q: Quaternion): this {
+	premul(q: this): this {
 		const { x, y, z, w } = this;
 		const { x: qx, y: qy, z: qz, w: qw } = q;
 
-		this.x = (qx * w) + (qw * x) + (qy * z) - (qz * y);
-		this.y = (qy * w) + (qw * y) + (qz * x) - (qx * z);
-		this.z = (qz * w) + (qw * z) + (qx * y) - (qy * x);
-		this.w = (qw * w) - (qx * x) - (qy * y) - (qz * z);
+		this.x = qx * w + qw * x + qy * z - qz * y;
+		this.y = qy * w + qw * y + qz * x - qx * z;
+		this.z = qz * w + qw * z + qx * y - qy * x;
+		this.w = qw * w - qx * x - qy * y - qz * z;
 		return this;
 	}
 
@@ -138,50 +133,58 @@ export class Quaternion {
 
 		switch (order) {
 			case "XYZ":
-				this.x = (s1 * c2 * c3) + (c1 * s2 * s3);
-				this.y = (c1 * s2 * c3) - (s1 * c2 * s3);
-				this.z = (c1 * c2 * s3) + (s1 * s2 * c3);
-				this.w = (c1 * c2 * c3) - (s1 * s2 * s3);
+				this.x = s1 * c2 * c3 + c1 * s2 * s3;
+				this.y = c1 * s2 * c3 - s1 * c2 * s3;
+				this.z = c1 * c2 * s3 + s1 * s2 * c3;
+				this.w = c1 * c2 * c3 - s1 * s2 * s3;
 				return this;
 			case "YXZ":
-				this.x = (s1 * c2 * c3) + (c1 * s2 * s3);
-				this.y = (c1 * s2 * c3) - (s1 * c2 * s3);
-				this.z = (c1 * c2 * s3) - (s1 * s2 * c3);
-				this.w = (c1 * c2 * c3) + (s1 * s2 * s3);
+				this.x = s1 * c2 * c3 + c1 * s2 * s3;
+				this.y = c1 * s2 * c3 - s1 * c2 * s3;
+				this.z = c1 * c2 * s3 - s1 * s2 * c3;
+				this.w = c1 * c2 * c3 + s1 * s2 * s3;
 				return this;
 			case "ZXY":
-				this.x = (s1 * c2 * c3) - (c1 * s2 * s3);
-				this.y = (c1 * s2 * c3) + (s1 * c2 * s3);
-				this.z = (c1 * c2 * s3) + (s1 * s2 * c3);
-				this.w = (c1 * c2 * c3) - (s1 * s2 * s3);
+				this.x = s1 * c2 * c3 - c1 * s2 * s3;
+				this.y = c1 * s2 * c3 + s1 * c2 * s3;
+				this.z = c1 * c2 * s3 + s1 * s2 * c3;
+				this.w = c1 * c2 * c3 - s1 * s2 * s3;
 				return this;
 			case "ZYX":
-				this.x = (s1 * c2 * c3) - (c1 * s2 * s3);
-				this.y = (c1 * s2 * c3) + (s1 * c2 * s3);
-				this.z = (c1 * c2 * s3) - (s1 * s2 * c3);
-				this.w = (c1 * c2 * c3) + (s1 * s2 * s3);
+				this.x = s1 * c2 * c3 - c1 * s2 * s3;
+				this.y = c1 * s2 * c3 + s1 * c2 * s3;
+				this.z = c1 * c2 * s3 - s1 * s2 * c3;
+				this.w = c1 * c2 * c3 + s1 * s2 * s3;
 				return this;
 			case "YZX":
-				this.x = (s1 * c2 * c3) + (c1 * s2 * s3);
-				this.y = (c1 * s2 * c3) + (s1 * c2 * s3);
-				this.z = (c1 * c2 * s3) - (s1 * s2 * c3);
-				this.w = (c1 * c2 * c3) - (s1 * s2 * s3);
+				this.x = s1 * c2 * c3 + c1 * s2 * s3;
+				this.y = c1 * s2 * c3 + s1 * c2 * s3;
+				this.z = c1 * c2 * s3 - s1 * s2 * c3;
+				this.w = c1 * c2 * c3 - s1 * s2 * s3;
 				return this;
 			case "XZY":
-				this.x = (s1 * c2 * c3) - (c1 * s2 * s3);
-				this.y = (c1 * s2 * c3) - (s1 * c2 * s3);
-				this.z = (c1 * c2 * s3) + (s1 * s2 * c3);
-				this.w = (c1 * c2 * c3) + (s1 * s2 * s3);
+				this.x = s1 * c2 * c3 - c1 * s2 * s3;
+				this.y = c1 * s2 * c3 - s1 * c2 * s3;
+				this.z = c1 * c2 * s3 + s1 * s2 * c3;
+				this.w = c1 * c2 * c3 + s1 * s2 * s3;
 				return this;
+			default:
+				throw new Error(`Easel.Quaternion: unknown Euler order: ${order}`);
 		}
 	}
 
 	setFromRotationMatrix(m: Matrix4): this {
 		const te = m.elements;
 
-		const m11 = te.safeAt(0), m12 = te.safeAt(4), m13 = te.safeAt(8);
-		const m21 = te.safeAt(1), m22 = te.safeAt(5), m23 = te.safeAt(9);
-		const m31 = te.safeAt(2), m32 = te.safeAt(6), m33 = te.safeAt(10);
+		const m11 = te[0] as number;
+		const m12 = te[4] as number;
+		const m13 = te[8] as number;
+		const m21 = te[1] as number;
+		const m22 = te[5] as number;
+		const m23 = te[9] as number;
+		const m31 = te[2] as number;
+		const m32 = te[6] as number;
+		const m33 = te[10] as number;
 
 		const trace = m11 + m22 + m33;
 		if (trace > 0) {

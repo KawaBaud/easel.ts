@@ -1,21 +1,4 @@
 export class Vector2 {
-	static cross(
-		x1: number,
-		y1: number,
-		x2: number,
-		y2: number,
-	): number {
-		return (x1 * y2) - (y1 * x2);
-	}
-
-	static dot(
-		x: number,
-		y: number,
-		target = new Vector2(),
-	): number {
-		return (x * target.x) + (y * target.y);
-	}
-
 	#x = 0;
 	#y = 0;
 
@@ -40,7 +23,7 @@ export class Vector2 {
 		this.#y = value;
 	}
 
-	add(v: Vector2): this {
+	add(v: this): this {
 		this.x += v.x;
 		this.y += v.y;
 		return this;
@@ -50,19 +33,19 @@ export class Vector2 {
 		return new Vector2(this.x, this.y);
 	}
 
-	copy(v: Vector2): this {
+	copy(v: this): this {
 		this.x = v.x;
 		this.y = v.y;
 		return this;
 	}
 
-	equals(v: Vector2): boolean {
-		return (this.x === v.x) && (this.y === v.y);
+	equals(v: this): boolean {
+		return this.x === v.x && this.y === v.y;
 	}
 
 	fromArray(array: number[]): this {
-		this.x = array.safeAt(0);
-		this.y = array.safeAt(1);
+		this.x = array[0] as number;
+		this.y = array[1] as number;
 		return this;
 	}
 
@@ -78,7 +61,7 @@ export class Vector2 {
 		return this;
 	}
 
-	sub(v: Vector2): this {
+	sub(v: this): this {
 		this.x -= v.x;
 		this.y -= v.y;
 		return this;

@@ -1,8 +1,8 @@
-import type { Line3 } from "./Line3.ts";
-import { Matrix3 } from "./Matrix3.ts";
-import type { Matrix4 } from "./Matrix4.ts";
-import type { Sphere } from "./Sphere.ts";
-import { Vector3 } from "./Vector3.ts";
+import type { Line3 } from "./Line3";
+import { Matrix3 } from "./Matrix3";
+import type { Matrix4 } from "./Matrix4";
+import type { Sphere } from "./Sphere";
+import { Vector3 } from "./Vector3";
 
 export class Plane {
 	#normal = new Vector3(1, 0, 0);
@@ -47,7 +47,7 @@ export class Plane {
 		return new Plane(this.normal, this.constant);
 	}
 
-	copy(plane: Plane): this {
+	copy(plane: this): this {
 		this.normal.copy(plane.normal);
 		this.constant = plane.constant;
 		return this;
@@ -57,14 +57,11 @@ export class Plane {
 		return this.normal.dot(point) + this.constant;
 	}
 
-	equals(plane: Plane): boolean {
+	equals(plane: this): boolean {
 		return plane.normal.equals(this.normal) && plane.constant === this.constant;
 	}
 
-	intersectLine(
-		line: Line3,
-		target = new Vector3(),
-	): Vector3 | undefined {
+	intersectLine(line: Line3, target = new Vector3()): Vector3 | undefined {
 		const dir = line.end.sub(line.start);
 		const denom = this.normal.dot(dir);
 		if (denom === 0) {
@@ -74,19 +71,22 @@ export class Plane {
 		}
 
 		const t = -(line.start.dot(this.normal) + this.constant) / denom;
-		if (t < 0 || t > 1) return undefined;
+		if (t < 0 || t > 1) {
+			return undefined;
+		}
 
 		return target.copy(dir).mulScalar(t).add(line.start);
 	}
 
 	intersectsSphere(sphere: Sphere): boolean {
-		return this.distanceToPoint(sphere.centre) <= sphere.radius;
+		return this.distanceToPoint(sphere.center) <= sphere.radius;
 	}
 
 	projectPoint(point: Vector3, target = new Vector3()): Vector3 {
-		return target.copy(this.normal).mulScalar(-this.distanceToPoint(point)).add(
-			point,
-		);
+		return target
+			.copy(this.normal)
+			.mulScalar(-this.distanceToPoint(point))
+			.add(point);
 	}
 
 	setComponents(x: number, y: number, z: number, w: number): this {

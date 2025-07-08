@@ -14,8 +14,8 @@
 	</head>
 	<body>
 		<script type="module">
-			import { OBJLoader } from "../src/loaders/OBJLoader.ts";
-			import { EASEL } from "../src/mod.ts";
+			import { ObjLoader } from "../src/loaders/ObjLoader.ts";
+			import * as EASEL from "../src/index.ts";
 
 			const width = globalThis.innerWidth;
 			const height = globalThis.innerHeight;
@@ -39,7 +39,7 @@
 			});
 
 			const myObject = new EASEL.Object3D();
-			const loader = new OBJLoader();
+			const loader = new ObjLoader();
 			loader.load(
 				"https://raw.githubusercontent.com/McNopper/OpenGL/refs/heads/master/Binaries/monkey.obj",
 				(object) => {
@@ -48,7 +48,7 @@
 						if (child instanceof EASEL.Mesh) child.material = material;
 					});
 					object.position.sub(
-						new EASEL.Box3().setFromObject(object).getCentre(
+						new EASEL.Box3().setFromObject(object).getCenter(
 							new EASEL.Vector3(),
 						),
 					);

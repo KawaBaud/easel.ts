@@ -1,12 +1,12 @@
-import type { Camera } from "../../cameras/Camera.ts";
-import { Vector3 } from "../../maths/Vector3.ts";
-import { Mesh } from "../../objects/Mesh.ts";
-import type { Scene } from "../../scenes/Scene.ts";
-import { ShapeUtils } from "../../shapes/ShapeUtils.ts";
-import "../../types.ts";
-import type { CanvasRenderer } from "../CanvasRenderer.ts";
-import { FrustumProcessor } from "../common/FrustumProcessor.ts";
-import { Pipeline } from "./Pipeline.ts";
+import type { Camera } from "../../cameras/Camera";
+import { Vector3 } from "../../maths/Vector3";
+import { Mesh } from "../../objects/Mesh";
+import type { Scene } from "../../scenes/Scene";
+import { ShapeUtils } from "../../shapes/ShapeUtils";
+import "../../types";
+import type { CanvasRenderer } from "../CanvasRenderer";
+import { FrustumProcessor } from "../common/FrustumProcessor";
+import { Pipeline } from "./Pipeline";
 
 const _v1 = new Vector3();
 const _v2 = new Vector3();
@@ -22,7 +22,6 @@ export class RenderPipeline extends Pipeline {
 
 	constructor(width?: number, height?: number) {
 		super();
-
 		this.width = width ?? globalThis.innerWidth;
 		this.height = height ?? globalThis.innerHeight;
 	}
@@ -59,20 +58,23 @@ export class RenderPipeline extends Pipeline {
 		renderer: CanvasRenderer,
 		material: Mesh["material"],
 	): void {
-		const idx1 = indices.safeAt(startIndex);
-		const idx2 = indices.safeAt(startIndex + 1);
-		const idx3 = indices.safeAt(startIndex + 2);
-
+		const idx1 = indices[startIndex] as number;
+		const idx2 = indices[startIndex + 1] as number;
+		const idx3 = indices[startIndex + 2] as number;
 		if (
-			(idx1 >= vertices.length) ||
-			(idx2 >= vertices.length) ||
-			(idx3 >= vertices.length)
-		) return;
+			idx1 >= vertices.length ||
+			idx2 >= vertices.length ||
+			idx3 >= vertices.length
+		) {
+			return;
+		}
 
 		const v1 = vertices[idx1];
 		const v2 = vertices[idx2];
 		const v3 = vertices[idx3];
-		if (!v1 || !v2 || !v3) return;
+		if (!(v1 && v2 && v3)) {
+			return;
+		}
 
 		_v1.copy(v1).applyMatrix4(mesh.worldMatrix);
 		_v2.copy(v2).applyMatrix4(mesh.worldMatrix);
@@ -88,9 +90,14 @@ export class RenderPipeline extends Pipeline {
 			return;
 		}
 
-		const clippedTriangles = this.#frustumProcessor
-			.clipTriangle(_worldV1, _worldV2, _worldV3);
-		if (clippedTriangles.length === 0) return;
+		const clippedTriangles = this.#frustumProcessor.clipTriangle(
+			_worldV1,
+			_worldV2,
+			_worldV3,
+		);
+		if (clippedTriangles.length === 0) {
+			return;
+		}
 		for (const triangle of clippedTriangles) {
 			renderer.rasterize(triangle, camera, material);
 		}
@@ -100,7 +107,9 @@ export class RenderPipeline extends Pipeline {
 		const shape = mesh.shape;
 		const material = mesh.material;
 
-		if (!shape || (!shape.vertices || (shape.vertices.length === 0))) return;
+		if (!shape?.vertices || shape.vertices.length === 0) {
+			return;
+		}
 
 		const vertices = shape.vertices;
 		let indices = shape.indices;

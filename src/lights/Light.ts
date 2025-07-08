@@ -1,6 +1,6 @@
-import { Color } from "../common/Color.ts";
-import { Object3D } from "../objects/Object3D.ts";
-import type { ColorValue } from "../types.ts";
+import { Color } from "../common/Color";
+import { Object3D } from "../objects/Object3D";
+import type { ColorValue } from "../types";
 
 export class Light extends Object3D {
 	#color = new Color(1, 1, 1);
@@ -8,7 +8,6 @@ export class Light extends Object3D {
 
 	constructor(color?: ColorValue, intensity = 1) {
 		super();
-
 		this.name = "Light";
 		this.color !== undefined ? this.color : color;
 		this.intensity = intensity;
@@ -34,9 +33,8 @@ export class Light extends Object3D {
 		return new Light(this.color, this.intensity).copy(this);
 	}
 
-	override copy(source: Light): this {
+	override copy(source: this): this {
 		super.copy(source);
-
 		this.color = source.color;
 		this.intensity = source.intensity;
 		return this;

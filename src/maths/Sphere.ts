@@ -1,20 +1,20 @@
-import { Vector3 } from "./Vector3.ts";
+import { Vector3 } from "./Vector3";
 
 export class Sphere {
-	#centre = new Vector3();
+	#center = new Vector3();
 	#radius = 1;
 
-	constructor(centre = new Vector3(), radius = 1) {
-		this.#centre = centre.clone();
+	constructor(center = new Vector3(), radius = 1) {
+		this.#center = center.clone();
 		this.#radius = radius;
 	}
 
-	get centre(): Vector3 {
-		return this.#centre;
+	get center(): Vector3 {
+		return this.#center;
 	}
 
-	set centre(value: Vector3) {
-		this.#centre.copy(value);
+	set center(value: Vector3) {
+		this.#center.copy(value);
 	}
 
 	get radius(): number {
@@ -26,40 +26,41 @@ export class Sphere {
 	}
 
 	clone(): Sphere {
-		return new Sphere(this.centre, this.radius);
+		return new Sphere(this.center, this.radius);
 	}
 
 	containsPoint(point: Vector3): boolean {
-		return point.clone().sub(this.centre).lengthSq <= this.radius * this.radius;
+		return point.clone().sub(this.center).lengthSq <= this.radius * this.radius;
 	}
 
-	copy(sphere: Sphere): this {
-		this.centre.copy(sphere.centre);
+	copy(sphere: this): this {
+		this.center.copy(sphere.center);
 		this.radius = sphere.radius;
 		return this;
 	}
 
 	distanceToPoint(point: Vector3): number {
-		return point.clone().sub(this.centre).length - this.radius;
+		return point.clone().sub(this.center).length - this.radius;
 	}
 
-	equals(sphere: Sphere): boolean {
+	equals(sphere: this): boolean {
 		return (
-			(sphere.centre.x === this.centre.x) &&
-			(sphere.centre.y === this.centre.y) &&
-			(sphere.centre.z === this.centre.z) &&
-			(sphere.radius === this.radius)
+			sphere.center.x === this.center.x &&
+			sphere.center.y === this.center.y &&
+			sphere.center.z === this.center.z &&
+			sphere.radius === this.radius
 		);
 	}
 
-	intersectsSphere(sphere: Sphere): boolean {
+	intersectsSphere(sphere: this): boolean {
 		const radiusSum = this.radius + sphere.radius;
-		return this.centre.clone().sub(sphere.centre)
-			.lengthSq <= (radiusSum * radiusSum);
+		return (
+			this.center.clone().sub(sphere.center).lengthSq <= radiusSum * radiusSum
+		);
 	}
 
 	translate(offset: Vector3): this {
-		this.centre.add(offset);
+		this.center.add(offset);
 		return this;
 	}
 }

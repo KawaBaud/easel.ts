@@ -1,6 +1,6 @@
-import { Vector3 } from "../maths/Vector3.ts";
-import type { ColorValue } from "../types.ts";
-import { Light } from "./Light.ts";
+import { Vector3 } from "../maths/Vector3";
+import type { ColorValue } from "../types";
+import { Light } from "./Light";
 
 export class DirectionalLight extends Light {
 	#direction = new Vector3(0, -1, 0);
@@ -8,7 +8,6 @@ export class DirectionalLight extends Light {
 
 	constructor(color?: ColorValue, intensity = 1) {
 		super(color, intensity);
-
 		this.name = "DirectionalLight";
 	}
 
@@ -42,9 +41,8 @@ export class DirectionalLight extends Light {
 		return new DirectionalLight(this.color, this.intensity).copy(this);
 	}
 
-	override copy(source: DirectionalLight): this {
+	override copy(source: this): this {
 		super.copy(source);
-
 		this.direction.copy(source.direction);
 		this.target.copy(source.target);
 		return this;
@@ -52,7 +50,6 @@ export class DirectionalLight extends Light {
 
 	override updateWorldMatrix(force = false, updateChildren = true): void {
 		super.updateWorldMatrix(force, updateChildren);
-
 		this.#updateDirection();
 	}
 }

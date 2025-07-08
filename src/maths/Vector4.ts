@@ -1,25 +1,10 @@
 export class Vector4 {
-	static dot(
-		x: number,
-		y: number,
-		z: number,
-		w: number,
-		target = new Vector4(),
-	): number {
-		return (x * target.x) + (y * target.y) + (z * target.z) + (w * target.w);
-	}
-
 	#x = 0;
 	#y = 0;
 	#z = 0;
 	#w = 1;
 
-	constructor(
-		x = 0,
-		y = 0,
-		z = 0,
-		w = 1,
-	) {
+	constructor(x = 0, y = 0, z = 0, w = 1) {
 		this.#x = x;
 		this.#y = y;
 		this.#z = z;
@@ -64,14 +49,14 @@ export class Vector4 {
 
 	get lengthSq(): number {
 		const { x, y, z, w } = this;
-		return (x * x) + (y * y) + (z * z) + (w * w);
+		return x * x + y * y + z * z + w * w;
 	}
 
 	clone(): Vector4 {
 		return new Vector4(this.x, this.y, this.z, this.w);
 	}
 
-	copy(v: Vector4): this {
+	copy(v: this): this {
 		this.x = v.x;
 		this.y = v.y;
 		this.z = v.z;
@@ -88,10 +73,10 @@ export class Vector4 {
 	}
 
 	fromArray(array: number[]): this {
-		this.x = array.safeAt(0);
-		this.y = array.safeAt(1);
-		this.z = array.safeAt(2);
-		this.w = array.safeAt(3);
+		this.x = array[0] as number;
+		this.y = array[1] as number;
+		this.z = array[2] as number;
+		this.w = array[3] as number;
 		return this;
 	}
 

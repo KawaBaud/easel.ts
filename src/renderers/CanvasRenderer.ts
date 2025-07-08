@@ -1,13 +1,13 @@
-import type { Camera } from "../cameras/Camera.ts";
-import { Color } from "../common/Color.ts";
-import type { Material } from "../materials/Material.ts";
-import { MathUtils } from "../maths/MathUtils.ts";
-import { Vector3 } from "../maths/Vector3.ts";
-import type { Scene } from "../scenes/Scene.ts";
-import type { ColorValue } from "../types.ts";
-import { CanvasUtils } from "./canvas/CanvasUtils.ts";
-import { RenderPipeline } from "./common/RenderPipeline.ts";
-import { Renderer, type RendererOptions } from "./Renderer.ts";
+import type { Camera } from "../cameras/Camera";
+import { Color } from "../common/Color";
+import type { Material } from "../materials/Material";
+import { MathUtils } from "../maths/MathUtils";
+import { Vector3 } from "../maths/Vector3";
+import type { Scene } from "../scenes/Scene";
+import type { ColorValue } from "../types";
+import { CanvasUtils } from "./canvas/CanvasUtils";
+import { RenderPipeline } from "./common/RenderPipeline";
+import { Renderer, type RendererOptions } from "./Renderer";
 
 const _pv1 = new Vector3();
 const _pv2 = new Vector3();
@@ -72,7 +72,9 @@ export class CanvasRenderer extends Renderer {
 
 		const dx = Math.abs(_screenP2.x - _screenP1.x);
 		const dy = Math.abs(_screenP2.y - _screenP1.y);
-		if (dx < 1 && dy < 1) return this;
+		if (dx < 1 && dy < 1) {
+			return this;
+		}
 
 		let x1 = _screenP1.x;
 		let y1 = _screenP1.y;
@@ -84,10 +86,12 @@ export class CanvasRenderer extends Renderer {
 		let err = dx - dy;
 
 		while (true) {
-			if ((x1 >= 0 && x1 < this.width) && (y1 >= 0 && y1 < this.height)) {
+			if (x1 >= 0 && x1 < this.width && y1 >= 0 && y1 < this.height) {
 				this.setPixel(x1, y1, color);
 			}
-			if (x1 === x2 && y1 === y2) break;
+			if (x1 === x2 && y1 === y2) {
+				break;
+			}
 
 			const e2 = err << 1;
 			if (e2 > -dy) {
@@ -110,13 +114,14 @@ export class CanvasRenderer extends Renderer {
 		color: ColorValue,
 		wireframe = false,
 	): this {
-		wireframe
-			? (
-				this.drawLine(v1, v2, color),
-					this.drawLine(v2, v3, color),
-					this.drawLine(v3, v1, color)
-			)
-			: this.drawTriangleFilled(v1, v2, v3, color);
+		if (wireframe) {
+			this.drawLine(v1, v2, color);
+			this.drawLine(v2, v3, color);
+			this.drawLine(v3, v1, color);
+		} else {
+			this.drawTriangleFilled(v1, v2, v3, color);
+		}
+
 		return this;
 	}
 
@@ -135,13 +140,13 @@ export class CanvasRenderer extends Renderer {
 		p1.y === p2.y
 			? this.#fillFlatTriangleTop(p1, p2, p3, color)
 			: p2.y === p3.y
-			? this.#fillFlatTriangleBottom(p1, p2, p3, color)
-			: (() => {
-				const p4x = p1.x + ((p2.y - p1.y) / (p3.y - p1.y)) * (p3.x - p1.x);
-				_p4.set(p4x, p2.y, 0);
-				this.#fillFlatTriangleBottom(p1, p2, _p4, color);
-				this.#fillFlatTriangleTop(p2, _p4, p3, color);
-			})();
+				? this.#fillFlatTriangleBottom(p1, p2, p3, color)
+				: (() => {
+						const p4x = p1.x + ((p2.y - p1.y) / (p3.y - p1.y)) * (p3.x - p1.x);
+						_p4.set(p4x, p2.y, 0);
+						this.#fillFlatTriangleBottom(p1, p2, _p4, color);
+						this.#fillFlatTriangleTop(p2, _p4, p3, color);
+					})();
 
 		return this;
 	}
@@ -151,11 +156,7 @@ export class CanvasRenderer extends Renderer {
 		return this;
 	}
 
-	rasterize(
-		triangle: Vector3[],
-		camera: Camera,
-		material: Material,
-	): void {
+	rasterize(triangle: Vector3[], camera: Camera, material: Material): void {
 		if (triangle.length === 3) {
 			const cv1 = triangle[0];
 			const cv2 = triangle[1];
@@ -166,13 +167,7 @@ export class CanvasRenderer extends Renderer {
 				_pv2.copy(cv2).applyMatrix4(camera.projectionMatrix);
 				_pv3.copy(cv3).applyMatrix4(camera.projectionMatrix);
 
-				this.drawTriangle(
-					_pv1,
-					_pv2,
-					_pv3,
-					material.color,
-					material.wireframe,
-				);
+				this.drawTriangle(_pv1, _pv2, _pv3, material.color, material.wireframe);
 			}
 		}
 	}
@@ -232,7 +227,6 @@ export class CanvasRenderer extends Renderer {
 		for (let y = startY; y <= endY; y++) {
 			const sx = x1 + (y - y1) * edge0;
 			const ex = isTopTriangle ? x2 + (y - y2) * edge1 : x1 + (y - y1) * edge1;
-
 			this.#fillScanline(y, sx, ex, color);
 		}
 	}
@@ -255,12 +249,7 @@ export class CanvasRenderer extends Renderer {
 		this.#fillFlatTriangle(p1, p2, p3, color, true);
 	}
 
-	#fillScanline(
-		y: number,
-		x1: number,
-		x2: number,
-		color: ColorValue,
-	): void {
+	#fillScanline(y: number, x1: number, x2: number, color: ColorValue): void {
 		const startX = MathUtils.clamp(
 			Math.ceil(MathUtils.fastMin(x1, x2)),
 			0,
@@ -287,7 +276,7 @@ export class CanvasRenderer extends Renderer {
 	}
 
 	#setPixelData(idx: number, color: ColorValue): void {
-		const rgb = Color.toRGB(color);
+		const rgb = Color.toRgb(color);
 		this.data[idx] = rgb.r;
 		this.data[idx + 1] = rgb.g;
 		this.data[idx + 2] = rgb.b;
@@ -299,10 +288,20 @@ export class CanvasRenderer extends Renderer {
 		p2: Vector3,
 		p3: Vector3,
 	): [Vector3, Vector3, Vector3] {
-		if (p1.y > p2.y) [p1, p2] = [p2, p1];
-		if (p1.y > p3.y) [p1, p3] = [p3, p1];
-		if (p2.y > p3.y) [p2, p3] = [p3, p2];
-		return [p1, p2, p3];
+		let sortedP1 = p1.clone();
+		let sortedP2 = p2.clone();
+		let sortedP3 = p3.clone();
+
+		if (sortedP1.y > sortedP2.y) {
+			[sortedP1, sortedP2] = [sortedP2, sortedP1];
+		}
+		if (sortedP1.y > sortedP3.y) {
+			[sortedP1, sortedP3] = [sortedP3, sortedP1];
+		}
+		if (sortedP2.y > sortedP3.y) {
+			[sortedP2, sortedP3] = [sortedP3, sortedP2];
+		}
+		return [sortedP1, sortedP2, sortedP3];
 	}
 
 	override render(scene: Scene, camera: Camera): this {

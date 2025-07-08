@@ -1,20 +1,20 @@
-import type { Color } from "./common/Color.ts";
+import type { Color } from "./common/Color";
 
 export type ColorValue = string | number | Color;
 
-export type HSL = { h: number; s: number; l: number };
-export type RGB = { r: number; g: number; b: number };
-export type RGBA = RGB & { a: number };
+export type Hsl = { h: number; s: number; l: number };
+export type Rgb = { r: number; g: number; b: number };
+export type Rgba = Rgb & { a: number };
 
-export type HSLArray = [h: number, s: number, l: number];
-export type RGBArray = [r: number, g: number, b: number];
-export type RGBAArray = [r: number, g: number, b: number, a: number];
+export type HslArray = [h: number, s: number, l: number];
+export type RgbArray = [r: number, g: number, b: number];
+export type RgbaArray = [r: number, g: number, b: number, a: number];
 
 /* const enum */
 export const Side = {
-	FRONT: 0,
-	BACK: 1,
-	DOUBLE: 2,
+	front: 0,
+	back: 1,
+	double: 2,
 } as const;
 
 export type Side = (typeof Side)[keyof typeof Side];

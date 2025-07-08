@@ -1,6 +1,6 @@
-import { MathUtils } from "./MathUtils.ts";
-import type { Matrix4 } from "./Matrix4.ts";
-import { Vector3 } from "./Vector3.ts";
+import { MathUtils } from "./MathUtils";
+import type { Matrix4 } from "./Matrix4";
+import { Vector3 } from "./Vector3";
 
 export class Line3 {
 	#start = new Vector3();
@@ -67,19 +67,21 @@ export class Line3 {
 
 		const dir = this.delta;
 		const dirLengthSq = dir.lengthSq;
-		if (dirLengthSq === 0) return 0;
+		if (dirLengthSq === 0) {
+			return 0;
+		}
 
 		const t = startPoint.dot(dir) / dirLengthSq;
 		return clampToLine ? MathUtils.clamp(t, 0, 1) : t;
 	}
 
-	copy(line: Line3): this {
+	copy(line: this): this {
 		this.#start.copy(line.start);
 		this.#end.copy(line.end);
 		return this;
 	}
 
-	equals(line: Line3): boolean {
+	equals(line: this): boolean {
 		return this.#start.equals(line.start) && this.#end.equals(line.end);
 	}
 

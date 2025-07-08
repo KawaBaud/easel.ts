@@ -1,5 +1,5 @@
-import { MathUtils } from "../maths/MathUtils.ts";
-import { Camera } from "./Camera.ts";
+import { MathUtils } from "../maths/MathUtils";
+import { Camera } from "./Camera";
 
 export class PerspCamera extends Camera {
 	#fov = 50;
@@ -7,14 +7,8 @@ export class PerspCamera extends Camera {
 	#near = 0.1;
 	#far = 2000;
 
-	constructor(
-		fov = 50,
-		aspect = 1,
-		near = 0.1,
-		far = 2000,
-	) {
+	constructor(fov = 50, aspect = 1, near = 0.1, far = 2000) {
 		super();
-
 		this.name = "PerspCamera";
 		this.fov = fov;
 		this.aspect = aspect;
@@ -59,15 +53,10 @@ export class PerspCamera extends Camera {
 	}
 
 	override clone(): PerspCamera {
-		return new PerspCamera(
-			this.fov,
-			this.aspect,
-			this.near,
-			this.far,
-		);
+		return new PerspCamera(this.fov, this.aspect, this.near, this.far);
 	}
 
-	override copy(source: PerspCamera): this {
+	override copy(source: this): this {
 		super.copy(source);
 
 		this.fov = source.fov;
